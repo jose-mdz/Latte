@@ -1,0 +1,15 @@
+/* 
+    Document   : DatePickerItem
+    Created on : Feb 27, 2013, 1:09:58 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.latte-item.date-picker .latte-item.button{
+    margin-right: 2px;
+}
+
+.latte-item.date-picker .latte-item.value.checkbox{
+    margin-top: 5px;
+    margin-right: 5px;
+}

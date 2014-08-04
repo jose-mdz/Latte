@@ -1,0 +1,138 @@
+/* 
+    Document   : Ribbon
+    Created on : Aug 3, 2012, 12:06:31 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.ribbon{
+    background-color: #E3E6E8;
+    position: relative;
+}
+
+.latte-item.ribbon > .tabs > .start-button{
+    padding-left: 2.5em;
+    padding-right: 2.5em;
+}
+
+.latte-item.ribbon > .tabs{
+    padding-top: 4px;
+    padding-left: 5px;
+}
+
+.latte-item.ribbon > .tabs > .latte-item.button{
+    margin-right: 5px;
+}
+
+
+.latte-item.ribbon > .tabs > .latte-item.button.tab{
+    position: relative;
+    margin-bottom: -1px;
+    
+}
+
+.latte-item.ribbon > .tabs > .latte-item.button.tab .face{
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.latte-item.ribbon > .face{
+    min-height: 87px;
+    padding: 1px;
+}
+
+.latte-item.ribbon > .face > .items-container{
+    overflow: hidden;
+    height: 87px;
+    width: 100%;
+    padding-top: 5px;
+    /*padding-left: 5px;*/
+}
+
+.latte-item.ribbon > .face .latte-item.button.vertical{
+    /*height: 85px;*/
+}
+
+.latte-item.ribbon > .face > .items-container > .ribbon-wrapper{
+    height: 85px;
+    float: left;
+}
+
+.latte-item.ribbon > .face > .items-container > .latte-item.button{
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
+.latte-item.ribbon .latte-item.button.collapse{
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0px;
+}
+
+.latte-item.ribbon.collapsed > .tabs{
+    z-index: 99990;
+}
+
+.latte-item.ribbon.collapsed > .face{
+    position:absolute;
+    left: 0;
+    right: 0;
+    z-index: 99998;
+}
+
+.latte-item.ribbon > .face > .items-container > .ribbon-wrapper > .latte-item{
+    margin-right: 1px;
+    margin-bottom: 5px;
+}
+
+/*
+        COLORS
+*/
+.latte-item.ribbon > .face{
+    border: solid 1px #b0b0b0;
+    border-left: none;
+    border-right: none;
+    background: white;
+    background: #ffffff; /* Old DetailViews */
+    background: -moz-linear-gradient(top,  #ffffff 0%, #f9fafb 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f9fafb)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#f9fafb 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #ffffff 0%,#f9fafb 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #ffffff 0%,#f9fafb 100%); /* IE10+ */
+    background: linear-gradient(top,  #ffffff 0%,#f9fafb 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f9fafb',GradientType=0 ); /* IE6-9 */
+    box-shadow: 0px 2px rgba(0, 0, 0, 0.1);
+}
+
+.latte-item.ribbon > .tabs > .start-button:not(.with-menu){
+    border: solid 1px #1F48A1 !important;
+    background: #0072C6 !important;
+    border-radius: 0 !important;
+    color: white !important;
+    text-shadow: 1px 1px 1px black !important;
+}
+
+/*
+    ITEMS
+*/
+.latte-item.ribbon > .face > .items-container > .ribbon-wrapper{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.latte-item.ribbon > .face > .items-container > .ribbon-wrapper > .latte-item{
+    display: block;
+    float: none;
+}
+
+.latte-item.ribbon > .face > .items-container > .ribbon-wrapper > .latte-item.button-group{
+    float: none;
+    margin-top: 5px;
+}
+
+.latte-item.ribbon > .face > .items-container > .ribbon-wrapper > .latte-item.input > .text > .label{
+    float: left;
+    font-weight: normal;
+}

@@ -1,0 +1,11 @@
+/* 
+    Document   : SplitView
+    Created on : Aug 7, 2012, 9:59:02 PM
+    Author     : menendezpoo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.latte-view.split > .splitter{
+    position: absolute;
+    background-color: #D2D5D9;
+}

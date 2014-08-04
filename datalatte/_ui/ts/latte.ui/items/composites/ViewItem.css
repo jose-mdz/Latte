@@ -1,0 +1,17 @@
+/* 
+    Document   : ViewItem
+    Created on : Jan 24, 2013, 9:28:40 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.view{
+    float: none;
+    position: relative;
+    min-height: 10px;
+}
+
+.latte-item.view > .latte-view{
+    
+}

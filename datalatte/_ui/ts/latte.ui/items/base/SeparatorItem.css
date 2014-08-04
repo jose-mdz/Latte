@@ -1,0 +1,33 @@
+/* 
+    Document   : SeparatorItem
+    Created on : Aug 6, 2012, 12:52:06 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.separator{
+    float: none;
+}
+
+.latte-item.separator.with-text{
+    padding: 0 4px 3px 4px;
+    background: #f9fafb;
+    color: black;
+    font-size: 8px;
+    font-weight: bold;
+    border-bottom: solid 1px #b0b0b0;
+}
+
+.latte-overlay.menu .latte-item.separator{
+    border-bottom: solid 1px #D2D5D9;
+    margin: 1px 0;
+}
+
+.latte-item.ribbon .items-container .latte-item.separator{
+    border-left: solid 1px #D2D5D9;
+    height: 85px;
+    float: left;
+    width: 1px;
+    margin: 0 2px;
+}

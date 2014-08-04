@@ -1,0 +1,31 @@
+
+/* Inset margin when content on bottom */
+.latte-item.toolbar.tab > .face > .holder > .items-container > .latte-item.tab.flat-bottom{
+    margin-bottom: -7px;
+}
+
+/* Inset margin when content on top */
+.latte-item.toolbar.tab > .face > .holder > .items-container > .latte-item.tab.flat-top{
+    margin-top: -7px;
+}
+
+/* Inset margin when content on left */
+.latte-item.toolbar.tab > .face > .holder > .items-container > .latte-item.tab.flat-left{
+    margin-left: -7px;
+}
+
+/* Inset margin when content on right */
+.latte-item.toolbar.tab > .face > .holder > .items-container > .latte-item.tab.flat-right{
+    margin-right: -7px;
+}
+
+/*  */
+.latte-view.toolbar.tab > .latte-item.toolbar {
+    background: #f0f0f0;
+}
+
+/* Borders for tab effect */
+.latte-item.toolbar.tab.content-at-top      { border-top:       solid 1px #ccc; }
+.latte-item.toolbar.tab.content-at-bottom   { border-bottom:    solid 1px #ccc; }
+.latte-item.toolbar.tab.content-at-left     { border-left:      solid 1px #ccc; }
+.latte-item.toolbar.tab.content-at-right    { border-right:     solid 1px #ccc; }

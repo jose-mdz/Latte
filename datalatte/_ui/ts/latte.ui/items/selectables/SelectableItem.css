@@ -1,0 +1,27 @@
+/* 
+    Document   : x
+    Created on : Sep 27, 2012, 8:53:49 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.selectable,
+.latte-item.tree-item  > .selectable, .selectable{
+    border: solid 1px transparent;
+    float: none;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.latte-item.selectable.hover,
+.latte-item.tree-item > .selectable.hover, .selectable.hover{
+    border-color: #D1D1D1;
+    background: #EFEFEF;
+}
+
+.latte-item.selectable.selected,
+.latte-item.tree-item > .selectable.selected, .selectable.selected{
+    border-color: #93A0B3;
+    background: #E8F3FF;
+}

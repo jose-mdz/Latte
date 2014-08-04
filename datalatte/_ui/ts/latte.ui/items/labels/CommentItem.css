@@ -1,0 +1,71 @@
+/* 
+    Document   : CommentItem
+    Created on : Sep 14, 2012, 10:27:16 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.comment{
+    /*padding-top: 7px;
+    padding-bottom: 5px;*/
+    position: relative;
+    margin-bottom: 2px;
+    overflow: hidden;
+}
+
+.latte-item.comment > .blinker{
+    background: #FFFAD7;
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.latte-item.comment > .comment-content{
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+.latte-item.comment > .comment-content > .icon-side {
+    margin: 5px;
+    margin-top: 0;
+    width: 32px;
+    float: left;
+}
+
+.latte-item.comment > .comment-content > .comment-side {
+    margin-left: 45px;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.latte-item.comment > .comment-content > .comment-side > .user{
+    display: inline;
+}
+
+.latte-item.comment > .comment-content > .comment-side > .user,
+.latte-item.comment > .comment-content > .comment-side  a
+{
+    color: #15C;
+    margin-right: 3px;
+    text-decoration: none;
+}
+
+.latte-item.comment > .comment-content > .comment-side > .user:hover,
+.latte-item.comment > .comment-content > .comment-side  a:hover
+{
+    text-decoration: underline;
+}
+
+.latte-item.comment > .comment-content > .comment-side > .date {
+    color: #bbb;
+}
+
+.latte-item.comment > .comment-content > .comment-side > .text {
+    white-space: pre-wrap;
+}

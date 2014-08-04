@@ -1,0 +1,73 @@
+/* 
+    Document   : ButtonItem
+    Created on : Aug 3, 2012, 9:04:59 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.button{
+    padding: 5px;
+}
+
+.latte-item.button > .latte-item.label{
+    float: none;
+}
+
+.latte-item.button.horizontal.no-icon{
+    padding: 5px 15px;
+}
+
+.latte-item.button.horizontal > .latte-item.label > .label-content{
+    overflow: hidden;
+}
+
+.latte-item.button.horizontal.with-dropdown > .latte-item.label{
+    padding-right: 20px;
+}
+
+.latte-item.button.horizontal.with-dropdown > .latte-item.clickable{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 16px;
+}
+
+.latte-item.button.vertical.with-dropdown > .latte-item.label{
+    padding-bottom: 20px;
+}
+
+.latte-item.button.vertical.with-dropdown > .latte-item.clickable{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 16px;
+}
+
+/* Dropdown style */
+.latte-item.button.horizontal > .latte-item.clickable,
+.latte-item.button.horizontal > .latte-item.clickable.pressed,
+.latte-item.button.horizontal > .latte-item.clickable.selected{
+    border-top-width: 0 !important;
+    border-right-width: 0 !important;
+    border-bottom-width: 0 !important;
+}
+
+.latte-item.button.vertical > .latte-item.clickable,
+.latte-item.button.vertical > .latte-item.clickable.pressed,
+.latte-item.button.vertical > .latte-item.clickable.selected{
+    border-bottom-width: 0 !important;
+    border-right-width: 0 !important;
+    border-left-width: 0 !important;
+}
+
+/* Glyph positioning */
+.latte-item.button > .latte-item.clickable > .latte-item.icon{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -8px;
+    margin-left: -8px;
+}

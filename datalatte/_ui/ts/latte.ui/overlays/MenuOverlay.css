@@ -1,0 +1,25 @@
+/* 
+    Document   : MenuItem
+    Created on : Aug 3, 2012, 9:06:35 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/*
+    latte.ui.MenuItem
+*/
+.latte-overlay.menu{
+    padding: 1px;
+}
+
+.latte-overlay.menu-face{
+    border: solid 1px #B0B0B0;
+    background: white;
+    box-shadow: 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.latte-overlay.menu > .latte-item{
+    display: block;
+    float: none;
+}

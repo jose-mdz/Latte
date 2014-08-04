@@ -1,0 +1,12 @@
+/**
+ * Overlay
+ */
+
+.latte-overlay{
+    /*color: black;*/
+    /*font-family: "Lucida Grande", sans-serif;*/
+    /*font-size: 11px;*/
+    position: fixed;
+    left: 100px; /* Default position. Should be altered by JS */
+    top: 100px; /* Default position. Should be altered by JS */
+}

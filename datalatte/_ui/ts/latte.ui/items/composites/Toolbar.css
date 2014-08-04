@@ -1,0 +1,92 @@
+/* 
+    Document   : Toolbar
+    Created on : Sep 10, 2012, 11:01:15 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.toolbar{
+    position: relative;
+    float: none;
+}
+
+.latte-item.toolbar > .face{
+    padding: 0px; /* 6px */
+    /*border-radius: 4px;*/
+}
+
+.latte-item.toolbar > .face > .holder{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/**
+ * Extra padding on buttons
+ */
+.latte-item.toolbar > .face > .holder .latte-item.button{
+    border-radius: 0;
+    padding: 10px;
+}
+.latte-item.toolbar > .face > .holder .latte-item.button.horizontal.no-icon{
+    padding: 10px 30px;
+}
+
+/**
+ * Extra padding on labels
+ */
+.latte-item.toolbar.horizontal > .face > .holder > .items-container > .latte-item.label,
+.latte-item.toolbar.horizontal > .face > .holder > .side-items-container > .latte-item.label{
+    padding-top: 6px;
+}
+
+/**
+ * Separators
+ */
+.latte-item.toolbar > .face > .holder > .items-container > .latte-item.separator,
+.latte-item.toolbar > .face > .holder > .side-items-container > .latte-item.separator{
+    border-left: solid 1px silver;
+    border-right: solid 1px white;
+    margin: 0 5px;
+    height: 25px;
+}
+
+.latte-item.toolbar > .face > .holder > .items-container > .latte-item.label,
+.latte-item.toolbar > .face > .holder > .side-items-container > .latte-item.label{
+    margin: 5px;
+}
+
+.latte-item.toolbar.vertical > .face > .holder > .items-container > .latte-item,
+.latte-item.toolbar.vertical > .face > .holder > .side-items-container > .latte-item{
+    float: none;
+    margin-bottom: 1px;
+}
+
+.latte-item.toolbar.horizontal > .face > .holder > .items-container{
+    float: left;
+}
+
+.latte-item.toolbar.horizontal > .face > .holder > .items-container > .latte-item{
+    float: left;
+    margin-right: 1px;
+}
+
+.latte-item.toolbar.horizontal > .face > .holder > .side-items-container{
+    float: right;
+}
+
+.latte-item.toolbar.horizontal > .face > .holder > .side-items-container > .latte-item{
+    float: right;
+    margin-left: 1px;
+}
+
+.latte-item.toolbar.with-face > .face{
+    background: #f9fafb; /* Old DetailViews */
+    background: -moz-linear-gradient(top,  #ffffff 0%, #f9fafb 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f9fafb));
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#f9fafb 100%);
+    background: -o-linear-gradient(top,  #ffffff 0%,#f9fafb 100%);
+    background: -ms-linear-gradient(top,  #ffffff 0%,#f9fafb 100%);
+    background: linear-gradient(top,  #ffffff 0%,#f9fafb 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f9fafb', GradientType=0 );
+}

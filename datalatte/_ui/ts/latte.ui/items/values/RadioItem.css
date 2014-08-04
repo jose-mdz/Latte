@@ -1,0 +1,4 @@
+.latte-item.radio > .latte-item.label{
+    /*float: none;*/
+    cursor: default;
+}

@@ -1,0 +1,16 @@
+/* 
+    Document   : UiElement
+    Created on : Oct 12, 2012, 10:27:28 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.latte-uielement:focus,
+.latte-uielement:active{
+    outline: none;
+}
+
+.active-drag-element{
+    font-size: 11px;
+    font-family: 'Lucida Grande', sans-serif;
+}

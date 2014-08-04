@@ -1,0 +1,33 @@
+/* 
+    Document   : MessageView
+    Created on : Sep 11, 2012, 6:32:24 PM
+    Author     : menendezpoo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.message > .icon{
+    float: left;
+    margin-right: 20px;
+}
+
+.latte-view.message > .message{
+    margin-left: 50px;
+    font-size: 15pt;
+    float: none;
+}
+
+.latte-view.message > .description{
+    margin-left: 60px;
+    font-size: 11pt;
+    color: gray;
+    float: none; 
+}
+
+.latte-view.message {
+    padding: 20px;
+}
+
+.latte-view.message > .container{
+    margin-left: 52px;
+}

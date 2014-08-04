@@ -1,0 +1,16 @@
+/* 
+    Document   : ItemStack
+    Created on : Sep 24, 2012, 12:55:04 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.stack{
+    float: none;
+}
+
+.latte-item.stack > .container > .latte-item{
+    float: none;
+    clear:both;
+}

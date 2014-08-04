@@ -1,0 +1,65 @@
+
+.latte-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.latte-view.main-view-holder,
+.latte-modal-view
+{
+    color: black;
+    font-family: "Lucida Grande", sans-serif;
+    font-size: 11px;
+}
+
+.latte-view > .container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+}
+
+.latte-modal-view-layer{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255,255,255, 0.7);
+}
+
+.latte-modal-view{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 500px;
+    /*border: solid 1px silver;*/
+    box-shadow: 0 0 30px rgba(0,0,0,0.7);
+    border-radius: 4px;
+    background: #f6f6f6;
+}
+
+.small-screen .latte-modal-view{
+    width: auto;
+    right: 0;
+    bottom: 0;
+}
+
+.latte-modal-view > .inner-view{
+    /*padding: 10px;*/
+}
+
+.latte-modal-view > .items{
+    background: #f0f0f0;
+    padding: 5px;
+}
+
+.latte-modal-view > .items > .latte-item{
+    float: right;
+    margin-left: 10px;
+}

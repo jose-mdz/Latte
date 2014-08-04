@@ -1,0 +1,29 @@
+/* 
+    Document   : ListViewItem
+    Created on : Oct 3, 2012, 11:24:42 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.selectable.list{
+    /*margin-bottom: 1px;*/
+    padding: 10px;
+}
+
+.latte-item.list > .icon{
+    float: left;
+}
+
+.latte-item.list > .columns > div{
+    float: left;
+    overflow: hidden;
+}
+
+.latte-item.list > .columns > div{
+    min-height: 5px;
+}
+
+.latte-item.list > .columns > div .label-content{
+    margin-top: 0px;
+}

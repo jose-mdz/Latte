@@ -1,0 +1,42 @@
+/* 
+    Document   : ConversationItem
+    Created on : Sep 14, 2012, 6:51:55 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.conversation{
+    float: none;
+}
+
+.latte-item.conversation > .hidden-comments{
+    padding: 10px;
+    text-align: center;
+    color: #15c;
+    border-bottom: solid 1px #eee;
+    cursor: pointer;
+}
+
+.latte-item.conversation > .hidden-comments:hover{
+    text-decoration: underline;
+}
+
+.latte-item.conversation > .comments{
+    /*border-top: solid 1px #D4D5D6;
+    border-bottom: solid 1px #fbfbfb;*/
+}
+
+.latte-item.conversation > .comments > .comment{
+    float: none;
+}
+
+.latte-item.conversation > .new-comment{
+    padding: 3px 0;
+    padding-top: 0;
+    text-align: center;
+}
+
+.latte-item.conversation > .new-comment > .latte-item.textbox {
+    float: none;
+}

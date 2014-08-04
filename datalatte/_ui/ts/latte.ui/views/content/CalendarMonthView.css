@@ -1,0 +1,82 @@
+/* 
+    Document   : CalendarMonthView
+    Created on : Oct 18, 2012, 7:41:55 PM
+    Author     : menendezpoo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.calendar-month{
+    background: white;
+}
+
+.latte-view.calendar-month > .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 15px;
+    overflow: visible;
+}
+
+.latte-view.calendar-month > .content > .content-items{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: visible;
+}
+
+.latte-view.calendar-month > .content > .day {
+    position: absolute;
+    border-right: solid 1px #CBCCCC;
+    border-bottom: solid 1px #CBCCCC;
+    color: #9a9a9a;
+}
+
+.latte-view.calendar-month > .content > .day.today {
+    background-color: #EAEFF8;
+    background-color: rgba(87, 141, 217, 0.1);
+    color: #2782F3;
+}
+
+.latte-view.calendar-month > .content > .day > .number {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+}
+
+.latte-view.calendar-month > .content > .day > .week-number {
+    position: absolute;
+    top: 1px;
+    left: 0px;
+    color: #a4a4a4;
+    padding: 4px 6px;
+    background-color: #ebebeb;
+    border-bottom-right-radius: 5px;
+    font-size: 9px;
+    font-weight: bold;
+}
+
+.latte-view.calendar-month > .content > .day.with-left {
+    border-left: solid 1px #CBCCCC;
+}
+
+.latte-view.calendar-month > .content > .day.with-top {
+    border-top: solid 1px #CBCCCC;
+}
+
+.latte-view.calendar-month > .content > .day.grayed {
+    background: rgba(0,0,0,0.05);
+}
+
+
+.latte-view.calendar-month > .content .selection{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background-color: highlight;
+    background-color: rgba(0, 153, 255, 0.15);
+}

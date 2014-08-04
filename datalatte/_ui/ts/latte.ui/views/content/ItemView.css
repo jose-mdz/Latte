@@ -1,0 +1,12 @@
+/* 
+    Document   : ItemView
+    Created on : Jan 11, 2013, 11:59:45 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.item > .container > .latte-item{
+    margin: 0 auto;
+    float: none;
+}

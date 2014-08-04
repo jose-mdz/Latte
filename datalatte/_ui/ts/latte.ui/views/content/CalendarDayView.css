@@ -1,0 +1,155 @@
+/* 
+    Document   : CalendarDayView
+    Created on : Oct 11, 2012, 1:33:58 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.calendar-day{
+    background: white;
+}
+
+.latte-view.calendar-day  > .content > .timeline{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 60px;
+}
+
+.latte-view.calendar-day > .content{
+    position: absolute;
+    top: 15px; /* JM: 30 for debug, set to zero*/
+    left: 0;
+    bottom: 0;
+    right: 15px;
+    border-right: solid 1px #CBCCCC;
+}
+
+.latte-view.calendar-day > .content > .columns-grid{
+    position: absolute;
+    top: 0;
+    left: 60px;
+    bottom: 0;
+    right: 0;
+    border-top: solid 1px #CBCCCC;
+
+}
+
+.latte-view.calendar-day > .content > .columns-grid > .columns-items{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.latte-view.calendar-day > .content > .columns-grid > .columns{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.latte-view.calendar-day > .content > .separator{
+    position: absolute;
+    left: 60px;
+    right: 0px;
+    height: 2px;
+    background: white;
+    border: solid 1px #CBCCCC;
+    border-left: none;
+    border-right: none;
+}
+
+.latte-view.calendar-day > .content >  .columns-grid > .columns > .column{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border: solid 1px #CBCCCC;
+    border-right-color: transparent;
+    border-top-color: transparent;
+    color: #CBCCCC;
+}
+
+.latte-view.calendar-day > .content >  .columns-grid > .columns > .column.today{
+    background-color: #EAEFF8;
+    background-color: rgba(87, 141, 217, 0.1);
+    color: #2782F3;
+}
+
+.latte-view.calendar-day > .content >  .columns-grid > .columns > .column.today.only-day{
+    background-color: transparent !important;
+}
+
+.latte-view.calendar-day > .content >  .columns-grid > .columns > .column > .date{
+    float: left;
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.latte-view.calendar-day > .content > .days-grid{
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0;
+    bottom: 0;
+    overflow: auto;
+}
+
+.latte-view.calendar-day > .content > .days-grid > .time-spans{
+    
+}
+
+.latte-view.calendar-day > .content > .days-grid > .days-items{
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0;
+    bottom: 0;
+}
+
+.latte-view.calendar-day > .content > .days-grid > .time-indicator{
+    position: absolute;
+    border-top: solid 1px gray;
+    left: 60px; right: 0;
+    height: 0px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+}
+
+.latte-view.calendar-day > .content > .days-grid > .time-spans > .time-span{
+    position: relative;
+    border-top: dotted 1px #cbcccc;
+    margin-left: 60px;
+    height: 25px;
+}
+
+.latte-view.calendar-day > .content > .days-grid > .time-spans > .time-span.hour{
+    border-top: solid 1px #cbcccc;
+}
+
+.latte-view.calendar-day > .content > .days-grid > .time-spans > .time-span.non-working{
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.latte-view.calendar-day > .content > .days-grid > .time-spans > .time-span.first{
+    border-top-color: transparent;
+}
+
+.latte-view.calendar-day > .content > .days-grid > .time-spans > .time-span > .label{
+    width: 55px;
+    margin-top: -8px;
+    margin-left: -65px;
+    text-align: right;
+    color: #CBCCCC;
+}
+
+.latte-view.calendar-day > .content .selection{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background-color: highlight;
+    background-color: rgba(0, 153, 255, 0.15);
+}

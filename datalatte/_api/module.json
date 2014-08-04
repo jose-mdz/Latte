@@ -1,0 +1,15 @@
+{
+
+    "module-include":[
+        "_ui"
+    ],
+
+    "before-make":[
+        "js/extract.js"
+    ],
+
+    "ua-include-js" :[
+        "js/api.js"
+    ]
+
+}

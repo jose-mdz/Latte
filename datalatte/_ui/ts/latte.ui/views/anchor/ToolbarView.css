@@ -1,0 +1,27 @@
+/* 
+    Document   : ToolbarView
+    Created on : Mar 5, 2013, 11:27:59 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.toolbar{
+    
+}
+
+.latte-view.toolbar.top > .latte-item.toolbar.with-face{
+    border-bottom: solid 1px #D2D5D9;
+}
+
+.latte-view.toolbar.bottom > .latte-item.toolbar.with-face{
+    border-top: solid 1px #D2D5D9;
+}
+
+.latte-view.toolbar.left > .latte-item.toolbar.with-face{
+    border-right: solid 1px #D2D5D9;
+}
+
+.latte-view.toolbar.right > .latte-item.toolbar.with-face{
+    border-left: solid 1px #D2D5D9;
+}

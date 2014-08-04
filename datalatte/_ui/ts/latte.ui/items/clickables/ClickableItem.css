@@ -1,0 +1,71 @@
+/* 
+    Document   : ClickableItem
+    Created on : Jan 31, 2013, 1:01:18 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.clickable{
+    border-width: 1px;
+    border-style: solid;
+    border-color: transparent;
+    border-radius: 3px;
+    cursor: pointer;
+    position: relative;
+}
+
+.latte-item.clickable.with-face{
+    border-color: #B0B0B0;
+    background-color: #F9FAFB;
+}
+
+.latte-item.clickable.selected,
+.latte-item.clickable.with-face.selected{
+    border-color:#527DE0;
+    background-color: #E8F2FC;
+}
+
+.latte-item.clickable.pressed,
+.latte-item.clickable.with-face.pressed{
+    border-color:#527DE0;
+    background-color: #C1CDDD;
+}
+
+.latte-item.clickable.checked,
+.latte-item.clickable.with-face.checked{
+    border-color:#527DE0;
+    background-color: #D7E3EF;
+}
+
+.latte-item.clickable.with-context,
+.latte-item.clickable.tab.active,
+.latte-item.clickable.with-face.with-context{
+    border-color:#b0b0b0;
+    background-color: white;
+}
+
+.latte-item.clickable.flat-bottom{ border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.latte-item.clickable.flat-right{ border-top-right-radius: 0; border-bottom-right-radius: 0;}
+.latte-item.clickable.flat-left{ border-top-left-radius: 0; border-bottom-left-radius: 0;}
+.latte-item.clickable.flat-top{ border-top-left-radius: 0; border-top-right-radius: 0;}
+
+.latte-item.clickable.open-at-bottom,
+.latte-item.clickable.open-at-bottom.selected,
+.latte-item.clickable.open-at-bottom.pressed,
+.latte-item.clickable.open-at-bottom.checked{ border-bottom-color: transparent !important; }
+
+.latte-item.clickable.open-at-right,
+.latte-item.clickable.open-at-right.selected,
+.latte-item.clickable.open-at-right.pressed,
+.latte-item.clickable.open-at-right.checked{ border-right-color: transparent !important; }
+
+.latte-item.clickable.open-at-left,
+.latte-item.clickable.open-at-left.selected,
+.latte-item.clickable.open-at-left.pressed,
+.latte-item.clickable.open-at-left.checked { border-left-color: transparent !important; }
+
+.latte-item.clickable.open-at-top,
+.latte-item.clickable.open-at-top.selected,
+.latte-item.clickable.open-at-top.pressed,
+.latte-item.clickable.open-at-top.checked { border-top-color: transparent !important; }

@@ -1,0 +1,5 @@
+appName My App
+newPerson New Person
+lastName Last Name
+sex Gender
+birth Birth date

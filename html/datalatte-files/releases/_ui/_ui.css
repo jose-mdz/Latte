@@ -1,0 +1,1993 @@
+/* 
+    Document   : Glyph
+    Created on : Aug 9, 2012, 8:47:26 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*//* 
+    Document   : IconItem
+    Created on : Aug 3, 2012, 9:05:12 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+    Document   : Item
+    Created on : Aug 3, 2012, 9:05:05 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+
+.latte-item{
+    display: block;
+    float: left;
+}
+/* 
+    Document   : SeparatorItem
+    Created on : Aug 6, 2012, 12:52:06 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.separator{
+    float: none;
+}
+
+.latte-item.separator.with-text{
+    padding: 0 4px 3px 4px;
+    background: #f9fafb;
+    color: black;
+    font-size: 8px;
+    font-weight: bold;
+    border-bottom: solid 1px #b0b0b0;
+}
+
+.latte-overlay.menu .latte-item.separator{
+    border-bottom: solid 1px #D2D5D9;
+    margin: 1px 0;
+}
+
+.latte-item.ribbon .items-container .latte-item.separator{
+    border-left: solid 1px #D2D5D9;
+    height: 85px;
+    float: left;
+    width: 1px;
+    margin: 0 2px;
+}
+/* 
+    Document   : ButtonItem
+    Created on : Aug 3, 2012, 9:04:59 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.button{
+    padding: 5px;
+}
+
+.latte-item.button > .latte-item.label{
+    float: none;
+}
+
+.latte-item.button.horizontal.no-icon{
+    padding: 5px 15px;
+}
+
+.latte-item.button.horizontal > .latte-item.label > .label-content{
+    overflow: hidden;
+}
+
+.latte-item.button.horizontal.with-dropdown > .latte-item.label{
+    padding-right: 20px;
+}
+
+.latte-item.button.horizontal.with-dropdown > .latte-item.clickable{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 16px;
+}
+
+.latte-item.button.vertical.with-dropdown > .latte-item.label{
+    padding-bottom: 20px;
+}
+
+.latte-item.button.vertical.with-dropdown > .latte-item.clickable{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 16px;
+}
+
+/* Dropdown style */
+.latte-item.button.horizontal > .latte-item.clickable,
+.latte-item.button.horizontal > .latte-item.clickable.pressed,
+.latte-item.button.horizontal > .latte-item.clickable.selected{
+    border-top-width: 0 !important;
+    border-right-width: 0 !important;
+    border-bottom-width: 0 !important;
+}
+
+.latte-item.button.vertical > .latte-item.clickable,
+.latte-item.button.vertical > .latte-item.clickable.pressed,
+.latte-item.button.vertical > .latte-item.clickable.selected{
+    border-bottom-width: 0 !important;
+    border-right-width: 0 !important;
+    border-left-width: 0 !important;
+}
+
+/* Glyph positioning */
+.latte-item.button > .latte-item.clickable > .latte-item.icon{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -8px;
+    margin-left: -8px;
+}/* 
+    Document   : ClickableItem
+    Created on : Jan 31, 2013, 1:01:18 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.clickable{
+    border-width: 1px;
+    border-style: solid;
+    border-color: transparent;
+    border-radius: 3px;
+    cursor: pointer;
+    position: relative;
+}
+
+.latte-item.clickable.with-face{
+    border-color: #B0B0B0;
+    background-color: #F9FAFB;
+}
+
+.latte-item.clickable.selected,
+.latte-item.clickable.with-face.selected{
+    border-color:#527DE0;
+    background-color: #E8F2FC;
+}
+
+.latte-item.clickable.pressed,
+.latte-item.clickable.with-face.pressed{
+    border-color:#527DE0;
+    background-color: #C1CDDD;
+}
+
+.latte-item.clickable.checked,
+.latte-item.clickable.with-face.checked{
+    border-color:#527DE0;
+    background-color: #D7E3EF;
+}
+
+.latte-item.clickable.with-context,
+.latte-item.clickable.tab.active,
+.latte-item.clickable.with-face.with-context{
+    border-color:#b0b0b0;
+    background-color: white;
+}
+
+.latte-item.clickable.flat-bottom{ border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.latte-item.clickable.flat-right{ border-top-right-radius: 0; border-bottom-right-radius: 0;}
+.latte-item.clickable.flat-left{ border-top-left-radius: 0; border-bottom-left-radius: 0;}
+.latte-item.clickable.flat-top{ border-top-left-radius: 0; border-top-right-radius: 0;}
+
+.latte-item.clickable.open-at-bottom,
+.latte-item.clickable.open-at-bottom.selected,
+.latte-item.clickable.open-at-bottom.pressed,
+.latte-item.clickable.open-at-bottom.checked{ border-bottom-color: transparent !important; }
+
+.latte-item.clickable.open-at-right,
+.latte-item.clickable.open-at-right.selected,
+.latte-item.clickable.open-at-right.pressed,
+.latte-item.clickable.open-at-right.checked{ border-right-color: transparent !important; }
+
+.latte-item.clickable.open-at-left,
+.latte-item.clickable.open-at-left.selected,
+.latte-item.clickable.open-at-left.pressed,
+.latte-item.clickable.open-at-left.checked { border-left-color: transparent !important; }
+
+.latte-item.clickable.open-at-top,
+.latte-item.clickable.open-at-top.selected,
+.latte-item.clickable.open-at-top.pressed,
+.latte-item.clickable.open-at-top.checked { border-top-color: transparent !important; }
+ /*Inset margin when content on bottom */
+/*.latte-item.toolbar > .face > .holder > .items-container > .latte-item.tab.flat-bottom{*/
+    /*margin-bottom: -7px;*/
+/*}*/
+
+ /*Inset margin when content on top */
+/*.latte-item.toolbar > .face > .holder > .items-container > .latte-item.tab.flat-top{*/
+    /*margin-top: -7px;*/
+/*}*/
+
+ /*Inset margin when content on left */
+/*.latte-item.toolbar > .face > .holder > .items-container > .latte-item.tab.flat-left{*/
+    /*margin-left: -7px;*/
+/*}*/
+
+ /*Inset margin when content on right */
+/*.latte-item.toolbar > .face > .holder > .items-container > .latte-item.tab.flat-right{*/
+    /*margin-right: -7px;*/
+/*}*//* 
+    Document   : ConversationItem
+    Created on : Sep 14, 2012, 6:51:55 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.conversation{
+    float: none;
+}
+
+.latte-item.conversation > .hidden-comments{
+    padding: 10px;
+    text-align: center;
+    color: #15c;
+    border-bottom: solid 1px #eee;
+    cursor: pointer;
+}
+
+.latte-item.conversation > .hidden-comments:hover{
+    text-decoration: underline;
+}
+
+.latte-item.conversation > .comments{
+    /*border-top: solid 1px #D4D5D6;
+    border-bottom: solid 1px #fbfbfb;*/
+}
+
+.latte-item.conversation > .comments > .comment{
+    float: none;
+}
+
+.latte-item.conversation > .new-comment{
+    padding: 3px 0;
+    padding-top: 0;
+    text-align: center;
+}
+
+.latte-item.conversation > .new-comment > .latte-item.textbox {
+    float: none;
+}/* 
+    Document   : DateItem
+    Created on : Oct 4, 2012, 8:09:10 PM
+    Author     : menendezpoo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.date > table{
+    margin: auto;
+
+}
+
+.latte-item.date .month > table{
+    border: none;
+    border-spacing: 0px;
+    margin: auto;
+    font-size: 11px;
+}
+
+.latte-item.date .month > table td{
+    text-align: center;
+    padding: 1px;
+    border: solid 1px transparent;
+    border-radius: 4px;
+}
+
+.latte-item.date .month > table td.month-name{
+    padding: 5px;
+    font-size: 1.1em;
+}
+
+.latte-item.date .month > table td.day-name{
+    color: gray;
+}
+
+.latte-item.date .month > table td .selectable{
+    padding: 5px;
+}
+
+.latte-item.date .month > table td.grayed.hidden{
+    visibility: hidden;
+}
+
+.latte-item.date .month > table td.grayed .selectable{
+    color: silver !important;
+}
+
+.latte-item.date .month table td.today .selectable{
+    color: #2782F3;
+}
+.latte-item.date .month > table td.today{
+    border-color: #2782F3;
+    background-color: #EAEFF8;
+    background-color: rgba(87, 141, 217, 0.1);
+}/* 
+    Document   : FormItem
+    Created on : Feb 3, 2013, 8:52:46 AM
+    Author     : menendezpoo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.latte-item.form {
+    padding: 20px;
+
+}
+
+.latte-item.form.with-face{
+    background: white;
+    border: solid 1px silver;
+    border-radius: 5px;
+}
+
+.latte-item.form > .container > .latte-item{
+    margin-bottom: 15px;
+}
+
+.latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox{
+    float: none;
+}
+
+.latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox input,
+.latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox textarea{
+    width: 100%;
+}/* 
+    Document   : HtmlEditorItem
+    Created on : Feb 6, 2013, 3:34:32 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.html-editor {
+    float: none;
+    overflow: hidden;
+    min-height: 50px;
+    
+    box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1);
+    border: solid 1px #D2D5D9;
+    background: white;
+}
+
+.latte-item.html-editor > .latte-item.toolbar > .face{
+    padding: 2px;
+    border-radius: 0;
+    border-bottom: solid 1px silver;
+}
+
+.latte-item.html-editor > iframe{
+    width: 100%;
+    background: white;
+    color: black;
+    overflow: hidden;
+}
+
+body.html-editor table{
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+body.html-editor td{
+    border: solid 1px silver;
+    padding: 8px;
+}/* 
+    Document   : ItemStack
+    Created on : Sep 24, 2012, 12:55:04 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.stack{
+    float: none;
+}
+
+.latte-item.stack > .container > .latte-item{
+    float: none;
+    clear:both;
+}/* 
+    Document   : Ribbon
+    Created on : Aug 3, 2012, 12:06:31 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.ribbon{
+    background-color: #E3E6E8;
+    position: relative;
+}
+
+.latte-item.ribbon > .tabs > .start-button{
+    padding-left: 2.5em;
+    padding-right: 2.5em;
+}
+
+.latte-item.ribbon > .tabs{
+    padding-top: 4px;
+    padding-left: 5px;
+}
+
+.latte-item.ribbon > .tabs > .latte-item.button{
+    margin-right: 5px;
+}
+
+
+.latte-item.ribbon > .tabs > .latte-item.button.tab{
+    position: relative;
+    margin-bottom: -1px;
+    
+}
+
+.latte-item.ribbon > .tabs > .latte-item.button.tab .face{
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.latte-item.ribbon > .face{
+    min-height: 87px;
+    padding: 1px;
+}
+
+.latte-item.ribbon > .face > .items-container{
+    overflow: hidden;
+    height: 87px;
+    width: 100%;
+    padding-top: 5px;
+    /*padding-left: 5px;*/
+}
+
+.latte-item.ribbon > .face .latte-item.button.vertical{
+    /*height: 85px;*/
+}
+
+.latte-item.ribbon > .face > .items-container > .ribbon-wrapper{
+    height: 85px;
+    float: left;
+}
+
+.latte-item.ribbon > .face > .items-container > .latte-item.button{
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
+.latte-item.ribbon .latte-item.button.collapse{
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0px;
+}
+
+.latte-item.ribbon.collapsed > .tabs{
+    z-index: 99990;
+}
+
+.latte-item.ribbon.collapsed > .face{
+    position:absolute;
+    left: 0;
+    right: 0;
+    z-index: 99998;
+}
+
+.latte-item.ribbon > .face > .items-container > .ribbon-wrapper > .latte-item{
+    margin-right: 1px;
+    margin-bottom: 5px;
+}
+
+/*
+        COLORS
+*/
+.latte-item.ribbon > .face{
+    border: solid 1px #b0b0b0;
+    border-left: none;
+    border-right: none;
+    background: white;
+    background: #ffffff; /* Old DetailViews */
+    background: -moz-linear-gradient(top,  #ffffff 0%, #f9fafb 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f9fafb)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#f9fafb 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #ffffff 0%,#f9fafb 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #ffffff 0%,#f9fafb 100%); /* IE10+ */
+    background: linear-gradient(top,  #ffffff 0%,#f9fafb 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f9fafb',GradientType=0 ); /* IE6-9 */
+    box-shadow: 0px 2px rgba(0, 0, 0, 0.1);
+}
+
+.latte-item.ribbon > .tabs > .start-button:not(.with-menu){
+    border: solid 1px #1F48A1 !important;
+    background: #0072C6 !important;
+    border-radius: 0 !important;
+    color: white !important;
+    text-shadow: 1px 1px 1px black !important;
+}
+
+/*
+    ITEMS
+*/
+.latte-item.ribbon > .face > .items-container > .ribbon-wrapper{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.latte-item.ribbon > .face > .items-container > .ribbon-wrapper > .latte-item{
+    display: block;
+    float: none;
+}
+
+.latte-item.ribbon > .face > .items-container > .ribbon-wrapper > .latte-item.button-group{
+    float: none;
+    margin-top: 5px;
+}
+
+.latte-item.ribbon > .face > .items-container > .ribbon-wrapper > .latte-item.input > .text > .label{
+    float: left;
+    font-weight: normal;
+}.latte-item.tab-container > .container > .latte-item.content{
+    border: solid 1px #ccc;
+    background-color: #ffffff;
+}
+
+/* Remove top border */
+.latte-item.tab-container.content-at-bottom > .container > .latte-item.content{
+    border-top-color: transparent;
+}
+
+
+/* Remove bottom border */
+.latte-item.tab-container.content-at-top > .container > .latte-item.content{
+    border-bottom-color: transparent;
+}
+/* Inset margin when content on bottom */
+.latte-item.toolbar.tab > .face > .holder > .items-container > .latte-item.tab.flat-bottom{
+    margin-bottom: -7px;
+}
+
+/* Inset margin when content on top */
+.latte-item.toolbar.tab > .face > .holder > .items-container > .latte-item.tab.flat-top{
+    margin-top: -7px;
+}
+
+/* Inset margin when content on left */
+.latte-item.toolbar.tab > .face > .holder > .items-container > .latte-item.tab.flat-left{
+    margin-left: -7px;
+}
+
+/* Inset margin when content on right */
+.latte-item.toolbar.tab > .face > .holder > .items-container > .latte-item.tab.flat-right{
+    margin-right: -7px;
+}
+
+/*  */
+.latte-view.toolbar.tab > .latte-item.toolbar {
+    background: #f0f0f0;
+}
+
+/* Borders for tab effect */
+.latte-item.toolbar.tab.content-at-top      { border-top:       solid 1px #ccc; }
+.latte-item.toolbar.tab.content-at-bottom   { border-bottom:    solid 1px #ccc; }
+.latte-item.toolbar.tab.content-at-left     { border-left:      solid 1px #ccc; }
+.latte-item.toolbar.tab.content-at-right    { border-right:     solid 1px #ccc; }/* 
+    Document   : Toolbar
+    Created on : Sep 10, 2012, 11:01:15 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.toolbar{
+    position: relative;
+    float: none;
+}
+
+.latte-item.toolbar > .face{
+    padding: 0px; /* 6px */
+    /*border-radius: 4px;*/
+}
+
+.latte-item.toolbar > .face > .holder{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/**
+ * Extra padding on buttons
+ */
+.latte-item.toolbar > .face > .holder .latte-item.button{
+    border-radius: 0;
+    padding: 10px;
+}
+.latte-item.toolbar > .face > .holder .latte-item.button.horizontal.no-icon{
+    padding: 10px 30px;
+}
+
+/**
+ * Separators
+ */
+.latte-item.toolbar > .face > .holder > .items-container > .latte-item.separator,
+.latte-item.toolbar > .face > .holder > .side-items-container > .latte-item.separator{
+    border-left: solid 1px silver;
+    border-right: solid 1px white;
+    margin: 0 5px;
+    height: 25px;
+}
+
+.latte-item.toolbar > .face > .holder > .items-container > .latte-item.label,
+.latte-item.toolbar > .face > .holder > .side-items-container > .latte-item.label{
+    margin: 5px;
+}
+
+.latte-item.toolbar.vertical > .face > .holder > .items-container > .latte-item,
+.latte-item.toolbar.vertical > .face > .holder > .side-items-container > .latte-item{
+    float: none;
+    margin-bottom: 1px;
+}
+
+.latte-item.toolbar.horizontal > .face > .holder > .items-container{
+    float: left;
+}
+
+.latte-item.toolbar.horizontal > .face > .holder > .items-container > .latte-item{
+    float: left;
+    margin-right: 1px;
+}
+
+.latte-item.toolbar.horizontal > .face > .holder > .side-items-container{
+    float: right;
+}
+
+.latte-item.toolbar.horizontal > .face > .holder > .side-items-container > .latte-item{
+    float: right;
+    margin-left: 1px;
+}
+
+.latte-item.toolbar.with-face > .face{
+    background: #f9fafb; /* Old DetailViews */
+    background: -moz-linear-gradient(top,  #ffffff 0%, #f9fafb 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f9fafb));
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#f9fafb 100%);
+    background: -o-linear-gradient(top,  #ffffff 0%,#f9fafb 100%);
+    background: -ms-linear-gradient(top,  #ffffff 0%,#f9fafb 100%);
+    background: linear-gradient(top,  #ffffff 0%,#f9fafb 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f9fafb', GradientType=0 );
+}/* 
+    Document   : ViewItem
+    Created on : Jan 24, 2013, 9:28:40 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.view{
+    float: none;
+    position: relative;
+    min-height: 10px;
+}
+
+.latte-item.view > .latte-view{
+    
+}/* 
+    Document   : WidgetItem
+    Created on : Sep 24, 2012, 10:20:50 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.widget{
+    border: solid 1px #b0b0b0;
+    border-radius: 4px;
+    float: none !important;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.15);
+}
+
+.latte-item.widget > .latte-item.stack{
+    background: white;
+    border-radius: 4px;
+    min-height: 20px;
+    
+}
+
+.latte-item.widget > .latte-item.stack  > .container{
+    overflow: hidden;
+}
+
+.latte-item.widget > .latte-item.stack  > .container > .latte-item.separator{
+    border-top: solid 1px #b0b0b0;
+
+}
+
+.latte-item.widget > .latte-item.toolbar.top > .face {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: solid 1px #b0b0b0;
+    padding: 2px;
+}
+
+.latte-item.widget.minimized > .latte-item.toolbar.top > .face {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-bottom: none;
+}
+
+
+.latte-item.widget > .latte-item.toolbar.bottom > .face {
+    border-bottom: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top: solid 1px #b0b0b0;
+    padding: 2px;
+}
+
+.latte-item.widget > .latte-item.toolbar.with-face{
+    border-bottom: none;
+}/* 
+    Document   : ColumnHeader
+    Created on : Oct 3, 2012, 12:47:30 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.column-header{
+    padding: 5px 0;
+}
+
+.latte-item.column-header > .label-content{
+    margin-left: 10px;
+}
+
+.latte-item.column-header{
+    color: #93A0B3;
+    border: none;
+    background: white;
+    background: #ffffff; /* Old DetailViews */
+    background: -moz-linear-gradient(top,  #ffffff 0%, #f9fafb 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f9fafb)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#f9fafb 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #ffffff 0%,#f9fafb 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #ffffff 0%,#f9fafb 100%); /* IE10+ */
+    background: linear-gradient(top,  #ffffff 0%,#f9fafb 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f9fafb',GradientType=0 ); /* IE6-9 */
+}
+
+.latte-item.column-header:hover{
+    color: black;
+    border-color: #93A0B3;
+    background: #E8F3FF;
+    background: -moz-linear-gradient(top,  #E8F3FF 0%, #C5DFF8 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#E8F3FF), color-stop(100%,#C5DFF8)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #E8F3FF 0%,#C5DFF8 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #E8F3FF 0%,#C5DFF8 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #E8F3FF 0%,#C5DFF8 100%); /* IE10+ */
+    background: linear-gradient(top,  #E8F3FF 0%,#C5DFF8 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#E8F3FF', endColorstr='#C5DFF8',GradientType=0 ); /* IE6-9 */
+}/* 
+    Document   : CommentItem
+    Created on : Sep 14, 2012, 10:27:16 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.comment{
+    /*padding-top: 7px;
+    padding-bottom: 5px;*/
+    position: relative;
+    margin-bottom: 2px;
+    overflow: hidden;
+}
+
+.latte-item.comment > .blinker{
+    background: #FFFAD7;
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.latte-item.comment > .comment-content{
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+.latte-item.comment > .comment-content > .icon-side {
+    margin: 5px;
+    margin-top: 0;
+    width: 32px;
+    float: left;
+}
+
+.latte-item.comment > .comment-content > .comment-side {
+    margin-left: 45px;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.latte-item.comment > .comment-content > .comment-side > .user{
+    display: inline;
+}
+
+.latte-item.comment > .comment-content > .comment-side > .user,
+.latte-item.comment > .comment-content > .comment-side  a
+{
+    color: #15C;
+    margin-right: 3px;
+    text-decoration: none;
+}
+
+.latte-item.comment > .comment-content > .comment-side > .user:hover,
+.latte-item.comment > .comment-content > .comment-side  a:hover
+{
+    text-decoration: underline;
+}
+
+.latte-item.comment > .comment-content > .comment-side > .date {
+    color: #bbb;
+}
+
+.latte-item.comment > .comment-content > .comment-side > .text {
+    white-space: pre-wrap;
+}/* 
+    Document   : LabelItem
+    Created on : Sep 24, 2012, 10:33:29 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.label{
+    overflow: hidden;
+}
+
+.latte-item.link-style{
+    color: #0066CC;
+    cursor: pointer;
+}
+
+.latte-item.link-style:hover{
+    text-decoration: underline;    
+}
+
+.latte-item.label.title-1,
+.latte-item.label.title-2,
+.latte-item.label.title-3,
+.latte-item.label.title-4,
+.latte-item.label.title-5{
+    margin-bottom: 10px;
+}
+
+.latte-item.label.title-1 > .label-content,
+.latte-item.label.title-2 > .label-content,
+.latte-item.label.title-3 > .label-content,
+.latte-item.label.title-4 > .label-content,
+.latte-item.label.title-5 > .label-content{
+    white-space: pre-wrap;
+}
+
+.latte-item.label.title-1 { font-size: 15pt; }
+.latte-item.label.title-2 { font-size: 14pt; }
+.latte-item.label.title-3 { font-size: 12pt; }
+.latte-item.label.title-4 { font-size: 11pt; font-weight: bold; }
+.latte-item.label.title-5 { font-size: 10pt; font-weight: bold; }
+
+
+
+.latte-item.label > .label-content{
+    white-space: pre;
+}
+
+.latte-item.label > .label-content > *{
+    float: none;
+}
+
+.latte-item.label > .label-content > .description{
+    opacity: 0.5;
+}
+
+.latte-item.label.horizontal > .icon{
+    float: left;
+    min-height: 16px;
+}
+
+.latte-item.label.horizontal > .label-content{
+    margin-top: 1px;
+}
+
+.latte-item.label.horizontal.icon-and-text > .label-content{
+    /*float: left;*/
+    padding-left: 5px;
+}
+
+.latte-item.label.vertical > .icon > .latte-item.icon{
+    float: none;
+    margin: auto;
+}
+
+.latte-item.label.vertical > .label-content{
+    text-align: center;
+}
+
+/* 
+    Document   : CalendarItem
+    Created on : Oct 12, 2012, 10:04:44 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.selectable.calendar{
+    position: absolute;
+    padding: 0!important;
+    box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+    /*opacity: 0.8;*/
+    overflow: hidden;
+    border-radius: 0;
+}
+
+.latte-item.calendar > .label{
+    margin-left: 4px;
+}
+
+
+.latte-item.selectable.calendar,
+.latte-item.selectable.calendar.selected{
+    border-color: #99C8E9;
+    background: #CDE6F7;
+}
+
+.latte-item.selectable.calendar.selected{
+    /*box-shadow: 0 0 0 2px black;*/
+}/* 
+    Document   : ListViewItem
+    Created on : Oct 3, 2012, 11:24:42 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.selectable.list{
+    /*margin-bottom: 1px;*/
+    padding: 10px;
+}
+
+.latte-item.list > .icon{
+    float: left;
+}
+
+.latte-item.list > .columns > div{
+    float: left;
+    overflow: hidden;
+}
+
+.latte-item.list > .columns > div{
+    min-height: 5px;
+}
+
+.latte-item.list > .columns > div .label-content{
+    margin-top: 0px;
+}/* 
+    Document   : x
+    Created on : Sep 27, 2012, 8:53:49 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.selectable,
+.latte-item.tree-item  > .selectable, .selectable{
+    border: solid 1px transparent;
+    float: none;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.latte-item.selectable.hover,
+.latte-item.tree-item > .selectable.hover, .selectable.hover{
+    border-color: #D1D1D1;
+    background: #EFEFEF;
+}
+
+.latte-item.selectable.selected,
+.latte-item.tree-item > .selectable.selected, .selectable.selected{
+    border-color: #93A0B3;
+    background: #E8F3FF;
+}/* 
+    Document   : TreeItem
+    Created on : Aug 8, 2012, 10:07:49 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.tree-item{
+    padding: 0;
+}
+
+.latte-item.tree-item .selectable{
+    margin-bottom: 0px;
+    position:relative;
+    overflow: hidden;
+    padding: 7px;
+}
+
+.latte-item.tree-item .selectable .level{
+    float: left;
+    height: 16px;
+}
+
+.latte-item.tree-item .selectable .glyph{
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin-right: 3px;
+}
+
+.latte-item.tree-item .selectable .icon{
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin-right: 3px;
+}
+
+.latte-item.tree-item .selectable .text{
+    position: static;
+    white-space: pre;
+}/* 
+    Document   : CheckboxItem
+    Created on : Feb 1, 2013, 2:16:38 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.latte-item.checkbox > .latte-item.label{
+    /*float: none;*/
+}/* 
+    Document   : DatePickerItem
+    Created on : Feb 27, 2013, 1:09:58 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.latte-item.date-picker .latte-item.button{
+    margin-right: 2px;
+}
+
+.latte-item.date-picker .latte-item.value.checkbox{
+    margin-top: 5px;
+    margin-right: 5px;
+}/* 
+    Document   : InputItem
+    Created on : Aug 13, 2012, 11:57:01 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.input{
+    display: block;
+    float: none;
+}
+
+.latte-item.input > .value > .read-only,
+.latte-item.input > .value > .label-value{
+    margin-top: 7px;
+    color: #777;
+}
+
+.latte-item.input > .separator{
+    display: none;
+    clear: both;
+    height: 15px;
+    border-bottom: dotted 1px silver;
+}
+
+.latte-item.input > .text > .label{
+    font-weight: bold;
+}
+
+/*
+ * HORIZONTAL
+ */
+.latte-item.horizontal.input > .text{
+    width: 20%;
+    float: left;
+    padding-top: 7px; 
+    padding-right: 10px;
+    white-space: pre;
+    text-align: right;
+}
+
+.latte-item.horizontal.input > .text > .label{
+    float: right;
+}
+
+.latte-item.horizontal.input > .value{
+    width: 75%;  
+    float: left;
+}
+
+.latte-item.horizontal.input.no-text > .value{
+    width: auto;  
+    float: none;
+}
+
+/*
+ * VERTICAL
+ */
+.latte-item.vertical.input > .text{
+    float: none;
+    clear: both;
+    margin-bottom: 5px;
+}
+
+.latte-item.vertical.input > .value{
+    float: none;
+    clear: both;
+}
+/* 
+    Document   : LabelValueItem
+    Created on : Jan 22, 2013, 2:49:19 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.label-value .latte-item.label .label-content{
+    white-space: pre-wrap;
+}/* 
+    Document   : ProgressItem
+    Created on : Sep 24, 2012, 4:50:37 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.progress{
+    padding: 3px;
+    float: none;
+}
+
+.latte-item.progress > .container{
+    border: solid 1px #b0b0b0;
+    padding: 1px;
+    border-radius: 4px;
+}
+
+.latte-item.progress > .container > .bar{
+    border-radius: 4px;
+    background-color: green;
+    height: 5px;
+}
+
+
+
+.latte-item.radio > .latte-item.label{
+    /*float: none;*/
+    cursor: default;
+}/* 
+    Document   : TextboxItem
+    Created on : Jan 16, 2013, 2:32:43 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.latte-item.textbox{
+    position: relative;
+    font-family: sans-serif;
+    font-size: 11px;
+    text-align: left;
+    white-space: pre-wrap;
+    margin: 0;
+}
+
+.latte-item.textbox input,
+.latte-item.textbox textarea,
+.latte-item.textbox > .invisible,
+.latte-item.textbox > .latte-item.label{
+    font-family: inherit;
+    font-size: inherit;
+    padding: 5px;
+    text-align: inherit;
+    white-space: inherit;
+    margin: 0;
+}
+
+.latte-item.textbox > .input{
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0;
+    text-align: inherit;
+    white-space: inherit;
+}
+
+.latte-item.textbox input,
+.latte-item.textbox textarea,
+.latte-item.textbox > .invisible{
+    box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1);
+    border: solid 1px #D2D5D9;
+    background: white;
+}
+
+.latte-item.textbox input:focus,
+.latte-item.textbox textarea:focus{
+    outline: none;
+}
+
+.latte-item.textbox textarea{
+    resize: none;
+}
+
+.latte-item.textbox > .invisible{
+    position: absolute;
+    visibility: hidden;
+}
+
+.latte-item.textbox > .latte-item.label{
+    color: #aaa;
+}
+
+.latte-item.textbox > .latte-item.label.placeholder{
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: text;
+}
+
+.latte-item.textbox > .latte-item.label.side-label{
+    position: absolute;
+    top: 0;
+    right: 0;
+}/* 
+    Document   : Loader
+    Created on : Aug 12, 2012, 3:54:15 PM
+    Author     : menendezpoo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.latte-overlay.loader{
+    font-family: "Lucida Grande", sans-serif;
+    font-size: 11px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 7px 3em 7px 3em;
+    border-radius: 4px;
+    text-shadow: 0 -1px 1px black;
+}
+
+.latte-overlay.loader .latte-item.progress{
+    float: none;
+}/* 
+    Document   : MenuItem
+    Created on : Aug 3, 2012, 9:06:35 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/*
+    latte.ui.MenuItem
+*/
+.latte-overlay.menu{
+    padding: 1px;
+}
+
+.latte-overlay.menu-face{
+    border: solid 1px #B0B0B0;
+    background: white;
+    box-shadow: 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.latte-overlay.menu > .latte-item{
+    display: block;
+    float: none;
+}/**
+ * Overlay
+ */
+
+.latte-overlay{
+    /*color: black;*/
+    /*font-family: "Lucida Grande", sans-serif;*/
+    /*font-size: 11px;*/
+    position: fixed;
+    left: 100px; /* Default position. Should be altered by JS */
+    top: 100px; /* Default position. Should be altered by JS */
+}.latte-overlay.suggestion{
+    font-family: "Lucida Grande", sans-serif;
+    font-size: 11px;
+    border: solid 1px #ccc;
+    background: white;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+    overflow: auto;
+}
+.latte-overlay.suggestion .latte-item.separator{
+    border-top: solid 1px silver;
+}/* 
+    Document   : UiElement
+    Created on : Oct 12, 2012, 10:27:28 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.latte-uielement:focus,
+.latte-uielement:active{
+    outline: none;
+}
+
+.active-drag-element{
+    font-size: 11px;
+    font-family: 'Lucida Grande', sans-serif;
+}
+.latte-view.anchor > .latte-item.anchor{
+    position: absolute;
+}/* 
+    Document   : RibbonView.css
+    Created on : Aug 7, 2012, 5:39:53 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/*.latte-view.ribbon .latte-item.ribbon{*/
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*left: 0;*/
+    /*right: 0;*/
+/*}*//* 
+    Document   : TabView
+    Created on : Mar 5, 2013, 11:06:20 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.tab > .container {
+    background: white;
+    border: solid 1px white;
+}
+/* 
+    Document   : ToolbarView
+    Created on : Mar 5, 2013, 11:27:59 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.toolbar{
+    
+}
+
+.latte-view.toolbar.top > .latte-item.toolbar.with-face{
+    border-bottom: solid 1px #D2D5D9;
+}
+
+.latte-view.toolbar.bottom > .latte-item.toolbar.with-face{
+    border-top: solid 1px #D2D5D9;
+}
+
+.latte-view.toolbar.left > .latte-item.toolbar.with-face{
+    border-right: solid 1px #D2D5D9;
+}
+
+.latte-view.toolbar.right > .latte-item.toolbar.with-face{
+    border-left: solid 1px #D2D5D9;
+}/* 
+    Document   : CalendarDayView
+    Created on : Oct 11, 2012, 1:33:58 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.calendar-day{
+    background: white;
+}
+
+.latte-view.calendar-day  > .content > .timeline{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 60px;
+}
+
+.latte-view.calendar-day > .content{
+    position: absolute;
+    top: 15px; /* JM: 30 for debug, set to zero*/
+    left: 0;
+    bottom: 0;
+    right: 15px;
+    border-right: solid 1px #CBCCCC;
+}
+
+.latte-view.calendar-day > .content > .columns-grid{
+    position: absolute;
+    top: 0;
+    left: 60px;
+    bottom: 0;
+    right: 0;
+    border-top: solid 1px #CBCCCC;
+
+}
+
+.latte-view.calendar-day > .content > .columns-grid > .columns-items{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.latte-view.calendar-day > .content > .columns-grid > .columns{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.latte-view.calendar-day > .content > .separator{
+    position: absolute;
+    left: 60px;
+    right: 0px;
+    height: 2px;
+    background: white;
+    border: solid 1px #CBCCCC;
+    border-left: none;
+    border-right: none;
+}
+
+.latte-view.calendar-day > .content >  .columns-grid > .columns > .column{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border: solid 1px #CBCCCC;
+    border-right-color: transparent;
+    border-top-color: transparent;
+    color: #CBCCCC;
+}
+
+.latte-view.calendar-day > .content >  .columns-grid > .columns > .column.today{
+    background-color: #EAEFF8;
+    background-color: rgba(87, 141, 217, 0.1);
+    color: #2782F3;
+}
+
+.latte-view.calendar-day > .content >  .columns-grid > .columns > .column.today.only-day{
+    background-color: transparent !important;
+}
+
+.latte-view.calendar-day > .content >  .columns-grid > .columns > .column > .date{
+    float: left;
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.latte-view.calendar-day > .content > .days-grid{
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0;
+    bottom: 0;
+    overflow: auto;
+}
+
+.latte-view.calendar-day > .content > .days-grid > .time-spans{
+    
+}
+
+.latte-view.calendar-day > .content > .days-grid > .days-items{
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0;
+    bottom: 0;
+}
+
+.latte-view.calendar-day > .content > .days-grid > .time-indicator{
+    position: absolute;
+    border-top: solid 1px gray;
+    left: 60px; right: 0;
+    height: 0px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+}
+
+.latte-view.calendar-day > .content > .days-grid > .time-spans > .time-span{
+    position: relative;
+    border-top: dotted 1px #cbcccc;
+    margin-left: 60px;
+    height: 25px;
+}
+
+.latte-view.calendar-day > .content > .days-grid > .time-spans > .time-span.hour{
+    border-top: solid 1px #cbcccc;
+}
+
+.latte-view.calendar-day > .content > .days-grid > .time-spans > .time-span.non-working{
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.latte-view.calendar-day > .content > .days-grid > .time-spans > .time-span.first{
+    border-top-color: transparent;
+}
+
+.latte-view.calendar-day > .content > .days-grid > .time-spans > .time-span > .label{
+    width: 55px;
+    margin-top: -8px;
+    margin-left: -65px;
+    text-align: right;
+    color: #CBCCCC;
+}
+
+.latte-view.calendar-day > .content .selection{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background-color: highlight;
+    background-color: rgba(0, 153, 255, 0.15);
+}/* 
+    Document   : CalendarMonthView
+    Created on : Oct 18, 2012, 7:41:55 PM
+    Author     : menendezpoo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.calendar-month{
+    background: white;
+}
+
+.latte-view.calendar-month > .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 15px;
+    overflow: visible;
+}
+
+.latte-view.calendar-month > .content > .content-items{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: visible;
+}
+
+.latte-view.calendar-month > .content > .day {
+    position: absolute;
+    border-right: solid 1px #CBCCCC;
+    border-bottom: solid 1px #CBCCCC;
+    color: #9a9a9a;
+}
+
+.latte-view.calendar-month > .content > .day.today {
+    background-color: #EAEFF8;
+    background-color: rgba(87, 141, 217, 0.1);
+    color: #2782F3;
+}
+
+.latte-view.calendar-month > .content > .day > .number {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+}
+
+.latte-view.calendar-month > .content > .day > .week-number {
+    position: absolute;
+    top: 1px;
+    left: 0px;
+    color: #a4a4a4;
+    padding: 4px 6px;
+    background-color: #ebebeb;
+    border-bottom-right-radius: 5px;
+    font-size: 9px;
+    font-weight: bold;
+}
+
+.latte-view.calendar-month > .content > .day.with-left {
+    border-left: solid 1px #CBCCCC;
+}
+
+.latte-view.calendar-month > .content > .day.with-top {
+    border-top: solid 1px #CBCCCC;
+}
+
+.latte-view.calendar-month > .content > .day.grayed {
+    background: rgba(0,0,0,0.05);
+}
+
+
+.latte-view.calendar-month > .content .selection{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background-color: highlight;
+    background-color: rgba(0, 153, 255, 0.15);
+}/* 
+    Document   : CalendarView
+    Created on : Oct 24, 2012, 9:48:22 PM
+    Author     : menendezpoo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.latte-view.calendar{
+    background-color: white;
+}
+
+.latte-view.calendar > .controls{
+    position: absolute;
+    top: 0; 
+    left: 0;
+    right: 0;
+    height: 50px;
+}
+
+.latte-view.calendar > .controls > .latte-item.label{
+    margin: 20px;
+}
+
+.latte-view.calendar > .controls > .latte-item.button-group{
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    
+}/* 
+    Document   : DateView
+    Created on : Oct 9, 2012, 7:15:30 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.date > .container > .latte-item.date{
+    float: none;
+    position: absolute;
+}
+
+.latte-view.date > .latte-item.button{
+    float: none;
+    position: absolute;
+    bottom: 1px;
+    padding: 3px 10px;
+    text-align: center;
+}
+
+.latte-view.date > .latte-item.button > .face > .label{
+    padding: 0 !important;
+    margin: 0 auto;
+    text-align: center;
+    float: none;
+}/* 
+    Document   : Form.css
+    Created on : Aug 3, 2012, 10:13:39 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+/* 
+    Document   : HtmlView
+    Created on : Aug 9, 2012, 8:47:42 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+/* 
+    Document   : ItemView
+    Created on : Jan 11, 2013, 11:59:45 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.item > .container > .latte-item{
+    margin: 0 auto;
+    float: none;
+}/* 
+    Document   : MessageView
+    Created on : Sep 11, 2012, 6:32:24 PM
+    Author     : menendezpoo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.message > .icon{
+    float: left;
+    margin-right: 20px;
+}
+
+.latte-view.message > .message{
+    margin-left: 50px;
+    font-size: 15pt;
+    float: none;
+}
+
+.latte-view.message > .description{
+    margin-left: 60px;
+    font-size: 11pt;
+    color: gray;
+    float: none; 
+}
+
+.latte-view.message {
+    padding: 20px;
+}
+
+.latte-view.message > .container{
+    margin-left: 52px;
+}/* 
+    Document   : TextView
+    Created on : Sep 10, 2012, 12:41:28 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.text textarea{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: none;
+    font-family: monospace;
+    font-size: 10pt;
+    min-height: 4em;
+}
+
+.latte-view.text textarea:active,
+.latte-view.text textarea:focus
+{
+    outline: none;
+}/* 
+    Document   : ColumnView
+    Created on : Sep 23, 2012, 9:25:49 PM
+    Author     : menendezpoo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.column .column{
+    float: left;
+    /*height: 100%;*/
+    position: relative;
+}
+
+.small-screen .latte-view.column .column{
+    float: none;
+    height: auto;
+    width: 100%;
+    position: static;
+}
+
+.latte-view.column .column .column-content{
+    background: transparent;
+}
+
+.latte-view.column .column .column-content > .latte-item{
+    float: none;
+}
+/* 
+    Document   : DialogView
+    Created on : Sep 11, 2012, 10:20:50 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.dialog {
+    border: solid 1px gray;
+    border-radius: 4px;
+}
+
+.small-screen .latte-view.dialog{
+    border: none;
+}
+
+.latte-view > .container {
+    min-height: 1em;
+}
+
+.latte-view.dialog > .bar{
+    position: absolute;
+    top: 1px; 
+    left: 1px; 
+    right: 1px;
+    background-color: #f0f0f0;
+    border-bottom: solid 1px gray;
+    padding: 4px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.small-screen .latte-view.dialog > .bar{
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    right: 1px;
+    background-color: #f0f0f0;
+    border-bottom: solid 1px gray;
+    padding: 4px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+}
+
+.latte-view.dialog > .bar > .title{
+    float: left;
+    margin-top: 3px;
+}
+
+.latte-view.dialog > .bar  > .latte-item.button.close{
+    float: right;
+}
+
+.latte-view.dialog > .bar  > .latte-item.button.close > .clickable{
+    padding: 0;
+}
+
+.latte-view.dialog > .items{
+    position: absolute;
+    left: 1px;
+    right: 1px;
+    bottom: 1px;
+    
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    background: #f0f0f0;
+    border-top: solid 1px #B0B0B0;
+    padding: 4px;
+}
+
+.latte-view.dialog > .items > .latte-item{
+    float: right;
+    margin-left: 7px;
+}
+/* 
+    Document   : SplitView
+    Created on : Aug 7, 2012, 9:59:02 PM
+    Author     : menendezpoo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.latte-view.split > .splitter{
+    position: absolute;
+    background-color: #D2D5D9;
+}/* 
+    Document   : ListView
+    Created on : Oct 3, 2012, 12:09:07 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.list{
+    background: #fff;
+}
+.latte-view.list > .container{
+    /*padding: 5px;*/
+    padding-bottom: 100px;
+}
+
+.latte-view.list > .column-headers > .spacer{
+    height: 23px;
+    width: 36px;
+    float: left;
+}
+
+.latte-view.list > .column-headers{
+    overflow: hidden;
+    color: #93A0B3;
+    border-bottom: solid 1px #ccc;
+    background: white;
+    background: #ffffff; /* Old DetailViews */
+    background: -moz-linear-gradient(top,  #ffffff 0%, #f9fafb 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f9fafb)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#f9fafb 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #ffffff 0%,#f9fafb 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #ffffff 0%,#f9fafb 100%); /* IE10+ */
+    background: linear-gradient(top,  #ffffff 0%,#f9fafb 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f9fafb',GradientType=0 ); /* IE6-9 */
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+}/* 
+    Document   : TreeView
+    Created on : Aug 8, 2012, 12:27:36 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.tree > .container{
+    /*padding: 5px;*/
+    padding-bottom: 100px;
+}
+
+.latte-view.tree > .container  .latte-item.tree-item{
+    display: block;
+    float: none;
+}
+
+.latte-view.tree > .container  .latte-item.tree-item > .selectable{
+    display: block;
+}
+.latte-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.latte-view.main-view-holder,
+.latte-modal-view
+{
+    color: black;
+    font-family: "Lucida Grande", sans-serif;
+    font-size: 11px;
+}
+
+.latte-view > .container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+}
+
+.latte-modal-view-layer{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255,255,255, 0.7);
+}
+
+.latte-modal-view{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 500px;
+    /*border: solid 1px silver;*/
+    box-shadow: 0 0 30px rgba(0,0,0,0.7);
+    border-radius: 4px;
+    background: #f6f6f6;
+}
+
+.small-screen .latte-modal-view{
+    width: auto;
+    right: 0;
+    bottom: 0;
+}
+
+.latte-modal-view > .inner-view{
+    /*padding: 10px;*/
+}
+
+.latte-modal-view > .items{
+    background: #f0f0f0;
+    padding: 5px;
+}
+
+.latte-modal-view > .items > .latte-item{
+    float: right;
+    margin-left: 10px;
+}

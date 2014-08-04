@@ -1,0 +1,12 @@
+/* 
+    Document   : TabView
+    Created on : Mar 5, 2013, 11:06:20 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.tab > .container {
+    background: white;
+    border: solid 1px white;
+}

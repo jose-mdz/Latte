@@ -1,0 +1,11 @@
+/* 
+    Document   : LabelValueItem
+    Created on : Jan 22, 2013, 2:49:19 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.label-value .latte-item.label .label-content{
+    white-space: pre-wrap;
+}

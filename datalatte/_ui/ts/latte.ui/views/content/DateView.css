@@ -1,0 +1,27 @@
+/* 
+    Document   : DateView
+    Created on : Oct 9, 2012, 7:15:30 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.date > .container > .latte-item.date{
+    float: none;
+    position: absolute;
+}
+
+.latte-view.date > .latte-item.button{
+    float: none;
+    position: absolute;
+    bottom: 1px;
+    padding: 3px 10px;
+    text-align: center;
+}
+
+.latte-view.date > .latte-item.button > .face > .label{
+    padding: 0 !important;
+    margin: 0 auto;
+    text-align: center;
+    float: none;
+}

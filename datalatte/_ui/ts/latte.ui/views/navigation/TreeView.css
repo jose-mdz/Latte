@@ -1,0 +1,21 @@
+/* 
+    Document   : TreeView
+    Created on : Aug 8, 2012, 12:27:36 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.tree > .container{
+    /*padding: 5px;*/
+    padding-bottom: 100px;
+}
+
+.latte-view.tree > .container  .latte-item.tree-item{
+    display: block;
+    float: none;
+}
+
+.latte-view.tree > .container  .latte-item.tree-item > .selectable{
+    display: block;
+}

@@ -1,0 +1,31 @@
+/* 
+    Document   : CalendarItem
+    Created on : Oct 12, 2012, 10:04:44 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.selectable.calendar{
+    position: absolute;
+    padding: 0!important;
+    box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+    /*opacity: 0.8;*/
+    overflow: hidden;
+    border-radius: 0;
+}
+
+.latte-item.calendar > .label{
+    margin-left: 4px;
+}
+
+
+.latte-item.selectable.calendar,
+.latte-item.selectable.calendar.selected{
+    border-color: #99C8E9;
+    background: #CDE6F7;
+}
+
+.latte-item.selectable.calendar.selected{
+    /*box-shadow: 0 0 0 2px black;*/
+}

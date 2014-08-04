@@ -1,0 +1,13 @@
+/* 
+    Document   : Item
+    Created on : Aug 3, 2012, 9:05:05 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+
+.latte-item{
+    display: block;
+    float: left;
+}

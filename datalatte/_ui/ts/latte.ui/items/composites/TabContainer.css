@@ -1,0 +1,15 @@
+.latte-item.tab-container > .container > .latte-item.content{
+    border: solid 1px #ccc;
+    background-color: #ffffff;
+}
+
+/* Remove top border */
+.latte-item.tab-container.content-at-bottom > .container > .latte-item.content{
+    border-top-color: transparent;
+}
+
+
+/* Remove bottom border */
+.latte-item.tab-container.content-at-top > .container > .latte-item.content{
+    border-bottom-color: transparent;
+}

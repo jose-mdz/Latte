@@ -1,0 +1,69 @@
+/* 
+    Document   : InputItem
+    Created on : Aug 13, 2012, 11:57:01 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.input{
+    display: block;
+    float: none;
+}
+
+.latte-item.input > .value > .read-only,
+.latte-item.input > .value > .label-value{
+    margin-top: 7px;
+    color: #777;
+}
+
+.latte-item.input > .separator{
+    display: none;
+    clear: both;
+    height: 15px;
+    border-bottom: dotted 1px silver;
+}
+
+.latte-item.input > .text > .label{
+    font-weight: bold;
+}
+
+/*
+ * HORIZONTAL
+ */
+.latte-item.horizontal.input > .text{
+    width: 20%;
+    float: left;
+    padding-top: 7px; 
+    padding-right: 10px;
+    white-space: pre;
+    text-align: right;
+}
+
+.latte-item.horizontal.input > .text > .label{
+    float: right;
+}
+
+.latte-item.horizontal.input > .value{
+    width: 75%;  
+    float: left;
+}
+
+.latte-item.horizontal.input.no-text > .value{
+    width: auto;  
+    float: none;
+}
+
+/*
+ * VERTICAL
+ */
+.latte-item.vertical.input > .text{
+    float: none;
+    clear: both;
+    margin-bottom: 5px;
+}
+
+.latte-item.vertical.input > .value{
+    float: none;
+    clear: both;
+}

@@ -1,0 +1,134 @@
+/* 
+    Document   : GridView
+    Created on : Aug 17, 2012, 10:01:14 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.grid{
+    background-color: #f0f0f0;
+}
+
+.latte-view.grid table{
+    border: solid 1px transparent;
+    border-right-color: silver;
+    border-bottom-color: silver;
+    border-spacing: 0;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+.latte-view.grid table td{
+    padding: 3px;
+    cursor: pointer;
+    border: solid 1px silver;
+    white-space: pre;
+}
+
+.latte-view.grid table tr.changeable-row td{
+    background-color: rgb(240, 240, 255);
+    color: darkblue;
+}
+
+.latte-view.grid table tr.insertable-row td{
+    background-color: rgb(255, 255, 230);
+    color: #663300;
+}
+
+.latte-view.grid table tr.deletable-row td{
+    background-color: rgb(255, 230, 230);
+    color: darkred;
+}
+
+.latte-view.grid table tr.pendent td{
+    background-color: rgb(230, 230, 230);
+    color: darkgray;
+}
+
+.latte-view.grid table td div.null{
+    border: solid 1px silver;
+    float: left;
+    color: silver;
+    font-size: 7px;
+    padding: 1px;
+    border-radius: 3px;
+}
+
+.latte-view.grid table td.selected div.null{
+    color: highlighttext;
+    border-color: highlighttext;
+}
+
+.latte-view.grid table td.editing{
+    padding: 0 !important;
+}
+
+.latte-view.grid table td:hover{
+    padding: 3px;
+    cursor: pointer;
+    
+    background-color:  #f0f0f0 !important;
+}
+
+.latte-view.grid table td.selected:hover,
+.latte-view.grid table td.selected{
+    background-color: highlight !important;
+    color: highlighttext !important;
+}
+
+
+.latte-view.grid table th{
+    padding: 4px;
+    cursor: pointer;
+}
+
+
+/*
+        COLORS
+*/
+.latte-view.grid table th{
+    color: #93A0B3;
+    border: none;
+    background: white;
+    background: #ffffff; /* Old DetailViews */
+    background: -moz-linear-gradient(top,  #ffffff 0%, #f9fafb 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f9fafb)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#f9fafb 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #ffffff 0%,#f9fafb 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #ffffff 0%,#f9fafb 100%); /* IE10+ */
+    background: linear-gradient(top,  #ffffff 0%,#f9fafb 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f9fafb',GradientType=0 ); /* IE6-9 */
+    box-shadow: 0px 2px rgba(0, 0, 0, 0.1);
+}
+
+.latte-view.grid table th.selected,
+.latte-view.grid table th:hover{
+    color: black;
+    border-color: #93A0B3;
+    background: #E8F3FF;
+    background: -moz-linear-gradient(top,  #E8F3FF 0%, #C5DFF8 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#E8F3FF), color-stop(100%,#C5DFF8)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #E8F3FF 0%,#C5DFF8 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #E8F3FF 0%,#C5DFF8 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #E8F3FF 0%,#C5DFF8 100%); /* IE10+ */
+    background: linear-gradient(top,  #E8F3FF 0%,#C5DFF8 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#E8F3FF', endColorstr='#C5DFF8',GradientType=0 ); /* IE6-9 */
+}
+
+
+.latte-view.grid .latte-item.input {
+    padding: 0;
+}
+
+.latte-view.grid .latte-item.input > .value input[type=text],
+.latte-view.grid .latte-item.input > .value input[type=password],
+.latte-view.grid .latte-item.input > .value textarea {
+    width: 100%;
+    padding: 2px;
+}
+
+.latte-view.grid .latte-item.input > .value{
+    width: auto !important;  
+    float: none !important;
+}

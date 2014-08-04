@@ -1,0 +1,56 @@
+/* 
+    Document   : DateItem
+    Created on : Oct 4, 2012, 8:09:10 PM
+    Author     : menendezpoo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.date > table{
+    margin: auto;
+
+}
+
+.latte-item.date .month > table{
+    border: none;
+    border-spacing: 0px;
+    margin: auto;
+    font-size: 11px;
+}
+
+.latte-item.date .month > table td{
+    text-align: center;
+    padding: 1px;
+    border: solid 1px transparent;
+    border-radius: 4px;
+}
+
+.latte-item.date .month > table td.month-name{
+    padding: 5px;
+    font-size: 1.1em;
+}
+
+.latte-item.date .month > table td.day-name{
+    color: gray;
+}
+
+.latte-item.date .month > table td .selectable{
+    padding: 5px;
+}
+
+.latte-item.date .month > table td.grayed.hidden{
+    visibility: hidden;
+}
+
+.latte-item.date .month > table td.grayed .selectable{
+    color: silver !important;
+}
+
+.latte-item.date .month table td.today .selectable{
+    color: #2782F3;
+}
+.latte-item.date .month > table td.today{
+    border-color: #2782F3;
+    background-color: #EAEFF8;
+    background-color: rgba(87, 141, 217, 0.1);
+}

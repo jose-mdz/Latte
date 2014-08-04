@@ -1,0 +1,42 @@
+/* 
+    Document   : TreeItem
+    Created on : Aug 8, 2012, 10:07:49 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.tree-item{
+    padding: 0;
+}
+
+.latte-item.tree-item .selectable{
+    margin-bottom: 0px;
+    position:relative;
+    overflow: hidden;
+    padding: 7px;
+}
+
+.latte-item.tree-item .selectable .level{
+    float: left;
+    height: 16px;
+}
+
+.latte-item.tree-item .selectable .glyph{
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin-right: 3px;
+}
+
+.latte-item.tree-item .selectable .icon{
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin-right: 3px;
+}
+
+.latte-item.tree-item .selectable .text{
+    position: static;
+    white-space: pre;
+}

@@ -1,0 +1,74 @@
+/* 
+    Document   : TextboxItem
+    Created on : Jan 16, 2013, 2:32:43 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.latte-item.textbox{
+    position: relative;
+    font-family: sans-serif;
+    font-size: 11px;
+    text-align: left;
+    white-space: pre-wrap;
+    margin: 0;
+}
+
+.latte-item.textbox input,
+.latte-item.textbox textarea,
+.latte-item.textbox > .invisible,
+.latte-item.textbox > .latte-item.label{
+    font-family: inherit;
+    font-size: inherit;
+    padding: 5px;
+    text-align: inherit;
+    white-space: inherit;
+    margin: 0;
+}
+
+.latte-item.textbox > .input{
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0;
+    text-align: inherit;
+    white-space: inherit;
+}
+
+.latte-item.textbox input,
+.latte-item.textbox textarea,
+.latte-item.textbox > .invisible{
+    box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1);
+    border: solid 1px #D2D5D9;
+    background: white;
+}
+
+.latte-item.textbox input:focus,
+.latte-item.textbox textarea:focus{
+    outline: none;
+}
+
+.latte-item.textbox textarea{
+    resize: none;
+}
+
+.latte-item.textbox > .invisible{
+    position: absolute;
+    visibility: hidden;
+}
+
+.latte-item.textbox > .latte-item.label{
+    color: #aaa;
+}
+
+.latte-item.textbox > .latte-item.label.placeholder{
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: text;
+}
+
+.latte-item.textbox > .latte-item.label.side-label{
+    position: absolute;
+    top: 0;
+    right: 0;
+}

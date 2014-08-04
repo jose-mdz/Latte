@@ -1,0 +1,19 @@
+{
+    "connection": {
+        "host": "127.0.0.1",
+        "user": "root",
+        "password" : "",
+        "database": "latte"
+    },
+    
+    "module-include":[
+        "_core"
+    ],
+
+    "records": [
+        "Person"
+    ],
+
+    "release-export" :[
+    ]
+}

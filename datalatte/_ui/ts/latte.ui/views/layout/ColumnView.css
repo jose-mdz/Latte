@@ -1,0 +1,28 @@
+/* 
+    Document   : ColumnView
+    Created on : Sep 23, 2012, 9:25:49 PM
+    Author     : menendezpoo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.column .column{
+    float: left;
+    /*height: 100%;*/
+    position: relative;
+}
+
+.small-screen .latte-view.column .column{
+    float: none;
+    height: auto;
+    width: 100%;
+    position: static;
+}
+
+.latte-view.column .column .column-content{
+    background: transparent;
+}
+
+.latte-view.column .column .column-content > .latte-item{
+    float: none;
+}

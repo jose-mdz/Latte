@@ -1,0 +1,29 @@
+/* 
+    Document   : CalendarView
+    Created on : Oct 24, 2012, 9:48:22 PM
+    Author     : menendezpoo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.latte-view.calendar{
+    background-color: white;
+}
+
+.latte-view.calendar > .controls{
+    position: absolute;
+    top: 0; 
+    left: 0;
+    right: 0;
+    height: 50px;
+}
+
+.latte-view.calendar > .controls > .latte-item.label{
+    margin: 20px;
+}
+
+.latte-view.calendar > .controls > .latte-item.button-group{
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    
+}
