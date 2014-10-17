@@ -3687,6 +3687,11 @@ declare module latte {
         *
         **/
         constructor();
+        /**
+        * Zero pads for dates
+        * @param i
+        * @returns {string}
+        */
         private zeroPad(i);
         /**
         *
@@ -3829,13 +3834,13 @@ declare module latte {
         **/
         constructor(columns?: number);
         /**
-        *
+        * Called when an item is added to the items collection
         **/
-        private _onAddItem(item);
+        public onAddItem(item: Item): void;
         /**
-        *
+        * Called when an item is removed to the items collection
         **/
-        private _onRemoveItem(item);
+        public onRemoveItem(item: Item): void;
         /**
         * Returns the column at the specified index. First column is zero
         **/
@@ -4746,67 +4751,6 @@ declare module latte {
 }
 declare module latte {
     /**
-    * Executes an action every specified amount of milliseconds
-    **/
-    class Timer {
-        /**
-        *
-        **/
-        private _callback;
-        /**
-        *
-        **/
-        private _context;
-        /**
-        *
-        **/
-        private _milliseconds;
-        /**
-        *
-        **/
-        private _paused;
-        /**
-        * Creates a timer that will call <c>callback</c> every specified amount of
-        <c>milliseconds</c> on the specified <c>context</c>.
-        **/
-        constructor(callback: Function, milliseconds: number, context: any);
-        /**
-        * Gets or sets the function who will be called every tick
-        **/
-        /**
-        * Gets or sets the function who will be called every tick
-        **/
-        public callback : Function;
-        /**
-        * Gets or sets the context in which the function is executed
-        **/
-        /**
-        * Gets or sets the context in which the function is executed
-        **/
-        public context : any;
-        /**
-        * Gets or sets the milliseconds to sleep between calls
-        **/
-        /**
-        * Gets or sets the milliseconds to sleep between calls
-        **/
-        public milliseconds : number;
-        /**
-        * Pauses the timer
-        **/
-        public pause(): void;
-        /**
-        * Starts ticking
-        **/
-        public start(): void;
-        /**
-        * Ticks the timer. Executes the callback and programs next tick.
-        **/
-        public tick(): void;
-    }
-}
-declare module latte {
-    /**
     * Represents a time interval.
     **/
     class TimeSpan {
@@ -4940,6 +4884,67 @@ declare module latte {
     }
 }
 declare module latte {
+    /**
+    * Executes an action every specified amount of milliseconds
+    **/
+    class Timer {
+        /**
+        *
+        **/
+        private _callback;
+        /**
+        *
+        **/
+        private _context;
+        /**
+        *
+        **/
+        private _milliseconds;
+        /**
+        *
+        **/
+        private _paused;
+        /**
+        * Creates a timer that will call <c>callback</c> every specified amount of
+        <c>milliseconds</c> on the specified <c>context</c>.
+        **/
+        constructor(callback: Function, milliseconds: number, context: any);
+        /**
+        * Gets or sets the function who will be called every tick
+        **/
+        /**
+        * Gets or sets the function who will be called every tick
+        **/
+        public callback : Function;
+        /**
+        * Gets or sets the context in which the function is executed
+        **/
+        /**
+        * Gets or sets the context in which the function is executed
+        **/
+        public context : any;
+        /**
+        * Gets or sets the milliseconds to sleep between calls
+        **/
+        /**
+        * Gets or sets the milliseconds to sleep between calls
+        **/
+        public milliseconds : number;
+        /**
+        * Pauses the timer
+        **/
+        public pause(): void;
+        /**
+        * Starts ticking
+        **/
+        public start(): void;
+        /**
+        * Ticks the timer. Executes the callback and programs next tick.
+        **/
+        public tick(): void;
+    }
+}
+declare module latte {
     class HEvent<T> {
     }
 }
@@ -5044,6 +5049,10 @@ declare module latte {
         */
         public onDoubleClick(p: Point, button: number): void;
         /**
+        * Raises the <c>dragged</c> event
+        */
+        public onDragged(): void;
+        /**
         * Raises the <c>mouseDown</c> event
         */
         public onMouseDown(p: Point, button: number): void;
@@ -5087,6 +5096,16 @@ declare module latte {
         * @returns {LatteEvent}
         */
         public doubleClick : LatteEvent;
+        /**
+        * Back field for event
+        */
+        private _dragged;
+        /**
+        * Gets an event raised when the node is dragged
+        *
+        * @returns {LatteEvent}
+        */
+        public dragged : LatteEvent;
         /**
         * Back field for event
         */
@@ -5150,6 +5169,31 @@ declare module latte {
         /**
         * Property field
         */
+        private _draggable;
+        /**
+        * Gets or sets a value indicating if user is allowed to draw the node around.
+        *
+        * @returns {boolean}
+        */
+        /**
+        * Gets or sets a value indicating if user is allowed to draw the node around.
+        *
+        * @param {boolean} value
+        */
+        public draggable : boolean;
+        /**
+        * Property field
+        */
+        private _dragOffset;
+        /**
+        * Gets the offset of dragging
+        *
+        * @returns {string}
+        */
+        public dragOffset : Point;
+        /**
+        * Property field
+        */
         private _mouseHovering;
         /**
         * Gets or sets a value indicating if the mouse is currently hovering the node
@@ -5162,6 +5206,16 @@ declare module latte {
         * @param {boolean} value
         */
         public mouseHovering : boolean;
+        /**
+        * Property field
+        */
+        private _mouseIsDown;
+        /**
+        * Gets a value indicating if the mouse is currently down
+        *
+        * @returns {boolean}
+        */
+        public mouseIsDown : boolean;
     }
 }
 /**
@@ -5934,6 +5988,30 @@ declare module latte {
         public text : string;
     }
 }
+declare module latte {
+    /**
+    * Manages z-index related positions
+    <b style="color:darkred">This class should not be used directly because it is likely to disappear in future version</b>
+    **/
+    class ZIndex {
+        /**
+        * Array of elements that are being handled by class
+        **/
+        static elements: JQuery[];
+        /**
+        * Brings the specified element to the top
+        **/
+        static bringToFront(element: JQuery): void;
+        /**
+        * Remove elemet from elements, and erase z-index
+        **/
+        static removeElement(element: JQuery): void;
+        /**
+        * Updates the z-indexes of elements
+        **/
+        static updateZIndexes(): void;
+    }
+}
 /**
 * Created by josemanuel on 7/1/14.
 */
@@ -5976,6 +6054,10 @@ declare module latte {
         * Returns the glyph specified by its location
         **/
         private static _byLocation(u, v, name);
+        /**
+        * Gets an empty glyph
+        **/
+        static add : Glyph;
         /**
         * Gets an empty glyph
         **/
@@ -6462,6 +6544,13 @@ declare module latte {
         **/
         constructor();
         /**
+        * Sets the textbox of the comment editor.
+        * This method is useful for replacing the default textbox for a custom one.
+        *
+        * @param t
+        */
+        public setTextbox(t: TextboxItem): void;
+        /**
         *
         **/
         public _onAddComment(comment: CommentItem): void;
@@ -6500,6 +6589,23 @@ declare module latte {
         * Gets or sets a value indicating if the user may add new comments
         **/
         public allowNewComments : boolean;
+        /**
+        * Property field
+        */
+        private _ignoreEnter;
+        /**
+        * Gets or sets a value indicating if the enter key should be ignored.
+        * Used for allowing user to hit enter on selecting users from auto-complete
+        *
+        * @returns {boolean}
+        */
+        /**
+        * Gets or sets a value indicating if the enter key should be ignored.
+        * Used for allowing user to hit enter on selecting users from auto-complete
+        *
+        * @param {boolean} value
+        */
+        public ignoreEnter : boolean;
         /**
         * Gets or sets the number of hidden comments in conversation
         **/
@@ -8141,39 +8247,6 @@ declare module latte {
         public treeView : TreeView;
     }
 }
-declare module latte {
-    /**
-    *
-    **/
-    class CheckboxItem extends ValueItem {
-        /**
-        *
-        **/
-        private _value;
-        /**
-        * Label for checkbox
-        **/
-        public label: LabelItem;
-        /**
-        *
-        **/
-        constructor();
-        /**
-        * Gets or sets the text of the checkbox
-        **/
-        /**
-        * Gets or sets the text of the checkbox
-        **/
-        public text : string;
-        /**
-        * Gets or sets the checked state of checkbox
-        **/
-        /**
-        * Gets or sets the checked state of checkbox
-        **/
-        public value : boolean;
-    }
-}
 /**
 * Created by josemanuel on 7/1/14.
 */
@@ -8277,6 +8350,39 @@ declare module latte {
         * Gets the value as a string for human reading
         **/
         public valueString : any;
+    }
+}
+declare module latte {
+    /**
+    *
+    **/
+    class CheckboxItem extends ValueItem {
+        /**
+        *
+        **/
+        private _value;
+        /**
+        * Label for checkbox
+        **/
+        public label: LabelItem;
+        /**
+        *
+        **/
+        constructor();
+        /**
+        * Gets or sets the text of the checkbox
+        **/
+        /**
+        * Gets or sets the text of the checkbox
+        **/
+        public text : string;
+        /**
+        * Gets or sets the checked state of checkbox
+        **/
+        /**
+        * Gets or sets the checked state of checkbox
+        **/
+        public value : boolean;
     }
 }
 declare module latte {
@@ -9765,7 +9871,7 @@ declare module latte {
         /**
         *
         **/
-        private _controls;
+        public _controls: JQuery;
         /**
         * Group of buttons for scrolling through calendar
         **/
@@ -10210,18 +10316,6 @@ declare module latte {
     **/
     class FormView extends ColumnView {
         /**
-        * Form
-        **/
-        public form: FormItem;
-        /**
-        * Input items of the form
-        **/
-        public inputs: Collection<InputItem>;
-        /**
-        * Holds the title element of the form
-        **/
-        public titleLabel: LabelItem;
-        /**
         * Creates a new form, using the specified fields
         and commands
         **/
@@ -10230,6 +10324,10 @@ declare module latte {
         * Checks every input in <c>inputs</c> to be valid
         **/
         public valid(): boolean;
+        /**
+        * Returns an object with the values of fields
+        **/
+        public getValues(): any;
         /**
         * Gets or sets the with of the text parts.
         * Value must be percent since it must be leveled with value part. Value size will be adjusted
@@ -10240,6 +10338,30 @@ declare module latte {
         */
         public setTextWidth(value: number): void;
         /**
+        * Back field for event
+        */
+        private _valueChanged;
+        /**
+        * Gets an event raised when a value of the form changes
+        *
+        * @returns {LatteEvent}
+        */
+        public valueChanged : LatteEvent;
+        /**
+        * Raises the <c>valueChanged</c> event
+        */
+        public onValueChanged(): void;
+        /**
+        * Field for form property
+        */
+        private _form;
+        /**
+        * Gets the form of the view
+        *
+        * @returns {FormItem}
+        */
+        public form : FormItem;
+        /**
         * Gets or sets a value indicating if the form has a visible face style.
         **/
         /**
@@ -10247,9 +10369,11 @@ declare module latte {
         **/
         public faceVisible : boolean;
         /**
-        * Returns an object with the values of fields
-        **/
-        public getValues(): any;
+        * Gets the inputs of the form
+        *
+        * @returns {Collection<InputItem>}
+        */
+        public inputs : Collection<InputItem>;
         /**
         * Gets or sets a value indicating if the inputs in the form are read-only
         **/
@@ -10264,6 +10388,12 @@ declare module latte {
         * Gets or sets the title of the form
         **/
         public title : string;
+        /**
+        * Gets the title label of the form
+        *
+        * @returns {LabelItem}
+        */
+        public titleLabel : LabelItem;
     }
 }
 declare module latte {
@@ -10567,6 +10697,25 @@ declare module latte {
 }
 declare module latte {
     /**
+    *
+    **/
+    class NavigationListView extends NavigationView {
+        /**
+        *
+        **/
+        public list: ListView;
+        /**
+        *
+        **/
+        public toolbar: Toolbar;
+        /**
+        *
+        **/
+        constructor();
+    }
+}
+declare module latte {
+    /**
     * Renders a list with columns
     **/
     class ListView extends View {
@@ -10650,25 +10799,6 @@ declare module latte {
         * Raises the <c>selectedItem</c> event
         */
         public onSelectedItemChanged(): void;
-    }
-}
-declare module latte {
-    /**
-    *
-    **/
-    class NavigationListView extends NavigationView {
-        /**
-        *
-        **/
-        public list: ListView;
-        /**
-        *
-        **/
-        public toolbar: Toolbar;
-        /**
-        *
-        **/
-        constructor();
     }
 }
 declare module latte {
@@ -10818,29 +10948,5 @@ declare module latte {
         * @returns {LatteEvent}
         */
         public removeItem : LatteEvent;
-    }
-}
-declare module latte {
-    /**
-    * Manages z-index related positions
-    <b style="color:darkred">This class should not be used directly because it is likely to disappear in future version</b>
-    **/
-    class ZIndex {
-        /**
-        * Array of elements that are being handled by class
-        **/
-        static elements: JQuery[];
-        /**
-        * Brings the specified element to the top
-        **/
-        static bringToFront(element: JQuery): void;
-        /**
-        * Remove elemet from elements, and erase z-index
-        **/
-        static removeElement(element: JQuery): void;
-        /**
-        * Updates the z-indexes of elements
-        **/
-        static updateZIndexes(): void;
     }
 }

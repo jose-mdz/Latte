@@ -4,6 +4,7 @@ module latte{
      **/
     export class DatePickerItem extends ValueItem{
 
+        //region Fields
         /**
          *
          **/
@@ -23,6 +24,7 @@ module latte{
          *
          **/
         private _timeVisible: boolean = false;
+        //endregion
 
         /**
          *
@@ -36,18 +38,25 @@ module latte{
             this._dateButton.dropdownVisible = true;
             this._dateButton.glyph = Glyph.down;
             this._dateButton.appendTo(this.element);
+            this._dateButton.element.css({marginRight: 15});
 
-            this.element.clear();
+            //this.element.clear();
 
             this._dateButton.loadItems.add(( ) => {
                 this._dateButton.items.add(this.dateItem);
-            })
-
+            });
 
             this.date = DateTime.today;
 
         }
 
+        //region Private Methods
+
+        /**
+         * Zero pads for dates
+         * @param i
+         * @returns {string}
+         */
         private zeroPad(i: number): string{
             return i < 10 ? '0' + i : i.toString();
         }
@@ -58,8 +67,10 @@ module latte{
         _updateTimeComponent(){
             //this.onValueChanged();
         }
+        //endregion
 
         //region Components
+
         /**
          * Field for dateItem property
          */
@@ -126,9 +137,7 @@ module latte{
         public get hourCombo():ComboItem {
             if (!this._hourCombo) {
                 this._hourCombo = new ComboItem();
-                this._hourCombo.appendTo(this.element);
-                this._hourCombo.value = 0;
-                this._hourCombo.valueChanged.add(this._updateTimeComponent);
+                this._hourCombo.valueChanged.add(() => { this.onValueChanged() });
                 this._hourCombo.button.loadItems.add(() => {
                     var hours: string[] = [];
                     for(var i = 0; i <= 23; i++){
@@ -136,6 +145,8 @@ module latte{
                     }
                     this._hourCombo.options = hours;
                 });
+                this._hourCombo.value = 0;
+                this._hourCombo.button.dropdownVisible = false;
             }
             return this._hourCombo;
         }
@@ -153,9 +164,7 @@ module latte{
         public get minuteCombo():ComboItem {
             if (!this._minuteCombo) {
                 this._minuteCombo = new ComboItem();
-                this._minuteCombo.appendTo(this.element);
-                this._minuteCombo.value = 0;
-                this._minuteCombo.valueChanged.add(this._updateTimeComponent);
+                this._minuteCombo.valueChanged.add(() => { this.onValueChanged() });
                 this._minuteCombo.button.loadItems.add(() => {
                     var minutes: string[] = [];
                     for(var i = 0; i <= 59; i++){
@@ -163,10 +172,11 @@ module latte{
                     }
                     this._minuteCombo.options = minutes;
                 })
+                this._minuteCombo.value = 0;
+                this._minuteCombo.button.dropdownVisible = false;
             }
             return this._minuteCombo;
         }
-
 
         //endregion
 
@@ -200,6 +210,9 @@ module latte{
             if(this.timeVisible){
                 this._hourCombo.value = value.timeOfDay.hours;
                 this._minuteCombo.value = value.minute;
+
+                this._hourCombo.button.text = this.zeroPad(value.timeOfDay.hours);
+                this._minuteCombo.button.text = this.zeroPad(value.minute);
             }
         }
 
@@ -303,13 +316,30 @@ module latte{
          **/
         set timeVisible(value: boolean){
 
-
             if(!_isBoolean(value))
                 throw new InvalidArgumentEx();
 
             this._timeVisible = value;
 
             if(value) {
+
+                //region Check if controls must be created
+                if(!this._hourCombo) {
+
+                    var colon = new UiText(' : ');
+                    colon.css({
+                        'float': 'left',
+                        marginTop: 5,
+                        marginLeft: 2,
+                        marginRight: 3
+                    })
+
+                    this.element.append(this.hourCombo.element);
+                    this.element.append(colon.element);
+                    this.element.append(this.minuteCombo.element);
+                }
+                //endregion
+
                 this.hourCombo.visible = this.minuteCombo.visible = true;
 
             }else if(this._hourCombo) {
@@ -335,8 +365,6 @@ module latte{
          * Gets or sets the date of the picker, as a string
          **/
         set value(value: any){
-
-
 
             if(value instanceof DateTime){
                 this.date = value;

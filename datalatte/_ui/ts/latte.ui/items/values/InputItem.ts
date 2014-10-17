@@ -556,8 +556,6 @@ module latte{
                 throw new InvalidCallEx("What the hey?");
             }
 
-
-
         }
 
         /**

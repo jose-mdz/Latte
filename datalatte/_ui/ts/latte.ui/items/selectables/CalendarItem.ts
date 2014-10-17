@@ -106,7 +106,7 @@ module latte{
          *
          **/
         onSelectedChanged(){
-            throw new Ex();
+            super.onSelectedChanged();
         }
 
         /**

@@ -174,5 +174,5 @@ reconnecting Reconnecting
 reconnectingInS Reconnecting in %s seconds
 makeRelease Make Release
 insertYouTube Insert YouTube
-clearText Limpiar texto
-developedBy Desarrollado por Goplek.com
+clearText Clear Text
+developedBy Developed by Goplek.com

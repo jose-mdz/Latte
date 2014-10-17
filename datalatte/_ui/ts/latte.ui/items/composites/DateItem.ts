@@ -4,6 +4,7 @@ module latte{
      **/
     export class DateItem extends Item{
 
+        //region Fields
         /**
          *
          **/
@@ -69,6 +70,7 @@ module latte{
          **/
         selectionModeChanged: LatteEvent;
 
+        //endregion
 
         /**
          * Creates the Item
@@ -90,6 +92,8 @@ module latte{
 
 
         }
+
+        //region Private Methods
 
         /**
          * Creates a month. January is 1, december is 12.
@@ -244,7 +248,9 @@ module latte{
 
 
         }
+        //endregion
 
+        //region Methods
         /**
          *
         **/
@@ -503,6 +509,9 @@ module latte{
             this.setViewStart(this.viewStart.addMonths(this.rows * this.columns * -1));
 
         }
+        //endregion
+
+        //region Properties
 
         /**
          * Gets or sets the number of columns of months
@@ -645,5 +654,6 @@ module latte{
             return this.element.find('td.day:not(.grayed)').first().children().first().data('instance').tag;
 
         }
+        //endregion
     }
 }

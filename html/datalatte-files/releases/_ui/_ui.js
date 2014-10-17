@@ -2137,11 +2137,12 @@ var latte;
             if (typeof itemsArray === "undefined") { itemsArray = null; }
             var items = new latte.Collection();
 
-            if (itemsArray)
+            if (itemsArray) {
                 items.addArray(itemsArray);
+            }
 
             // Hide previous modal
-            if (this._modalView instanceof View) {
+            if (this._modalView instanceof View && this._modalView !== view) {
                 if (this._layer) {
                     this._layer.fadeOut(function () {
                         $(this).remove();
@@ -2174,6 +2175,7 @@ var latte;
                 // Items
                 var its = new latte.Collection();
                 its.addCollection(items);
+
                 var item;
 
                 while ((item = its.next()))
@@ -2193,6 +2195,7 @@ var latte;
                     top: -dialog.height(),
                     opacity: 0
                 };
+
                 var end = {
                     top: centerRect.top,
                     opacity: 1
@@ -2322,6 +2325,7 @@ var latte;
         });
 
 
+        //region Methods
         /**
         * Focuses the first input if any
         **/
@@ -2356,6 +2360,7 @@ var latte;
                 var viewRect = this.element.rectangle();
                 viewRect.top = 0;
                 viewRect.left = 0;
+
                 var itemRect = this._infoItem.element.rectangle();
                 this._infoItem.element.css('position', 'absolute').rectangle(itemRect.center(viewRect));
             }
@@ -2571,6 +2576,8 @@ var latte;
         };
 
         Object.defineProperty(View.prototype, "infoItem", {
+            //endregion
+            //region Properties
             /**
             * Gets or sets the info item of the view. Its shown in the back of the container
             and centered into the view.
@@ -5004,9 +5011,8 @@ var latte;
             The only possible values are: <c>16</c> | <c>32</c> | <c>48</c>
             **/
             set: function (value) {
-                if (value != 16 && value != 32 && value != 48)
-                    throw "Icon.size(" + value + ") size not supported";
-
+                //if(value != 16 && value != 32 && value != 48)
+                //    throw "Icon.size(" + value + ") size not supported";
                 // Set size attributes
                 this.element.width(value).height(value);
 
@@ -7087,6 +7093,10 @@ var latte;
                 this.dropdown.selected = this.selected;
             }
 
+            if (this.showingItems && this.selected) {
+                this.selected = false;
+            }
+
             if (this.split) {
                 if (this.selected) {
                     this.dropdown.element.addClass('with-face');
@@ -7771,6 +7781,7 @@ var latte;
     **/
     var DatePickerItem = (function (_super) {
         __extends(DatePickerItem, _super);
+        //endregion
         /**
         *
         **/
@@ -7796,15 +7807,21 @@ var latte;
             this._dateButton.dropdownVisible = true;
             this._dateButton.glyph = latte.Glyph.down;
             this._dateButton.appendTo(this.element);
+            this._dateButton.element.css({ marginRight: 15 });
 
-            this.element.clear();
-
+            //this.element.clear();
             this._dateButton.loadItems.add(function () {
                 _this._dateButton.items.add(_this.dateItem);
             });
 
             this.date = latte.DateTime.today;
         }
+        //region Private Methods
+        /**
+        * Zero pads for dates
+        * @param i
+        * @returns {string}
+        */
         DatePickerItem.prototype.zeroPad = function (i) {
             return i < 10 ? '0' + i : i.toString();
         };
@@ -7875,9 +7892,9 @@ var latte;
                 var _this = this;
                 if (!this._hourCombo) {
                     this._hourCombo = new latte.ComboItem();
-                    this._hourCombo.appendTo(this.element);
-                    this._hourCombo.value = 0;
-                    this._hourCombo.valueChanged.add(this._updateTimeComponent);
+                    this._hourCombo.valueChanged.add(function () {
+                        _this.onValueChanged();
+                    });
                     this._hourCombo.button.loadItems.add(function () {
                         var hours = [];
                         for (var i = 0; i <= 23; i++) {
@@ -7885,6 +7902,8 @@ var latte;
                         }
                         _this._hourCombo.options = hours;
                     });
+                    this._hourCombo.value = 0;
+                    this._hourCombo.button.dropdownVisible = false;
                 }
                 return this._hourCombo;
             },
@@ -7902,9 +7921,9 @@ var latte;
                 var _this = this;
                 if (!this._minuteCombo) {
                     this._minuteCombo = new latte.ComboItem();
-                    this._minuteCombo.appendTo(this.element);
-                    this._minuteCombo.value = 0;
-                    this._minuteCombo.valueChanged.add(this._updateTimeComponent);
+                    this._minuteCombo.valueChanged.add(function () {
+                        _this.onValueChanged();
+                    });
                     this._minuteCombo.button.loadItems.add(function () {
                         var minutes = [];
                         for (var i = 0; i <= 59; i++) {
@@ -7912,6 +7931,8 @@ var latte;
                         }
                         _this._minuteCombo.options = minutes;
                     });
+                    this._minuteCombo.value = 0;
+                    this._minuteCombo.button.dropdownVisible = false;
                 }
                 return this._minuteCombo;
             },
@@ -7947,6 +7968,9 @@ var latte;
                 if (this.timeVisible) {
                     this._hourCombo.value = value.timeOfDay.hours;
                     this._minuteCombo.value = value.minute;
+
+                    this._hourCombo.button.text = this.zeroPad(value.timeOfDay.hours);
+                    this._minuteCombo.button.text = this.zeroPad(value.minute);
                 }
             },
             enumerable: true,
@@ -8057,6 +8081,22 @@ var latte;
                 this._timeVisible = value;
 
                 if (value) {
+                    //region Check if controls must be created
+                    if (!this._hourCombo) {
+                        var colon = new latte.UiText(' : ');
+                        colon.css({
+                            'float': 'left',
+                            marginTop: 5,
+                            marginLeft: 2,
+                            marginRight: 3
+                        });
+
+                        this.element.append(this.hourCombo.element);
+                        this.element.append(colon.element);
+                        this.element.append(this.minuteCombo.element);
+                    }
+
+                    //endregion
                     this.hourCombo.visible = this.minuteCombo.visible = true;
                 } else if (this._hourCombo) {
                     this.hourCombo.visible = this.minuteCombo.visible = false;
@@ -8152,16 +8192,16 @@ var latte;
 
             this.element.addClass('column');
 
-            this.items = new latte.Collection(this._onAddItem, this._onRemoveItem, this);
+            this.items = new latte.Collection(this.onAddItem, this.onRemoveItem, this);
 
             if (columns > 0) {
                 this.columns = columns;
             }
         }
         /**
-        *
+        * Called when an item is added to the items collection
         **/
-        ColumnView.prototype._onAddItem = function (item) {
+        ColumnView.prototype.onAddItem = function (item) {
             var column = this.getColumnAt((this.items.count - 1) % this.columns);
 
             // Append to current column
@@ -8175,9 +8215,9 @@ var latte;
         };
 
         /**
-        *
+        * Called when an item is removed to the items collection
         **/
-        ColumnView.prototype._onRemoveItem = function (item) {
+        ColumnView.prototype.onRemoveItem = function (item) {
             item.element.detach();
         };
 
@@ -8198,7 +8238,7 @@ var latte;
             _super.prototype.onLayout.call(this);
 
             if (this.columnWeights.length > 0) {
-                this.columnWeights = this.columnWeights;
+                //this.columnWeights = this.columnWeights;
             } else {
                 if (latte.View.smallScreen) {
                     this.container.children().css('width', '');
@@ -9186,7 +9226,9 @@ var latte;
             var b = symbol;
             var c = (offset ? round.substr(0, offset) + separator : '');
             var d = round.substr(offset).replace(/(\d{3})(?=\d)/g, "$1" + separator);
-            var e = (decimals ? point + Math.abs(n - parseInt(round)).toFixed(decimals).slice(2) : '');
+
+            //[Hack]
+            var e = (decimals ? point + (Math.abs(n) - parseInt(round)).toFixed(decimals).slice(2) : '');
 
             return a + b + c + d + e;
         };
@@ -10322,118 +10364,6 @@ var latte;
 var latte;
 (function (latte) {
     /**
-    * Executes an action every specified amount of milliseconds
-    **/
-    var Timer = (function () {
-        /**
-        * Creates a timer that will call <c>callback</c> every specified amount of
-        <c>milliseconds</c> on the specified <c>context</c>.
-        **/
-        function Timer(callback, milliseconds, context) {
-            this.callback = callback;
-            this.milliseconds = milliseconds;
-            this.context = context;
-        }
-        Object.defineProperty(Timer.prototype, "callback", {
-            /**
-            * Gets or sets the function who will be called every tick
-            **/
-            get: function () {
-                return this._callback;
-            },
-            /**
-            * Gets or sets the function who will be called every tick
-            **/
-            set: function (value) {
-                this._callback = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-
-        Object.defineProperty(Timer.prototype, "context", {
-            /**
-            * Gets or sets the context in which the function is executed
-            **/
-            get: function () {
-                return this._context;
-            },
-            /**
-            * Gets or sets the context in which the function is executed
-            **/
-            set: function (value) {
-                this._context = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-
-        Object.defineProperty(Timer.prototype, "milliseconds", {
-            /**
-            * Gets or sets the milliseconds to sleep between calls
-            **/
-            get: function () {
-                return this._milliseconds;
-            },
-            /**
-            * Gets or sets the milliseconds to sleep between calls
-            **/
-            set: function (value) {
-                this._milliseconds = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-
-        /**
-        * Pauses the timer
-        **/
-        Timer.prototype.pause = function () {
-            this._paused = true;
-        };
-
-        /**
-        * Starts ticking
-        **/
-        Timer.prototype.start = function () {
-            var _this = this;
-            if (this._paused === false)
-                return;
-
-            this._paused = false;
-
-            setTimeout(function () {
-                _this.tick();
-            }, this.milliseconds);
-        };
-
-        /**
-        * Ticks the timer. Executes the callback and programs next tick.
-        **/
-        Timer.prototype.tick = function () {
-            var _this = this;
-            // If paused, bye bye!
-            if (this._paused === true)
-                return;
-
-            // Call callback
-            this.callback.apply(this.context);
-
-            // Program next tick
-            setTimeout(function () {
-                _this.tick();
-            }, this.milliseconds);
-        };
-        return Timer;
-    })();
-    latte.Timer = Timer;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
     * Represents a time interval.
     **/
     var TimeSpan = (function () {
@@ -10742,6 +10672,118 @@ var latte;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
+    /**
+    * Executes an action every specified amount of milliseconds
+    **/
+    var Timer = (function () {
+        /**
+        * Creates a timer that will call <c>callback</c> every specified amount of
+        <c>milliseconds</c> on the specified <c>context</c>.
+        **/
+        function Timer(callback, milliseconds, context) {
+            this.callback = callback;
+            this.milliseconds = milliseconds;
+            this.context = context;
+        }
+        Object.defineProperty(Timer.prototype, "callback", {
+            /**
+            * Gets or sets the function who will be called every tick
+            **/
+            get: function () {
+                return this._callback;
+            },
+            /**
+            * Gets or sets the function who will be called every tick
+            **/
+            set: function (value) {
+                this._callback = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+
+        Object.defineProperty(Timer.prototype, "context", {
+            /**
+            * Gets or sets the context in which the function is executed
+            **/
+            get: function () {
+                return this._context;
+            },
+            /**
+            * Gets or sets the context in which the function is executed
+            **/
+            set: function (value) {
+                this._context = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+
+        Object.defineProperty(Timer.prototype, "milliseconds", {
+            /**
+            * Gets or sets the milliseconds to sleep between calls
+            **/
+            get: function () {
+                return this._milliseconds;
+            },
+            /**
+            * Gets or sets the milliseconds to sleep between calls
+            **/
+            set: function (value) {
+                this._milliseconds = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+
+        /**
+        * Pauses the timer
+        **/
+        Timer.prototype.pause = function () {
+            this._paused = true;
+        };
+
+        /**
+        * Starts ticking
+        **/
+        Timer.prototype.start = function () {
+            var _this = this;
+            if (this._paused === false)
+                return;
+
+            this._paused = false;
+
+            setTimeout(function () {
+                _this.tick();
+            }, this.milliseconds);
+        };
+
+        /**
+        * Ticks the timer. Executes the callback and programs next tick.
+        **/
+        Timer.prototype.tick = function () {
+            var _this = this;
+            // If paused, bye bye!
+            if (this._paused === true)
+                return;
+
+            // Call callback
+            this.callback.apply(this.context);
+
+            // Program next tick
+            setTimeout(function () {
+                _this.tick();
+            }, this.milliseconds);
+        };
+        return Timer;
+    })();
+    latte.Timer = Timer;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
     var HEvent = (function () {
         function HEvent() {
         }
@@ -10976,6 +11018,10 @@ var latte;
             /**
             * Property field
             */
+            this._draggable = false;
+            /**
+            * Property field
+            */
             this._mouseHovering = false;
         }
         //region Private Methods
@@ -11000,12 +11046,27 @@ var latte;
         };
 
         /**
+        * Raises the <c>dragged</c> event
+        */
+        DrawingClickable.prototype.onDragged = function () {
+            if (this._dragged) {
+                this._dragged.raise();
+            }
+        };
+
+        /**
         * Raises the <c>mouseDown</c> event
         */
         DrawingClickable.prototype.onMouseDown = function (p, button) {
             if (this._mouseDown) {
                 this._mouseDown.raise(p, button);
             }
+
+            if (this.draggable) {
+                this._dragOffset = new latte.Point(p.x - this.left, p.y - this.top);
+            }
+
+            this._mouseIsDown = true;
         };
 
         /**
@@ -11042,6 +11103,7 @@ var latte;
             if (this._mouseUp) {
                 this._mouseUp.raise(p, button);
             }
+            this._mouseIsDown = false;
         };
 
         /**
@@ -11085,6 +11147,22 @@ var latte;
             configurable: true
         });
 
+        Object.defineProperty(DrawingClickable.prototype, "dragged", {
+            /**
+            * Gets an event raised when the node is dragged
+            *
+            * @returns {LatteEvent}
+            */
+            get: function () {
+                if (!this._dragged) {
+                    this._dragged = new latte.LatteEvent(this);
+                }
+                return this._dragged;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
         Object.defineProperty(DrawingClickable.prototype, "mouseDown", {
             /**
             * Gets an event raised when the node captures the mouse down
@@ -11095,6 +11173,7 @@ var latte;
                 if (!this._mouseDown) {
                     this._mouseDown = new latte.LatteEvent(this);
                 }
+
                 return this._mouseDown;
             },
             enumerable: true,
@@ -11181,6 +11260,41 @@ var latte;
             configurable: true
         });
 
+        Object.defineProperty(DrawingClickable.prototype, "draggable", {
+            /**
+            * Gets or sets a value indicating if user is allowed to draw the node around.
+            *
+            * @returns {boolean}
+            */
+            get: function () {
+                return this._draggable;
+            },
+            /**
+            * Gets or sets a value indicating if user is allowed to draw the node around.
+            *
+            * @param {boolean} value
+            */
+            set: function (value) {
+                this._draggable = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+
+        Object.defineProperty(DrawingClickable.prototype, "dragOffset", {
+            /**
+            * Gets the offset of dragging
+            *
+            * @returns {string}
+            */
+            get: function () {
+                return this._dragOffset;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
         Object.defineProperty(DrawingClickable.prototype, "mouseHovering", {
             /**
             * Gets or sets a value indicating if the mouse is currently hovering the node
@@ -11202,6 +11316,19 @@ var latte;
             configurable: true
         });
 
+
+        Object.defineProperty(DrawingClickable.prototype, "mouseIsDown", {
+            /**
+            * Gets a value indicating if the mouse is currently down
+            *
+            * @returns {boolean}
+            */
+            get: function () {
+                return this._mouseIsDown;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return DrawingClickable;
     })(latte.DrawingNode);
     latte.DrawingClickable = DrawingClickable;
@@ -12189,6 +12316,11 @@ var latte;
                     if (node.hidden)
                         continue;
 
+                    if (node.draggable && node.mouseIsDown) {
+                        node.location = new latte.Point(p.x + node.dragOffset.x, p.y + node.dragOffset.y);
+                        node.onDragged();
+                    }
+
                     if (node.containsPoint(p)) {
                         node.onMouseMove(p, 0);
 
@@ -12227,6 +12359,10 @@ var latte;
 
                     if (node.hidden)
                         continue;
+
+                    if (node.draggable) {
+                        node.onMouseUp(p, button);
+                    }
 
                     if (node.containsPoint(p)) {
                         node.onMouseUp(p, button);
@@ -12994,6 +13130,68 @@ var latte;
     })();
     latte.Action = Action;
 })(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
+    * Manages z-index related positions
+    <b style="color:darkred">This class should not be used directly because it is likely to disappear in future version</b>
+    **/
+    var ZIndex = (function () {
+        function ZIndex() {
+        }
+        /**
+        * Brings the specified element to the top
+        **/
+        ZIndex.bringToFront = function (element) {
+            if (element instanceof jQuery)
+                element = element.get(0);
+
+            // Add to elements
+            this.elements.push(element);
+
+            // Update indexes
+            this.updateZIndexes();
+        };
+
+        /**
+        * Remove elemet from elements, and erase z-index
+        **/
+        ZIndex.removeElement = function (element) {
+            var arr = [];
+
+            if (element instanceof jQuery)
+                element = element.get(0);
+
+            // Remove z-index
+            $(element).css('zIndex', '');
+
+            for (var i = 0; i < this.elements.length; i++)
+                if (this.elements[i] !== element)
+                    arr.push(this.elements[i]);
+
+            // Set new array
+            this.elements = arr;
+
+            this.updateZIndexes();
+        };
+
+        /**
+        * Updates the z-indexes of elements
+        **/
+        ZIndex.updateZIndexes = function () {
+            // Calculate max index
+            //var max = document.all ? document.all.length : $('*').length;
+            var max = $(':not(.latte-overlay.menu)').length - this.elements.length;
+
+            for (var i = 0; i < this.elements.length; i++) {
+                $(this.elements[i]).css('zIndex', max++);
+            }
+        };
+        ZIndex.elements = [];
+        return ZIndex;
+    })();
+    latte.ZIndex = ZIndex;
+})(latte || (latte = {}));
 /**
 * Created by josemanuel on 7/1/14.
 */
@@ -13085,6 +13283,17 @@ var latte;
 
             return g;
         };
+
+        Object.defineProperty(Glyph, "add", {
+            /**
+            * Gets an empty glyph
+            **/
+            get: function () {
+                return Glyph._byLocation(2, 10, 'add');
+            },
+            enumerable: true,
+            configurable: true
+        });
 
         Object.defineProperty(Glyph, "check", {
             /**
@@ -13461,6 +13670,8 @@ var latte;
             this.btnCurrent.addClass('current');
             this.btnNext.addClass('next');
 
+            this.btnCurrent.items.add(this.btnOverlay);
+
             this.buttons.addArray([
                 this.btnPrevious, this.btnCurrent, this.btnNext
             ]);
@@ -13501,31 +13712,67 @@ var latte;
             }
         };
 
+        // region Private Methods
+        PaginationItem.prototype.txtPage_enterPressed = function () {
+            if (!(+this.txtPage.value > this.pages)) {
+                if (this.txtPage.value == "" || +this.txtPage.value <= 0 || isNaN(+this.txtPage.value))
+                    this.txtPage.value = this.page + "";
+
+                // Set page
+                this.page = parseInt(this.txtPage.value, 10);
+            } else {
+                this.txtPage.value = this.page + "";
+            }
+        };
+
         Object.defineProperty(PaginationItem.prototype, "page", {
+            // endregion
             /**
             * Gets or sets the current page
             **/
             get: function () {
-                return this._page;
+                return this.getPage();
             },
             /**
             * Gets or sets the current page
             **/
             set: function (value) {
-                var changed = this._page != value;
-                this._page = value;
-                this.btnCurrent.text = this._page + '/' + this._pages;
-                this.btnNext.enabled = this._page < this.pages;
-                this.btnPrevious.enabled = this._page > 1;
-
-                if (changed) {
-                    this.onPageChanged();
-                }
+                this.setPage(value);
             },
             enumerable: true,
             configurable: true
         });
 
+
+        /**
+        * Gets the current page.
+        * @returns {number}
+        */
+        PaginationItem.prototype.getPage = function () {
+            return this._page;
+        };
+
+        /**
+        * Sets the current page.
+        * Optionally omits the <c>pageChanged</c> event trigger.
+        * @param value
+        * @param silent
+        */
+        PaginationItem.prototype.setPage = function (value, silent) {
+            if (typeof silent === "undefined") { silent = false; }
+            var changed = this._page != value;
+
+            this._page = value;
+            this.btnCurrent.text = this._page + '/' + this._pages;
+            this.btnNext.enabled = this._page < this.pages;
+            this.btnPrevious.enabled = this._page > 1;
+
+            this.txtPage.enabled = this._page <= this.pages && this._page >= 1;
+
+            if (changed && silent !== true) {
+                this.onPageChanged();
+            }
+        };
 
         Object.defineProperty(PaginationItem.prototype, "pages", {
             /**
@@ -13549,6 +13796,82 @@ var latte;
             configurable: true
         });
 
+
+        Object.defineProperty(PaginationItem.prototype, "txtPage", {
+            get: function () {
+                if (!this._txtPage) {
+                    this._txtPage = new latte.TextboxItem();
+                    this._txtPage.value = this.page + "";
+                    this._txtPage.input.width(20);
+                    this._txtPage.input.height(14);
+                    this._txtPage.enabled = false;
+                    this._txtPage.enterPressed.add(this.txtPage_enterPressed, this);
+
+                    this._txtPage.element.css({ float: 'left' });
+                }
+                return this._txtPage;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(PaginationItem.prototype, "lblPages", {
+            /**
+            * Gets a value indicating
+            */
+            get: function () {
+                if (!this._lblPages) {
+                    this._lblPages = new latte.LabelItem("Ir a página");
+                    this._lblPages.element.css({ float: 'left', paddingTop: 5, paddingRight: 5, color: 'black' });
+                }
+
+                return this._lblPages;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(PaginationItem.prototype, "btnGo", {
+            /**
+            * Gets a value indicating
+            */
+            get: function () {
+                if (!this._btnGo) {
+                    this._btnGo = new latte.ButtonItem("Ir");
+                    this._btnGo.removeClass('clickable');
+                    this._btnGo.element.css({ float: 'left' });
+                    this._btnGo.click.add(this.txtPage_enterPressed, this);
+                }
+
+                return this._btnGo;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(PaginationItem.prototype, "btnOverlay", {
+            /**
+            * Gets a value indicating
+            */
+            get: function () {
+                if (!this._btnOverlay) {
+                    this._btnOverlay = new latte.ButtonItem();
+                    this._btnOverlay.faceVisible = false;
+                    this._btnOverlay.removeClass('clickable');
+                    this._btnOverlay.height = 28;
+
+                    this._btnOverlay.label.contentElement.append(this.lblPages.element);
+                    this._btnOverlay.label.contentElement.append(this.txtPage.element);
+
+                    //this._btnOverlay.label.contentElement.append(this.btnGo.element);
+                    this._btnOverlay.label.contentElement.clear();
+                }
+
+                return this._btnOverlay;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return PaginationItem;
     })(latte.ButtonGroupItem);
     latte.PaginationItem = PaginationItem;
@@ -14084,6 +14407,10 @@ var latte;
             *
             **/
             this._allowNewComments = true;
+            /**
+            * Property field
+            */
+            this._ignoreEnter = false;
 
             var __this = this;
 
@@ -14101,27 +14428,54 @@ var latte;
             this.pendentPagesElement = $('<div>').addClass('hidden-comments').hide().appendTo(this.element);
             this.commentsElement = $('<div>').addClass('comments').appendTo(this.element);
             this.newCommentElement = $('<div>').addClass('new-comment').appendTo(this.element);
-            this.textbox = new latte.TextboxItem();
-            this.textbox.multiline = true;
-            this.textbox.placeholder = strings.writeComment;
-            this.textbox.appendTo(this.newCommentElement);
-            this.element.clear();
+
+            this.setTextbox(new latte.TextboxItem());
 
             // Add handlers
-            this.textbox.enterPressed.add(function () {
-                var _this = this;
-                if (this.value.length > 0) {
-                    __this.onCommentAdded(this.value);
-                    setTimeout(function () {
-                        _this.value = ('');
-                    }, 100);
-                }
-            });
-
             this.pendentPagesElement.click(function () {
                 __this.onPendentPagesSolicited();
             });
         }
+        //region Methods
+        /**
+        * Sets the textbox of the comment editor.
+        * This method is useful for replacing the default textbox for a custom one.
+        *
+        * @param t
+        */
+        ConversationItem.prototype.setTextbox = function (t) {
+            var _this = this;
+            var replace = !!this.textbox;
+            var old = this.textbox;
+
+            this.textbox = t;
+            this.textbox.multiline = true;
+            this.textbox.placeholder = strings.writeComment;
+            this.textbox.appendTo(this.newCommentElement);
+
+            if (replace) {
+                old.element.replaceWith(this.textbox);
+            } else {
+                this.textbox.appendTo(this.newCommentElement);
+            }
+
+            this.element.clear();
+
+            this.textbox.enterPressed.add(function () {
+                if (_this.ignoreEnter) {
+                    return;
+                }
+
+                if (_this.textbox.value.length > 0) {
+                    setTimeout(function () {
+                        _this.onCommentAdded(_this.textbox.value);
+                        _this.textbox.value = ('');
+                    }, 100);
+                }
+            });
+        };
+
+        //endregion
         /**
         *
         **/
@@ -14184,6 +14538,7 @@ var latte;
         };
 
         Object.defineProperty(ConversationItem.prototype, "allowNewComments", {
+            //region Properties
             /**
             * Gets or sets a value indicating if the user may add new comments
             **/
@@ -14204,6 +14559,30 @@ var latte;
                 }
 
                 this._allowNewComments = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+
+        Object.defineProperty(ConversationItem.prototype, "ignoreEnter", {
+            /**
+            * Gets or sets a value indicating if the enter key should be ignored.
+            * Used for allowing user to hit enter on selecting users from auto-complete
+            *
+            * @returns {boolean}
+            */
+            get: function () {
+                return this._ignoreEnter;
+            },
+            /**
+            * Gets or sets a value indicating if the enter key should be ignored.
+            * Used for allowing user to hit enter on selecting users from auto-complete
+            *
+            * @param {boolean} value
+            */
+            set: function (value) {
+                this._ignoreEnter = value;
             },
             enumerable: true,
             configurable: true
@@ -14250,11 +14629,13 @@ var latte;
     **/
     var DateItem = (function (_super) {
         __extends(DateItem, _super);
+        //endregion
         /**
         * Creates the Item
         **/
         function DateItem() {
             _super.call(this);
+            //region Fields
             /**
             *
             **/
@@ -14279,6 +14660,7 @@ var latte;
 
             this.selectionStart = latte.DateTime.today;
         }
+        //region Private Methods
         /**
         * Creates a month. January is 1, december is 12.
         **/
@@ -14420,6 +14802,8 @@ var latte;
             this.element.find('td.date-' + date.year + '-' + date.month + '-' + date.day + ' > .latte-item.selectable').addClass('selected');
         };
 
+        //endregion
+        //region Methods
         /**
         *
         **/
@@ -14669,6 +15053,8 @@ var latte;
         };
 
         Object.defineProperty(DateItem.prototype, "columns", {
+            //endregion
+            //region Properties
             /**
             * Gets or sets the number of columns of months
             **/
@@ -14862,12 +15248,9 @@ var latte;
         *
         **/
         FormItem.prototype._onAddInput = function (input) {
-            var _this = this;
             this.items.add(input);
 
-            input.valueChanged.add(function () {
-                _this.onValueChanged();
-            });
+            input.valueChanged.add(this.onValueChanged, this);
 
             input.textVisible = true;
         };
@@ -17440,7 +17823,7 @@ var latte;
         *
         **/
         CalendarItem.prototype.onSelectedChanged = function () {
-            throw new latte.Ex();
+            _super.prototype.onSelectedChanged.call(this);
         };
 
         Object.defineProperty(CalendarItem.prototype, "allDay", {
@@ -18163,25 +18546,40 @@ var latte;
             * Gets or sets a value indicaing if the item is currently selected
             **/
             set: function (value) {
-                if (!latte._isBoolean(value))
-                    throw new latte.InvalidArgumentEx('value');
-
-                var __this = this;
+                var _this = this;
                 var changed = value !== this._selected;
 
                 this._selected = value;
 
                 if (value) {
-                    // Unselect siblings
-                    this.faceElement.parents('.latte-view.tree').find('.selectable.selected').each(function () {
-                        var inst = $(this).parent().instance();
+                    // Get TreeView
+                    var tv = this.treeView;
 
-                        if (inst !== __this) {
-                            inst.selected = (false);
+                    if (tv) {
+                        //region Unselect siblings of all tree
+                        var tabOf = function (len) {
+                            var s = '';
+                            for (var i = 0; i < len; i++)
+                                s += '-';
+                            return s;
+                        };
+                        var unselect = function (item, tab) {
+                            if (typeof tab === "undefined") { tab = 0; }
+                            if (item !== _this && item.selected) {
+                                item.selected = false;
+                            }
+
+                            for (var i = 0; i < item.items.length; i++) {
+                                unselect(item.items[i], tab + 1);
+                            }
+                        };
+
+                        for (var i = 0; i < tv.items.length; i++) {
+                            unselect(tv.items[i]);
                         }
-                    });
+                        //endregion
+                    }
 
-                    //.removeClass('selected');
                     // Select face
                     this.faceElement.addClass('selected');
 
@@ -18190,18 +18588,17 @@ var latte;
                         this.expanded = true;
                     }
 
-                    // Get TreeView
-                    var tv = this.treeView;
-
                     // Inform tree view selection
-                    if (tv)
+                    if (tv) {
                         tv._informSelectedItem(this);
+                    }
                 } else {
                     this.faceElement.removeClass('selected');
                 }
 
-                if (changed)
+                if (changed) {
                     this.onSelectedChanged();
+                }
             },
             enumerable: true,
             configurable: true
@@ -18271,84 +18668,6 @@ var latte;
         return TreeItem;
     })(latte.Item);
     latte.TreeItem = TreeItem;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
-    *
-    **/
-    var CheckboxItem = (function (_super) {
-        __extends(CheckboxItem, _super);
-        /**
-        *
-        **/
-        function CheckboxItem() {
-            var _this = this;
-            _super.call(this);
-            this.element.addClass('checkbox');
-
-            this.label = new latte.LabelItem();
-            this.label.appendTo(this);
-
-            this.element.click(function () {
-                _this.value = !_this.value;
-            });
-
-            this.value = false;
-        }
-        Object.defineProperty(CheckboxItem.prototype, "text", {
-            /**
-            * Gets or sets the text of the checkbox
-            **/
-            get: function () {
-                return this.label.text;
-            },
-            /**
-            * Gets or sets the text of the checkbox
-            **/
-            set: function (value) {
-                this.label.text = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-
-        Object.defineProperty(CheckboxItem.prototype, "value", {
-            /**
-            * Gets or sets the checked state of checkbox
-            **/
-            get: function () {
-                return this._value;
-            },
-            /**
-            * Gets or sets the checked state of checkbox
-            **/
-            set: function (value) {
-                if (!latte._isBoolean(value))
-                    throw new latte.InvalidArgumentEx('value', value);
-
-                var changed = value !== this._value;
-
-                if (value) {
-                    this.label.icon = latte.Glyph.checked;
-                } else {
-                    this.label.icon = latte.Glyph.unchecked;
-                }
-
-                this._value = value;
-
-                if (changed) {
-                    this.onValueChanged();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        return CheckboxItem;
-    })(latte.ValueItem);
-    latte.CheckboxItem = CheckboxItem;
 })(latte || (latte = {}));
 /**
 * Created by josemanuel on 7/1/14.
@@ -18585,6 +18904,93 @@ var latte;
         return ComboItem;
     })(latte.ValueItem);
     latte.ComboItem = ComboItem;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
+    *
+    **/
+    var CheckboxItem = (function (_super) {
+        __extends(CheckboxItem, _super);
+        /**
+        *
+        **/
+        function CheckboxItem() {
+            var _this = this;
+            _super.call(this);
+            this.element.addClass('checkbox');
+
+            this.label = new latte.LabelItem();
+            this.label.appendTo(this);
+
+            this.element.click(function () {
+                _this.value = !_this.value;
+            });
+
+            this.value = false;
+        }
+        Object.defineProperty(CheckboxItem.prototype, "text", {
+            /**
+            * Gets or sets the text of the checkbox
+            **/
+            get: function () {
+                return this.label.text;
+            },
+            /**
+            * Gets or sets the text of the checkbox
+            **/
+            set: function (value) {
+                this.label.text = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+
+        Object.defineProperty(CheckboxItem.prototype, "value", {
+            /**
+            * Gets or sets the checked state of checkbox
+            **/
+            get: function () {
+                return this._value;
+            },
+            /**
+            * Gets or sets the checked state of checkbox
+            **/
+            set: function (value) {
+                if (!latte._isBoolean(value)) {
+                    var t = value;
+
+                    if (t == 1) {
+                        value = true;
+                    } else if (t == 0 || t == "") {
+                        value = false;
+                    } else {
+                        throw new latte.InvalidArgumentEx('value', value);
+                    }
+                }
+
+                var changed = value !== this._value;
+
+                if (value) {
+                    this.label.icon = latte.Glyph.checked;
+                } else {
+                    this.label.icon = latte.Glyph.unchecked;
+                }
+
+                this._value = value;
+
+                if (changed) {
+                    this.onValueChanged();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        return CheckboxItem;
+    })(latte.ValueItem);
+    latte.CheckboxItem = CheckboxItem;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -21033,8 +21439,11 @@ var latte;
             var side = this.side;
 
             // If menu is larger than viewport
-            if (rect.height > viewport.height) {
+            if (rect.bottom > viewport.bottom) {
                 // Make it fit
+                latte.log("FITTING!");
+                this.element.height(viewport.bottom - rect.top);
+                this.element.css('overflow', 'auto');
             }
 
             //            log("MenuAt %s, %s", x, y)
@@ -21946,7 +22355,7 @@ var latte;
                 var rect = $this.data('rectangle');
 
                 if (rect instanceof latte.Rectangle) {
-                    if (x >= rect.left() && x <= rect.right()) {
+                    if (x >= rect.left && x <= rect.right) {
                         col = $this;
                     }
                 }
@@ -24024,20 +24433,24 @@ var latte;
             _super.call(this, 1);
             this.addClass('form');
 
-            this.form = new latte.FormItem();
-            this.inputs = this.form.inputs;
-            this.titleLabel = this.form.titleLabel;
-
             this.items.add(this.form);
 
             if (inputs)
                 this.inputs.addArray(inputs);
         }
+        //region Methods
         /**
         * Checks every input in <c>inputs</c> to be valid
         **/
         FormView.prototype.valid = function () {
             return this.form.valid;
+        };
+
+        /**
+        * Returns an object with the values of fields
+        **/
+        FormView.prototype.getValues = function () {
+            return this.form.getValues();
         };
 
         /**
@@ -24052,7 +24465,52 @@ var latte;
             this.form.setTextWidth(value);
         };
 
+        Object.defineProperty(FormView.prototype, "valueChanged", {
+            /**
+            * Gets an event raised when a value of the form changes
+            *
+            * @returns {LatteEvent}
+            */
+            get: function () {
+                if (!this._valueChanged) {
+                    this._valueChanged = new latte.LatteEvent(this);
+                }
+                return this._valueChanged;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        /**
+        * Raises the <c>valueChanged</c> event
+        */
+        FormView.prototype.onValueChanged = function () {
+            if (this._valueChanged) {
+                this._valueChanged.raise();
+            }
+            this.unsavedChanges = true;
+        };
+
+        Object.defineProperty(FormView.prototype, "form", {
+            /**
+            * Gets the form of the view
+            *
+            * @returns {FormItem}
+            */
+            get: function () {
+                if (!this._form) {
+                    this._form = new latte.FormItem();
+                    this._form.valueChanged.add(this.onValueChanged, this);
+                }
+                return this._form;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
         Object.defineProperty(FormView.prototype, "faceVisible", {
+            //endregion
+            //region Properties
             /**
             * Gets or sets a value indicating if the form has a visible face style.
             **/
@@ -24070,12 +24528,18 @@ var latte;
         });
 
 
-        /**
-        * Returns an object with the values of fields
-        **/
-        FormView.prototype.getValues = function () {
-            return this.form.getValues();
-        };
+        Object.defineProperty(FormView.prototype, "inputs", {
+            /**
+            * Gets the inputs of the form
+            *
+            * @returns {Collection<InputItem>}
+            */
+            get: function () {
+                return this.form.inputs;
+            },
+            enumerable: true,
+            configurable: true
+        });
 
         Object.defineProperty(FormView.prototype, "readOnly", {
             /**
@@ -24112,6 +24576,19 @@ var latte;
             configurable: true
         });
 
+
+        Object.defineProperty(FormView.prototype, "titleLabel", {
+            /**
+            * Gets the title label of the form
+            *
+            * @returns {LabelItem}
+            */
+            get: function () {
+                return this.form.titleLabel;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return FormView;
     })(latte.ColumnView);
     latte.FormView = FormView;
@@ -24285,6 +24762,7 @@ var latte;
         };
 
         Object.defineProperty(MessageView.prototype, "description", {
+            //region Properties
             /**
             * Gets or sets the description of the message
             **/
@@ -24813,6 +25291,36 @@ var latte;
 var latte;
 (function (latte) {
     /**
+    *
+    **/
+    var NavigationListView = (function (_super) {
+        __extends(NavigationListView, _super);
+        /**
+        *
+        **/
+        function NavigationListView() {
+            _super.call(this);
+
+            this.addClass('list');
+
+            // Initialize view
+            var t = new latte.ToolbarView();
+
+            this.view = t;
+
+            // Get toolbar pointer
+            this.toolbar = t.toolbar;
+
+            // Assign list view as main view of toolbar view
+            this.view.view = this.list = new latte.ListView();
+        }
+        return NavigationListView;
+    })(latte.NavigationView);
+    latte.NavigationListView = NavigationListView;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
     * Renders a list with columns
     **/
     var ListView = (function (_super) {
@@ -25040,36 +25548,6 @@ var latte;
         return ListView;
     })(latte.View);
     latte.ListView = ListView;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
-    *
-    **/
-    var NavigationListView = (function (_super) {
-        __extends(NavigationListView, _super);
-        /**
-        *
-        **/
-        function NavigationListView() {
-            _super.call(this);
-
-            this.addClass('list');
-
-            // Initialize view
-            var t = new latte.ToolbarView();
-
-            this.view = t;
-
-            // Get toolbar pointer
-            this.toolbar = t.toolbar;
-
-            // Assign list view as main view of toolbar view
-            this.view.view = this.list = new latte.ListView();
-        }
-        return NavigationListView;
-    })(latte.NavigationView);
-    latte.NavigationListView = NavigationListView;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -25346,181 +25824,119 @@ var latte;
     })(latte.View);
     latte.TreeView = TreeView;
 })(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
-    * Manages z-index related positions
-    <b style="color:darkred">This class should not be used directly because it is likely to disappear in future version</b>
-    **/
-    var ZIndex = (function () {
-        function ZIndex() {
-        }
-        /**
-        * Brings the specified element to the top
-        **/
-        ZIndex.bringToFront = function (element) {
-            if (element instanceof jQuery)
-                element = element.get(0);
-
-            // Add to elements
-            this.elements.push(element);
-
-            // Update indexes
-            this.updateZIndexes();
-        };
-
-        /**
-        * Remove elemet from elements, and erase z-index
-        **/
-        ZIndex.removeElement = function (element) {
-            var arr = [];
-
-            if (element instanceof jQuery)
-                element = element.get(0);
-
-            // Remove z-index
-            $(element).css('zIndex', '');
-
-            for (var i = 0; i < this.elements.length; i++)
-                if (this.elements[i] !== element)
-                    arr.push(this.elements[i]);
-
-            // Set new array
-            this.elements = arr;
-
-            this.updateZIndexes();
-        };
-
-        /**
-        * Updates the z-indexes of elements
-        **/
-        ZIndex.updateZIndexes = function () {
-            // Calculate max index
-            //var max = document.all ? document.all.length : $('*').length;
-            var max = $(':not(.latte-overlay.menu)').length - this.elements.length;
-
-            for (var i = 0; i < this.elements.length; i++) {
-                $(this.elements[i]).css('zIndex', max++);
-            }
-        };
-        ZIndex.elements = [];
-        return ZIndex;
-    })();
-    latte.ZIndex = ZIndex;
-})(latte || (latte = {}));
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/support/ts-include/_ui.strings.d.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/support/ts-include/datalatte.d.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/support/ts-include/jquery.d.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/datalatte.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte/Key.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte/TriBool.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte/WeekDay.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/DateSelectionMode.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/Direction.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/Side.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/Transition.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/UiElement.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/base/Item.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/views/View.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/values/ValueItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.drawing/DrawingRectangle.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/composites/ItemStack.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/overlays/Overlay.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.drawing/DrawingElement.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/selectables/SelectableItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/views/anchor/AnchorView.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/views/layout/SplitView.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte/Ex.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/base/IconItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/clickables/ClickableItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/labels/LabelItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.drawing/Brush.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.drawing/DrawingNode.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/clickables/ButtonGroupItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/clickables/ButtonItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/composites/Toolbar.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/selectables/SelectableLabel.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/values/DatePickerItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/overlays/StackOverlay.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/views/layout/ColumnView.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/views/navigation/NavigationView.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte/Collection.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte/Color.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte/Culture.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte/DateTime.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte/Event.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte/InvaldArgumentEx.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte/InvalidCallEx.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte/Navigation.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte/Rectangle.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte/Timer.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte/TimeSpan.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte/TypeEvent.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.drawing/Animation.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.drawing/DrawingClickable.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.drawing/DrawingContext.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.drawing/DrawingImage.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.drawing/DrawingPath.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.drawing/DrawingScene.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.drawing/LinearGradientBrush.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.drawing/Pen.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.drawing/Point.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.drawing/Size.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/Action.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/base/ColorIconItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/base/Glyph.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/base/ImageItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/base/SeparatorItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/clickables/PaginationItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/clickables/TabItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/composites/ColorPicker.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/composites/ConversationItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/composites/DateItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/composites/FormItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/composites/HtmlEditorCommands.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/composites/HtmlEditorItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/composites/Ribbon.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/composites/SelectableStack.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/composites/TabContainer.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/composites/TabToolbar.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/composites/ViewItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/composites/WidgetItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/labels/ColumnHeader.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/labels/CommentItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/labels/DateTimeLabel.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/labels/UiText.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/selectables/CalendarItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/selectables/ListViewItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/selectables/TreeItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/values/CheckboxItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/values/ColorValueItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/values/ComboItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/values/FileValueItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/values/InputItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/values/LabelValueItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/values/ProgressItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/values/RadioGroup.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/values/RadioItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/values/TextboxItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/items/values/TimePickerItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/overlays/Loader.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/overlays/MenuOverlay.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/overlays/SuggestionOverlay.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/views/anchor/RibbonView.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/views/anchor/TabView.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/views/anchor/ToolbarView.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/views/content/CalendarDayView.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/views/content/CalendarMonthView.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/views/content/CalendarView.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/views/content/CanvasView.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/views/content/DateView.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/views/content/FormView.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/views/content/HtmlView.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/views/content/ItemView.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/views/content/MessageView.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/views/content/TextView.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/views/layout/DialogView.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/views/navigation/ListView.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/views/navigation/NavigationListView.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/views/navigation/TreeView.ts" />
-/// <reference path="/Users/josemanuel/Sites/latte.net/datalatte/_ui/ts/latte.ui/ZIndex.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/support/ts-include/_ui.strings.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/support/ts-include/datalatte.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/support/ts-include/jquery.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/datalatte.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte/Key.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte/TriBool.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte/WeekDay.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/DateSelectionMode.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/Direction.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/Side.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/Transition.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/UiElement.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/base/Item.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/views/View.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/values/ValueItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.drawing/DrawingRectangle.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/composites/ItemStack.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/overlays/Overlay.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.drawing/DrawingElement.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/selectables/SelectableItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/views/anchor/AnchorView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/views/layout/SplitView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte/Ex.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/base/IconItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/clickables/ClickableItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/labels/LabelItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.drawing/Brush.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.drawing/DrawingNode.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/clickables/ButtonGroupItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/clickables/ButtonItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/composites/Toolbar.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/selectables/SelectableLabel.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/values/DatePickerItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/overlays/StackOverlay.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/views/layout/ColumnView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/views/navigation/NavigationView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte/Collection.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte/Color.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte/Culture.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte/DateTime.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte/Event.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte/InvaldArgumentEx.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte/InvalidCallEx.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte/Navigation.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte/Rectangle.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte/TimeSpan.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte/Timer.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte/TypeEvent.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.drawing/Animation.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.drawing/DrawingClickable.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.drawing/DrawingContext.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.drawing/DrawingImage.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.drawing/DrawingPath.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.drawing/DrawingScene.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.drawing/LinearGradientBrush.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.drawing/Pen.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.drawing/Point.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.drawing/Size.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/Action.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/ZIndex.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/base/ColorIconItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/base/Glyph.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/base/ImageItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/base/SeparatorItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/clickables/PaginationItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/clickables/TabItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/composites/ColorPicker.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/composites/ConversationItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/composites/DateItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/composites/FormItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/composites/HtmlEditorCommands.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/composites/HtmlEditorItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/composites/Ribbon.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/composites/SelectableStack.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/composites/TabContainer.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/composites/TabToolbar.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/composites/ViewItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/composites/WidgetItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/labels/ColumnHeader.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/labels/CommentItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/labels/DateTimeLabel.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/labels/UiText.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/selectables/CalendarItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/selectables/ListViewItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/selectables/TreeItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/values/ColorValueItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/values/ComboItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/values/CheckboxItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/values/FileValueItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/values/InputItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/values/LabelValueItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/values/ProgressItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/values/RadioGroup.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/values/RadioItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/values/TextboxItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/items/values/TimePickerItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/overlays/Loader.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/overlays/MenuOverlay.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/overlays/SuggestionOverlay.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/views/anchor/RibbonView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/views/anchor/TabView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/views/anchor/ToolbarView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/views/content/CalendarDayView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/views/content/CalendarMonthView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/views/content/CalendarView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/views/content/CanvasView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/views/content/DateView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/views/content/FormView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/views/content/HtmlView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/views/content/ItemView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/views/content/MessageView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/views/content/TextView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/views/layout/DialogView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/views/navigation/NavigationListView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/views/navigation/ListView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/datalatte/_ui/ts/latte.ui/views/navigation/TreeView.ts" />

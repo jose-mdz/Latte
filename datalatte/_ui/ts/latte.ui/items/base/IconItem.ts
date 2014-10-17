@@ -135,8 +135,8 @@ module latte{
         set size(value: number){
 
 
-            if(value != 16 && value != 32 && value != 48)
-                throw "Icon.size(" + value + ") size not supported";
+            //if(value != 16 && value != 32 && value != 48)
+            //    throw "Icon.size(" + value + ") size not supported";
 
             // Set size attributes
             this.element.width(value).height(value);

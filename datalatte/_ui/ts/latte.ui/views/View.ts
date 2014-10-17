@@ -106,11 +106,12 @@ module latte{
 
             var items: Collection<Item> = new Collection<Item>();
 
-            if(itemsArray)
+            if(itemsArray){
                 items.addArray(itemsArray);
+            }
 
             // Hide previous modal
-            if(this._modalView instanceof View){
+            if(this._modalView instanceof View && this._modalView !== view){
                 if(this._layer){
                     this._layer.fadeOut(function(){ $(this).remove() });
                     this._layer = null;
@@ -132,6 +133,7 @@ module latte{
                 var eInner = $('<div>').addClass('inner-view').appendTo(dialog);
                 var eItems = $('<div>').addClass('items').appendTo(dialog);
 
+
                 // Adapt & append view
                 view.parentIsModal = true;
 
@@ -139,7 +141,8 @@ module latte{
 
                 // Items
                 var its = new Collection<Item>();
-                its.addCollection(items);
+                its.addCollection(items)
+
                 var item;
 
                 while( (item = its.next()) )
@@ -158,6 +161,7 @@ module latte{
                     top: -dialog.height(),
                     opacity: 0
                 };
+
                 var end = {
                     top: centerRect.top,
                     opacity: 1
@@ -379,6 +383,7 @@ module latte{
 
         }
 
+        //region Methods
         /**
          * Focuses the first input if any
          **/
@@ -415,10 +420,12 @@ module latte{
 
             if(this._infoItem instanceof Item){
                 this._infoItem.element.css({width: 'auto', height: 'auto'});
+
                 // Center on view
                 var viewRect = this.element.rectangle();
-                    viewRect.top = 0;
-                    viewRect.left = 0;
+                viewRect.top = 0;
+                viewRect.left = 0;
+
                 var itemRect = this._infoItem.element.rectangle();
                 this._infoItem.element.css('position', 'absolute').rectangle(itemRect.center(viewRect));
             }
@@ -486,19 +493,19 @@ module latte{
                 if(this.unsavedChanges){
 
                     var btnSave = new ButtonItem();
-                        btnSave.text = strings.yesSaveChanges;
-                        btnSave.click.add( () => { this.saveChanges() });
+                    btnSave.text = strings.yesSaveChanges;
+                    btnSave.click.add( () => { this.saveChanges() });
                     var btnIgnore = new ButtonItem();
-                        btnIgnore.text = strings.noIgnoreChanges;
-                        btnIgnore.click.add( () => { this.unsavedChanges = false; } );
+                    btnIgnore.text = strings.noIgnoreChanges;
+                    btnIgnore.click.add( () => { this.unsavedChanges = false; } );
 
                     // Ask if user wants to save changes
                     DialogView
                         .ask(
-                            strings.askSaveChanges,
-                            strings.unsavedChanges,
-                            [btnSave, btnIgnore]
-                        );
+                        strings.askSaveChanges,
+                        strings.unsavedChanges,
+                        [btnSave, btnIgnore]
+                    );
                 }
 
             }
@@ -636,8 +643,6 @@ module latte{
             if(changed && silent !== true)
                 this.onUnsavedChangesChanged();
 
-
-
         }
 
         /**
@@ -652,7 +657,9 @@ module latte{
             return this;
 
         }
+        //endregion
 
+        //region Properties
         /**
          * Gets or sets the info item of the view. Its shown in the back of the container
          and centered into the view.
@@ -667,7 +674,6 @@ module latte{
          **/
         set infoItem(value: Item){
 
-
             if(this._infoItem instanceof Item)
                 this._infoItem.element.detach();
 
@@ -676,7 +682,6 @@ module latte{
 
             this._infoItem = value;
             this.onLayout();
-
 
         }
 
@@ -767,6 +772,7 @@ module latte{
             this.setView(value);
 
         }
+        //endregion
     }
 
     $(() => { View.initStatic(); });

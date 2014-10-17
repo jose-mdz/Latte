@@ -5,34 +5,14 @@ module latte{
     export class FormView extends ColumnView{
 
         /**
-         * Form
-         **/
-        form: FormItem;
-
-        /**
-         * Input items of the form
-         **/
-        inputs: Collection<InputItem>;
-
-        /**
-         * Holds the title element of the form
-         **/
-        titleLabel: LabelItem;
-
-
-        /**
          * Creates a new form, using the specified fields
          and commands
          **/
-            constructor(inputs: Array<InputItem> = null){
+        constructor(inputs: Array<InputItem> = null){
 
 
             super(1);
             this.addClass('form');
-
-            this.form = new FormItem();
-            this.inputs = this.form.inputs;
-            this.titleLabel = this.form.titleLabel;
 
             this.items.add(this.form);
 
@@ -41,6 +21,7 @@ module latte{
 
         }
 
+        //region Methods
         /**
          * Checks every input in <c>inputs</c> to be valid
          **/
@@ -48,6 +29,13 @@ module latte{
 
             return this.form.valid;
 
+        }
+
+        /**
+         * Returns an object with the values of fields
+         **/
+        getValues(): any{
+            return this.form.getValues();
         }
 
         /**
@@ -61,7 +49,64 @@ module latte{
         setTextWidth(value: number){
             this.form.setTextWidth(value);
         }
+        //endregion
 
+        //region Events
+
+
+        /**
+         * Back field for event
+         */
+         private _valueChanged: LatteEvent
+
+        /**
+         * Gets an event raised when a value of the form changes
+         *
+         * @returns {LatteEvent}
+         */
+        public get valueChanged(): LatteEvent{
+            if(!this._valueChanged){
+                this._valueChanged = new LatteEvent(this);
+            }
+            return this._valueChanged;
+        }
+
+        /**
+         * Raises the <c>valueChanged</c> event
+         */
+        public onValueChanged(){
+            if(this._valueChanged){
+                this._valueChanged.raise();
+            }
+            this.unsavedChanges = true;
+        }
+
+        //endregion
+
+        //region Components
+
+        /**
+         * Field for form property
+         */
+        private _form:FormItem;
+
+        /**
+         * Gets the form of the view
+         *
+         * @returns {FormItem}
+         */
+        public get form():FormItem {
+            if (!this._form) {
+                this._form = new FormItem();
+                this._form.valueChanged.add(this.onValueChanged, this);
+            }
+            return this._form;
+        }
+
+
+        //endregion
+
+        //region Properties
         /**
          * Gets or sets a value indicating if the form has a visible face style.
          **/
@@ -73,19 +118,16 @@ module latte{
          * Gets or sets a value indicating if the form has a visible face style.
          **/
         set faceVisible(value: boolean){
-
             this.form.faceVisible = value;
-
-
         }
 
         /**
-         * Returns an object with the values of fields
-         **/
-        getValues(): any{
-
-            return this.form.getValues();
-
+         * Gets the inputs of the form
+         *
+         * @returns {Collection<InputItem>}
+         */
+        public get inputs():Collection<InputItem> {
+            return this.form.inputs;
         }
 
         /**
@@ -115,5 +157,16 @@ module latte{
         set title(value: string){
             this.form.title = value;
         }
+
+        /**
+         * Gets the title label of the form
+         *
+         * @returns {LabelItem}
+         */
+        public get titleLabel():LabelItem {
+            return this.form.titleLabel;
+        }
+
+        //endregion
     }
 }

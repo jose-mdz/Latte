@@ -705,7 +705,7 @@ module latte{
                 var rect = $this.data('rectangle');
 
                 if(rect instanceof Rectangle){
-                    if(x >= rect.left() && x <= rect.right()){
+                    if(x >= rect.left && x <= rect.right){
                         col = $this;
                     }
                 }

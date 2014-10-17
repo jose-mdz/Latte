@@ -22,18 +22,40 @@ exports.manifestOf = function(module){
     //Create path to manifest
     var manifestPath = path.join(module.path, 'module.json');
 
-    if(fs.existsSync(manifestPath)){
+    // Load manifest
+    var manifest = exports.jsonAt(manifestPath);
 
-        // Read manifest
-        var data = fs.readFileSync(manifestPath, 'utf8');
+    if(manifest) {
+        return manifest;
 
-        return JSON.parse(data);
+    }else {
 
-    }else{
         console.warn(manifestPath + " not found. Defaults for manifest will be used");
 
         return defaultManifest;
     }
+
+
+}
+
+/**
+ * Returns the contents of the file as an object.
+ * File must contain a json object
+ *
+ * @param {string} path
+ */
+exports.jsonAt = function(path){
+
+    if(fs.existsSync(path)){
+
+        // Read manifest
+        var data = fs.readFileSync(path, 'utf8');
+
+        return JSON.parse(data);
+
+    }
+
+    return null;
 
 }
 
@@ -101,7 +123,14 @@ exports.Module.prototype.hasConnection = function(){
  */
 exports.Module.prototype.query = function(sql, callback){
 
-    var connection = mysql.createConnection(this.manifest.connection);
+    var connectionData = this.manifest.connection;
+
+    if(typeof this.manifest.connection['file'] == 'string') {
+        var connectionPath = path.join(this.path, this.manifest.connection.file); //
+        connectionData = exports.jsonAt(connectionPath);
+    }
+
+    var connection = mysql.createConnection(connectionData);
 
     connection.connect();
 

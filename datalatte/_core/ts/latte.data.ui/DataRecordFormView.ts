@@ -12,9 +12,9 @@ module latte{
 
             super();
 
-            this.form = new DataRecordFormItem();
-            this.items.clear();
-            this.items.add(this.form);
+            //this.form = new DataRecordFormItem();
+            //this.items.clear();
+            //this.items.add(this.form);
 
             if(record)
                 this.record = record;
@@ -31,6 +31,30 @@ module latte{
 
         }
 
+        //region Components
+
+        /**
+         * Field for form property
+         */
+        private _dataform:DataRecordFormItem;
+
+        /**
+         * Gets the data record form view
+         *
+         * @returns {DataRecordFormItem}
+         */
+        public get form():DataRecordFormItem {
+            if (!this._dataform) {
+                this._dataform = new DataRecordFormItem();
+                this._dataform.valueChanged.add(this.onValueChanged, this);
+            }
+            return this._dataform;
+        }
+
+        //endregion
+
+        //region Properties
+
         /**
          * Gets or sets the record of the form
          **/
@@ -44,5 +68,6 @@ module latte{
         set record(record: DataRecord){
             (<DataRecordFormItem>this.form).record = record;
         }
+        //endregion
     }
 }

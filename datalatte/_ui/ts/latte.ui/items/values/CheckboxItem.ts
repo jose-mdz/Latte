@@ -62,8 +62,21 @@ module latte{
         set value(value: boolean){
 
 
-            if(!_isBoolean(value))
-                throw new InvalidArgumentEx('value', value);
+            if(!_isBoolean(value)){
+
+                var t:any = value;
+
+                if(t == 1) {
+                    value = true;
+
+                }else if(t == 0 || t == ""){
+                    value = false;
+                }else{
+                    throw new InvalidArgumentEx('value', value);
+                }
+
+            }
+
 
             var changed = value !== this._value;
 

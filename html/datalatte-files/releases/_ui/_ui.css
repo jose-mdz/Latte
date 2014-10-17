@@ -1,4 +1,19 @@
 /* 
+    Document   : UiElement
+    Created on : Oct 12, 2012, 10:27:28 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.latte-uielement:focus,
+.latte-uielement:active{
+    outline: none;
+}
+
+.active-drag-element{
+    font-size: 11px;
+    font-family: 'Lucida Grande', sans-serif;
+}/* 
     Document   : Glyph
     Created on : Aug 9, 2012, 8:47:26 AM
     Author     : josemanuel
@@ -67,7 +82,7 @@
 */
 
 .latte-item.button{
-    padding: 5px;
+    padding: 4px;
 }
 
 .latte-item.button > .latte-item.label{
@@ -75,7 +90,7 @@
 }
 
 .latte-item.button.horizontal.no-icon{
-    padding: 5px 15px;
+    padding: 4px 15px;
 }
 
 .latte-item.button.horizontal > .latte-item.label > .label-content{
@@ -614,6 +629,14 @@ body.html-editor td{
 }
 
 /**
+ * Extra padding on labels
+ */
+.latte-item.toolbar.horizontal > .face > .holder > .items-container > .latte-item.label,
+.latte-item.toolbar.horizontal > .face > .holder > .side-items-container > .latte-item.label{
+    padding-top: 6px;
+}
+
+/**
  * Separators
  */
 .latte-item.toolbar > .face > .holder > .items-container > .latte-item.separator,
@@ -710,8 +733,8 @@ body.html-editor td{
 }
 
 .latte-item.widget > .latte-item.toolbar.top > .face {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
     border-bottom: solid 1px #b0b0b0;
     padding: 2px;
 }
@@ -1318,21 +1341,70 @@ body.html-editor td{
 }
 .latte-overlay.suggestion .latte-item.separator{
     border-top: solid 1px silver;
-}/* 
-    Document   : UiElement
-    Created on : Oct 12, 2012, 10:27:28 AM
-    Author     : josemanuel
-    Description:
-        Purpose of the stylesheet follows.
-*/
-.latte-uielement:focus,
-.latte-uielement:active{
-    outline: none;
+}
+.latte-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
-.active-drag-element{
+.latte-view.main-view-holder,
+.latte-modal-view
+{
+    color: black;
+    font-family: "Lucida Grande", sans-serif;
     font-size: 11px;
-    font-family: 'Lucida Grande', sans-serif;
+}
+
+.latte-view > .container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+}
+
+.latte-modal-view-layer{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255,255,255, 0.7);
+}
+
+.latte-modal-view{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 500px;
+    /*border: solid 1px silver;*/
+    box-shadow: 0 0 30px rgba(0,0,0,0.7);
+    border-radius: 4px;
+    background: #f6f6f6;
+}
+
+.small-screen .latte-modal-view{
+    width: auto;
+    right: 0;
+    bottom: 0;
+}
+
+.latte-modal-view > .inner-view{
+    /*padding: 10px;*/
+}
+
+.latte-modal-view > .items{
+    background: #f0f0f0;
+    padding: 5px;
+}
+
+.latte-modal-view > .items > .latte-item{
+    float: right;
+    margin-left: 10px;
 }
 .latte-view.anchor > .latte-item.anchor{
     position: absolute;
@@ -1623,34 +1695,6 @@ body.html-editor td{
     background-color: highlight;
     background-color: rgba(0, 153, 255, 0.15);
 }/* 
-    Document   : CalendarView
-    Created on : Oct 24, 2012, 9:48:22 PM
-    Author     : menendezpoo
-    Description:
-        Purpose of the stylesheet follows.
-*/
-.latte-view.calendar{
-    background-color: white;
-}
-
-.latte-view.calendar > .controls{
-    position: absolute;
-    top: 0; 
-    left: 0;
-    right: 0;
-    height: 50px;
-}
-
-.latte-view.calendar > .controls > .latte-item.label{
-    margin: 20px;
-}
-
-.latte-view.calendar > .controls > .latte-item.button-group{
-    position: absolute;
-    right: 20px;
-    top: 20px;
-    
-}/* 
     Document   : DateView
     Created on : Oct 9, 2012, 7:15:30 PM
     Author     : josemanuel
@@ -1684,6 +1728,34 @@ body.html-editor td{
         Purpose of the stylesheet follows.
 */
 /* 
+    Document   : CalendarView
+    Created on : Oct 24, 2012, 9:48:22 PM
+    Author     : menendezpoo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.latte-view.calendar{
+    background-color: white;
+}
+
+.latte-view.calendar > .controls{
+    position: absolute;
+    top: 0; 
+    left: 0;
+    right: 0;
+    height: 50px;
+}
+
+.latte-view.calendar > .controls > .latte-item.label{
+    margin: 20px;
+}
+
+.latte-view.calendar > .controls > .latte-item.button-group{
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    
+}/* 
     Document   : HtmlView
     Created on : Aug 9, 2012, 8:47:42 AM
     Author     : josemanuel
@@ -1926,68 +1998,4 @@ body.html-editor td{
 
 .latte-view.tree > .container  .latte-item.tree-item > .selectable{
     display: block;
-}
-.latte-view {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-}
-
-.latte-view.main-view-holder,
-.latte-modal-view
-{
-    color: black;
-    font-family: "Lucida Grande", sans-serif;
-    font-size: 11px;
-}
-
-.latte-view > .container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow: auto;
-}
-
-.latte-modal-view-layer{
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255,255,255, 0.7);
-}
-
-.latte-modal-view{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 500px;
-    /*border: solid 1px silver;*/
-    box-shadow: 0 0 30px rgba(0,0,0,0.7);
-    border-radius: 4px;
-    background: #f6f6f6;
-}
-
-.small-screen .latte-modal-view{
-    width: auto;
-    right: 0;
-    bottom: 0;
-}
-
-.latte-modal-view > .inner-view{
-    /*padding: 10px;*/
-}
-
-.latte-modal-view > .items{
-    background: #f0f0f0;
-    padding: 5px;
-}
-
-.latte-modal-view > .items > .latte-item{
-    float: right;
-    margin-left: 10px;
 }

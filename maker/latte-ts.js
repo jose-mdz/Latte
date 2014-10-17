@@ -203,6 +203,8 @@ function createTsReferencesFile(includes, directory, callback){
                      */
                     sortByReferences(classInfo);
 
+                    //console.log(JSON.stringify(classInfo))
+
                     var references = [];
                     var code = '';
 
@@ -276,15 +278,18 @@ var _extends = function(baseClassInfo, superClassInfo, infos){
     if(!baseClassInfo) return false;
 
     if(typeof infos[baseClassInfo.className] == 'undefined'){
+        //console.log("NOT FOUND: " + baseClassInfo.className)
         return false;
     }
 
     if(baseClassInfo.extends == superClassInfo.className){
+        //console.log(baseClassInfo.className + " -> " + superClassInfo.className)
         return true;
     }else{
         if(typeof baseClassInfo.extends == 'string'){
             return _extends(infos[baseClassInfo.extends], superClassInfo, infos);
         }else{
+            //console.log("NOT EXTEND: " + baseClassInfo.className + " -> " + superClassInfo.className)
             return false;
         }
     }
@@ -337,8 +342,17 @@ function getClassInfo(path, callback){
 //            var matches = data.match(/export\s+class\s+(\w*)(\s+extends\s+([\w|\.]*))?/i);
             var matches = data.match(/export\s+class\s+(\w*)<[\w\s,]*>(\s+extends\s+([\w|\.]*))<[\w\s,]*>?/i);
 
+            if(matches === null) {
+                matches = data.match(/export\s+class\s+(\w*)<[\w\s,]*>(\s+extends\s+([\w|\.]*))/i);
+            }
+
             if(matches === null){
                 matches =  data.match(/export\s+class\s+(\w*)(\s+extends\s+([\w|\.]*))?/i);
+            }
+
+            // Patch
+            if(data) {
+
             }
 
             if(matches && matches.length > 1){
@@ -372,6 +386,7 @@ function getClassInfo(path, callback){
             }
         }
 
+        //console.log(result.className + " ---extends--> " + result.extends)
         callback.call(this, result);
     });
 }

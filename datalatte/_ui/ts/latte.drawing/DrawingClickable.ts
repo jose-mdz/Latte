@@ -12,6 +12,7 @@ module latte {
         //endregion
 
         //region Fields
+
         //endregion
 
         /**
@@ -45,14 +46,28 @@ module latte {
         }
 
         /**
+         * Raises the <c>dragged</c> event
+         */
+        onDragged(){
+            if(this._dragged){
+                this._dragged.raise();
+            }
+        }
+
+        /**
          * Raises the <c>mouseDown</c> event
          */
         public onMouseDown(p: Point, button: number){
             if(this._mouseDown){
                 this._mouseDown.raise(p, button);
             }
-        }
 
+            if(this.draggable) {
+                this._dragOffset = new Point(p.x - this.left, p.y - this.top);
+            }
+
+            this._mouseIsDown = true;
+        }
 
         /**
          * Raises the <c>mouseEnter</c> event
@@ -88,8 +103,8 @@ module latte {
             if(this._mouseUp){
                 this._mouseUp.raise(p, button);
             }
+            this._mouseIsDown = false;
         }
-
 
         /**
          * Raises the <c>mouseWheel</c> event
@@ -138,6 +153,24 @@ module latte {
             return this._doubleClick;
         }
 
+
+        /**
+         * Back field for event
+         */
+        private _dragged: LatteEvent;
+
+        /**
+         * Gets an event raised when the node is dragged
+         *
+         * @returns {LatteEvent}
+         */
+        get dragged(): LatteEvent{
+            if(!this._dragged){
+                this._dragged = new LatteEvent(this);
+            }
+            return this._dragged;
+        }
+
         /**
          * Back field for event
          */
@@ -152,9 +185,9 @@ module latte {
             if(!this._mouseDown){
                 this._mouseDown = new LatteEvent(this);
             }
+
             return this._mouseDown;
         }
-
 
         /**
          * Back field for event
@@ -172,7 +205,6 @@ module latte {
             }
             return this._mouseEnter;
         }
-
 
         /**
          * Back field for event
@@ -208,7 +240,6 @@ module latte {
             return this._mouseMove;
         }
 
-
         /**
          * Back field for event
          */
@@ -225,7 +256,6 @@ module latte {
             }
             return this._mouseUp;
         }
-
 
         /**
          * Back field for event
@@ -251,6 +281,44 @@ module latte {
         /**
          * Property field
          */
+        private _draggable:boolean = false;
+
+        /**
+         * Gets or sets a value indicating if user is allowed to draw the node around.
+         *
+         * @returns {boolean}
+         */
+        get draggable():boolean {
+            return this._draggable;
+        }
+
+        /**
+         * Gets or sets a value indicating if user is allowed to draw the node around.
+         *
+         * @param {boolean} value
+         */
+        set draggable(value:boolean) {
+            this._draggable = value;
+        }
+
+        /**
+         * Property field
+         */
+        private _dragOffset:Point;
+
+        /**
+         * Gets the offset of dragging
+         *
+         * @returns {string}
+         */
+        get dragOffset():Point {
+            return this._dragOffset;
+        }
+
+
+        /**
+         * Property field
+         */
         private _mouseHovering:boolean = false;
 
         /**
@@ -270,6 +338,21 @@ module latte {
         public set mouseHovering(value:boolean) {
             this._mouseHovering = value;
         }
+
+        /**
+         * Property field
+         */
+        private _mouseIsDown:boolean;
+
+        /**
+         * Gets a value indicating if the mouse is currently down
+         *
+         * @returns {boolean}
+         */
+        get mouseIsDown():boolean {
+            return this._mouseIsDown;
+        }
+
 
         //endregion
 

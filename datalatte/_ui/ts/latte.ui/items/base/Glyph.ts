@@ -32,6 +32,13 @@ module latte{
         /**
          * Gets an empty glyph
          **/
+        static get add(): Glyph{
+            return Glyph._byLocation(2, 10, 'add');
+        }
+
+        /**
+         * Gets an empty glyph
+         **/
         static get check(): Glyph{
             return Glyph._byLocation(2, 5, 'check');
         }
@@ -174,7 +181,7 @@ module latte{
         /**
          * Creates the glyph
          **/
-            constructor(){
+        constructor(){
 
             super();
             this.element.addClass('glyph');

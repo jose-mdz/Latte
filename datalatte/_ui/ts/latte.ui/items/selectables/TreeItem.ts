@@ -458,27 +458,43 @@ module latte{
         set selected(value: boolean){
 
 
-            if(!_isBoolean(value))
-                throw new InvalidArgumentEx('value');
-
-            var __this = this;
             var changed = value !== this._selected;
 
             this._selected = value;
 
             if(value){
 
-                // Unselect siblings
-                this.faceElement.parents('.latte-view.tree')
-                    .find('.selectable.selected')
-                    .each(function(){
-                        var inst = $(this).parent().instance();
+                // Get TreeView
+                var tv = this.treeView;
 
-                        if(inst !== __this){
-                            inst.selected = (false);
+                if (tv) {
+
+                    //region Unselect siblings of all tree
+                    var tabOf = (len) => {
+                        var s = '';
+                        for (var i = 0; i < len; i++) s += '-';
+                        return s;
+                    }
+                    var unselect = (item:TreeItem, tab = 0) => {
+
+
+                        if (item !== this && item.selected) {
+                            item.selected = false;
                         }
-                    })
-                //.removeClass('selected');
+
+                        for (var i = 0; i < item.items.length; i++) {
+                            unselect(item.items[i], tab + 1);
+                        }
+
+                    };
+
+                    for (var i = 0; i < tv.items.length; i++) {
+                        unselect(tv.items[i]);
+                    }
+
+                    //endregion
+
+                }
 
                 // Select face
                 this.faceElement.addClass('selected');
@@ -488,18 +504,17 @@ module latte{
                     this.expanded = true;
                 }
 
-                // Get TreeView
-                var tv = this.treeView;
-
                 // Inform tree view selection
-                if(tv) tv._informSelectedItem(this);
+                if(tv){
+                    tv._informSelectedItem(this);
+                }
             }else{
                 this.faceElement.removeClass('selected');
             }
 
-            if(changed)
+            if(changed){
                 this.onSelectedChanged();
-
+            }
 
 
         }

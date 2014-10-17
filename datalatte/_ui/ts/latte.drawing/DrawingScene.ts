@@ -271,6 +271,11 @@ module latte {
 
                     if(node.hidden) continue;
 
+                    if(node.draggable && node.mouseIsDown) {
+                        node.location = new Point(p.x + node.dragOffset.x, p.y + node.dragOffset.y);
+                        node.onDragged();
+                    }
+
                     if(node.containsPoint(p)) {
                         node.onMouseMove(p, 0);
 
@@ -312,6 +317,10 @@ module latte {
                     var node:DrawingClickable = clickables[i];
 
                     if(node.hidden) continue;
+
+                    if(node.draggable) {
+                        node.onMouseUp(p, button);
+                    }
 
                     if(node.containsPoint(p)) {
                         node.onMouseUp(p, button);

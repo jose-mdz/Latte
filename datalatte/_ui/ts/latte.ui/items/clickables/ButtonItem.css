@@ -7,7 +7,7 @@
 */
 
 .latte-item.button{
-    padding: 5px;
+    padding: 4px;
 }
 
 .latte-item.button > .latte-item.label{
@@ -15,7 +15,7 @@
 }
 
 .latte-item.button.horizontal.no-icon{
-    padding: 5px 15px;
+    padding: 4px 15px;
 }
 
 .latte-item.button.horizontal > .latte-item.label > .label-content{

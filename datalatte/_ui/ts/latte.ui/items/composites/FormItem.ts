@@ -56,11 +56,7 @@ module latte{
 
             this.items.add(input);
 
-
-
-            input.valueChanged.add(() => {
-                this.onValueChanged();
-            })
+            input.valueChanged.add(this.onValueChanged, this);
 
             input.textVisible = true;
 

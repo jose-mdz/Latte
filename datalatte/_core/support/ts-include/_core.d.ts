@@ -1352,6 +1352,16 @@ declare module latte {
         **/
         public applyValues(record?: DataRecord): void;
         /**
+        * Field for form property
+        */
+        private _dataform;
+        /**
+        * Gets the data record form view
+        *
+        * @returns {DataRecordFormItem}
+        */
+        public form : DataRecordFormItem;
+        /**
         * Gets or sets the record of the form
         **/
         /**

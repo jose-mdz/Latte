@@ -3687,6 +3687,11 @@ declare module latte {
         *
         **/
         constructor();
+        /**
+        * Zero pads for dates
+        * @param i
+        * @returns {string}
+        */
         private zeroPad(i);
         /**
         *
@@ -3829,13 +3834,13 @@ declare module latte {
         **/
         constructor(columns?: number);
         /**
-        *
+        * Called when an item is added to the items collection
         **/
-        private _onAddItem(item);
+        public onAddItem(item: Item): void;
         /**
-        *
+        * Called when an item is removed to the items collection
         **/
-        private _onRemoveItem(item);
+        public onRemoveItem(item: Item): void;
         /**
         * Returns the column at the specified index. First column is zero
         **/
@@ -4033,106 +4038,6 @@ declare module latte {
         public length : number;
     }
 }
-/**
-* Created by josemanuel on 2/6/14.
-*/
-declare module latte {
-    /**
-    *
-    */
-    class Culture {
-        /**
-        * Property field
-        */
-        private static _current;
-        /**
-        * Gets or sets the current culture of the system
-        *
-        * @returns {Culture}
-        */
-        /**
-        * Gets or sets the current culture of the system
-        *
-        * @param {Culture} value
-        */
-        static current : Culture;
-        /**
-        * Field for esMX property
-        */
-        private static _esMx;
-        /**
-        * Gets the Español-Mexico Culture
-        *
-        * @returns {Culture}
-        */
-        static esMx : Culture;
-        /**
-        * Field for enUs property
-        */
-        private static _enUs;
-        /**
-        * Gets the English-USA Culture
-        *
-        * @returns {Culture}
-        */
-        static enUs : Culture;
-        /**
-        * Formats currency using the current culture
-        * @param n
-        * @returns {string}
-        */
-        static formatCurrency(n: number): string;
-        /**
-        * Formats a number using the current Culture
-        * @param n
-        * @param decimals
-        * @param symbol
-        * @returns {string}
-        */
-        static formatNumber(n: number, decimals?: number, symbol?: string): string;
-        /**
-        * Short date format
-        */
-        public shortDateFormat: string;
-        /**
-        * Long date format
-        */
-        public longDateFormat: string;
-        /**
-        * Amount of decimals to show in currency format
-        */
-        public currencyDecimals: number;
-        /**
-        * Separator of decimals for currency
-        */
-        public numberDecimalsSeparator: string;
-        /**
-        * Thousands separator for currency
-        */
-        public numberThousandsSeparator: string;
-        /**
-        * Symbol to use in currency
-        */
-        public currencySymbol: string;
-        /**
-        *
-        */
-        constructor();
-        /**
-        * Returns the specified number as a currency
-        * @param n
-        */
-        public onFormatCurrency(n: number): string;
-        /**
-        * Formats the specified number
-        * @param n
-        * @param decimals
-        * @param symbol
-        * @returns {string}
-        */
-        public onFormatNumber(n: number, decimals?: number, symbol?: string): string;
-    }
-}
 declare module latte {
     /**
     * Represents a color
@@ -4281,6 +4186,106 @@ declare module latte {
         * Gets or sets the Red component of color, from 0 to 255.
         **/
         public r : number;
+    }
+}
+/**
+* Created by josemanuel on 2/6/14.
+*/
+declare module latte {
+    /**
+    *
+    */
+    class Culture {
+        /**
+        * Property field
+        */
+        private static _current;
+        /**
+        * Gets or sets the current culture of the system
+        *
+        * @returns {Culture}
+        */
+        /**
+        * Gets or sets the current culture of the system
+        *
+        * @param {Culture} value
+        */
+        static current : Culture;
+        /**
+        * Field for esMX property
+        */
+        private static _esMx;
+        /**
+        * Gets the Español-Mexico Culture
+        *
+        * @returns {Culture}
+        */
+        static esMx : Culture;
+        /**
+        * Field for enUs property
+        */
+        private static _enUs;
+        /**
+        * Gets the English-USA Culture
+        *
+        * @returns {Culture}
+        */
+        static enUs : Culture;
+        /**
+        * Formats currency using the current culture
+        * @param n
+        * @returns {string}
+        */
+        static formatCurrency(n: number): string;
+        /**
+        * Formats a number using the current Culture
+        * @param n
+        * @param decimals
+        * @param symbol
+        * @returns {string}
+        */
+        static formatNumber(n: number, decimals?: number, symbol?: string): string;
+        /**
+        * Short date format
+        */
+        public shortDateFormat: string;
+        /**
+        * Long date format
+        */
+        public longDateFormat: string;
+        /**
+        * Amount of decimals to show in currency format
+        */
+        public currencyDecimals: number;
+        /**
+        * Separator of decimals for currency
+        */
+        public numberDecimalsSeparator: string;
+        /**
+        * Thousands separator for currency
+        */
+        public numberThousandsSeparator: string;
+        /**
+        * Symbol to use in currency
+        */
+        public currencySymbol: string;
+        /**
+        *
+        */
+        constructor();
+        /**
+        * Returns the specified number as a currency
+        * @param n
+        */
+        public onFormatCurrency(n: number): string;
+        /**
+        * Formats the specified number
+        * @param n
+        * @param decimals
+        * @param symbol
+        * @returns {string}
+        */
+        public onFormatNumber(n: number, decimals?: number, symbol?: string): string;
     }
 }
 declare module latte {
@@ -4746,67 +4751,6 @@ declare module latte {
 }
 declare module latte {
     /**
-    * Executes an action every specified amount of milliseconds
-    **/
-    class Timer {
-        /**
-        *
-        **/
-        private _callback;
-        /**
-        *
-        **/
-        private _context;
-        /**
-        *
-        **/
-        private _milliseconds;
-        /**
-        *
-        **/
-        private _paused;
-        /**
-        * Creates a timer that will call <c>callback</c> every specified amount of
-        <c>milliseconds</c> on the specified <c>context</c>.
-        **/
-        constructor(callback: Function, milliseconds: number, context: any);
-        /**
-        * Gets or sets the function who will be called every tick
-        **/
-        /**
-        * Gets or sets the function who will be called every tick
-        **/
-        public callback : Function;
-        /**
-        * Gets or sets the context in which the function is executed
-        **/
-        /**
-        * Gets or sets the context in which the function is executed
-        **/
-        public context : any;
-        /**
-        * Gets or sets the milliseconds to sleep between calls
-        **/
-        /**
-        * Gets or sets the milliseconds to sleep between calls
-        **/
-        public milliseconds : number;
-        /**
-        * Pauses the timer
-        **/
-        public pause(): void;
-        /**
-        * Starts ticking
-        **/
-        public start(): void;
-        /**
-        * Ticks the timer. Executes the callback and programs next tick.
-        **/
-        public tick(): void;
-    }
-}
-declare module latte {
-    /**
     * Represents a time interval.
     **/
     class TimeSpan {
@@ -4940,6 +4884,67 @@ declare module latte {
     }
 }
 declare module latte {
+    /**
+    * Executes an action every specified amount of milliseconds
+    **/
+    class Timer {
+        /**
+        *
+        **/
+        private _callback;
+        /**
+        *
+        **/
+        private _context;
+        /**
+        *
+        **/
+        private _milliseconds;
+        /**
+        *
+        **/
+        private _paused;
+        /**
+        * Creates a timer that will call <c>callback</c> every specified amount of
+        <c>milliseconds</c> on the specified <c>context</c>.
+        **/
+        constructor(callback: Function, milliseconds: number, context: any);
+        /**
+        * Gets or sets the function who will be called every tick
+        **/
+        /**
+        * Gets or sets the function who will be called every tick
+        **/
+        public callback : Function;
+        /**
+        * Gets or sets the context in which the function is executed
+        **/
+        /**
+        * Gets or sets the context in which the function is executed
+        **/
+        public context : any;
+        /**
+        * Gets or sets the milliseconds to sleep between calls
+        **/
+        /**
+        * Gets or sets the milliseconds to sleep between calls
+        **/
+        public milliseconds : number;
+        /**
+        * Pauses the timer
+        **/
+        public pause(): void;
+        /**
+        * Starts ticking
+        **/
+        public start(): void;
+        /**
+        * Ticks the timer. Executes the callback and programs next tick.
+        **/
+        public tick(): void;
+    }
+}
+declare module latte {
     class HEvent<T> {
     }
 }
@@ -5044,6 +5049,10 @@ declare module latte {
         */
         public onDoubleClick(p: Point, button: number): void;
         /**
+        * Raises the <c>dragged</c> event
+        */
+        public onDragged(): void;
+        /**
         * Raises the <c>mouseDown</c> event
         */
         public onMouseDown(p: Point, button: number): void;
@@ -5087,6 +5096,16 @@ declare module latte {
         * @returns {LatteEvent}
         */
         public doubleClick : LatteEvent;
+        /**
+        * Back field for event
+        */
+        private _dragged;
+        /**
+        * Gets an event raised when the node is dragged
+        *
+        * @returns {LatteEvent}
+        */
+        public dragged : LatteEvent;
         /**
         * Back field for event
         */
@@ -5150,6 +5169,31 @@ declare module latte {
         /**
         * Property field
         */
+        private _draggable;
+        /**
+        * Gets or sets a value indicating if user is allowed to draw the node around.
+        *
+        * @returns {boolean}
+        */
+        /**
+        * Gets or sets a value indicating if user is allowed to draw the node around.
+        *
+        * @param {boolean} value
+        */
+        public draggable : boolean;
+        /**
+        * Property field
+        */
+        private _dragOffset;
+        /**
+        * Gets the offset of dragging
+        *
+        * @returns {string}
+        */
+        public dragOffset : Point;
+        /**
+        * Property field
+        */
         private _mouseHovering;
         /**
         * Gets or sets a value indicating if the mouse is currently hovering the node
@@ -5162,6 +5206,16 @@ declare module latte {
         * @param {boolean} value
         */
         public mouseHovering : boolean;
+        /**
+        * Property field
+        */
+        private _mouseIsDown;
+        /**
+        * Gets a value indicating if the mouse is currently down
+        *
+        * @returns {boolean}
+        */
+        public mouseIsDown : boolean;
     }
 }
 /**
@@ -5852,6 +5906,112 @@ declare module latte {
         public width : number;
     }
 }
+declare module latte {
+    /**
+    * represents an action
+    **/
+    class Action {
+        /**
+        *
+        **/
+        private _buttons;
+        /**
+        *
+        **/
+        private _checked;
+        /**
+        *
+        **/
+        private _description;
+        /**
+        *
+        **/
+        private _enabled;
+        /**
+        *
+        **/
+        private _icon;
+        /**
+        *
+        **/
+        private _text;
+        /**
+        * Contains sub-actions of the icon
+        **/
+        public actions: Collection<Action>;
+        /**
+        * Raised when the action is clicked or invoked.
+        **/
+        public execute: LatteEvent;
+        /**
+        * Creates the action
+        **/
+        constructor(text?: string, icon?: IconItem, execute?: () => any, description?: string);
+        /**
+        * Gets or sets a value indicating if the action is currently checked
+        **/
+        /**
+        * Gets or sets a value indicating if the action is currently checked
+        **/
+        public checked : boolean;
+        /**
+        * Gets or sets the description of the action
+        **/
+        /**
+        * Gets or sets the description of the action
+        **/
+        public description : string;
+        /**
+        * Gets or sets a value indicating if the action is currently enabled
+        **/
+        /**
+        * Gets or sets a value indicating if the action is currently enabled
+        **/
+        public enabled : boolean;
+        /**
+        * Gets a <c>ButtonItem</c> representation of the action
+        **/
+        public getButton(): ButtonItem;
+        /**
+        * Gets or sets the 16 x 16 icon of the action
+        **/
+        /**
+        * Gets or sets the 16 x 16 icon of the action
+        **/
+        public icon : IconItem;
+        /**
+        * Gets or sets the text of the action
+        **/
+        /**
+        * Gets or sets the text of the action
+        **/
+        public text : string;
+    }
+}
+declare module latte {
+    /**
+    * Manages z-index related positions
+    <b style="color:darkred">This class should not be used directly because it is likely to disappear in future version</b>
+    **/
+    class ZIndex {
+        /**
+        * Array of elements that are being handled by class
+        **/
+        static elements: JQuery[];
+        /**
+        * Brings the specified element to the top
+        **/
+        static bringToFront(element: JQuery): void;
+        /**
+        * Remove elemet from elements, and erase z-index
+        **/
+        static removeElement(element: JQuery): void;
+        /**
+        * Updates the z-indexes of elements
+        **/
+        static updateZIndexes(): void;
+    }
+}
 /**
 * Created by josemanuel on 7/1/14.
 */
@@ -5894,6 +6054,10 @@ declare module latte {
         * Returns the glyph specified by its location
         **/
         private static _byLocation(u, v, name);
+        /**
+        * Gets an empty glyph
+        **/
+        static add : Glyph;
         /**
         * Gets an empty glyph
         **/
@@ -6181,6 +6345,149 @@ declare module latte {
         * @param value
         */
         public contentSide : Side;
+    }
+}
+/**
+* Created by josemanuel on 3/21/14.
+*/
+declare module latte {
+    /**
+    * Used to model swatches on the palettes
+    */
+    interface ColorPickerSwatch {
+        /**
+        * Bounds of swatch in canvas
+        */
+        bounds: Rectangle;
+        /**
+        * Color of swatch
+        */
+        color: Color;
+    }
+    /**
+    *
+    */
+    class ColorPicker extends ItemStack {
+        /**
+        *
+        */
+        constructor();
+        /**
+        * Handles mouse move on canvas
+        * @param screenX
+        * @param screenY
+        */
+        public canvasMouseMove(screenX: number, screenY: number): void;
+        /**
+        * Handles mouse down on canvas
+        * @param screenX
+        * @param screenY
+        */
+        public canvasMouseDown(screenX: number, screenY: number): void;
+        /**
+        * Draws the palette
+        */
+        public drawPalette(): void;
+        /**
+        * Raises the <c>color</c> event
+        */
+        public onColorChanged(): void;
+        /**
+        * Override.
+        */
+        public onLayout(): void;
+        /**
+        * Gets the swatch at the specified point (if any)
+        * @param screenX
+        * @param screenY
+        * @returns {*}
+        */
+        public swatchAt(screenX: number, screenY: number): ColorPickerSwatch;
+        /**
+        * Back field for event
+        */
+        private _colorChanged;
+        /**
+        * Gets an event raised when the value of the color property changes
+        *
+        * @returns {LatteEvent}
+        */
+        public colorChanged : LatteEvent;
+        /**
+        * Field for canvas property
+        */
+        private _canvas;
+        /**
+        * Gets the canvas where color palette is drawn
+        *
+        * @returns {JQuery}
+        */
+        public canvas : JQuery;
+        /**
+        * Field for lblIndicator property
+        */
+        private _lblIndicator;
+        /**
+        * Gets the color indicator label
+        *
+        * @returns {LabelItem}
+        */
+        public lblIndicator : LabelItem;
+        /**
+        * Field for toolbar property
+        */
+        private _toolbar;
+        /**
+        * Gets the toolbar
+        *
+        * @returns {Toolbar}
+        */
+        public toolbar : Toolbar;
+        /**
+        * Field for txtHex property
+        */
+        private _txtHex;
+        /**
+        * Gets the textbox item
+        *
+        * @returns {TextboxItem}
+        */
+        public txtHex : TextboxItem;
+        /**
+        * Property field
+        */
+        private _color;
+        /**
+        * Gets or sets the selected color of the picker
+        *
+        * @returns {Color}
+        */
+        /**
+        * Gets or sets the selected color of the picker
+        *
+        * @param {Color} value
+        */
+        public color : Color;
+        /**
+        * Field for context property
+        */
+        private _context;
+        /**
+        * Gets the context for rendering
+        *
+        * @returns {CanvasRenderingContext2D}
+        */
+        public context : CanvasRenderingContext2D;
+        /**
+        * Field for swatches property
+        */
+        private _swatches;
+        /**
+        * Gets the swatches on the canvas
+        *
+        * @returns {ColorPickerSwatch[]}
+        */
+        public swatches : ColorPickerSwatch[];
     }
 }
 declare module latte {
@@ -7009,84 +7316,39 @@ declare module latte {
 }
 declare module latte {
     /**
-    * represents an action
-    **/
-    class Action {
+    * Stack of items. It unselects siblings when a selectable within is selected
+    */
+    class SelectableStack extends ItemStack {
+        private _selectedItem;
+        private _selectedItemChanged;
         /**
+        * Creates the item
+        */
+        constructor();
+        /**
+        * Clears the current selection
+        */
+        public clearSelection(): void;
+        /**
+        * Adds selection handlers
+        * @param item
+        */
+        public onAddItem(item: Item): void;
+        /**
+        * Raises the <c>selectedItemChanged</c> event
+        */
+        public onSelectedItemChanged(): void;
+        /**
+        * Gets the selected item of the stack
         *
-        **/
-        private _buttons;
+        * @returns {SelectableItem}
+        */
+        public selectedItem : SelectableItem;
         /**
-        *
-        **/
-        private _checked;
-        /**
-        *
-        **/
-        private _description;
-        /**
-        *
-        **/
-        private _enabled;
-        /**
-        *
-        **/
-        private _icon;
-        /**
-        *
-        **/
-        private _text;
-        /**
-        * Contains sub-actions of the icon
-        **/
-        public actions: Collection<Action>;
-        /**
-        * Raised when the action is clicked or invoked.
-        **/
-        public execute: LatteEvent;
-        /**
-        * Creates the action
-        **/
-        constructor(text?: string, icon?: IconItem, execute?: () => any, description?: string);
-        /**
-        * Gets or sets a value indicating if the action is currently checked
-        **/
-        /**
-        * Gets or sets a value indicating if the action is currently checked
-        **/
-        public checked : boolean;
-        /**
-        * Gets or sets the description of the action
-        **/
-        /**
-        * Gets or sets the description of the action
-        **/
-        public description : string;
-        /**
-        * Gets or sets a value indicating if the action is currently enabled
-        **/
-        /**
-        * Gets or sets a value indicating if the action is currently enabled
-        **/
-        public enabled : boolean;
-        /**
-        * Gets a <c>ButtonItem</c> representation of the action
-        **/
-        public getButton(): ButtonItem;
-        /**
-        * Gets or sets the 16 x 16 icon of the action
-        **/
-        /**
-        * Gets or sets the 16 x 16 icon of the action
-        **/
-        public icon : IconItem;
-        /**
-        * Gets or sets the text of the action
-        **/
-        /**
-        * Gets or sets the text of the action
-        **/
-        public text : string;
+        * Gets an event raised when
+        * @returns {LatteEvent}
+        */
+        public selectedItemChanged : LatteEvent;
     }
 }
 declare module latte {
@@ -7137,147 +7399,60 @@ declare module latte {
         public contentSide : Side;
     }
 }
-/**
-* Created by josemanuel on 3/21/14.
-*/
 declare module latte {
     /**
-    * Used to model swatches on the palettes
-    */
-    interface ColorPickerSwatch {
-        /**
-        * Bounds of swatch in canvas
-        */
-        bounds: Rectangle;
-        /**
-        * Color of swatch
-        */
-        color: Color;
-    }
-    /**
+    * Toolbar specialized on showing tabs.
     *
+    * This toolbar is necessary because of the rendering styles applied to tabs to make the
+    * graphical "tab" effect.
     */
-    class ColorPicker extends ItemStack {
+    class TabToolbar extends Toolbar {
+        private _selectedTab;
+        private _contentSide;
         /**
-        *
+        * Collection of tabs
+        */
+        public tabs: Collection<TabItem>;
+        /**
+        * Raised when a tab is selected
+        **/
+        public selectedTabChanged: LatteEvent;
+        /**
+        * Creates the toolbar
         */
         constructor();
         /**
-        * Handles mouse move on canvas
-        * @param screenX
-        * @param screenY
-        */
-        public canvasMouseMove(screenX: number, screenY: number): void;
+        * Raises the <c>selectedTabChanged</c> event
+        **/
+        public onSelectedTabChanged(): void;
         /**
-        * Handles mouse down on canvas
-        * @param screenX
-        * @param screenY
+        * Handles tab adding
+        * @param tab
         */
-        public canvasMouseDown(screenX: number, screenY: number): void;
+        public onTabAdded(tab: TabItem): void;
         /**
-        * Draws the palette
+        * Handles tab removing
+        * @param tab
         */
-        public drawPalette(): void;
+        public onTabRemoved(tab: TabItem): void;
         /**
-        * Raises the <c>color</c> event
-        */
-        public onColorChanged(): void;
-        /**
-        * Override.
-        */
-        public onLayout(): void;
-        /**
-        * Gets the swatch at the specified point (if any)
-        * @param screenX
-        * @param screenY
-        * @returns {*}
-        */
-        public swatchAt(screenX: number, screenY: number): ColorPickerSwatch;
-        /**
-        * Back field for event
-        */
-        private _colorChanged;
-        /**
-        * Gets an event raised when the value of the color property changes
-        *
-        * @returns {LatteEvent}
-        */
-        public colorChanged : LatteEvent;
-        /**
-        * Field for canvas property
-        */
-        private _canvas;
-        /**
-        * Gets the canvas where color palette is drawn
-        *
-        * @returns {JQuery}
-        */
-        public canvas : JQuery;
-        /**
-        * Field for lblIndicator property
-        */
-        private _lblIndicator;
-        /**
-        * Gets the color indicator label
-        *
-        * @returns {LabelItem}
-        */
-        public lblIndicator : LabelItem;
-        /**
-        * Field for toolbar property
-        */
-        private _toolbar;
-        /**
-        * Gets the toolbar
-        *
-        * @returns {Toolbar}
-        */
-        public toolbar : Toolbar;
-        /**
-        * Field for txtHex property
-        */
-        private _txtHex;
-        /**
-        * Gets the textbox item
-        *
-        * @returns {TextboxItem}
-        */
-        public txtHex : TextboxItem;
-        /**
-        * Property field
-        */
-        private _color;
-        /**
-        * Gets or sets the selected color of the picker
-        *
-        * @returns {Color}
+        * Gets the current content side
+        * @returns {Side}
         */
         /**
-        * Gets or sets the selected color of the picker
-        *
-        * @param {Color} value
+        * Sets the content side of tabs
+        * @param value
         */
-        public color : Color;
+        public contentSide : Side;
         /**
-        * Field for context property
+        * Gets the selected tab of the toolbar
+        * @returns {TabItem}
         */
-        private _context;
         /**
-        * Gets the context for rendering
-        *
-        * @returns {CanvasRenderingContext2D}
+        * Sets the selected tab of the toolbar
+        * @param value
         */
-        public context : CanvasRenderingContext2D;
-        /**
-        * Field for swatches property
-        */
-        private _swatches;
-        /**
-        * Gets the swatches on the canvas
-        *
-        * @returns {ColorPickerSwatch[]}
-        */
-        public swatches : ColorPickerSwatch[];
+        public selectedTab : TabItem;
     }
 }
 declare module latte {
@@ -8072,39 +8247,6 @@ declare module latte {
         public treeView : TreeView;
     }
 }
-declare module latte {
-    /**
-    *
-    **/
-    class CheckboxItem extends ValueItem {
-        /**
-        *
-        **/
-        private _value;
-        /**
-        * Label for checkbox
-        **/
-        public label: LabelItem;
-        /**
-        *
-        **/
-        constructor();
-        /**
-        * Gets or sets the text of the checkbox
-        **/
-        /**
-        * Gets or sets the text of the checkbox
-        **/
-        public text : string;
-        /**
-        * Gets or sets the checked state of checkbox
-        **/
-        /**
-        * Gets or sets the checked state of checkbox
-        **/
-        public value : boolean;
-    }
-}
 /**
 * Created by josemanuel on 7/1/14.
 */
@@ -8208,6 +8350,39 @@ declare module latte {
         * Gets the value as a string for human reading
         **/
         public valueString : any;
+    }
+}
+declare module latte {
+    /**
+    *
+    **/
+    class CheckboxItem extends ValueItem {
+        /**
+        *
+        **/
+        private _value;
+        /**
+        * Label for checkbox
+        **/
+        public label: LabelItem;
+        /**
+        *
+        **/
+        constructor();
+        /**
+        * Gets or sets the text of the checkbox
+        **/
+        /**
+        * Gets or sets the text of the checkbox
+        **/
+        public text : string;
+        /**
+        * Gets or sets the checked state of checkbox
+        **/
+        /**
+        * Gets or sets the checked state of checkbox
+        **/
+        public value : boolean;
     }
 }
 declare module latte {
@@ -8583,22 +8758,6 @@ declare module latte {
 }
 declare module latte {
     /**
-    * Allows user to pick a time
-    **/
-    class TimePickerItem extends DatePickerItem {
-        /**
-        *
-        **/
-        constructor();
-        /**
-        * Gets or sets the value of the item
-        **/
-        public getValue(): TimeSpan;
-        public setValue(value: TimeSpan): void;
-    }
-}
-declare module latte {
-    /**
     *
     **/
     class TextboxItem extends ValueItem {
@@ -8885,6 +9044,22 @@ declare module latte {
 }
 declare module latte {
     /**
+    * Allows user to pick a time
+    **/
+    class TimePickerItem extends DatePickerItem {
+        /**
+        *
+        **/
+        constructor();
+        /**
+        * Gets or sets the value of the item
+        **/
+        public getValue(): TimeSpan;
+        public setValue(value: TimeSpan): void;
+    }
+}
+declare module latte {
+    /**
     * Shows a graphical indicator of activity.
     <example><code><span style="color: #000000">
     <span style="color: #0000BB"><br /><br />&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Show&nbsp;loader<br />&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">loader&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Loader</span><span style="color: #007700">(</span><span style="color: #DD0000">"Doing&nbsp;some&nbsp;stuff"</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;...<br />&nbsp;&nbsp;//&nbsp;Load&nbsp;some&nbsp;heavy&nbsp;stuff..<br />&nbsp;&nbsp;//&nbsp;...<br /><br />&nbsp;&nbsp;//&nbsp;Hide&nbsp;loader<br />&nbsp;&nbsp;</span><span style="color: #0000BB">loader</span><span style="color: #007700">.</span><span style="color: #0000BB">stop</span><span style="color: #007700">();<br />&nbsp;<br /></span><span style="color: #0000BB"></span>
@@ -9007,11 +9182,6 @@ declare module latte {
         * Gets or sets the text of the loader
         **/
         public text : string;
-    }
-}
-declare module latte {
-    class SuggestionOverlay extends StackOverlay {
-        constructor();
     }
 }
 declare module latte {
@@ -9144,6 +9314,11 @@ declare module latte {
         * Gets the orientation of the menu, relative to element provided by <c>domElement</c>
         **/
         public side : Side;
+    }
+}
+declare module latte {
+    class SuggestionOverlay extends StackOverlay {
+        constructor();
     }
 }
 declare module latte {
@@ -9696,7 +9871,7 @@ declare module latte {
         /**
         *
         **/
-        private _controls;
+        public _controls: JQuery;
         /**
         * Group of buttons for scrolling through calendar
         **/
@@ -10141,18 +10316,6 @@ declare module latte {
     **/
     class FormView extends ColumnView {
         /**
-        * Form
-        **/
-        public form: FormItem;
-        /**
-        * Input items of the form
-        **/
-        public inputs: Collection<InputItem>;
-        /**
-        * Holds the title element of the form
-        **/
-        public titleLabel: LabelItem;
-        /**
         * Creates a new form, using the specified fields
         and commands
         **/
@@ -10161,6 +10324,10 @@ declare module latte {
         * Checks every input in <c>inputs</c> to be valid
         **/
         public valid(): boolean;
+        /**
+        * Returns an object with the values of fields
+        **/
+        public getValues(): any;
         /**
         * Gets or sets the with of the text parts.
         * Value must be percent since it must be leveled with value part. Value size will be adjusted
@@ -10171,6 +10338,30 @@ declare module latte {
         */
         public setTextWidth(value: number): void;
         /**
+        * Back field for event
+        */
+        private _valueChanged;
+        /**
+        * Gets an event raised when a value of the form changes
+        *
+        * @returns {LatteEvent}
+        */
+        public valueChanged : LatteEvent;
+        /**
+        * Raises the <c>valueChanged</c> event
+        */
+        public onValueChanged(): void;
+        /**
+        * Field for form property
+        */
+        private _form;
+        /**
+        * Gets the form of the view
+        *
+        * @returns {FormItem}
+        */
+        public form : FormItem;
+        /**
         * Gets or sets a value indicating if the form has a visible face style.
         **/
         /**
@@ -10178,9 +10369,11 @@ declare module latte {
         **/
         public faceVisible : boolean;
         /**
-        * Returns an object with the values of fields
-        **/
-        public getValues(): any;
+        * Gets the inputs of the form
+        *
+        * @returns {Collection<InputItem>}
+        */
+        public inputs : Collection<InputItem>;
         /**
         * Gets or sets a value indicating if the inputs in the form are read-only
         **/
@@ -10195,6 +10388,12 @@ declare module latte {
         * Gets or sets the title of the form
         **/
         public title : string;
+        /**
+        * Gets the title label of the form
+        *
+        * @returns {LabelItem}
+        */
+        public titleLabel : LabelItem;
     }
 }
 declare module latte {
@@ -10498,6 +10697,25 @@ declare module latte {
 }
 declare module latte {
     /**
+    *
+    **/
+    class NavigationListView extends NavigationView {
+        /**
+        *
+        **/
+        public list: ListView;
+        /**
+        *
+        **/
+        public toolbar: Toolbar;
+        /**
+        *
+        **/
+        constructor();
+    }
+}
+declare module latte {
+    /**
     * Renders a list with columns
     **/
     class ListView extends View {
@@ -10581,118 +10799,6 @@ declare module latte {
         * Raises the <c>selectedItem</c> event
         */
         public onSelectedItemChanged(): void;
-    }
-}
-declare module latte {
-    /**
-    *
-    **/
-    class NavigationListView extends NavigationView {
-        /**
-        *
-        **/
-        public list: ListView;
-        /**
-        *
-        **/
-        public toolbar: Toolbar;
-        /**
-        *
-        **/
-        constructor();
-    }
-}
-declare module latte {
-    /**
-    * Stack of items. It unselects siblings when a selectable within is selected
-    */
-    class SelectableStack extends ItemStack {
-        private _selectedItem;
-        private _selectedItemChanged;
-        /**
-        * Creates the item
-        */
-        constructor();
-        /**
-        * Clears the current selection
-        */
-        public clearSelection(): void;
-        /**
-        * Adds selection handlers
-        * @param item
-        */
-        public onAddItem(item: Item): void;
-        /**
-        * Raises the <c>selectedItemChanged</c> event
-        */
-        public onSelectedItemChanged(): void;
-        /**
-        * Gets the selected item of the stack
-        *
-        * @returns {SelectableItem}
-        */
-        public selectedItem : SelectableItem;
-        /**
-        * Gets an event raised when
-        * @returns {LatteEvent}
-        */
-        public selectedItemChanged : LatteEvent;
-    }
-}
-declare module latte {
-    /**
-    * Toolbar specialized on showing tabs.
-    *
-    * This toolbar is necessary because of the rendering styles applied to tabs to make the
-    * graphical "tab" effect.
-    */
-    class TabToolbar extends Toolbar {
-        private _selectedTab;
-        private _contentSide;
-        /**
-        * Collection of tabs
-        */
-        public tabs: Collection<TabItem>;
-        /**
-        * Raised when a tab is selected
-        **/
-        public selectedTabChanged: LatteEvent;
-        /**
-        * Creates the toolbar
-        */
-        constructor();
-        /**
-        * Raises the <c>selectedTabChanged</c> event
-        **/
-        public onSelectedTabChanged(): void;
-        /**
-        * Handles tab adding
-        * @param tab
-        */
-        public onTabAdded(tab: TabItem): void;
-        /**
-        * Handles tab removing
-        * @param tab
-        */
-        public onTabRemoved(tab: TabItem): void;
-        /**
-        * Gets the current content side
-        * @returns {Side}
-        */
-        /**
-        * Sets the content side of tabs
-        * @param value
-        */
-        public contentSide : Side;
-        /**
-        * Gets the selected tab of the toolbar
-        * @returns {TabItem}
-        */
-        /**
-        * Sets the selected tab of the toolbar
-        * @param value
-        */
-        public selectedTab : TabItem;
     }
 }
 declare module latte {
@@ -10842,29 +10948,5 @@ declare module latte {
         * @returns {LatteEvent}
         */
         public removeItem : LatteEvent;
-    }
-}
-declare module latte {
-    /**
-    * Manages z-index related positions
-    <b style="color:darkred">This class should not be used directly because it is likely to disappear in future version</b>
-    **/
-    class ZIndex {
-        /**
-        * Array of elements that are being handled by class
-        **/
-        static elements: JQuery[];
-        /**
-        * Brings the specified element to the top
-        **/
-        static bringToFront(element: JQuery): void;
-        /**
-        * Remove elemet from elements, and erase z-index
-        **/
-        static removeElement(element: JQuery): void;
-        /**
-        * Updates the z-indexes of elements
-        **/
-        static updateZIndexes(): void;
     }
 }

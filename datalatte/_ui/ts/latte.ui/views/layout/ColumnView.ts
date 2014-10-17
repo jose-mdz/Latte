@@ -34,7 +34,7 @@ module latte{
 
             this.element.addClass('column');
 
-            this.items = new Collection<Item>(this._onAddItem, this._onRemoveItem, this);
+            this.items = new Collection<Item>(this.onAddItem, this.onRemoveItem, this);
 
             if(columns > 0){
                 this.columns = columns;
@@ -45,9 +45,9 @@ module latte{
         }
 
         /**
-         *
+         * Called when an item is added to the items collection
          **/
-        private _onAddItem(item: Item){
+         onAddItem(item: Item){
 
             var column = this.getColumnAt( (this.items.count - 1) % this.columns );
 
@@ -63,9 +63,9 @@ module latte{
         }
 
         /**
-         *
+         * Called when an item is removed to the items collection
          **/
-        private _onRemoveItem(item: Item){
+        onRemoveItem(item: Item){
 
             item.element.detach();
 
@@ -91,7 +91,7 @@ module latte{
             super.onLayout();
 
             if(this.columnWeights.length > 0){
-                this.columnWeights = this.columnWeights;
+                //this.columnWeights = this.columnWeights;
             }else{
                 if(View.smallScreen){
                     this.container.children().css('width', '');

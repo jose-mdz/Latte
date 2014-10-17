@@ -16,9 +16,9 @@ $doc = new Document(true);
 $doc->title->text($strings['appName']);
 
 // Add core and app tags
-$doc->head->add(DataLatteModule::tagsOf('_ui'));
-$doc->head->add(DataLatteModule::tagsOf('_core'));
-$doc->head->add(DataLatteModule::tagsAndConnectionOf('_app'));
+$doc->head->add(DataLatteModule::tagsOf('_ui', 'en'));
+$doc->head->add(DataLatteModule::tagsOf('_core', 'en'));
+$doc->head->add(DataLatteModule::tagsAndConnectionOf('_app', 'en'));
 $doc->head->add(DataLatteModule::tagsAndConnectionOf('_api'));
 
 // Load main

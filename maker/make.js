@@ -76,6 +76,13 @@ var releasePath = path.join(releasesPath, module_name);
 var releaseSupportPath = path.join(releasePath, 'support');
 //endregion
 
+// If there is no php or ts directory, abort make
+if(!fs.existsSync(tsPath) && !fs.existsSync(phpPath)){
+    console.log("Make aborted: no php/ or ts/ directory indicates module is only stub.");
+    process.exit(1)
+}
+//endregion
+
 //region File paths
 var jsFile = path.join(tsIncludePath, module_name + '.js');
 var tsDStrings = path.join(tsIncludePath, module_name + '.strings.d.ts');

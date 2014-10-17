@@ -76,7 +76,7 @@ module latte{
 
                         var field = metadata.fields[i];
                         var input:InputItem = new InputItem();
-                        var value = record[i] ? record[i] : null;
+                        var value = _undef(record[i]) ? null : record[i];
 
                         input.text = field.text ? field.text : '(No name)';
                         input.type = field.type ? field.type : 'string';

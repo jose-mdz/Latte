@@ -7,7 +7,7 @@ module latte{
         /**
          *
          **/
-        private _controls: JQuery;
+         _controls: JQuery;
 
         /**
          * Group of buttons for scrolling through calendar

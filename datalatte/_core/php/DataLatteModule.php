@@ -151,9 +151,9 @@ class DataLatteModule {
      * @param $moduleName
      * @return array
      */
-    public static function tagsOf($moduleName){
+    public static function tagsOf($moduleName, $lang = null){
         $module = new DataLatteModule($moduleName);
-        $module->load();
+        $module->load($lang);
         return $module->getTags();
     }
 
@@ -250,231 +250,6 @@ class DataLatteModule {
     //region Private Methods
 
     /**
-     * Copies the support files on the specified version folder
-     *
-     * @param $versionFolder
-     */
-    private function copySupportFiles($versionFolder){
-        
-        if(!is_dir($this->pathSupport)) return;
-        
-        $suporigin = String::combinePath($this->path, self::PATH_SUPPORT);
-        $supdestination = String::combinePath($versionFolder, self::PATH_SUPPORT);
-        
-        // Create bak directory
-        mkdir($supdestination, 0777);
-        
-        $files = DataLatteReflection::getFullFileList($suporigin);
-        $destination = array();
-        
-        // Create destintnfiles with corrected path
-        foreach($files as $file){
-            $destination[] = str_replace($suporigin, $supdestination, $file);
-        }
-
-        // Copy files
-        foreach($files as $i => $file){
-            
-            // Create folder if necessary
-            if(is_dir($file)){
-                if(!is_dir($destination[$i])){
-                    mkdir($destination[$i], 0777);
-                }
-            }else{
-                // Copy if doesn't start with an underscore
-                if(!str(basename($file))->startsWith("_")){
-                    copy($file, $destination[$i]);
-                }
-            }
-        }
-    }
-
-    /**
-     * Creates the CSS file on the specified version folder
-     *
-     * @param $versionFolder
-     */
-    private function createCssFile($versionFolder){
-        
-        $csspath = String::combinePath($versionFolder, $this->name . '.css');
-        
-        // Get CSS code
-        $css = $original = $this->getCss();
-        
-        // Simple minify
-        $css = preg_replace( '#\s+#', ' ', $css );
-        $css = preg_replace( '#/\*.*?\*/#s', '', $css );
-        $css = str_replace( '; ', ';', $css );
-        $css = str_replace( ': ', ':', $css );
-        $css = str_replace( ' {', '{', $css );
-        $css = str_replace( '{ ', '{', $css );
-        $css = str_replace( ', ', ',', $css );
-        $css = str_replace( '} ', '}', $css );
-        $css = str_replace( ';}', '}', $css );
-        
-        // Save it to file
-        $ptr = fopen($csspath, 'w+');
-        fwrite($ptr, $css);
-        fclose($ptr);
-        
-        // Get backup folder
-        $bakpath = self::getBackupPath($versionFolder);
-        
-        // Create directory if needed
-        if(!is_dir($bakpath)) mkdir($bakpath, 0777);
-        
-        // Save original
-        $ptr = fopen(String::combinePath($bakpath, $this->name . '.css'), 'w+');
-        fwrite($ptr, $original);
-        fclose($ptr);
-    }
-
-    /**
-     * Creates the description file on the specified version folder
-     *
-     * @param $versionFolder
-     */
-    private function createDescriptionFile($versionFolder){
-        
-        $info = array(
-            'classes' => array(),
-            'ua' => array()
-        );
-        
-        /**
-         * Gather php files information
-         */
-        $phpFiles = DataLatteReflection::getFileList($this->pathClasses, 'php');
-        
-        foreach($phpFiles as $phpFile){
-            $info['classes'][basename($phpFile, '.php')] = 
-                    DataLatteReflection::generatePhpFileInfo(
-                            String::combinePath($this->pathClasses, $phpFile));
-        }
-        
-        /**
-         * Gather JS files information
-         */
-        $namespaces = DataLatteReflection::getDirectoryList($this->pathUa);
-        
-        foreach($namespaces as $namespace){
-            
-            $jsFiles = DataLatteReflection::getFileList(
-                    String::combinePath($this->pathUa, $namespace), '.js');
-
-            $info['ua'][$namespace] = array();
-            
-            foreach($jsFiles as $jsFile){ 
-                $info['ua'][$namespace][basename($jsFile, '.js')] = 
-                    DataLatteReflection::generateJavaScriptFileInfo(
-                            String::combinePath($this->pathUa, $namespace . '/' . $jsFile));
-            }
-            
-        }
-        
-        /**
-         * 
-         * Write json file
-         * 
-         */
-        file_put_contents(
-                String::combinePath($versionFolder, $this->name . '.json'), 
-                json_encode($info));
-        
-    }
-
-    /**
-     * Creates the Directory for the spcified version
-     *
-     * @param $version
-     * @return string
-     */
-    private function createDirectoryForVersion($version){
-        
-        // Paths
-        $releasesPath = String::combinePath(DATALATTE_FILES, self::PATH_RELEASES);
-        $moduleReleasesPath = String::combinePath($releasesPath, $this->name);
-        $versionPath = $this->getPath($version);
-        
-        // Create releases directory
-        if(!(is_dir($releasesPath))){
-            mkdir($releasesPath, 0777);
-        }
-        
-        // Create 'module' directory
-        if(!is_dir($moduleReleasesPath)){
-            mkdir($moduleReleasesPath, 0777);
-        }
-        
-        // Create version directory
-        mkdir($versionPath, 0777);
-        
-        return $versionPath;
-    }
-
-    /**
-     * Creates the JavaScript file of the specified release
-     *
-     * @param $versionFolder
-     */
-    private function createJsFile($versionFolder){
-        
-        $jspath = String::combinePath($versionFolder, $this->name . '.js');
-        
-        // Get javascript
-        $js = $this->getJs();
-
-        // Compile using google service
-        $script = $js;
-        $ch = curl_init('http://closure-compiler.appspot.com/compile');
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, 'output_info=compiled_code&output_format=text&compilation_level=SIMPLE_OPTIMIZATIONS&js_code=' . urlencode($script));
-        $output = curl_exec($ch);
-        curl_close($ch);
-        
-        // Save it to file
-        file_put_contents($jspath, $output);
-        
-        // Get backup folder
-        $bakpath = self::getBackupPath($versionFolder);
-        
-        // Create directory if needed
-        if(!is_dir($bakpath)) mkdir($bakpath, 0777);
-        
-        // Save original
-        file_put_contents(String::combinePath($bakpath, $this->name . '.js'), $js);
-    }
-
-    /**
-     * Creates the Php file of the release
-     *
-     * @param $versionFolder
-     */
-    private function createPhpFile($versionFolder){
-        
-        //  
-        $phpPath = String::combinePath($versionFolder, $this->name . '.php');
-        
-        // Get php code
-        $php = $this->getPhp();
-        
-        // Save it to file
-        file_put_contents($phpPath, $php);
-        
-        // Get backup folder
-        $bakpath = self::getBackupPath($versionFolder);
-        
-        // Create directory if needed
-        if(!is_dir($bakpath)) mkdir($bakpath, 0777);
-        
-        // Save original
-        file_put_contents(String::combinePath($bakpath, $this->name . '.php'), $php);
-        
-    }
-
-    /**
      * Returns an array with all strings of all languages
      * @return array
      */
@@ -491,8 +266,7 @@ class DataLatteModule {
             
             // Get lang
             $lang =  basename($file, '.txt');
-            
-            
+
             // Scan file
             foreach(file($path) as $s){
                 $parts = explode(" ", $s);
@@ -575,108 +349,7 @@ class DataLatteModule {
         
         return $response;
     }
-    
-    /**
-     * Resolves relative version names, depending on what user asked for and what system allows
-     *
-     * @param string $version
-     * @return strings
-     */
-    private function resolveVersion($version){
-        
-        if($version == 'latest'){
-            $version = $this->getLatestVersion();
-        }
-        
-        if(!file_exists($this->getPath($version))){
-            $version = 'development';
-        }
-        
-        if(DataLatteManager::isLoggedIn()){
-            $version = 'development';
-        }
-        
-        return $version;
-    }
 
-    /**
-     * Gets the full PHP
-     *
-     * @return string
-     */
-    private function getPhp(){
-        
-        $classesPath = String::combinePath($this->getPath('development'), self::PATH_CLASSES);
-        $init = String::combinePath($this->getPath('development'), 'init.php');
-        $files = DataLatteReflection::getFileList($classesPath, 'php');
-        $php = '';
-        
-        // TODO: Records should be module-independent
-        // Include records
-        $php .= file_get_contents(String::combinePath(DATALATTE_FILES, 'records.php'));
-        
-        foreach($files as $file){
-            $php .= file_get_contents(String::combinePath($classesPath, $file));
-        }
-        
-        // Include init file
-        if(file_exists($init)){
-            $php .= file_get_contents($init);
-        }
-        
-        // Remove open tag declarations
-        $php = '<' . '?php ' . str_replace('<' . '?php', '', $php);
-        
-        return $php;
-    }
-
-    /**
-     * Increments the specified version
-     *
-     * @param $version
-     * @param bool $majorIncrement Increments major part
-     * @return string
-     */
-    private function incrementVersion($version, $majorIncrement = false){
-        $major = self::getMajor($version) + ($majorIncrement ? 1 : 0);
-        $minor = self::getMinor($version) + ($majorIncrement ? 0 : 1);
-        
-        return $major . '.' . $minor;
-    }
-
-    /**
-     * Creates the backup on the specified version folder
-     * @param $versionFolder
-     */
-    private function makeBackup($versionFolder){
-        
-        $bakpath = self::getBackupPath($versionFolder);
-        
-        // Create bak directory
-        if(!is_dir($bakpath)) mkdir($bakpath, 0777);
-        
-        $files = DataLatteReflection::getFullFileList($this->path);
-        $destination = array();
-        
-        // Create destintnfiles with corrected path
-        foreach($files as $file){
-            $destination[] = str_replace($this->path, $bakpath, $file);
-        }
-
-        // Copy files
-        foreach($files as $i => $file){
-            
-            // Create folder if necessary
-            if(is_dir($file)){
-                if(!is_dir($destination[$i])){
-                    mkdir($destination[$i], 0777);
-                }
-            }else{
-                copy($file, $destination[$i]);
-            }
-        }
-        
-    }
     //endregion
 
     //region Public Methods
@@ -854,7 +527,7 @@ class DataLatteModule {
      * @param string $urlPrefix
      * @return array
      */
-    public function getTags($version = 'latest', $urlPrefix = ''){
+    public function getTags($lang = 'en', $urlPrefix = ''){
 
         $tags = array();
 
@@ -881,50 +554,12 @@ class DataLatteModule {
          */
         $tags = array_merge($tags, array(
             tag('link')->rel('stylesheet')->href("/datalatte-files/releases/$this->name/$this->name.css"),
-            tag('script')->src("/datalatte-files/releases/$this->name/en.js"),
+            tag('script')->src("/datalatte-files/releases/$this->name/$lang.js"),
             tag('script')->src("/datalatte-files/releases/$this->name/$this->name.js"),
         ));
 
         return $tags;
 
-        $version = $this->resolveVersion($version);
-        $tags = array();
-
-        if($version == 'development'){
-
-            // If ua folder exists
-            if(file_exists(String::combinePath($this->path, self::PATH_UA))){
-
-                // Send the old way
-                return array(
-                    tag('link')->rel('stylesheet')->href("/datalatte/request.php?action=module-css&name=$this->name"),
-                    tag('script')->src("/datalatte/request.php?action=module-js&name=$this->name"),
-                );
-            }else{
-
-                // Send typescript deployed version
-                $tags = array(
-                    tag('link')->rel('stylesheet')->href(String::combineUrl($this->getUrlForSupport($version, $urlPrefix), "$this->name.css")),
-                    tag('script')->src(String::combineUrl($this->getUrlForSupport($version, $urlPrefix), "en.js")),
-                    tag('script')->src(String::combineUrl($this->getUrlForSupport($version, $urlPrefix), "$this->name.js")),
-                );
-            }
-
-
-        }else{
-
-            $tags = array(
-                tag('link')->rel('stylesheet')->href($this->getUrlForCss($version, $urlPrefix)),
-                tag('script')->src($this->getUrlForJsStrings($version, 'en', $urlPrefix)),
-                tag('script')->src($this->getUrlForJs($version, $urlPrefix)),
-            );
-        }
-
-        if($this->name == '_core'){
-            array_unshift($tags, tag('script')->src(String::combineUrl($this->getUrlForSupport($version, $urlPrefix), "js/jquery-1.10.2.min.js")));
-        }
-
-        return $tags;
     }
 
     /**
@@ -1145,9 +780,8 @@ class DataLatteModule {
      * Loads the module into memory, with the specified language and version
      *
      * @param string $lang
-     * @param string $version
      */
-    public function load($version = 'latest', $lang = 'en'){
+    public function load($lang = null){
 
 
         // Report as loaded
@@ -1180,6 +814,23 @@ class DataLatteModule {
         }
         //endregion
 
+        //region Load strings
+        if($lang){
+            $langs = $this->createStringsArray();
+
+            if(isset($langs[$lang])){
+                if(!isset($GLOBALS['strings'])){
+                    $GLOBALS['strings'] = array();
+                }
+
+                $GLOBALS['strings'] = array_merge($GLOBALS['strings'], $langs[$lang]);
+            }else{
+                die("No $lang lang in $this->name");
+            }
+        }
+        //endregion
+
+
     }
 
     /**
@@ -1191,29 +842,29 @@ class DataLatteModule {
 
         if(isset($this->metadata['connection'])){
 
+            $c = $this->metadata['connection'];
+
+            if(isset($this->metadata['connection']['file'])){
+                // Load connection from file
+                $connectionFile = String::combinePath($this->path, $this->metadata['connection']['file']);
+                $connectionText = file_get_contents($connectionFile);
+                $c = json_decode($connectionText, true);
+            }
+
             if(DataLatte::$current){
                 DataLatte::$current->close();
             }
 
-            $c = $this->metadata['connection'];
             $x = new DataConnection($c['user'], $c['password'], $c['host'], $c['database'], true);
 
-//            echo "[Connection params: $c[user] $c[password] $c[host] $c[database] ]";
-//            echo "[Created Connection: " . var_export($x, true) . "]";
-
-
             DataLatte::$current = $x;
-//            echo "[TEST: " . DataLatte::getSingle("select now()")  . "]";
-//            die("Assigned " . var_export($x, true));
-        }else{
-            //DataLatte::$current = null;
         }
     }
     
     /**
      * Makes a release of the app
      */
-    public function makeRelease($major = false){
+    public function makeRelease_ERASE($major = false){
         
         $oldmask = umask(0);
         

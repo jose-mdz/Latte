@@ -175,5 +175,5 @@ strings.reconnecting = "Reconnecting";
 strings.reconnectingInS = "Reconnecting in %s seconds";
 strings.makeRelease = "Make Release";
 strings.insertYouTube = "Insert YouTube";
-strings.clearText = "Limpiar texto";
-strings.developedBy = "Desarrollado por Goplek.com";
+strings.clearText = "Clear Text";
+strings.developedBy = "Developed by Goplek.com";
