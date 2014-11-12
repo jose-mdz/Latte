@@ -48,6 +48,7 @@ class DataLatteRequest {
 
         // Execute each call
         foreach($calls as $calldata){
+
             $call = new DataLatteCall();
 
             $call->moduleName = $calldata['moduleName'];

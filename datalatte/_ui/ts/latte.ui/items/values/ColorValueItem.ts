@@ -70,6 +70,7 @@ module latte {
                 this._colorPicker = new ColorPicker();
                 this._colorPicker.colorChanged.add(() => {
                     this.color = this._colorPicker.color;
+                    this.onValueChanged();
                     //MenuOverlay.closeAll();
 
                 });

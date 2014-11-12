@@ -322,10 +322,10 @@ module latte{
          **/
         container: JQuery;
 
-        /**
-         * Raised when the view stops being visible
-         **/
-        hidden: LatteEvent;
+        ///**
+        // * Raised when the view stops being visible
+        // **/
+        //hidden: LatteEvent;
 
         /**
          * Raised when the view is loaded and about to be placed into its container
@@ -367,7 +367,7 @@ module latte{
             super();
 
             // Initialize events
-            this.hidden = new LatteEvent(this);
+            //this.hidden = new LatteEvent(this);
             this.load = new LatteEvent(this);
             this.shown = new LatteEvent(this);
             this.unload = new LatteEvent(this);
@@ -405,11 +405,11 @@ module latte{
         /**
          * Raises the <c>hidden</c> event
          **/
-        onHidden(){
-
-            this.hidden.raise();
-
-        }
+        //onHidden(){
+        //
+        //    this.hidden.raise();
+        //
+        //}
 
         /**
          * Raises the <c>layout</c> event
@@ -611,7 +611,7 @@ module latte{
                 oldView.element.detach();
 
                 // Inform hidden
-                oldView.onHidden();
+                //oldView.onHidden();
             });
 
             this._view = newView;

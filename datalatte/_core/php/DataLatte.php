@@ -299,16 +299,17 @@
         
         // Append pagination to query
         $query .= PHP_EOL . "LIMIT $pageSize OFFSET $offset";
-        
+
         // Retrieve records
         $records = self::arrayOf($class, $query);
-        
+
         // Retrieve count of records in query
         $count = DataLatte::getSingle("SELECT FOUND_ROWS()");
-        
+
+
         // Compute total of pages
         $pageCount = ceil($count / $pageSize);
-        
+
         return array(
             'records' => $records,
             'recordcount' => $count,

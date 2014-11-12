@@ -36,7 +36,7 @@ class DataLatteModule {
     /**
      * Path (relative to module path)  of directory where PHP classes are located
      */
-    const PATH_CLASSES = 'php';
+    const PATH_PHP = 'php';
     
     /**
      * Path (relative to module path)  of directory where support files are located
@@ -89,60 +89,19 @@ class DataLatteModule {
     }
 
     /**
-     * Gets the back up folder path
+     * Returns a value indicating if the specified module is loaded
      *
-     * @param string $versionFolder
-     * @return string
+     * @param $name
+     * @return bool
      */
-    private static function getBackupPath($versionFolder){
-        return String::combinePath($versionFolder, 'bak');
-    }
+    public static function isLoaded($name){
+        // Check on loaded modules
+        foreach(DataLatteModule::$loadedModules as $module){
 
-    /**
-     * Gets the Major number of specified version string
-     * @param string $version
-     * @return int
-     * @throws InvalidArgumentException
-     */
-    private static function getMajor($version){
-
-        $version = strval($version);
-        $parts = explode('.', $version);
-
-        if(sizeof($parts) == 0){
-            return 0;
-
-        }elseif(sizeof($parts) == 1 || sizeof($parts) == 2){
-            return intval($parts[0]);
-
-        }else{
-            throw new InvalidArgumentException('$version');
+            if($module->name == $name) return true;
         }
-    }
 
-    /**
-     * Gets the Minor number of specified version string
-     * @param string $version
-     * @return int
-     * @throws Exception
-     */
-    private static function getMinor($version){
-
-        $version = strval($version);
-        $parts = explode('.', $version);
-
-        if(sizeof($parts) == 0){
-            return 0;
-
-        }elseif(sizeof($parts) == 1){
-            return 0;
-
-        }elseif(sizeof($parts) == 2){
-            return intval($parts[1]);
-
-        }else{
-            throw new InvalidArgumentException('$version');
-        }
+        return false;
     }
 
     /**
@@ -168,6 +127,18 @@ class DataLatteModule {
         $module->load();
         $module->loadConnection();
         return $module->getTags();
+    }
+
+    /**
+     * Loads the specified module into memory
+     * @param $moduleName
+     * @param null $lang
+     * @return DataLatteModule
+     */
+    public static function memoryLoad($moduleName, $lang = null){
+        $module = new DataLatteModule($moduleName);
+        $module->load($lang);
+        return $module;
     }
 
     //endregion
@@ -196,7 +167,7 @@ class DataLatteModule {
      * Path of module's classes folder
      * @var string
      */
-    public $pathClasses;
+    public $pathPhp;
     
     /**
      * Path of module's ua folder
@@ -209,7 +180,7 @@ class DataLatteModule {
      * @var string
      */
     public $pathLang;
-    
+
     /**
      * Path of module's support folder
      * @var string
@@ -220,6 +191,14 @@ class DataLatteModule {
      * Path of module's TypeScript classes folder
      */
     public $pathTs;
+
+    /**
+     * Loaded language of the module
+     *
+     * @var string
+     */
+    public $lang;
+
     //endregion
 
     //region Ctor
@@ -238,7 +217,7 @@ class DataLatteModule {
             throw new ErrorException("Directory -$name- does not exist in modules directory");
         }
         
-        $this->pathClasses = String::combinePath($this->path, self::PATH_CLASSES);
+        $this->pathPhp = String::combinePath($this->path, self::PATH_PHP);
         $this->pathUa = String::combinePath($this->path, self::PATH_UA);
         $this->pathLang = String::combinePath($this->path, self::PATH_LANG);
         $this->pathSupport = String::combinePath($this->path, self::PATH_SUPPORT);
@@ -282,170 +261,6 @@ class DataLatteModule {
         return $response;
     }
     
-    /**
-     * Creates the files of strings (JavaScript and PHP). The <c>return</c> param accepts
-     *  <b>'js'</b> or <b>'php'</b>, in which case, the files will not be written.
-     * 
-     * @param string $versionFolder
-     * @param string= $return
-     * @return mixed
-     */
-    private function createStringsFiles($versionFolder, $return = null){
-        
-        $response = '';
-        $langs = $this->createStringsArray();
-        
-        $jsInit = "if( (typeof window['strings']) != 'object'){ window['strings'] = {}; }";
-        $phpInit = 'if(!isset($GLOBALS["strings"])){$GLOBALS["strings"]=array();}';
-        
-        foreach($langs as $lang => $strings){
-            
-            // Files path
-            $jsPath = String::combinePath($versionFolder, 'lang-' . $lang . '.js');
-            $phpPath = String::combinePath($versionFolder, 'lang-' . $lang . '.php');
-            
-            // Open file to write
-            if(!$return) {
-                $h = fopen($jsPath, 'w+');
-                $phph = fopen($phpPath, 'w+');
-            }
-            
-            // Write strings variables Init
-            if(!$return) {
-                fwrite($h, $jsInit);
-                fwrite($phph, $phpInit);
-            }else{
-                if($return == 'js'){
-                    $response .= $jsInit;
-                }elseif($return == 'php'){
-                    $response .= $phpInit;
-                }
-            }
-            
-            // Scan file
-            foreach($strings as $name => $str){
-                
-                $jsLine = "window['strings']['$name']=\"$str\";";
-                $phpLine = "\$GLOBALS['strings']['$name']=\"$str\";";
-                
-                if(!$return) {
-                    fwrite($h, $jsLine);
-                    fwrite($phph, $phpLine);
-                }else{
-                    if($return == 'js'){
-                        $response .= $jsLine;
-                    }elseif($return == 'php'){
-                        $response .= $phpLine;
-                    }
-                }
-            }
-            
-            // Close files
-            if(!$return) {
-                fclose($h);
-                fclose($phph);
-            }
-        }
-        
-        return $response;
-    }
-
-    //endregion
-
-    //region Public Methods
-    /**
-     * Gets url of JavaScript file for specified version
-     * If version is ommitted, latest version will be used.
-     *
-     * @param string= $version
-     * @param string= $urlPrefix
-     * @return string
-     */
-    public function getUrlForJs($version = null, $urlPrefix = ''){
-
-        if($version === null){
-            $version = $this->getLatestVersion();
-        }
-
-        return "$urlPrefix/datalatte-files/releases/$this->name/$version/$this->name.js";
-    }
-
-    /**
-     * Gets url of JS strings file for specified version
-     * If version is ommitted, latest version will be used.
-     *
-     * @param string= $version
-     * @param string= $lang
-     * @param string= $urlPrefix
-     * @return string
-     */
-    public function getUrlForJsStrings($version = null, $lang = 'en', $urlPrefix = ''){
-
-        if($version === null){
-            $version = $this->getLatestVersion();
-        }
-
-        return "$urlPrefix/datalatte-files/releases/$this->name/$version/lang-$lang.js";
-    }
-
-    /**
-     * Gets the Url for the support folder
-     * @param string $version
-     * @param string $urlPrefix
-     * @return string
-     */
-    public function getUrlForSupport($version = null, $urlPrefix = ''){
-        if($version === null){
-            $version = $this->getLatestVersion();
-        }
-
-        if($version == 'development'){
-            if($this->name == '_core'){
-                return "$urlPrefix/datalatte/_core/support";
-
-            }elseif($this->name == '_app'){
-                return "$urlPrefix/datalatte-app/support";
-
-            }elseif($this->name == '_manager'){
-                return "$urlPrefix/datalatte/_manager/support";
-
-            }else{
-                return "$urlPrefix/datalatte-modules/$this->name/support";
-            }
-        }else{
-            return "$urlPrefix/datalatte-files/releases/$this->name/$version/support";
-        }
-    }
-
-    /**
-     * Gets all the info about classes in the specified version
-     *
-     * @param string $version
-     * @return array
-     * @throws Exception
-     */
-    public function getClassesInfo($version = 'latest'){
-
-        $response = array();
-        $version = $this->resolveVersion($version);
-
-        if($version == 'development'){
-
-            $files = DataLatteReflection::getFileList($this->pathClasses);
-
-            foreach($files as $file){
-                $info = DataLatteReflection::generatePhpFileInfo(
-                    String::combinePath($this->pathClasses, $file));
-                $response[$info['name']] = $info;
-            }
-
-        }else{
-            throw new Exception("getClassesInfo::Implement this!");
-        }
-
-        return $response;
-    }
-
     /**
      * Gets the live css of module
      */
@@ -523,11 +338,12 @@ class DataLatteModule {
     /**
      * Gets the tags for including the module in the document
      *
-     * @param string $version
      * @param string $urlPrefix
      * @return array
      */
-    public function getTags($lang = 'en', $urlPrefix = ''){
+    public function getTags($urlPrefix = ''){
+
+//        echo PHP_EOL . "<!-- TAGS: $this->name -->";
 
         $tags = array();
 
@@ -554,230 +370,26 @@ class DataLatteModule {
          */
         $tags = array_merge($tags, array(
             tag('link')->rel('stylesheet')->href("/datalatte-files/releases/$this->name/$this->name.css"),
-            tag('script')->src("/datalatte-files/releases/$this->name/$lang.js"),
             tag('script')->src("/datalatte-files/releases/$this->name/$this->name.js"),
         ));
+
+        if($this->lang){
+            if(file_exists(String::combinePath(DATALATTE_FILES, "releases/$this->name/$this->lang.js"))){
+                $tags = array_merge($tags, array(
+                    tag('script')->src("/datalatte-files/releases/$this->name/$this->lang.js"),
+                ));
+            }
+
+        }
 
         return $tags;
 
     }
 
-    /**
-     * Gets the namespaces of the UA folder in the specified version
-     *
-     * @param string $version
-     * @return array
-     * @throws Exception
-     */
-    public function getUaNamespaces($version = 'latest'){
-
-        $version = $this->resolveVersion($version);
-
-        if($version == 'development'){
-
-            return DataLatteReflection::getDirectoryList($this->pathUa);
-
-        }else{
-
-            // Data should come from a .json description file in release folder
-            throw new Exception("Not implemented");
-        }
-
-    }
 
     /**
-     * Gets the PHP classes of the specified version
-     *
-     * @param string $version
-     * @return array
-     * @throws Exception
-     */
-    public function getPhpClasses($version = 'latest'){
-
-        $version = $this->resolveVersion($version);
-
-        if($version == 'development'){
-
-            $result = array();
-            $files = DataLatteReflection::getFileList($this->pathClasses, 'php');
-
-            foreach($files as $file){
-                $result[] = basename($file, '.php');
-            }
-
-            return $result;
-
-        }else{
-
-            // Data should come from a .json description file in release folder
-            throw new Exception("Not implemented");
-        }
-    }
-
-    /**
-     * Gets the Info about the specified PHP class of the specified version
-     *
-     * @param $class
-     * @param string $version
-     * @return string
-     * @throws Exception
-     */
-    public function getPhpClassInfo($class, $version = 'latest'){
-
-        $version = $this->resolveVersion($version);
-
-        if($version == 'development'){
-
-            return DataLatteReflection::generatePhpFileInfo(
-                String::combinePath($this->pathClasses, $class . '.php'));
-
-        }else{
-
-            // Data should come from a .json description file in release folder
-            throw new Exception("Not implemented");
-        }
-    }
-
-    /**
-     * Gets the info of specified lass on specified version
-     * @param $class
-     * @param string $version
-     * @return array
-     * @throws Exception
-     */
-    public function getUaClassInfo($class, $version = 'latest'){
-
-        $version = $this->resolveVersion($version);
-
-        if($version == 'development'){
-
-            // Explode by dots
-            $parts = explode('.', $class);
-
-            // Get file name
-            $file = $parts[sizeof($parts) - 1];
-
-            // Remove file name for directory
-            unset($parts[sizeof($parts) - 1]);
-
-            // Gather to get namespace
-            $namespace = implode('.', $parts);
-
-            return DataLatteReflection::generateJavaScriptFileInfo(
-                String::combinePath($this->pathUa, $namespace . '/' . $file . '.js'));
-
-        }else{
-
-            // Data should come from a .json description file in release folder
-            throw new Exception("Not implemented");
-        }
-    }
-
-    /**
-     * Gets the classes in the namespace in the specified version
-     *
-     * @param string $namespace
-     * @param string $version
-     * @return array
-     * @throws Exception
-     */
-    public function getUaNamespaceClasses($namespace, $version = 'latest'){
-
-        $version = $this->resolveVersion($version);
-
-        if($version == 'development'){
-
-            $files = DataLatteReflection::getFileList(
-                String::combinePath($this->pathUa, $namespace), 'js');
-
-            $result = array();
-
-            foreach($files as $file){
-                $result[] = basename($file, '.js');
-            }
-
-            return $result;
-
-        }else{
-
-            // Data should come from a .json description file in release folder
-            throw new Exception("Not implemented");
-        }
-    }
-
-    /**
-     * Gets url of release CSS file for specified version
-     * If version is ommitted, latest version will be used.
-     *
-     * @param string= $version
-     * @param string= $urlPrefix
-     * @return string
-     */
-    public function getUrlForCss($version = null, $urlPrefix){
-
-        if($version === null){
-            $version = $this->getLatestVersion();
-        }
-
-        return "$urlPrefix/datalatte-files/releases/$this->name/$version/$this->name.css";
-    }
-
-    /**
-     * Finds the current major version of releases
-     *
-     * @return float
-     */
-    public function getLatestVersion(){
-
-        $releasesPath = String::combinePath(DATALATTE_FILES, self::PATH_RELEASES);
-        $moduleReleasesPath = String::combinePath($releasesPath, $this->name);
-        $versions = array();
-
-        if(!is_dir($moduleReleasesPath)){
-            return '0.0';
-        }
-
-        $folders = DataLatteReflection::getDirectoryList($moduleReleasesPath);
-
-        // Scan all folders and get them on array
-        foreach($folders as $folder){
-            if(is_numeric($folder)){
-                $versions[] = $folder;
-            }
-        }
-
-        // Major versions array
-        $majors = array();
-
-        // Collect majors
-        foreach($versions as $v){
-            $majors[] = self::getMajor($v);
-        }
-
-        // Select major
-        $major = sizeof($majors) > 0 ? max($majors) : 0;
-
-        // Minor versions array
-        $minors = array();
-
-        // Collect minors
-        foreach($versions as $v){
-            if(self::getMajor($v) == $major){
-                $minors[] = self::getMinor($v);
-            }
-        }
-
-        $minor = sizeof($minors) > 0 ? max($minors) : 0;
-
-//        echo "Majors: " . var_export($majors, true);
-//        echo "Minors: " . var_export($minors, true);
-//        die("Latest: $major.$minor");
-
-        return $major . '.' . $minor;
-    }
-
-    /**
-     * Loads the module into memory, with the specified language and version
+     * Loads the module into memory, using the specified language
+     * If no language is specified, no language will be loaded into memory
      *
      * @param string $lang
      */
@@ -787,21 +399,20 @@ class DataLatteModule {
         // Report as loaded
         self::$loadedModules[] = $this;
 
-        //region Load Records
-        $records = String::combinePath($this->pathSupport, 'records.php');
-
-        if(file_exists($records)){
-            include $records;
-        }
-        //endregion
-
-
         //region Load Metadata
         $metafile = String::combinePath($this->path, 'module.json');
 
         if(file_exists($metafile)){
             $metatext = file_get_contents($metafile);
             $this->metadata = json_decode($metatext, true);
+        }
+        //endregion
+
+        //region Load Records
+        $records = String::combinePath($this->pathSupport, 'records.php');
+
+        if(file_exists($records)){
+            include $records;
         }
         //endregion
 
@@ -816,29 +427,62 @@ class DataLatteModule {
 
         //region Load strings
         if($lang){
-            $langs = $this->createStringsArray();
 
-            if(isset($langs[$lang])){
-                if(!isset($GLOBALS['strings'])){
-                    $GLOBALS['strings'] = array();
-                }
-
-                $GLOBALS['strings'] = array_merge($GLOBALS['strings'], $langs[$lang]);
-            }else{
-                die("No $lang lang in $this->name");
-            }
+            $this->loadLanguage($lang);
         }
         //endregion
 
+        //region Execute _onLoad.php
 
+        $onLoad = String::combinePath($this->pathPhp, '_onLoad.php');
+
+        if(file_exists($onLoad)){
+            include $onLoad;
+        }
+
+        //region
+
+//        echo "<!-- LOADED: $this->name -->";
+    }
+
+    /**
+     * Loads the specified language into memory and returns a value indicating success
+     *
+     * @param $lang
+     * @return bool
+     */
+    public function loadLanguage($lang){
+        $this->lang = $lang;
+
+        $langs = $this->createStringsArray();
+
+        if(isset($langs[$lang])){
+
+            if(!isset($GLOBALS['strings'])){
+                $GLOBALS['strings'] = array();
+            }
+
+            $GLOBALS['strings'] = array_replace($GLOBALS['strings'], $langs[$lang]);
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * Gets a value indicating if the module has a connection declared
+     *
+     * @return bool
+     */
+    public function hasConnection(){
+        return isset($this->metadata['connection']);
     }
 
     /**
      * Loads its MySQL connection from metadata.
-     * If no connection loaded. No connection will be active in DataLatte Object
+     * If no connection is specified in metadata, DataLatte current connection won't be changed.
+     * If no connection loaded, no connection will be active in DataLatte Object
      */
     public function loadConnection(){
-
 
         if(isset($this->metadata['connection'])){
 
@@ -858,44 +502,20 @@ class DataLatteModule {
             $x = new DataConnection($c['user'], $c['password'], $c['host'], $c['database'], true);
 
             DataLatte::$current = $x;
+
+            //region Execute _onLoadConnection.php
+
+            $onLoad = String::combinePath($this->pathPhp, '_onLoadConnection.php');
+
+            if(file_exists($onLoad)){
+                include $onLoad;
+            }
+
+            //region
         }
     }
     
-    /**
-     * Makes a release of the app
-     */
-    public function makeRelease_ERASE($major = false){
-        
-        $oldmask = umask(0);
-        
-        $version = $this->incrementVersion($this->getLatestVersion(), $major);
-         
-        // Create directory
-        $versionFolder = $this->createDirectoryForVersion($version);
-        
-        // Create JS file
-        $this->createJsFile($versionFolder);
-        
-        // Create CSS file
-        $this->createCssFile($versionFolder);
-        
-        // Create PHP file
-        $this->createPhpFile($versionFolder);
-        
-        // Create description file
-        $this->createDescriptionFile($versionFolder);
-        
-        // Create strings files
-        $this->createStringsFiles($versionFolder);
-        
-        // Copy support files
-        $this->copySupportFiles($versionFolder);
-        
-        umask($oldmask);
-        
-        
-        return "OK - " . DataLatte::datetime();
-    }
+
     //endregion
 
 }

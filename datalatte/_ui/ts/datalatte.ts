@@ -144,29 +144,6 @@ module latte{
     export function _undef(param){ return typeof param == 'undefined'; };
 
     /**
-     * Requires the specified plugin
-     *
-     * @param {string} name
-     * @param {function} callback
-     */
-    export function _requirePlugin(name, callback){
-
-        // Check if already included
-        if(includedPlugins[name] === true){
-            callback.call(this);
-
-        }else{
-            includedPlugins[name] = true;
-
-            // Include script
-            jQuery.getScript(sprintf('/datalatte/_core/support/js/%s.js', name), function(){
-                callback.call(this);
-            });
-        }
-
-    };
-
-    /**
      * Logs the specified data if there's a console.
      */
     export function log(...any){

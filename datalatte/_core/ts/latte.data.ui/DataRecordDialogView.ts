@@ -4,6 +4,27 @@ module latte{
      **/
     export class DataRecordDialogView extends DialogView{
 
+        //region Static
+
+        /**
+         * Shows a dialog to edit the specified record
+         * @param r
+         * @param onSaved
+         * @param title
+         */
+        static editRecord(r: DataRecord, onSaved: () => any = null, title:string = ''): DataRecordDialogView{
+
+            var d = new DataRecordDialogView(r);
+
+            d.title = title;
+            d.saved.add(onSaved);
+            d.show();
+
+            return d;
+
+        }
+
+        //endregion
 
         /**
          *

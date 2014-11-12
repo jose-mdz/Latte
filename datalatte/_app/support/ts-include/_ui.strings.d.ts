@@ -177,4 +177,7 @@ declare module latte{ interface Strings{
 	insertYouTube: string;
 	clearText: string;
 	developedBy: string;
+	confirmDeleteS: string;
+	cantBeUndone: string;
+	yesDeleteS: string;
 }}

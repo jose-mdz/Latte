@@ -58,6 +58,7 @@ class DataLatteUa {
      * File scanning is <b>not recursive</b>.
      * 
      * @param string $path Path to scan for JS files
+     * @return string
      */
     public static function getFolderJs($path){
         
@@ -476,11 +477,26 @@ class DataLatteUa {
     }
     
     /**
+     * Retrieves a record
+     *
      * @remote 
-     * @param type $name
-     * @param type $id
+     * @param string $name
+     * @param string $id
+     * @param string $module
+     * @return DataRecord
      */
-    public static function recordSelect($name, $id = NULL){
+    public static function recordSelect($name, $id = NULL, $module = NULL){
+
+        if($module){
+            if(!DataLatteModule::isLoaded($module)){
+                $mod = DataLatteModule::memoryLoad($module);
+                if($mod->hasConnection()){
+                    $mod->loadConnection();
+                }
+            }else{
+                DataLatteModule::byName($module)->loadConnection();
+            }
+        }
 
         if($id)
             $record = DataRecord::byAuto($name, $id);

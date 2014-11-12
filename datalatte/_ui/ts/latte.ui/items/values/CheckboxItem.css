@@ -5,6 +5,7 @@
     Description:
         Purpose of the stylesheet follows.
 */
-.latte-item.checkbox > .latte-item.label{
+.latte-item.value.checkbox > .latte-item.label{
     /*float: none;*/
+    margin-top: 5px;
 }

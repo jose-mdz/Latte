@@ -637,13 +637,24 @@ body.html-editor td{
 }
 
 /**
+ * Extra margin on textboxes
+ */
+.latte-item.toolbar.horizontal > .face > .holder > .items-container  .latte-item.value.textbox,
+.latte-item.toolbar.horizontal > .face > .holder > .side-items-container .latte-item.value.textbox{
+    margin-top: 6px;
+    margin-bottom: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+/**
  * Separators
  */
 .latte-item.toolbar > .face > .holder > .items-container > .latte-item.separator,
 .latte-item.toolbar > .face > .holder > .side-items-container > .latte-item.separator{
     border-left: solid 1px silver;
     border-right: solid 1px white;
-    margin: 0 5px;
+    margin: 6px 5px;
     height: 25px;
 }
 
@@ -1013,11 +1024,11 @@ body.html-editor td{
         Purpose of the stylesheet follows.
 */
 
-.latte-item.selectable,
-.latte-item.tree-item  > .selectable, .selectable{
+.latte-item.list.selectable,
+.latte-item.tree-item  > .selectable{
     border: solid 1px transparent;
     float: none;
-    padding: 5px;
+    padding: 10px;
     cursor: pointer;
 }
 
@@ -1031,6 +1042,8 @@ body.html-editor td{
 .latte-item.tree-item > .selectable.selected, .selectable.selected{
     border-color: #93A0B3;
     background: #E8F3FF;
+}.latte-item.selectable.with-label{
+    padding: 10px;
 }/* 
     Document   : TreeItem
     Created on : Aug 8, 2012, 10:07:49 AM
@@ -1079,8 +1092,9 @@ body.html-editor td{
     Description:
         Purpose of the stylesheet follows.
 */
-.latte-item.checkbox > .latte-item.label{
+.latte-item.value.checkbox > .latte-item.label{
     /*float: none;*/
+    margin-top: 5px;
 }/* 
     Document   : DatePickerItem
     Created on : Feb 27, 2013, 1:09:58 PM
@@ -1695,6 +1709,34 @@ body.html-editor td{
     background-color: highlight;
     background-color: rgba(0, 153, 255, 0.15);
 }/* 
+    Document   : CalendarView
+    Created on : Oct 24, 2012, 9:48:22 PM
+    Author     : menendezpoo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.latte-view.calendar{
+    background-color: white;
+}
+
+.latte-view.calendar > .controls{
+    position: absolute;
+    top: 0; 
+    left: 0;
+    right: 0;
+    height: 50px;
+}
+
+.latte-view.calendar > .controls > .latte-item.label{
+    margin: 20px;
+}
+
+.latte-view.calendar > .controls > .latte-item.button-group{
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    
+}/* 
     Document   : DateView
     Created on : Oct 9, 2012, 7:15:30 PM
     Author     : josemanuel
@@ -1728,34 +1770,6 @@ body.html-editor td{
         Purpose of the stylesheet follows.
 */
 /* 
-    Document   : CalendarView
-    Created on : Oct 24, 2012, 9:48:22 PM
-    Author     : menendezpoo
-    Description:
-        Purpose of the stylesheet follows.
-*/
-.latte-view.calendar{
-    background-color: white;
-}
-
-.latte-view.calendar > .controls{
-    position: absolute;
-    top: 0; 
-    left: 0;
-    right: 0;
-    height: 50px;
-}
-
-.latte-view.calendar > .controls > .latte-item.label{
-    margin: 20px;
-}
-
-.latte-view.calendar > .controls > .latte-item.button-group{
-    position: absolute;
-    right: 20px;
-    top: 20px;
-    
-}/* 
     Document   : HtmlView
     Created on : Aug 9, 2012, 8:47:42 AM
     Author     : josemanuel

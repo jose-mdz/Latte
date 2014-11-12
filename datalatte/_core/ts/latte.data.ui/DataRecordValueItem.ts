@@ -20,7 +20,7 @@ module latte{
          * @param loader
          * @param textboxCreated
          */
-        constructor(loader: DataRecordSuggestionLoader = null, textboxCreated: (t: TextboxItem) => any = null){
+        constructor(loader: DataRecordSuggestionLoader = null, textboxCreated: (t: TextboxItem) => any = null, placeholder: string = null){
             super();
 
             if(textboxCreated) {
@@ -33,6 +33,13 @@ module latte{
                 this.loaderFunction = loader;
             }
 
+            if(placeholder) {
+                this.placeholder = placeholder;
+
+                if(this.textbox) {
+                    this.textbox.placeholder = placeholder;
+                }
+            }
 
         }
 
@@ -152,6 +159,9 @@ module latte{
             if(this._textboxCreated){
                 this._textboxCreated.raise(this.textbox);
             }
+            if(_isString(this.placeholder) && this.placeholder.length > 0) {
+                this.textbox.placeholder = this.placeholder;
+            }
         }
         //endregion
 
@@ -178,6 +188,29 @@ module latte{
          */
         public set loaderFunction(value:DataRecordSuggestionLoader) {
             this._loaderFunction = value;
+        }
+
+        /**
+         * Property field
+         */
+        private _placeholder:string = null;
+
+        /**
+         * Gets or sets the placeholder
+         *
+         * @returns {string}
+         */
+        get placeholder():string {
+            return this._placeholder;
+        }
+
+        /**
+         * Gets or sets the placeholder
+         *
+         * @param {string} value
+         */
+        set placeholder(value:string) {
+            this._placeholder = value;
         }
 
         /**

@@ -41,13 +41,24 @@
 }
 
 /**
+ * Extra margin on textboxes
+ */
+.latte-item.toolbar.horizontal > .face > .holder > .items-container  .latte-item.value.textbox,
+.latte-item.toolbar.horizontal > .face > .holder > .side-items-container .latte-item.value.textbox{
+    margin-top: 6px;
+    margin-bottom: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+/**
  * Separators
  */
 .latte-item.toolbar > .face > .holder > .items-container > .latte-item.separator,
 .latte-item.toolbar > .face > .holder > .side-items-container > .latte-item.separator{
     border-left: solid 1px silver;
     border-right: solid 1px white;
-    margin: 0 5px;
+    margin: 6px 5px;
     height: 25px;
 }
 

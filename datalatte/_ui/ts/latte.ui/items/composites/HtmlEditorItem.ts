@@ -7,6 +7,13 @@ module latte{
      **/
     export class HtmlEditorItem extends ValueItem{
 
+        //region Static
+
+        static rangyLoaded: boolean = false;
+
+        //endregion
+
+        //region Fields
         /**
          *
          **/
@@ -41,6 +48,7 @@ module latte{
          * Raised when an image in the editor is selected
          **/
         imageSelected: LatteEvent;
+        //endregion
 
         /**
          * Creates the editor.
@@ -61,7 +69,14 @@ module latte{
             this.toolbar.appendTo(this);
             this._addToolbarButtons();
 
-            _requirePlugin('rangy', () => { this._initEditor()});
+            if(!HtmlEditorItem.rangyLoaded){
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = 'datalatte-files/releases/_ui/support/js/rangy.js';
+                document.body.appendChild(script);
+
+                HtmlEditorItem.rangyLoaded = true;
+            }
 
         }
 
@@ -694,21 +709,6 @@ module latte{
         }
 
         /**
-         * Gets the range of selection. Returns <c>null</c> if no current selection.
-         **/
-          get  selectionRange(): RangyRange{
-
-
-            var sel = this.selection;
-
-            if(!sel.rangeCount)
-                return null;
-
-            return this.selection.getRangeAt(0);
-
-        }
-
-        /**
          * Gets the element where selection starts.
          **/
         selectionStart(): JQuery{
@@ -728,7 +728,7 @@ module latte{
         }
 
         /**
-         *
+         * Override.
          **/
         setValue(value: string){
 
@@ -773,20 +773,39 @@ module latte{
 
         }
 
+        /**
+         * Gets the range of selection. Returns <c>null</c> if no current selection.
+         **/
+        get  selectionRange(): RangyRange{
+
+
+            var sel = this.selection;
+
+            if(!sel.rangeCount)
+                return null;
+
+            return this.selection.getRangeAt(0);
+
+        }
+
+        /**
+         * Gets or sets the source html
+         */
         get value(): string{
             return this.getValue();
         }
 
+        /**
+         * Gets or sets the source html
+         */
         set value(value: string){
             this.setValue(value);
         }
 
-
-
         /**
          * Gets the Window of the iframe
          **/
-     get window(){
+        get window(){
 
             return this.iframe.get(0).contentWindow;
 

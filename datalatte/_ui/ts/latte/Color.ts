@@ -12,6 +12,23 @@ module latte{
          **/
         static fromHex(hexColor: string): latte.Color{
 
+            if(_isString(hexColor)) {
+                if(hexColor.toLowerCase() == 'white') {
+                    hexColor = '#FFF';
+                }
+
+                if(hexColor.toLowerCase() == 'black') {
+                    hexColor = '#000';
+                }
+
+                if(hexColor.toLowerCase() == 'gray') {
+                    hexColor = '#777';
+                }
+
+                if(hexColor.length == 0) {
+                    hexColor = '#000';
+                }
+            }
 
             // Check is string
             if(!_isString(hexColor) || hexColor.length == 0)

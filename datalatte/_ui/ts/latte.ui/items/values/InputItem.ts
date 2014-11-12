@@ -485,6 +485,7 @@ module latte{
                     case "boolean":
                         item = new CheckboxItem();
                         break;
+
                     case "password":
                         item = new TextboxItem();
                         item.password = (true);
@@ -526,6 +527,10 @@ module latte{
 
                     case "flags":
                         item = new LabelValueItem();
+                        break;
+
+                    case "color":
+                        item = new ColorValueItem();
                         break;
 
                     case "file":

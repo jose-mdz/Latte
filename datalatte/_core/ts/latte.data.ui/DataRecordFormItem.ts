@@ -4,11 +4,6 @@ module latte{
      **/
     export class DataRecordFormItem extends FormItem{
 
-        /**
-         *
-         **/
-        private _record: DataRecord;
-
 
         /**
          * Creates the form of the specified record
@@ -21,6 +16,8 @@ module latte{
                 this.record = record;
 
         }
+
+        //region Methods
 
         /**
          * Applies the values on form to the record. Optionally specifies which record
@@ -42,22 +39,14 @@ module latte{
         }
 
         /**
-         * Gets or sets the record of the form
-         **/
-        get record(): DataRecord{
-            return this._record;
-        }
+         * Raises the <c>record</c> event
+         */
+        onRecordChanged(){
 
-        /**
-         * Gets or sets the record of the form
-         **/
-        set record(record: DataRecord){
+            var record = this.record;
 
             // Calls to get foreign key records
             var calls: Array<RemoteCall<DataRecord>> = [];
-
-            // Hold record
-            this._record = record;
 
             // Clear inputs
             this.inputs.clear();
@@ -99,9 +88,20 @@ module latte{
                             // If not record as value, load it in call
                             if (value && field['recordType'] && !(value instanceof DataRecord)) {
                                 ((d:DataRecordValueItem, input) => {
-                                    calls.push(new RemoteCall<DataRecord>('_core', 'DataLatteUa', 'recordSelect', {name: field['recordType'], id: value}).withHandlers((r:DataRecord) => {
-    //                                    log("Arrived foreign key record:")
-    //                                    log(r)
+
+                                    var params = {
+                                        name: field['recordType'],
+                                        id: value
+                                    };
+
+                                    if(_isString(field['recordModule'])){
+                                        log("Added module")
+                                        params['module'] = field['recordModule'];
+                                    }
+
+                                    calls.push(new RemoteCall<DataRecord>('_core', 'DataLatteUa', 'recordSelect', params).withHandlers((r:DataRecord) => {
+                                        //                                    log("Arrived foreign key record:")
+                                        //                                    log(r)
                                         if (r && r.recordId) {
                                             d.setRecordSilent(r);
                                             input.value = input.value;
@@ -127,7 +127,67 @@ module latte{
                 }
             }
 
-
+            if(this._recordChanged){
+                this._recordChanged.raise();
+            }
         }
+        //endregion
+
+        //region Events
+
+        /**
+         * Back field for event
+         */
+        private _recordChanged: LatteEvent
+
+        /**
+         * Gets an event raised when the value of the record property changes
+         *
+         * @returns {LatteEvent}
+         */
+        get recordChanged(): LatteEvent{
+            if(!this._recordChanged){
+                this._recordChanged = new LatteEvent(this);
+            }
+            return this._recordChanged;
+        }
+        //endregion
+
+        //region Properties
+
+        /**
+         * Property field
+         */
+        private _record: DataRecord = null;
+
+        /**
+         * Gets or sets the record of the form
+         *
+         * @returns {DataRecord}
+         */
+        get record(): DataRecord{
+            return this._record;
+        }
+
+        /**
+         * Gets or sets the record of the form
+         *
+         * @param {DataRecord} value
+         */
+        set record(value: DataRecord){
+
+            // Check if value changed
+            var changed: boolean = value !== this._record;
+
+            // Set value
+            this._record = value;
+
+            // Trigger changed event
+            if(changed){
+                this.onRecordChanged();
+            }
+        }
+        //endregion
+
     }
 }

@@ -1,20 +1,6 @@
 <?php
 
-/**
- * Adds a warning to return in the current ajax call
- * @param $message
- */
-function ajaxWarn($message){
-    $GLOBALS['ajax-warn'][] = $message;
-}
 
-/**
- * Adds a log to return in the current ajax call
- * @param $message
- */
-function ajaxLog($message){
-    $GLOBALS['ajax-log'][] = $message . '';
-}
 
 /**
  * Created by PhpStorm.
@@ -65,6 +51,7 @@ class DataLatteCall{
      * Executes the call and returns the result
      *
      * @return DataLatteResponse
+     * @throws SecurityException
      */
     public function execute(){
 

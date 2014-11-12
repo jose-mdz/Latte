@@ -440,6 +440,22 @@ module latte{
         }
 
         /**
+         * Raises the <c>hidden</c> event
+         */
+        onHiddenChanged(){
+
+            if(this.hidden) {
+                this.css('visibility', 'hidden');
+            }else {
+                this.css('visibility', '');
+            }
+
+            if(this._hiddenChanged){
+                this._hiddenChanged.raise();
+            }
+        }
+
+        /**
          * Raises the <c>layout</c> event.
          **/
         onLayout(){
@@ -554,7 +570,6 @@ module latte{
             }
         }
 
-
         /**
          * Back field for event
          */
@@ -581,6 +596,22 @@ module latte{
             }
         }
 
+        /**
+         * Back field for event
+         */
+        private _hiddenChanged: LatteEvent
+
+        /**
+         * Gets an event raised when the value of the hidden property changes
+         *
+         * @returns {LatteEvent}
+         */
+        get hiddenChanged(): LatteEvent{
+            if(!this._hiddenChanged){
+                this._hiddenChanged = new LatteEvent(this);
+            }
+            return this._hiddenChanged;
+        }
 
         /**
          * Back field for event
@@ -744,7 +775,6 @@ module latte{
             return this._finalized;
         }
 
-
         /**
          * Gets or sets a value indicating if the element should be focusable
          **/
@@ -786,6 +816,39 @@ module latte{
             this.element.height(value);
 
 
+        }
+
+        /**
+         * Property field
+         */
+        private _hidden: boolean = false;
+
+        /**
+         * Gets or sets a value indicating if the element is hidde
+         *
+         * @returns {boolean}
+         */
+        get hidden(): boolean{
+            return this._hidden;
+        }
+
+        /**
+         * Gets or sets a value indicating if the element is hidde
+         *
+         * @param {boolean} value
+         */
+        set hidden(value: boolean){
+
+            // Check if value changed
+            var changed: boolean = value !== this._hidden;
+
+            // Set value
+            this._hidden = value;
+
+            // Trigger changed event
+            if(changed){
+                this.onHiddenChanged();
+            }
         }
 
         /**
@@ -882,6 +945,7 @@ module latte{
 
 
         }
+
         //endregion
 
     }

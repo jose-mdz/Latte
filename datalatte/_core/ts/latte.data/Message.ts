@@ -414,6 +414,8 @@ module latte{
                 calls.push(this.calls[i].marshall());
             }
 
+            //log(sprintf("Call: %s, %s", DateTime.now.toString(), JSON.stringify(calls)));
+
             $.ajax({
 
                 /// Use URL for DataLatte requests

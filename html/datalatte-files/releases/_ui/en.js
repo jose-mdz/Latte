@@ -177,3 +177,6 @@ strings.makeRelease = "Make Release";
 strings.insertYouTube = "Insert YouTube";
 strings.clearText = "Clear Text";
 strings.developedBy = "Developed by Goplek.com";
+strings.confirmDeleteS = "Do you want to delete\"%s\"?";
+strings.cantBeUndone = "This action can't be undone.";
+strings.yesDeleteS = "Yes, delete %s";

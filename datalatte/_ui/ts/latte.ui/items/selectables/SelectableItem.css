@@ -6,11 +6,11 @@
         Purpose of the stylesheet follows.
 */
 
-.latte-item.selectable,
-.latte-item.tree-item  > .selectable, .selectable{
+.latte-item.list.selectable,
+.latte-item.tree-item  > .selectable{
     border: solid 1px transparent;
     float: none;
-    padding: 5px;
+    padding: 10px;
     cursor: pointer;
 }
 

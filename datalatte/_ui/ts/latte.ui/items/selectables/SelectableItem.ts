@@ -45,13 +45,13 @@ module latte{
          **/
         private _thisMouseDown(e){
 
+            if(!this.enabled) return;
 
             // Remove hover flag
             this.element.removeClass('hover');
 
             // Select
             this.selected = true;
-
 
         }
 
@@ -60,6 +60,7 @@ module latte{
          **/
         private _thisMouseOut(e){
 
+            if(!this.enabled) return;
 
             this.element.removeClass('hover pressed');
 
@@ -70,6 +71,7 @@ module latte{
          **/
         private _thisMouseOver(e){
 
+            if(!this.enabled) return;
 
             this.element.addClass('hover');
 

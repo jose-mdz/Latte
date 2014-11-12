@@ -7,6 +7,7 @@ module latte{
      **/
     export class IconItem extends Item{
 
+        //region Static
         /**
          * Default URL of sprite used if coordinates are specified, and no <c>url</c> is provided.
          **/
@@ -34,40 +35,21 @@ module latte{
             return icon;
 
         }
-        /**
-         *
-         **/
-        private _name: string = '';
+        //endregion
 
-        /**
-         *
-         **/
-        private _size: number = 16;
 
-        /**
-         *
-         **/
-        private _u: number;
 
-        /**
-         *
-         **/
-        private _url: string;
 
-        /**
-         *
-         **/
-        private _v: number;
 
-        /**
-         *
-         **/
-        private _x: number;
 
-        /**
-         *
-         **/
-        private _y: number;
+
+
+
+
+
+
+
+
 
         /**
          * Creates the icon
@@ -86,6 +68,7 @@ module latte{
 
         }
 
+        //region Methods
         /**
          * Returns a clone of the icon
          **/
@@ -102,6 +85,13 @@ module latte{
             return icon;
 
         }
+        //endregion
+
+        //region Properties
+        /**
+         *
+         **/
+        private _name: string = '';
 
         /**
          * Gets or sets the name of the icon
@@ -119,6 +109,11 @@ module latte{
 
 
         }
+
+        /**
+         *
+         **/
+        private _size: number = 16;
 
         /**
          * Gets or sets the size of the icon
@@ -149,12 +144,21 @@ module latte{
 
         }
 
+
+
+
+
         /**
          * Gets or sets the U coordiante of the icon inside image
          **/
         get u(): number{
             return this._u;
         }
+
+        /**
+         *
+         **/
+        private _u: number;
 
         /**
          * Gets or sets the U coordiante of the icon inside image
@@ -169,6 +173,11 @@ module latte{
         }
 
         /**
+         *
+         **/
+        private _url: string;
+
+        /**
          * Gets or sets the URL of the icon's image URL
          **/
         get url(): string{
@@ -180,22 +189,26 @@ module latte{
          **/
         set url(value: string){
 
-
-            if(value !== null){
+            if(_isString(value) && value.length > 0) {
                 this.element.css({
                     backgroundImage: 'url(' + value + ')',
                     backgroundRepeat: 'no-repeat'
                 });
-            }else{
+            }else {
                 this.element.css({
                     backgroundImage: '',
                     backgroundRepeat: ''
                 });
             }
+
             this._url = value;
 
-
         }
+
+        /**
+         *
+         **/
+        private _v: number;
 
         /**
          * Gets or sets the U coordiante of the icon inside image
@@ -214,6 +227,11 @@ module latte{
 
 
         }
+
+        /**
+         *
+         **/
+        private _x: number;
 
         /**
          * Gets or sets the X coordinate of icon inside image (As a sprite)
@@ -237,6 +255,11 @@ module latte{
         }
 
         /**
+         *
+         **/
+        private _y: number;
+
+        /**
          * Gets or sets the Y coordinate of icon inside image (As a sprite)
          **/
         get y(): number{
@@ -256,5 +279,7 @@ module latte{
 
 
         }
+        //endregion
+
     }
 }

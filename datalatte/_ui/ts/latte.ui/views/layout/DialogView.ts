@@ -85,6 +85,20 @@ module latte{
         }
 
         /**
+         * Shows a question MessageView asking form deletion confirmation of the specified object
+         * @param objectName
+         * @param callback
+         */
+        static confirmDelete(objectName: string, callback: () => any){
+
+            DialogView.ask(sprintf(strings.confirmDeleteS, objectName), strings.cantBeUndone, [
+                new ButtonItem(sprintf(strings.yesDeleteS, objectName), null, () => { callback() }),
+                new ButtonItem(strings.cancel)
+            ])
+
+        }
+
+        /**
          * Shows an error <c>MessageView</c> on a <c>DialogView</c> with the specified <c>message</c> and <c>description</c>
          **/
         static error(message:string, description:string = '', items:Array<Item> = null):DialogView {
@@ -404,9 +418,14 @@ module latte{
         /**
          * Shows the dialog as modal
          **/
-            show():DialogView {
+        show(items: Item[] = null):DialogView {
 
             View.modalView = this;
+
+            if(items) {
+                this.items.addArray(items);
+            }
+
             return this;
 
         }
