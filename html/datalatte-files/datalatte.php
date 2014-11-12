@@ -5,9 +5,6 @@
 /// Set default timezone
 date_default_timezone_set('America/Mexico_City');
 
-/// PHPMailer API
-include __DIR__ . "/../../datalatte/plugins/phpmailer/Autoloader.php";
-
 /*
  * DATALATTE
  * Make an require() or include() to this file to get
