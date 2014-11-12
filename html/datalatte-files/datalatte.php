@@ -19,7 +19,7 @@ include __DIR__ . "/../../datalatte/plugins/phpmailer/Autoloader.php";
  define('DATALATTE_FILES', __DIR__ . "/.");
  define('DATALATTE_MODULES', __DIR__ . "/../../datalatte/");
  define('DATALATTE_APP', __DIR__ . "/../../datalatte/_app");
- 
+
 
  /// Declare autoload
  function __autoload($className){
