@@ -252,7 +252,7 @@ module latte{
          **/
             add(timespan: TimeSpan): DateTime{
 
-            return DateTime.fromMilliseconds(this._span._millis + timespan._millis);
+            return DateTime.fromMilliseconds(this._span.millis + timespan.millis);
 
         }
 
@@ -261,7 +261,7 @@ module latte{
          **/
             addDays(days: number): DateTime{
 
-            return DateTime.fromMilliseconds(this._span._millis + days * 86400000);
+            return DateTime.fromMilliseconds(this._span.millis + days * 86400000);
 
         }
 
@@ -270,7 +270,7 @@ module latte{
          **/
             addHours(hours: number): DateTime{
 
-            return DateTime.fromMilliseconds(this._span._millis + hours * 3600000);
+            return DateTime.fromMilliseconds(this._span.millis + hours * 3600000);
 
         }
 
@@ -279,7 +279,7 @@ module latte{
          **/
             addMilliseconds(milliseconds: number): DateTime{
 
-            return DateTime.fromMilliseconds(this._span._millis + milliseconds);
+            return DateTime.fromMilliseconds(this._span.millis + milliseconds);
 
         }
 
@@ -288,7 +288,7 @@ module latte{
          **/
             addMinutes(minutes: number): DateTime{
 
-            return DateTime.fromMilliseconds(this._span._millis + minutes * 60000);
+            return DateTime.fromMilliseconds(this._span.millis + minutes * 60000);
 
         }
 
@@ -329,7 +329,7 @@ module latte{
          **/
             addSeconds(seconds: number): DateTime{
 
-            return new DateTime(this._span._millis + seconds * 1000);
+            return new DateTime(this._span.millis + seconds * 1000);
 
         }
 
@@ -384,7 +384,7 @@ module latte{
             subtractDate(datetime: DateTime): TimeSpan{
 
             if(!(datetime instanceof DateTime)) throw new InvalidArgumentEx('datetime');
-            return TimeSpan.fromMilliseconds(this._span._millis - datetime._span._millis);
+            return TimeSpan.fromMilliseconds(this._span.millis - datetime._span.millis);
 
         }
 
@@ -394,7 +394,7 @@ module latte{
             subtractTime(timespan: TimeSpan): DateTime{
 
             if(!(timespan instanceof TimeSpan)) throw new InvalidArgumentEx('timespan');
-            return DateTime.fromMilliseconds(this._span._millis - timespan._millis);
+            return DateTime.fromMilliseconds(this._span.millis - timespan.millis);
 
         }
 
@@ -566,7 +566,7 @@ module latte{
          **/
         get timeOfDay(): TimeSpan{
 
-            return TimeSpan.fromMilliseconds(this._span._millis % 86400000);
+            return TimeSpan.fromMilliseconds(this._span.millis % 86400000);
 
         }
 

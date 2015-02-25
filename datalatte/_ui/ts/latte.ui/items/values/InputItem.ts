@@ -39,6 +39,22 @@ module latte{
             }
 
         }
+
+        /**
+         * Creates the input item from a caption and a value item
+         *
+         * @param text
+         * @param item
+         */
+        static fromItem(text: string, item: ValueItem): InputItem{
+
+            var input = new InputItem(text, 'custom');
+
+            input.valueItem = item;
+
+            return input;
+
+        }
         //endregion
 
         /**

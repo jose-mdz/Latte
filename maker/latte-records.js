@@ -125,6 +125,7 @@ exports.PhpRecordsGenerator.prototype.recordCodeOf = function(table, callback){
     var code = "class %sBase extends DataRecord{\n\t%s\n}";
     var className = exports.tableNameToClassName(table);
     var body  = '';
+    var module = this.module;
     var makePairs = function(arr){
         var r = [];
         for(var i = 0; i < arr.length; i++){
@@ -179,8 +180,9 @@ exports.PhpRecordsGenerator.prototype.recordCodeOf = function(table, callback){
         var getkeys =           sprintf("public function getKeys(){ return array( %s ); }", makePairs(keys).join(', '));
         var getfields =         sprintf("public function getFields(){ return array( %s ); }", makePairs(justFields).join(', '));
         var isinserted =        sprintf("public function isInserted(){ return %s; }", checks.length ? checks.join(' && ') : 1);
+        var getmodule =         sprintf("public function getModule(){ return '%s'; }", module.name);
 
-        body = [fieldDeclaration, all, gettable, getautokey, getkeys, getfields, isinserted].join('\n\t');
+        body = [fieldDeclaration, all, gettable, getautokey, getkeys, getfields, getmodule, isinserted].join('\n\t');
 
         callback.call(null, sprintf(code, className, body));
     });
@@ -358,6 +360,7 @@ exports.TsRecordsGenerator.prototype.recordCodeOf = function(table, phpClassInfo
             type = type.replace("=", '').replace("?", '');
             type = type.replace('object', 'any');
             type = type.replace('type', 'any');
+            type = type.replace('mixed', 'any');
             type = type.replace('int', 'number');
             type = type.replace('function', 'GenericCallback');
             type = type.replace('jQuery', 'JQuery');

@@ -201,7 +201,7 @@ module latte{
             if(!(value instanceof latte.DateTime))
                 throw new latte.InvalidArgumentEx('value');
 
-            if(isNaN(value._span._millis))
+            if(isNaN(value._span.millis))
                 throw new latte.InvalidArgumentEx('value');
 
             this._date = value;

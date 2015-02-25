@@ -6,5 +6,6 @@ class personBase extends DataRecord{
 	public function getAutoKey(){ return array( "idperson" => $this->idperson ); }
 	public function getKeys(){ return array(  ); }
 	public function getFields(){ return array( "title" => $this->title, "name" => $this->name, "lastname" => $this->lastname, "birth" => $this->birth, "sex" => $this->sex ); }
+	public function getModule(){ return '_app'; }
 	public function isInserted(){ return isset($this->idperson); }
 }

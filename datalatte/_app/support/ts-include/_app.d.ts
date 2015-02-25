@@ -61,39 +61,6 @@ declare module latte {
     /**
      *
      */
-    class Person extends personBase {
-        /**
-         *
-         */
-        constructor();
-        getMetadata(): {
-            fields: {
-                name: {
-                    text: string;
-                };
-                lastname: {
-                    text: string;
-                };
-                sex: {
-                    text: string;
-                    type: string;
-                    options: string[];
-                };
-                birth: {
-                    text: string;
-                    type: string;
-                };
-            };
-        };
-    }
-}
-/**
- * Created by josemanuel on 6/11/14.
- */
-declare module latte {
-    /**
-     *
-     */
     class MainView extends ToolbarView {
         /**
          * Creates the Agenda View
@@ -134,5 +101,38 @@ declare module latte {
          * @returns {ListView}
          */
         listView: ListView;
+    }
+}
+/**
+ * Created by josemanuel on 6/11/14.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class Person extends personBase {
+        /**
+         *
+         */
+        constructor();
+        getMetadata(): {
+            fields: {
+                name: {
+                    text: string;
+                };
+                lastname: {
+                    text: string;
+                };
+                sex: {
+                    text: string;
+                    type: string;
+                    options: string[];
+                };
+                birth: {
+                    text: string;
+                    type: string;
+                };
+            };
+        };
     }
 }

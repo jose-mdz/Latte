@@ -4,7 +4,7 @@ module latte{
      **/
     export class TimeSpan{
 
-        _millis: number = 0;
+        millis: number = 0;
 
         /**
          * Creates a TimeSpan from the specified amount of days
@@ -31,7 +31,7 @@ module latte{
 
             var t = new TimeSpan();
 
-            t._millis = milliseconds;
+            t.millis = milliseconds;
 
             return t;
 
@@ -84,7 +84,7 @@ module latte{
          **/
         constructor(days: number = 0, hours: number = 0, minutes: number = 0, seconds: number = 0, milliseconds: number = 0){
 
-            this._millis = (days * 86400 + hours * 3600 + minutes * 60 + seconds) * 1000 + milliseconds;
+            this.millis = (days * 86400 + hours * 3600 + minutes * 60 + seconds) * 1000 + milliseconds;
 
         }
 
@@ -93,7 +93,7 @@ module latte{
          **/
         private _rounder(number: number){
 
-            if(this._millis < 0)
+            if(this.millis < 0)
                 return Math.ceil(number);
 
             return Math.floor(number);
@@ -117,7 +117,7 @@ module latte{
             if(!(timespan instanceof TimeSpan))
                 throw new InvalidArgumentEx('timespan');
 
-            return TimeSpan.fromMilliseconds(this._millis + timespan._millis);
+            return TimeSpan.fromMilliseconds(this.millis + timespan.millis);
 
         }
 
@@ -156,9 +156,9 @@ module latte{
             if(!(timespan instanceof TimeSpan))
                 throw new InvalidArgumentEx('timespan');
 
-            if(this._millis  > timespan._millis) return 1;
-            if(this._millis  == timespan._millis) return 0;
-            if(this._millis  < timespan._millis) return -1;
+            if(this.millis  > timespan.millis) return 1;
+            if(this.millis  == timespan.millis) return 0;
+            if(this.millis  < timespan.millis) return -1;
 
             throw new Ex();
 
@@ -169,7 +169,7 @@ module latte{
          **/
         duration(): TimeSpan{
 
-            return new TimeSpan(Math.abs(this._millis));
+            return new TimeSpan(Math.abs(this.millis));
 
         }
 
@@ -181,7 +181,7 @@ module latte{
             if(!(timespan instanceof TimeSpan))
                 throw new InvalidArgumentEx('timespan');
 
-            return this._millis == timespan._millis;
+            return this.millis == timespan.millis;
 
         }
 
@@ -190,7 +190,7 @@ module latte{
          **/
         negate(){
 
-            this._millis *= -1;
+            this.millis *= -1;
 
         }
 
@@ -202,7 +202,7 @@ module latte{
             if(!(timespan instanceof TimeSpan))
                 throw new InvalidArgumentEx('timespan');
 
-            return TimeSpan.fromMilliseconds(this._millis - timespan._millis);
+            return TimeSpan.fromMilliseconds(this.millis - timespan.millis);
 
         }
 
@@ -211,7 +211,7 @@ module latte{
          **/
         toString(): string{
 
-            return  (this._millis < 0 ? '-' : '') +
+            return  (this.millis < 0 ? '-' : '') +
                 (this.days ? this.days + ' ' : '') +
                 this._zeroPad(this.hours) + ":" +
                 this._zeroPad(this.minutes) +
@@ -225,7 +225,7 @@ module latte{
          **/
         get days(): number{
 
-            return this._rounder(this._millis / 86400000 );
+            return this._rounder(this.millis / 86400000 );
 
         }
 
@@ -234,7 +234,7 @@ module latte{
          **/
         get hours(): number{
 
-            return this._rounder( (this._millis % (24 * 3600 * 1000)) / (3600 * 1000));
+            return this._rounder( (this.millis % (24 * 3600 * 1000)) / (3600 * 1000));
 
         }
 
@@ -243,7 +243,7 @@ module latte{
          **/
         get isEmpty(): boolean{
 
-            return this._millis == 0;
+            return this.millis == 0;
 
         }
 
@@ -252,7 +252,7 @@ module latte{
          **/
         get milliseconds(): number{
 
-            return this._rounder(this._millis % 1000);
+            return this._rounder(this.millis % 1000);
 
         }
 
@@ -261,7 +261,7 @@ module latte{
          **/
         get minutes(): number{
 
-            return this._rounder( (this._millis % (3600 * 1000)) / (60 * 1000));
+            return this._rounder( (this.millis % (3600 * 1000)) / (60 * 1000));
 
         }
 
@@ -270,7 +270,7 @@ module latte{
          **/
         get seconds(): number{
 
-            return this._rounder((this._millis % 60000) / 1000);
+            return this._rounder((this.millis % 60000) / 1000);
 
         }
 
@@ -280,7 +280,7 @@ module latte{
         get totalDays(): number{
 
             //                     86400000
-            return this._millis / (86400000);
+            return this.millis / (86400000);
 
         }
 
@@ -289,7 +289,7 @@ module latte{
          **/
         get totalHours(): number{
 
-            return this._millis / (3600000);
+            return this.millis / (3600000);
 
         }
 
@@ -298,7 +298,7 @@ module latte{
          **/
         get totalMilliseconds(): number{
 
-            return this._millis;
+            return this.millis;
 
         }
 
@@ -307,7 +307,7 @@ module latte{
          **/
         get totalMinutes(): number{
 
-            return this._millis / (60 * 1000);
+            return this.millis / (60 * 1000);
 
         }
 
@@ -316,7 +316,7 @@ module latte{
          **/
         get totalSeconds(): number{
 
-            return this._millis / 1000;
+            return this.millis / 1000;
 
         }
     }

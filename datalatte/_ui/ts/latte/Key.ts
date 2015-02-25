@@ -143,70 +143,70 @@ module latte{
          *
          * @type {number}
          */
-            0 = 48,
+            NUMBER_0 = 48,
 
         /**
          * One key
          *
          * @type {number}
          */
-            1 = 49,
+            NUMBER_1 = 49,
 
         /**
          * Two key
          *
          * @type {number}
          */
-            2 = 50,
+        NUMBER_2 = 50,
 
         /**
          * Three key
          *
          * @type {number}
          */
-            3 = 51,
+        NUMBER_3 = 51,
 
         /**
          * Four key
          *
          * @type {number}
          */
-            4 = 52,
+        NUMBER_4 = 52,
 
         /**
          * Five key
          *
          * @type {number}
          */
-            5 = 53,
+        NUMBER_5 = 53,
 
         /**
          * Siz key
          *
          * @type {number}
          */
-            6 = 54,
+        NUMBER_6 = 54,
 
         /**
          * Seven key
          *
          * @type {number}
          */
-            7 = 55,
+        NUMBER_7 = 55,
 
         /**
          * Eight key
          *
          * @type {number}
          */
-            8 = 56,
+        NUMBER_8 = 56,
 
         /**
          * Nine key
          *
          * @type {number}
          */
-            9 = 57,
+        NUMBER_9 = 57,
 
         /**
          * A key
@@ -690,6 +690,12 @@ module latte{
          * @type {number}
          */
             SINGLE_QUOTE = 222,
+
+        /**
+         * Space bar key
+         * @type {number}
+         */
+        SPACEBAR = 32,
 
     }
 

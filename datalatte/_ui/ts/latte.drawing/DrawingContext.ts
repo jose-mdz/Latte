@@ -24,6 +24,17 @@ module latte {
     export class DrawingContext {
 
         //region Static
+
+        /**
+         * Creates the context from the specified canvas
+         *
+         * @param c
+         * @returns {latte.DrawingContext}
+         */
+        static fromCanvas(c: HTMLCanvasElement): DrawingContext{
+            return new DrawingContext(c.getContext('2d'));
+        }
+
         //endregion
 
         //region Fields
@@ -103,11 +114,16 @@ module latte {
          * @param image
          * @param bounds
          */
-        drawImage(image: HTMLImageElement, bounds: DrawingRectangle, offset: DrawingRectangle = null){
-            if(offset) {
-                this.context.drawImage(image, offset.left, offset.top, offset.width, offset.height, bounds.left, bounds.top, bounds.width, bounds.height);
-            }else{
-                this.context.drawImage(image, bounds.left, bounds.top, bounds.width, bounds.height);
+        drawImage(image: HTMLImageElement, bounds: DrawingRectangle, offset: DrawingRectangle = null): boolean{
+            try{
+                if(offset) {
+                    this.context.drawImage(image, offset.left, offset.top, offset.width, offset.height, bounds.left, bounds.top, bounds.width, bounds.height);
+                }else{
+                    this.context.drawImage(image, bounds.left, bounds.top, bounds.width, bounds.height);
+                }
+                return true;
+            }catch(e){
+                return false;
             }
         }
 
@@ -300,15 +316,15 @@ module latte {
          * @param lineHeight
          * @param fitWidth
          */
-        fillTextWrap(b: Brush, text: string, p: Point, lineHeight: number, fitWidth: number){
+        fillTextWrap(b: Brush, text: string, p: Point, lineHeight: number, fitWidth: number): DrawingRectangle{
 
             b.applyOn(this);
             var x = p.x;
             var y = p.y;
             var ctx = this.context;
+            var r: DrawingRectangle = new DrawingRectangle(p.x, p.y, 0, 0);
 
             // Starts foreign code
-
             var draw = x !== null && y !== null;
 
             text = text.replace(/(\r\n|\n\r|\r|\n)/g, "\n");
@@ -317,12 +333,19 @@ module latte {
             var i, index, str, wordWidth, words, currentLine = 0, maxWidth = 0;
 
             var printNextLine = function(str) {
+
+                var textY = y + (lineHeight * currentLine);
+
                 if (draw) {
-                    ctx.fillText(str, x, y + (lineHeight * currentLine));
+                    ctx.fillText(str, x, textY, fitWidth);
                 }
 
                 currentLine++;
-                wordWidth = ctx.measureText(str).width;
+                var strSize = ctx.measureText(str);
+                wordWidth = strSize.width;
+
+                r = DrawingRectangle.union(r, new DrawingRectangle(x, textY, fitWidth, lineHeight));
+
                 if (wordWidth > maxWidth) {
                     maxWidth = wordWidth;
                 }
@@ -362,6 +385,11 @@ module latte {
                 }
 
             }
+
+            r.offset(0, -(lineHeight * 0.5));
+            r.height += lineHeight * 0.5; //HACK: Heuristic
+
+            return r;
 
         }
 
@@ -416,6 +444,7 @@ module latte {
             this.context.shadowColor = color.toString();
             this.context.shadowOffsetX = offset.width;
             this.context.shadowOffsetY = offset.height;
+
         }
 
 

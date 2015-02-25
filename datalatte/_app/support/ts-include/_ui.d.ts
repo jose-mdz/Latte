@@ -203,61 +203,61 @@ declare module latte {
          *
          * @type {number}
          */
-        0 = 48,
+        NUMBER_0 = 48,
         /**
          * One key
          *
          * @type {number}
          */
-        1 = 49,
+        NUMBER_1 = 49,
         /**
          * Two key
          *
          * @type {number}
          */
-        2 = 50,
+        NUMBER_2 = 50,
         /**
          * Three key
          *
          * @type {number}
          */
-        3 = 51,
+        NUMBER_3 = 51,
         /**
          * Four key
          *
          * @type {number}
          */
-        4 = 52,
+        NUMBER_4 = 52,
         /**
          * Five key
          *
          * @type {number}
          */
-        5 = 53,
+        NUMBER_5 = 53,
         /**
          * Siz key
          *
          * @type {number}
          */
-        6 = 54,
+        NUMBER_6 = 54,
         /**
          * Seven key
          *
          * @type {number}
          */
-        7 = 55,
+        NUMBER_7 = 55,
         /**
          * Eight key
          *
          * @type {number}
          */
-        8 = 56,
+        NUMBER_8 = 56,
         /**
          * Nine key
          *
          * @type {number}
          */
-        9 = 57,
+        NUMBER_9 = 57,
         /**
          * A key
          *
@@ -672,6 +672,11 @@ declare module latte {
          * @type {number}
          */
         SINGLE_QUOTE = 222,
+        /**
+         * Space bar key
+         * @type {number}
+         */
+        SPACEBAR = 32,
     }
 }
 /**
@@ -3912,6 +3917,151 @@ declare module latte {
 }
 declare module latte {
     /**
+     *
+     */
+    class Collection<T> {
+        private pointer;
+        /**
+         *
+         */
+        constructor(addCallback?: (T: any, number: any) => void, removeCallback?: (T: any, number: any) => any, context?: any);
+        /**
+         * Adds an element to the collection
+         *
+         * @param element
+         * @param raiseEvent
+         */
+        add(element: T, raiseEvent?: boolean): void;
+        /**
+         * Adds an array of elements
+         *
+         * @param elements
+         * @param raiseEvent
+         */
+        addArray(elements: T[], raiseEvent?: boolean): void;
+        /**
+         * Adds a collection of elements to the collection
+         *
+         * @param collection
+         * @param raiseEvent
+         */
+        addCollection(collection: Collection<T>, raiseEvent?: boolean): void;
+        /**
+         * Clears the collection
+         */
+        clear(): void;
+        /**
+         * Iterates through the collection, executing the handler for each item
+         * @param handler
+         */
+        each(handler: (item: T, index: number) => any): void;
+        /**
+         * Gets the index of the specified element if found. -1 if not found.
+         * @param item
+         * @returns {number}
+         */
+        indexOf(item: T): number;
+        /**
+         * Gets the item at the specified position
+         * @param index
+         * @returns {*}
+         */
+        item(index: number): T;
+        /**
+         * Returns the object on current pointer and moves the pointer forward.
+         * It returns null and resets pointer if end of collection reached.
+         * @returns {*}
+         */
+        next(): T;
+        /**
+         * Raises the <c>addItem</c> event
+         */
+        onAddItem(item: T, index: number): void;
+        /**
+         * Raises the <c>removeItem</c> event
+         */
+        onRemoveItem(item: T, index: number): void;
+        /**
+         * Removes the specified item from the collection
+         * @param item
+         * @param raiseEvent
+         */
+        remove(item: T, raiseEvent?: boolean): Collection<T>;
+        /**
+         * Removes the item ath the specified index
+         * @param index
+         * @param raiseEvent
+         */
+        removeAt(index: number, raiseEvent?: boolean): void;
+        /**
+         * Resets the internal pointer for calls to <c>next()</c> method.
+         */
+        resetPointer(): void;
+        /**
+         * Back field for event
+         */
+        private _addItem;
+        /**
+         * Gets an event raised when an item is added
+         *
+         * @returns {LatteEvent}
+         */
+        addItem: LatteEvent;
+        /**
+         * Back field for event
+         */
+        private _removeItem;
+        /**
+         * Gets an event raised when an item is removed
+         *
+         * @returns {LatteEvent}
+         */
+        removeItem: LatteEvent;
+        /**
+         * Property field
+         */
+        private _context;
+        /**
+         * Gets or sets the context to execute methods of collection
+         *
+         * @returns {any}
+         */
+        /**
+         * Gets or sets the context to execute methods of collection
+         *
+         * @param {any} value
+         */
+        context: any;
+        /**
+         * Gets the count of elements in collection
+         *
+         * @returns {number}
+         */
+        count: number;
+        /**
+         * Gets the first element of the collection
+         * @returns {*}
+         */
+        first: T;
+        /**
+         * Gets the last element of the collection
+         * @returns {*}
+         */
+        last: T;
+        /**
+         * Property field
+         */
+        private _length;
+        /**
+         * Gets the length of the collection
+         *
+         * @returns {number}
+         */
+        length: number;
+    }
+}
+declare module latte {
+    /**
      * Represents a color
      **/
     class Color {
@@ -4058,151 +4208,6 @@ declare module latte {
          * Gets or sets the Red component of color, from 0 to 255.
          **/
         r: number;
-    }
-}
-declare module latte {
-    /**
-     *
-     */
-    class Collection<T> {
-        private pointer;
-        /**
-         *
-         */
-        constructor(addCallback?: (T: any, number: any) => void, removeCallback?: (T: any, number: any) => any, context?: any);
-        /**
-         * Adds an element to the collection
-         *
-         * @param element
-         * @param raiseEvent
-         */
-        add(element: T, raiseEvent?: boolean): void;
-        /**
-         * Adds an array of elements
-         *
-         * @param elements
-         * @param raiseEvent
-         */
-        addArray(elements: T[], raiseEvent?: boolean): void;
-        /**
-         * Adds a collection of elements to the collection
-         *
-         * @param collection
-         * @param raiseEvent
-         */
-        addCollection(collection: Collection<T>, raiseEvent?: boolean): void;
-        /**
-         * Clears the collection
-         */
-        clear(): void;
-        /**
-         * Iterates through the collection, executing the handler for each item
-         * @param handler
-         */
-        each(handler: (item: T, index: number) => any): void;
-        /**
-         * Gets the index of the specified element if found. -1 if not found.
-         * @param item
-         * @returns {number}
-         */
-        indexOf(item: T): number;
-        /**
-         * Gets the item at the specified position
-         * @param index
-         * @returns {*}
-         */
-        item(index: number): T;
-        /**
-         * Returns the object on current pointer and moves the pointer forward.
-         * It returns null and resets pointer if end of collection reached.
-         * @returns {*}
-         */
-        next(): T;
-        /**
-         * Raises the <c>addItem</c> event
-         */
-        onAddItem(item: T, index: number): void;
-        /**
-         * Raises the <c>removeItem</c> event
-         */
-        onRemoveItem(item: T, index: number): void;
-        /**
-         * Removes the specified item from the collection
-         * @param item
-         * @param raiseEvent
-         */
-        remove(item: T, raiseEvent?: boolean): Collection<T>;
-        /**
-         * Removes the item ath the specified index
-         * @param index
-         * @param raiseEvent
-         */
-        removeAt(index: number, raiseEvent?: boolean): void;
-        /**
-         * Resets the internal pointer for calls to <c>next()</c> method.
-         */
-        resetPointer(): void;
-        /**
-         * Back field for event
-         */
-        private _addItem;
-        /**
-         * Gets an event raised when an item is added
-         *
-         * @returns {LatteEvent}
-         */
-        addItem: LatteEvent;
-        /**
-         * Back field for event
-         */
-        private _removeItem;
-        /**
-         * Gets an event raised when an item is removed
-         *
-         * @returns {LatteEvent}
-         */
-        removeItem: LatteEvent;
-        /**
-         * Property field
-         */
-        private _context;
-        /**
-         * Gets or sets the context to execute methods of collection
-         *
-         * @returns {any}
-         */
-        /**
-         * Gets or sets the context to execute methods of collection
-         *
-         * @param {any} value
-         */
-        context: any;
-        /**
-         * Gets the count of elements in collection
-         *
-         * @returns {number}
-         */
-        count: number;
-        /**
-         * Gets the first element of the collection
-         * @returns {*}
-         */
-        first: T;
-        /**
-         * Gets the last element of the collection
-         * @returns {*}
-         */
-        last: T;
-        /**
-         * Property field
-         */
-        private _length;
-        /**
-         * Gets the length of the collection
-         *
-         * @returns {number}
-         */
-        length: number;
     }
 }
 /**
@@ -4771,7 +4776,7 @@ declare module latte {
      * Represents a time interval.
      **/
     class TimeSpan {
-        _millis: number;
+        millis: number;
         /**
          * Creates a TimeSpan from the specified amount of days
          **/
@@ -5257,6 +5262,13 @@ declare module latte {
      */
     class DrawingContext {
         /**
+         * Creates the context from the specified canvas
+         *
+         * @param c
+         * @returns {latte.DrawingContext}
+         */
+        static fromCanvas(c: HTMLCanvasElement): DrawingContext;
+        /**
          * Creates the drawing context
          */
         constructor(c: CanvasRenderingContext2D);
@@ -5287,7 +5299,7 @@ declare module latte {
          * @param image
          * @param bounds
          */
-        drawImage(image: HTMLImageElement, bounds: DrawingRectangle, offset?: DrawingRectangle): void;
+        drawImage(image: HTMLImageElement, bounds: DrawingRectangle, offset?: DrawingRectangle): boolean;
         /**
          * Draws a line between two points
          * @param p
@@ -5370,7 +5382,7 @@ declare module latte {
          * @param lineHeight
          * @param fitWidth
          */
-        fillTextWrap(b: Brush, text: string, p: Point, lineHeight: number, fitWidth: number): void;
+        fillTextWrap(b: Brush, text: string, p: Point, lineHeight: number, fitWidth: number): DrawingRectangle;
         /**
          * Restores the saved state
          */
@@ -5895,6 +5907,12 @@ declare module latte {
          * @returns {string}
          */
         toString(): string;
+        /**
+         * Gets the area represented by the size
+         *
+         * @returns {number}
+         */
+        area: number;
         /**
          * Gets a value indicating if the size has no compnents assigned or initialized
          *
@@ -8444,6 +8462,13 @@ declare module latte {
          **/
         static format(value: any, type: string, options?: any): string;
         /**
+         * Creates the input item from a caption and a value item
+         *
+         * @param text
+         * @param item
+         */
+        static fromItem(text: string, item: ValueItem): InputItem;
+        /**
          * Stores options
          */
         private _options;
@@ -8782,6 +8807,22 @@ declare module latte {
 }
 declare module latte {
     /**
+     * Allows user to pick a time
+     **/
+    class TimePickerItem extends DatePickerItem {
+        /**
+         *
+         **/
+        constructor();
+        /**
+         * Gets or sets the value of the item
+         **/
+        getValue(): TimeSpan;
+        setValue(value: TimeSpan): void;
+    }
+}
+declare module latte {
+    /**
      *
      **/
     class TextboxItem extends ValueItem {
@@ -9030,6 +9071,35 @@ declare module latte {
          **/
         placeholder: string;
         /**
+         * Property field
+         */
+        private _readOnly;
+        /**
+         * Gets or sets a value indicating if the textbox should be read-only
+         *
+         * @returns {boolean}
+         */
+        /**
+         * Gets or sets a value indicating if the textbox should be read-only
+         *
+         * @param {boolean} value
+         */
+        readOnly: boolean;
+        /**
+         * Back field for event
+         */
+        private _readOnlyChanged;
+        /**
+         * Gets an event raised when the value of the readOnly property changes
+         *
+         * @returns {LatteEvent}
+         */
+        readOnlyChanged: LatteEvent;
+        /**
+         * Raises the <c>readOnly</c> event
+         */
+        onReadOnlyChanged(): void;
+        /**
          * Gets the suggestions overlay
          */
         suggestionOverlay: SuggestionOverlay;
@@ -9064,22 +9134,6 @@ declare module latte {
          * Gets or sets the width of the textbox.
          **/
         width: number;
-    }
-}
-declare module latte {
-    /**
-     * Allows user to pick a time
-     **/
-    class TimePickerItem extends DatePickerItem {
-        /**
-         *
-         **/
-        constructor();
-        /**
-         * Gets or sets the value of the item
-         **/
-        getValue(): TimeSpan;
-        setValue(value: TimeSpan): void;
     }
 }
 declare module latte {

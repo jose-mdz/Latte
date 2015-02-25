@@ -656,6 +656,71 @@ module latte{
         }
 
         /**
+         * Property field
+         */
+        private _readOnly: boolean = false;
+
+        /**
+         * Gets or sets a value indicating if the textbox should be read-only
+         *
+         * @returns {boolean}
+         */
+        get readOnly(): boolean{
+            return this._readOnly;
+        }
+
+        /**
+         * Gets or sets a value indicating if the textbox should be read-only
+         *
+         * @param {boolean} value
+         */
+        set readOnly(value: boolean){
+
+            // Check if value changed
+            var changed: boolean = value !== this._readOnly;
+
+            // Set value
+            this._readOnly = value;
+
+            // Trigger changed event
+            if(changed){
+                this.onReadOnlyChanged();
+            }
+        }
+
+        /**
+         * Back field for event
+         */
+        private _readOnlyChanged: LatteEvent
+
+        /**
+         * Gets an event raised when the value of the readOnly property changes
+         *
+         * @returns {LatteEvent}
+         */
+        get readOnlyChanged(): LatteEvent{
+            if(!this._readOnlyChanged){
+                this._readOnlyChanged = new LatteEvent(this);
+            }
+            return this._readOnlyChanged;
+        }
+
+        /**
+         * Raises the <c>readOnly</c> event
+         */
+        onReadOnlyChanged(){
+            if(this._readOnlyChanged){
+                this._readOnlyChanged.raise();
+            }
+
+            if(this.readOnly) {
+                this.input.attr('readonly', 'yes');
+            }else {
+                this.input.removeAttr('readonly');
+            }
+        }
+
+        /**
          * Gets the suggestions overlay
          */
         get suggestionOverlay(): SuggestionOverlay{

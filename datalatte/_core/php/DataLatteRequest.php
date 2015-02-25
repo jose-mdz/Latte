@@ -14,37 +14,38 @@ class DataLatteRequest {
      * Creates the request handling and processes it
      */
     public function __construct() {
-        
-        if (isset($_POST['action'])) {
-            switch ($_POST['action']) {
-                case 'ajax-rpc': self::processAjaxMessage();
-                    break;
-            }
+
+        if(isset($_POST['calls'])){
+            self::processAjaxMessage($_POST['calls']);
+        }else if(isset($_GET['calls'])){
+            self::processAjaxMessage($_GET['calls']);
+        }else{
+            die("No calls specified");
         }
+        
     }
 
     
     /**
      * Processes the "ajax-message" action.
      */
-    private static function processAjaxMessage() {
+    private static function processAjaxMessage($calls_raw) {
         
         header("Content-Type: application/javascript");
 
         $response = array();
 
-        // Check calls exists
-        if(!isset($_POST['calls'])){
-            die("No calls specified");
-        }
+        
 
         // Parse calls
-        $calls = json_decode($_POST['calls'], true);
+        $calls = json_decode($calls_raw, true);
 
         // Check calls is an array
         if(!is_array($calls)){
-            die("Calls is not an array: $_POST[calls]");
+            die("Calls is not an array: $calls_raw");
         }
+        
+       
 
         // Execute each call
         foreach($calls as $calldata){

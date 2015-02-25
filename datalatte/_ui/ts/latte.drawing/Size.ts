@@ -81,6 +81,16 @@ module latte {
         //region Properties
 
         /**
+         * Gets the area represented by the size
+         *
+         * @returns {number}
+         */
+        get area():number {
+            return this.width * this.height;
+        }
+
+
+        /**
          * Gets a value indicating if the size has no compnents assigned or initialized
          *
          * @returns {boolean}
