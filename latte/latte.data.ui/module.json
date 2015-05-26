@@ -1,0 +1,6 @@
+{
+  "module-include":[
+    "latte.data",
+    "latte.ui"
+  ]
+}

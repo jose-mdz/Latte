@@ -3,7 +3,7 @@
 error_reporting(-1);
 
 /// Include DataLatte
-include 'datalatte-files/datalatte.php';
+include 'latte/datalatte.php';
 
 /// Create document
 $doc = new Document(true);

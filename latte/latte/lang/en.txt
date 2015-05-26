@@ -1,0 +1,30 @@
+justNow Ahora
+oneMinuteAgo Hace un minuto
+SMinutesAgo Hace %s minutos
+oneHourAgo Hace una hora
+SHoursAgo Hace %s horas
+yesterday Ayer
+SDaysAgo Hace %s días
+oneWeekAgo Hace una semana
+SWeeksAgo Hace %s semanas
+oneYearAgo Hace un año
+SYearsAgo Hace %s años
+sunday Domingo
+monday Lunes
+tuesday Martes
+wednesday Miércoles
+thursday Jueves
+friday Viernes
+saturday Sábado
+january Enero
+february Febrero
+march Marzo
+april Abril
+may Mayo
+june Junio
+july Julio
+august Agosto
+september Septiembre
+october Octubre
+november Noviembre
+december Diciembre

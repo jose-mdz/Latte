@@ -1,0 +1,149 @@
+DataLatte DataLatte
+info Info
+edit Editar
+save Guardar
+saveAndClose Guardar y Cerrar
+saveAndNew Guardar y Nuevo
+selectMonth Seleccionar
+defaultBool Sí/No
+add Agregar
+addNew Agregar Nuevo
+change Cambiar
+see Ver
+newKey Nuevo
+listof Lista de %s
+ok Aceptar
+cancel Cancelar
+selectObject Seleccionar objeto
+listOfVar Lista de (%s)
+pick Elegir
+createNew Crear nuevo
+create Crear
+secretPassword (Secreto)
+passphrase Passphrase
+managerDisabled Manager Disabled
+managerCheckingEnabled Checking if Manager Enabled
+managerCheckingReady Checking if Manager Ready
+managerCheckingLoggedIn Checking if logged in
+enterPassphrase Enter Passphrase:
+managerNotEnabled No passphrase configured. Please create a file named passphrase.php in datalatte-files directory. It must contain a PHP const named PASSPHRASE with the passphrase you wish to use for DataLatte Manager.
+managerNotReady Directory datalatte-files/ must have permissions to write.
+invalidPassphrase Invalid Passphrase.
+logout Cerrar sesión
+connection Conexión
+enterConnectionData Datos de conexión MySQL
+userName Nombre de usuario
+password Contaseña
+host Servidor
+dbName Base de datos
+parametersError No se puee establecer conexión con los parámetros:
+recordsUpdated Registros actualizados
+fieldNotValid El campo no es válido
+fieldNotNumber El campo no es numérico
+minValueIsS El valor mínimo es: s%
+maxValueIsS The maximum value is %s
+minLenValueIsS Mínimo de caracteres es %s
+maxLenValueIsS Máximo de caracteres es %s
+valueNotInteger El valor no es un número entero
+fieldMustHaveValue El campo es obligatoio
+home Inicio
+api API
+datalatte DataLatte
+dbConnection Conexión
+updateRecords Actualizar registros
+settings Settings
+cantConnectToServer No se puede conectar al servidor %s (Usuario %s)
+cantSelectDbS No se puede seleccionar la base de datos: %s
+errorOnQueryS Error al ejecutar el query: %s <sql>%s</sql>
+greatScott Great Scott! Automatic Initialization through connection.php failed!
+datalatteInitFailed No ConnectionParameters class defined and no datalatte-files/connection.php file. You may configure a connection in /datalatte with your web DetailView.
+loading Cargando
+saving Guardando
+tableData Datos
+tableColumns Columnas
+insertNow Insertar ahora
+columnName Nombre de la columna
+type Tipo
+length Ancho
+flags Flags
+strNull Null
+strDefault Default
+extra Extra
+yes Sí
+no No
+commit Cometer
+revert Revertir
+apply Aplicar
+deleteRow Eliminar renglón
+copy Copiar
+paste Pegar
+setAsNull Marcar como Null
+autoIncrement Auto Incremental
+primaryKey Llave primaria
+createTable Crear tabla
+tableName Nombre de la tabla
+dropTable Eliminar tabla
+confirmDropTable Deseas eliminar la tabla %s?
+php PHP
+userAgent User Agent
+database Base de datos
+app App
+query Query
+execute Ejecutar
+passphraseExplain Escribe el passphrase
+errorExecutingQuery Error executing query
+close Cerrar
+secret Secreto
+writeComment Escribir comentario
+showMoreCommentsS Mostrar más comentarios (%s)
+uploadingS Subiendo %s
+uploadingSSPercent Subiendo %s %s
+error Error
+name Nombre
+working Trabajando
+mondayShort L
+tuesdayShort M
+wednesdayShort M
+thursdayShort J
+fridayShort V
+saturdayShort S
+sundayShort D
+today Hoy
+day Día
+week Semana
+workWeek Semana laboral
+month Mes
+fullWeek Semana completa
+pleaseSelect Seleccionar...
+askSaveChanges ¿Deseas guardar los cambios?
+unsavedChanges Cambios sin guardar
+yesSaveChanges Sí, guardar cambios
+noIgnoreChanges No, ignorar los cambios
+imageUrl URL Imagen:
+linkUrl  URL Hipervínculo:
+bold Negrita
+italics Cursiva
+alignLeft Alinear a la izquierda
+alignRight Alienar a la derecha
+alignCenter Centrar Texto
+alignJustify Justificar texto
+indent Indentar
+outdent Des-indentar
+numberedList Lista numerada
+bulletList Lista
+eraseFormat Borrar formato
+insertImage Insertar imagen
+insertLink Insertar Hipervínculo
+nextPage Siguiente página
+previousPage Página anterior
+underline Subrayar
+insertHTML Insertar HTML
+videoURL URL Video
+urlNotYouTube URL no es reconocido como YouTube
+makeRelease Crear Release
+insertYouTube Insertar YouTube
+clearText Limpiar texto
+developedBy Desarrollado por Goplek.com
+confirmDeleteS ¿Desea eliminar "%s"?
+cantBeUndone Esta acción no se puede deshacer
+yesDeleteS Sí, eliminar %s

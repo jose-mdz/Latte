@@ -1,0 +1,148 @@
+/**
+ * Created by josemanuel on 8/11/14.
+ */
+module latte {
+
+    /**
+     *
+     */
+    export class ExplorerItemDataRecord<T extends DataRecord> extends ExplorerItem {
+
+        //region Static
+        //endregion
+
+        //region Fields
+        //endregion
+
+        /**
+         *
+         */
+        constructor() {
+            super();
+        }
+
+        //region Private Methods
+        //endregion
+
+        //region Methods
+
+        /**
+         * Creates a list view item for the record
+         */
+        createListViewItem(): ListViewItem{
+
+            var item = new ListViewItem();
+            var columns: string[] = this.getColumns();
+
+            item.icon = this.getIcon();
+
+            for (var i = 0; i < columns.length; i++) {
+                var s:string = columns[i];
+
+                item.addColumn(this.getColumnWithFor(s));
+                item.setItem(i, this.getItemForColumn(s));
+            }
+
+            return item;
+        }
+
+        /**
+         * Gets the name for the item
+         *
+         * @returns {string}
+         */
+        getName(): string{
+            return this.record ? this.record.toString() : this.toString();
+        }
+
+        /**
+         * Gets the name of the columns that go in the lists
+         * This are names of fields, described in metadata of record.
+         */
+        getColumns(): string[]{
+
+            if(!this.record) {
+                return [];
+            }
+
+            var result: string[] = [];
+            var metadata: any = this.record.getMetadata();
+
+            if(metadata.fields) {
+                for(var i in metadata.fields){
+                    result.push(i)
+                }
+            }
+
+            return result;
+        }
+
+        /**
+         * Gets the width of the specified column
+         *
+         * @param name
+         */
+        getColumnWithFor(name: string){
+            return 200;
+        }
+
+        /**
+         * Gets an item for the column
+         *
+         * @param name
+         */
+        getItemForColumn(name: string): Item{
+            return new LabelItem(this.record[name]);
+        }
+
+        /**
+         * Gets the detail view of the item
+         *
+         * @returns {latte.DataRecordFormItem}
+         */
+        getDetailView(): View{
+
+            var d = new DataRecordFormView(this.record);
+
+            d.savedChanges.add(() => {
+                d.applyValues(this.record);
+                this.record.save(() => {d.unsavedChanges = false });
+            });
+
+            return d;
+        }
+
+        //endregion
+
+        //region Events
+        //endregion
+
+        //region Properties
+
+        /**
+         * Property field
+         */
+        private _record:T = null;
+
+        /**
+         * Gets or sets the record of the item
+         *
+         * @returns {DataRecord}
+         */
+        public get record():T {
+            return this._record;
+        }
+
+        /**
+         * Gets or sets the record of the item
+         *
+         * @param {DataRecord} value
+         */
+        public set record(value:T) {
+            this._record = value;
+        }
+        //endregion
+
+    }
+
+}

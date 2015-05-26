@@ -1,0 +1,6 @@
+{
+
+  "ts-include":[
+    "ts-declarations/datalatte.d.ts"
+  ]
+}

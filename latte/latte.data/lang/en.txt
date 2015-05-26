@@ -1,0 +1,2 @@
+reconnecting Reconnecting
+reconnectingInS Reconnecting in %s seconds
