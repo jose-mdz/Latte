@@ -33,14 +33,14 @@ var latte;
             window['g'] = gv;
             this.element.addClass('grid');
             // Initialize Events
-            this.committed = new LatteEvent(this);
-            this.valueChanged = new LatteEvent(this);
-            this.rowsAdded = new LatteEvent(this);
-            this.rowsChanged = new LatteEvent(this);
-            this.rowsRemoved = new LatteEvent(this);
+            this.committed = new latte.LatteEvent(this);
+            this.valueChanged = new latte.LatteEvent(this);
+            this.rowsAdded = new latte.LatteEvent(this);
+            this.rowsChanged = new latte.LatteEvent(this);
+            this.rowsRemoved = new latte.LatteEvent(this);
             // Initialize Collections
-            this.columns = new Collection(this._onAddColumn, this._onRemoveColumn, this);
-            this.rows = new Collection(this._onAddRow, this._onRemoveRow, this);
+            this.columns = new latte.Collection(this._onAddColumn, this._onRemoveColumn, this);
+            this.rows = new latte.Collection(this._onAddRow, this._onRemoveRow, this);
             // Create table
             this.table = $('<table>', { border: 1 }).appendTo(this.container).hide();
             // Create headers row
@@ -57,40 +57,40 @@ var latte;
             // Initialize properties
             this.allowNewRows = this.allowNewRows;
             // Initialize actions
-            this._actionCommit = new Action();
+            this._actionCommit = new latte.Action();
             this._actionCommit.text = strings.apply;
-            this._actionCommit.icon = IconItem.standard(1, 6);
+            this._actionCommit.icon = latte.IconItem.standard(1, 6);
             this._actionCommit.enabled = false;
             this._actionCommit.execute.add(function () {
                 _this.commit();
             });
-            this._actionRollback = new Action();
+            this._actionRollback = new latte.Action();
             this._actionRollback.text = strings.revert;
-            this._actionRollback.icon = IconItem.standard(2, 6);
+            this._actionRollback.icon = latte.IconItem.standard(2, 6);
             this._actionRollback.enabled = false;
             this._actionRollback.execute.add(function () {
                 _this.rollback();
             });
-            this._actionRemoveRow = new Action();
+            this._actionRemoveRow = new latte.Action();
             this._actionRemoveRow.text = strings.deleteRow;
-            this._actionRemoveRow.icon = IconItem.standard(11, 5);
+            this._actionRemoveRow.icon = latte.IconItem.standard(11, 5);
             this._actionRemoveRow.execute.add(function () {
                 _this.deleteRowAt(_this.selectedCell.data('rowIndex'));
             });
-            this._actionCopyCellValue = new Action();
+            this._actionCopyCellValue = new latte.Action();
             this._actionCopyCellValue.text = strings.copy;
-            this._actionCopyCellValue.icon = IconItem.standard(14, 5);
+            this._actionCopyCellValue.icon = latte.IconItem.standard(14, 5);
             this._actionCopyCellValue.execute.add(function () {
                 _this.copySelectedCellValue();
             });
-            this._actionPasteCellValue = new Action();
+            this._actionPasteCellValue = new latte.Action();
             this._actionPasteCellValue.text = strings.paste;
-            this._actionPasteCellValue.icon = IconItem.standard(15, 4);
+            this._actionPasteCellValue.icon = latte.IconItem.standard(15, 4);
             this._actionPasteCellValue.execute.add(function () {
             });
-            this._actionSetCellNull = new Action();
+            this._actionSetCellNull = new latte.Action();
             this._actionSetCellNull.text = strings.setAsNull;
-            this._actionSetCellNull.icon = IconItem.empty(32);
+            this._actionSetCellNull.icon = latte.IconItem.empty(32);
             this._actionSetCellNull.execute.add(function () {
                 _this.setValueAt(_this.selectedCell.data('columnIndex'), _this.selectedCell.data('rowIndex'), null, true);
             });
@@ -122,7 +122,7 @@ var latte;
             }).mouseleave(function () {
                 $(this).removeClass('hover');
             });
-            UiElement.disableTextSelection(cell);
+            latte.UiElement.disableTextSelection(cell);
             return cell;
         };
         /**
@@ -240,7 +240,7 @@ var latte;
         GridView.prototype._transactionStart = function () {
             if (this.container.find('.insert-button').length)
                 return;
-            var bg = new ButtonGroupItem();
+            var bg = new latte.ButtonGroupItem();
             bg.buttons.add(this._actionCommit.getButton());
             bg.buttons.add(this._actionRollback.getButton());
             bg.element.addClass('insert-button').css({
@@ -298,7 +298,7 @@ var latte;
          LatteEvent <c>rowsAdded</c> is raised.
          **/
         GridView.prototype.commitAddedRows = function () {
-            var d = new DataSet();
+            var d = new latte.DataSet();
             var indexes = [];
             this.endCellEdit();
             for (var i = 0; i < this.columns.count; i++) {
@@ -325,8 +325,8 @@ var latte;
          LatteEvent <c>rowsChanged</c> is raised.
          **/
         GridView.prototype.commitChangedRows = function () {
-            var d = new DataSet();
-            var old = new DataSet();
+            var d = new latte.DataSet();
+            var old = new latte.DataSet();
             var indexes = [];
             this.endCellEdit();
             // Add dataset columns
@@ -344,12 +344,12 @@ var latte;
                 var rowIndex = indexes[i];
                 d.rows.add(this.rows.item(rowIndex));
                 // Form old row
-                var row = new DataSetRow();
+                var row = new latte.DataSetRow();
                 old.rows.add(row);
                 for (var j = 0; j < old.columns.count; j++) {
                     var columnIndex = j;
                     var value = this.originalValue(columnIndex, rowIndex);
-                    if (_undef(value))
+                    if (latte._undef(value))
                         if (this.hasValueAt(columnIndex, rowIndex))
                             value = this.getValueAt(columnIndex, rowIndex);
                         else
@@ -365,7 +365,7 @@ var latte;
          LatteEvent <c>rowsDeleted</c> is raised.
          **/
         GridView.prototype.commitDeletedRows = function () {
-            var d = new DataSet();
+            var d = new latte.DataSet();
             var indexes = [];
             this.endCellEdit();
             // Add dataset columns
@@ -415,11 +415,11 @@ var latte;
          * Enables the user a mechanism for copying the value of the cell to clipboard
          **/
         GridView.prototype.copySelectedCellValue = function () {
-            var txtView = new TextView();
+            var txtView = new latte.TextView();
             txtView.text = this.selectedCell.text();
-            var btnOk = new ButtonItem();
+            var btnOk = new latte.ButtonItem();
             btnOk.text = strings.ok;
-            var d = new DialogView(txtView, [btnOk]);
+            var d = new latte.DialogView(txtView, [btnOk]);
             d.show();
             txtView.textElement.focus();
             txtView.textElement.select();
@@ -444,7 +444,7 @@ var latte;
             this.clearSelection();
             // Mark as editing
             td.addClass('editing');
-            var input = new InputItem();
+            var input = new latte.InputItem();
             input.type = col.type;
             input.options = col.options;
             input.value = val;
@@ -455,14 +455,14 @@ var latte;
             // Focus input
             var elem = input.element.find('input, select, textarea');
             elem.keydown(function (evt) {
-                if (evt.keyCode == Key.ESCAPE)
+                if (evt.keyCode == 27 /* ESCAPE */)
                     gv.endCellEdit(true);
-                else if (evt.keyCode == Key.TAB)
+                else if (evt.keyCode == 9 /* TAB */)
                     if (evt.shiftKey)
                         gv.editPreviousCell();
                     else
                         gv.editNextCell();
-                else if (evt.keyCode == Key.ENTER)
+                else if (evt.keyCode == 13 /* ENTER */)
                     gv.endCellEdit(false);
             }).click(function (ev) {
                 ev.stopPropagation();
@@ -558,14 +558,14 @@ var latte;
          * Gets the actual element of the cell at specified column and row.
          **/
         GridView.prototype.getCellElementAt = function (columnIndex, rowIndex) {
-            return this.table.find(sprintf("tr:eq(%s) td:eq(%s)", rowIndex + 1, columnIndex));
+            return this.table.find(latte.sprintf("tr:eq(%s) td:eq(%s)", rowIndex + 1, columnIndex));
             //return this.table.find('td.row-' + rowIndex + '.col-' + columnIndex);
         };
         /**
          *
          **/
         GridView.prototype.getData = function () {
-            var d = new DataSet();
+            var d = new latte.DataSet();
             d.columns.addCollection(this.columns);
             d.rows.addCollection(this.rows);
             return d;
@@ -574,7 +574,7 @@ var latte;
          * Gets the actual element of the row at specified column and row.
          **/
         GridView.prototype.getRowElementAt = function (rowIndex) {
-            return this.table.find(sprintf("tr:eq(%s)", rowIndex + 1));
+            return this.table.find(latte.sprintf("tr:eq(%s)", rowIndex + 1));
         };
         /**
          * Gets the data value at the specified position.
@@ -583,9 +583,9 @@ var latte;
             if (this.hasValueAt(columnIndex, rowIndex))
                 return this.rows.item(rowIndex).getValueAt(columnIndex);
             else if (this.rows.count <= rowIndex)
-                throw new InvalidArgumentEx('rowIndex', rowIndex);
+                throw new latte.InvalidArgumentEx('rowIndex', rowIndex);
             else
-                throw new InvalidArgumentEx('columnIndex', columnIndex);
+                throw new latte.InvalidArgumentEx('columnIndex', columnIndex);
         };
         /**
          * Gets a value indicating if the there is a cell for the specified position
@@ -609,7 +609,7 @@ var latte;
          * Raises the <c>contextItemsShow</c> event.
          **/
         GridView.prototype.onContextItemsShow = function () {
-            super.onContextItemsShow.call(this);
+            _super.prototype.onContextItemsShow.call(this);
             // Get cell on mouse
             var hover = this.table.find('td.cell.hover');
             var columnIndex = hover.data('columnIndex');
@@ -628,7 +628,7 @@ var latte;
             // Copy & paste
             this.contextItems.add(this._actionCopyCellValue.getButton());
             this.contextItems.add(this._actionPasteCellValue.getButton());
-            this.contextItems.add(new SeparatorItem());
+            this.contextItems.add(new latte.SeparatorItem());
             // Set NULL value
             this.contextItems.add(this._actionSetCellNull.getButton());
             // Delete row
@@ -662,7 +662,7 @@ var latte;
             // Mark as changeable
             this.getRowElementAt(rowIndex).addClass('changeable-row');
             // Set original value
-            if (_undef(this.originalValue(columnIndex, rowIndex)))
+            if (latte._undef(this.originalValue(columnIndex, rowIndex)))
                 this.originalValue(columnIndex, rowIndex, oldValue);
             // Raise event
             this.valueChanged.raise({ row: rowIndex, column: columnIndex, value: value, oldValue: oldValue });
@@ -674,7 +674,7 @@ var latte;
         GridView.prototype.originalValue = function (columnIndex, rowIndex, value) {
             if (value === void 0) { value = null; }
             var cell = this.getCellElementAt(columnIndex, rowIndex);
-            if (_undef(value))
+            if (latte._undef(value))
                 return cell.data('original-value');
             cell.data('original-value', value);
             return this;
@@ -686,7 +686,7 @@ var latte;
             if (!this.hasCellAt(columnIndex, rowIndex))
                 return;
             var cell = this.getCellElementAt(columnIndex, rowIndex);
-            if (!_undef(cell.data('original-value'))) {
+            if (!latte._undef(cell.data('original-value'))) {
                 this.setValueAt(columnIndex, rowIndex, cell.data('original-value'));
                 cell.removeData('original-value');
             }
@@ -761,11 +761,11 @@ var latte;
             }
             else if (this.columns.item(columnIndex).type == 'password' || this.columns.item(columnIndex).type == 'md5-password') {
                 // Place a "(Sectet)" string
-                td.empty().html(sprintf("(%s)", strings.secret));
+                td.empty().html(latte.sprintf("(%s)", strings.secret));
             }
             else {
                 // Empty td and set value
-                td.empty().html(InputItem.format(value, this.columns.item(columnIndex).type, this.columns.item(columnIndex).options));
+                td.empty().html(latte.InputItem.format(value, this.columns.item(columnIndex).type, this.columns.item(columnIndex).options));
             }
             if (raiseEvent === true) {
                 this.onValueChanged(columnIndex, rowIndex, value, oldValue);
@@ -887,14 +887,14 @@ var latte;
              **/
             set: function (value) {
                 if (!(value instanceof jQuery))
-                    throw new InvalidArgumentEx('value');
+                    throw new latte.InvalidArgumentEx('value');
                 this.selectCellAt(value.data('columnIndex'), value.data('rowIndex'));
             },
             enumerable: true,
             configurable: true
         });
         return GridView;
-    })(View);
+    })(latte.View);
     latte.GridView = GridView;
 })(latte || (latte = {}));
 /**
@@ -950,7 +950,7 @@ var latte;
          * Creates a tree item for the record
          */
         ExplorerItem.prototype.createTreeItem = function () {
-            var item = new TreeItem();
+            var item = new latte.TreeItem();
             item.tag = this;
             item.text = this.getName();
             item.icon = this.getIcon();
@@ -960,12 +960,12 @@ var latte;
          * Creates a list view item for the record
          */
         ExplorerItem.prototype.createListViewItem = function () {
-            var item = new ListViewItem();
+            var item = new latte.ListViewItem();
             var columns = this.getColumns();
             item.icon = this.getIcon();
             // Name column
             item.addColumn(150);
-            item.setItem(0, new LabelItem(this.getName()));
+            item.setItem(0, new latte.LabelItem(this.getName()));
             return item;
         };
         /**
@@ -990,7 +990,7 @@ var latte;
          * @returns {IconItem}
          */
         ExplorerItem.prototype.getIcon = function () {
-            return IconItem.standard(2, 1);
+            return latte.IconItem.standard(2, 1);
         };
         /**
          * Gets the icon of 32 pixels
@@ -998,7 +998,7 @@ var latte;
          * @returns {IconItem}
          */
         ExplorerItem.prototype.getIcon32 = function () {
-            return IconItem.standard(2, 1, 32);
+            return latte.IconItem.standard(2, 1, 32);
         };
         /**
          * Gets the name for the item
@@ -1088,7 +1088,7 @@ var latte;
              */
             get: function () {
                 if (!this._childAdded) {
-                    this._childAdded = new LatteEvent(this);
+                    this._childAdded = new latte.LatteEvent(this);
                 }
                 return this._childAdded;
             },
@@ -1112,7 +1112,7 @@ var latte;
              */
             get: function () {
                 if (!this._childRemoved) {
-                    this._childRemoved = new LatteEvent(this);
+                    this._childRemoved = new latte.LatteEvent(this);
                 }
                 return this._childRemoved;
             },
@@ -1136,7 +1136,7 @@ var latte;
              */
             get: function () {
                 if (!this._childrenChanged) {
-                    this._childrenChanged = new LatteEvent(this);
+                    this._childrenChanged = new latte.LatteEvent(this);
                 }
                 return this._childrenChanged;
             },
@@ -1160,7 +1160,7 @@ var latte;
              */
             get: function () {
                 if (!this._childrenLoadStarted) {
-                    this._childrenLoadStarted = new LatteEvent(this);
+                    this._childrenLoadStarted = new latte.LatteEvent(this);
                 }
                 return this._childrenLoadStarted;
             },
@@ -1183,7 +1183,7 @@ var latte;
              */
             get: function () {
                 if (!this._childrenLoadEnd) {
-                    this._childrenLoadEnd = new LatteEvent(this);
+                    this._childrenLoadEnd = new latte.LatteEvent(this);
                 }
                 return this._childrenLoadEnd;
             },
@@ -1207,7 +1207,7 @@ var latte;
             get: function () {
                 var _this = this;
                 if (!this._children) {
-                    this._children = new Collection(function (item) {
+                    this._children = new latte.Collection(function (item) {
                         _this.onChildAdded(item);
                     }, function (item) {
                         _this.onChildRemoved(item);
@@ -1305,7 +1305,7 @@ var latte;
              */
             get: function () {
                 if (!this._childrenPagesChanged) {
-                    this._childrenPagesChanged = new LatteEvent(this);
+                    this._childrenPagesChanged = new latte.LatteEvent(this);
                 }
                 return this._childrenPagesChanged;
             },
@@ -1418,363 +1418,6 @@ var latte;
      *
      * Children are added using the <c>children</c> collection, when <c>loadChildren</c> method is called.
      */
-    var DataRecordChildrenView = (function (_super) {
-        __extends(DataRecordChildrenView, _super);
-        //region Static
-        //endregion
-        //region Fields
-        //endregion
-        /**
-         * Creates the widget
-         */
-        function DataRecordChildrenView(loadChildren, childAdd, childEdit, childRemove) {
-            if (loadChildren === void 0) { loadChildren = null; }
-            if (childAdd === void 0) { childAdd = null; }
-            if (childEdit === void 0) { childEdit = null; }
-            if (childRemove === void 0) { childRemove = null; }
-            _super.call(this);
-            /**
-             * Property field
-             */
-            this._record = null;
-            this.toolbar.sideItems.addArray([
-                this.btnRemove,
-                this.btnEdit,
-                this.btnAdd,
-                new SeparatorItem(),
-                this.btnRefresh,
-            ]);
-            this.view = this.listView;
-            if (loadChildren) {
-                this.loadChildren.add(loadChildren);
-            }
-            if (childAdd) {
-                this.childAdd.add(childAdd);
-            }
-            if (childEdit) {
-                this.childEdit.add(childEdit);
-            }
-            if (childRemove) {
-                this.childRemove.add(childRemove);
-            }
-        }
-        //region Private Methods
-        //endregion
-        //region Methods
-        /**
-         * Raises the <c>childAdd</c> event
-         */
-        DataRecordChildrenView.prototype.onChildrenAdd = function () {
-            if (this._childAdd) {
-                this._childAdd.raise();
-            }
-        };
-        /**
-         * Raises the <c>childEdit</c> event
-         */
-        DataRecordChildrenView.prototype.onChildEdit = function () {
-            if (this._childEdit) {
-                this._childEdit.raise();
-            }
-        };
-        /**
-         * Raises the <c>record</c> event
-         */
-        DataRecordChildrenView.prototype.onRecordChanged = function () {
-            if (this._recordChanged) {
-                this._recordChanged.raise();
-            }
-            this.onLoadChildren();
-        };
-        Object.defineProperty(DataRecordChildrenView.prototype, "childAdd", {
-            /**
-             * Gets an event raised when the user asks to add a new children
-             *
-             * @returns {LatteEvent}
-             */
-            get: function () {
-                var _this = this;
-                if (!this._childAdd) {
-                    this._childAdd = new LatteEvent(this);
-                    this._childAdd.handlerAdded.add(function () {
-                        _this.btnAdd.visible = true;
-                    });
-                }
-                return this._childAdd;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(DataRecordChildrenView.prototype, "childEdit", {
-            /**
-             * Gets an event raised when the user requests to edit the children
-             *
-             * @returns {LatteEvent}
-             */
-            get: function () {
-                var _this = this;
-                if (!this._childEdit) {
-                    this._childEdit = new LatteEvent(this);
-                    this._childEdit.handlerAdded.add(function () {
-                        _this.btnEdit.visible = true;
-                    });
-                }
-                return this._childEdit;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(DataRecordChildrenView.prototype, "childRemove", {
-            /**
-             * Gets an event raised when the user requests to delete the children
-             *
-             * @returns {LatteEvent}
-             */
-            get: function () {
-                var _this = this;
-                if (!this._childRemove) {
-                    this._childRemove = new LatteEvent(this);
-                    this._childRemove.handlerAdded.add(function () {
-                        _this.btnRemove.visible = true;
-                    });
-                }
-                return this._childRemove;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * Raises the <c>childRemove</c> event
-         */
-        DataRecordChildrenView.prototype.onChildRemove = function () {
-            if (this._childRemove) {
-                this._childRemove.raise();
-            }
-        };
-        Object.defineProperty(DataRecordChildrenView.prototype, "loadChildren", {
-            /**
-             * Gets an event raised when the children must be loaded
-             *
-             * @returns {LatteEvent}
-             */
-            get: function () {
-                if (!this._loadChildren) {
-                    this._loadChildren = new LatteEvent(this);
-                }
-                return this._loadChildren;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * Raises the <c>loadChildren</c> event
-         */
-        DataRecordChildrenView.prototype.onLoadChildren = function () {
-            this.btnRemove.enabled = this.btnEdit.enabled = false;
-            this.children.clear();
-            if (this._loadChildren) {
-                this._loadChildren.raise();
-            }
-        };
-        Object.defineProperty(DataRecordChildrenView.prototype, "recordChanged", {
-            /**
-             * Gets an event raised when the value of the record property changes
-             *
-             * @returns {LatteEvent}
-             */
-            get: function () {
-                if (!this._recordChanged) {
-                    this._recordChanged = new LatteEvent(this);
-                }
-                return this._recordChanged;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(DataRecordChildrenView.prototype, "btnAdd", {
-            /**
-             * Gets the add button
-             *
-             * @returns {ButtonItem}
-             */
-            get: function () {
-                var _this = this;
-                if (!this._btnAdd) {
-                    this._btnAdd = new ButtonItem(null, IconItem.standard(3, 3), function () {
-                        _this.onChildrenAdd();
-                    });
-                    this._btnAdd.tooltip = strings.add;
-                    this._btnAdd.visible = false;
-                }
-                return this._btnAdd;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(DataRecordChildrenView.prototype, "btnEdit", {
-            /**
-             * Gets the edit button
-             *
-             * @returns {ButtonItem}
-             */
-            get: function () {
-                var _this = this;
-                if (!this._btnEdit) {
-                    this._btnEdit = new ButtonItem(null, IconItem.standard(14, 8), function () {
-                        _this.onChildEdit();
-                    });
-                    this._btnEdit.tooltip = strings.edit;
-                    this._btnEdit.visible = false;
-                    this._btnEdit.enabled = false;
-                }
-                return this._btnEdit;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(DataRecordChildrenView.prototype, "btnRefresh", {
-            /**
-             * Gets the refresh button
-             *
-             * @returns {ButtonItem}
-             */
-            get: function () {
-                var _this = this;
-                if (!this._btnRefresh) {
-                    this._btnRefresh = new ButtonItem(null, IconItem.standard(1, 4), function () {
-                        _this.onLoadChildren();
-                    });
-                }
-                return this._btnRefresh;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(DataRecordChildrenView.prototype, "btnRemove", {
-            /**
-             * Gets the remove button
-             *
-             * @returns {ButtonItem}
-             */
-            get: function () {
-                var _this = this;
-                if (!this._btnRemove) {
-                    this._btnRemove = new ButtonItem(null, IconItem.standard(9, 1), function () {
-                        var name = _this.selectedChild.tag ? _this.selectedChild.tag.toString() : _this.selectedChild.toString();
-                        DialogView.confirmDelete(name, function () {
-                            _this.onChildRemove();
-                        });
-                    });
-                    //this._btnRemove.tooltip = strings.remove;
-                    this._btnRemove.visible = false;
-                    this._btnRemove.enabled = false;
-                }
-                return this._btnRemove;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(DataRecordChildrenView.prototype, "listView", {
-            /**
-             * Gets the list view of the view
-             *
-             * @returns {ListView}
-             */
-            get: function () {
-                var _this = this;
-                if (!this._listView) {
-                    this._listView = new ListView();
-                    this._listView.selectedItemChanged.add(function () {
-                        _this.btnEdit.enabled = _this.btnRemove.enabled = _this.listView.selectedItem != null;
-                    });
-                }
-                return this._listView;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(DataRecordChildrenView.prototype, "pagination", {
-            /**
-             * Gets the pagination item
-             *
-             * @returns {PaginationItem}
-             */
-            get: function () {
-                if (!this._pagination) {
-                    this._pagination = new PaginationItem();
-                }
-                return this._pagination;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(DataRecordChildrenView.prototype, "children", {
-            //endregion
-            //region Properties
-            /**
-             * Gets the collection of children of the widget
-             *
-             * @returns {Collection<SelectableItem>}
-             */
-            get: function () {
-                return this.listView.items;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(DataRecordChildrenView.prototype, "record", {
-            /**
-             * Gets or sets the record parent of the children
-             *
-             * @returns {DataRecord}
-             */
-            get: function () {
-                return this._record;
-            },
-            /**
-             * Gets or sets the record parent of the children
-             *
-             * @param {DataRecord} value
-             */
-            set: function (value) {
-                // Check if value changed
-                var changed = value !== this._record;
-                // Set value
-                this._record = value;
-                // Trigger changed event
-                if (changed) {
-                    this.onRecordChanged();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(DataRecordChildrenView.prototype, "selectedChild", {
-            /**
-             * Gets the selected child of the widget
-             *
-             * @returns {SelectableItem}
-             */
-            get: function () {
-                return this.listView.selectedItem;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return DataRecordChildrenView;
-    })(ToolbarView);
-    latte.DataRecordChildrenView = DataRecordChildrenView;
-})(latte || (latte = {}));
-/**
- * Created by josemanuel on 10/25/14.
- */
-var latte;
-(function (latte) {
-    /**
-     * Widget for showing children of a DataRecord.
-     *
-     * Children are added using the <c>children</c> collection, when <c>loadChildren</c> method is called.
-     */
     var DataRecordChildrenWidget = (function (_super) {
         __extends(DataRecordChildrenWidget, _super);
         //region Static
@@ -1799,7 +1442,7 @@ var latte;
                 this.btnRemove,
                 this.btnEdit,
                 this.btnAdd,
-                new SeparatorItem(),
+                new latte.SeparatorItem(),
                 this.btnRefresh,
             ]);
             this.items.add(this.stackChildren);
@@ -1853,7 +1496,7 @@ var latte;
             get: function () {
                 var _this = this;
                 if (!this._childAdd) {
-                    this._childAdd = new LatteEvent(this);
+                    this._childAdd = new latte.LatteEvent(this);
                     this._childAdd.handlerAdded.add(function () {
                         _this.btnAdd.visible = true;
                     });
@@ -1872,7 +1515,7 @@ var latte;
             get: function () {
                 var _this = this;
                 if (!this._childEdit) {
-                    this._childEdit = new LatteEvent(this);
+                    this._childEdit = new latte.LatteEvent(this);
                     this._childEdit.handlerAdded.add(function () {
                         _this.btnEdit.visible = true;
                     });
@@ -1891,7 +1534,7 @@ var latte;
             get: function () {
                 var _this = this;
                 if (!this._childRemove) {
-                    this._childRemove = new LatteEvent(this);
+                    this._childRemove = new latte.LatteEvent(this);
                     this._childRemove.handlerAdded.add(function () {
                         _this.btnRemove.visible = true;
                     });
@@ -1917,7 +1560,7 @@ var latte;
              */
             get: function () {
                 if (!this._loadChildren) {
-                    this._loadChildren = new LatteEvent(this);
+                    this._loadChildren = new latte.LatteEvent(this);
                 }
                 return this._loadChildren;
             },
@@ -1942,7 +1585,7 @@ var latte;
              */
             get: function () {
                 if (!this._recordChanged) {
-                    this._recordChanged = new LatteEvent(this);
+                    this._recordChanged = new latte.LatteEvent(this);
                 }
                 return this._recordChanged;
             },
@@ -1958,7 +1601,7 @@ var latte;
             get: function () {
                 var _this = this;
                 if (!this._btnAdd) {
-                    this._btnAdd = new ButtonItem(null, IconItem.standard(3, 3), function () {
+                    this._btnAdd = new latte.ButtonItem(null, latte.IconItem.standard(3, 3), function () {
                         _this.onChildrenAdd();
                     });
                     this._btnAdd.tooltip = strings.add;
@@ -1978,7 +1621,7 @@ var latte;
             get: function () {
                 var _this = this;
                 if (!this._btnEdit) {
-                    this._btnEdit = new ButtonItem(null, IconItem.standard(14, 8), function () {
+                    this._btnEdit = new latte.ButtonItem(null, latte.IconItem.standard(14, 8), function () {
                         _this.onChildEdit();
                     });
                     this._btnEdit.tooltip = strings.edit;
@@ -1999,7 +1642,7 @@ var latte;
             get: function () {
                 var _this = this;
                 if (!this._btnRefresh) {
-                    this._btnRefresh = new ButtonItem(null, IconItem.standard(1, 4), function () {
+                    this._btnRefresh = new latte.ButtonItem(null, latte.IconItem.standard(1, 4), function () {
                         _this.onLoadChildren();
                     });
                 }
@@ -2017,9 +1660,9 @@ var latte;
             get: function () {
                 var _this = this;
                 if (!this._btnRemove) {
-                    this._btnRemove = new ButtonItem(null, IconItem.standard(9, 1), function () {
+                    this._btnRemove = new latte.ButtonItem(null, latte.IconItem.standard(9, 1), function () {
                         var name = _this.selectedChild.tag ? _this.selectedChild.tag.toString() : _this.selectedChild.toString();
-                        DialogView.confirmDelete(name, function () {
+                        latte.DialogView.confirmDelete(name, function () {
                             _this.onChildRemove();
                         });
                     });
@@ -2041,7 +1684,7 @@ var latte;
             get: function () {
                 var _this = this;
                 if (!this._stackChildren) {
-                    this._stackChildren = new SelectableStack();
+                    this._stackChildren = new latte.SelectableStack();
                     this._stackChildren.padding = 0;
                     this._stackChildren.selectedItemChanged.add(function () {
                         _this.btnEdit.enabled = _this.btnRemove.enabled = _this.stackChildren.selectedItem != null;
@@ -2106,8 +1749,365 @@ var latte;
             configurable: true
         });
         return DataRecordChildrenWidget;
-    })(WidgetItem);
+    })(latte.WidgetItem);
     latte.DataRecordChildrenWidget = DataRecordChildrenWidget;
+})(latte || (latte = {}));
+/**
+ * Created by josemanuel on 10/25/14.
+ */
+var latte;
+(function (latte) {
+    /**
+     * Widget for showing children of a DataRecord.
+     *
+     * Children are added using the <c>children</c> collection, when <c>loadChildren</c> method is called.
+     */
+    var DataRecordChildrenView = (function (_super) {
+        __extends(DataRecordChildrenView, _super);
+        //region Static
+        //endregion
+        //region Fields
+        //endregion
+        /**
+         * Creates the widget
+         */
+        function DataRecordChildrenView(loadChildren, childAdd, childEdit, childRemove) {
+            if (loadChildren === void 0) { loadChildren = null; }
+            if (childAdd === void 0) { childAdd = null; }
+            if (childEdit === void 0) { childEdit = null; }
+            if (childRemove === void 0) { childRemove = null; }
+            _super.call(this);
+            /**
+             * Property field
+             */
+            this._record = null;
+            this.toolbar.sideItems.addArray([
+                this.btnRemove,
+                this.btnEdit,
+                this.btnAdd,
+                new latte.SeparatorItem(),
+                this.btnRefresh,
+            ]);
+            this.view = this.listView;
+            if (loadChildren) {
+                this.loadChildren.add(loadChildren);
+            }
+            if (childAdd) {
+                this.childAdd.add(childAdd);
+            }
+            if (childEdit) {
+                this.childEdit.add(childEdit);
+            }
+            if (childRemove) {
+                this.childRemove.add(childRemove);
+            }
+        }
+        //region Private Methods
+        //endregion
+        //region Methods
+        /**
+         * Raises the <c>childAdd</c> event
+         */
+        DataRecordChildrenView.prototype.onChildrenAdd = function () {
+            if (this._childAdd) {
+                this._childAdd.raise();
+            }
+        };
+        /**
+         * Raises the <c>childEdit</c> event
+         */
+        DataRecordChildrenView.prototype.onChildEdit = function () {
+            if (this._childEdit) {
+                this._childEdit.raise();
+            }
+        };
+        /**
+         * Raises the <c>record</c> event
+         */
+        DataRecordChildrenView.prototype.onRecordChanged = function () {
+            if (this._recordChanged) {
+                this._recordChanged.raise();
+            }
+            this.onLoadChildren();
+        };
+        Object.defineProperty(DataRecordChildrenView.prototype, "childAdd", {
+            /**
+             * Gets an event raised when the user asks to add a new children
+             *
+             * @returns {LatteEvent}
+             */
+            get: function () {
+                var _this = this;
+                if (!this._childAdd) {
+                    this._childAdd = new latte.LatteEvent(this);
+                    this._childAdd.handlerAdded.add(function () {
+                        _this.btnAdd.visible = true;
+                    });
+                }
+                return this._childAdd;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DataRecordChildrenView.prototype, "childEdit", {
+            /**
+             * Gets an event raised when the user requests to edit the children
+             *
+             * @returns {LatteEvent}
+             */
+            get: function () {
+                var _this = this;
+                if (!this._childEdit) {
+                    this._childEdit = new latte.LatteEvent(this);
+                    this._childEdit.handlerAdded.add(function () {
+                        _this.btnEdit.visible = true;
+                    });
+                }
+                return this._childEdit;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DataRecordChildrenView.prototype, "childRemove", {
+            /**
+             * Gets an event raised when the user requests to delete the children
+             *
+             * @returns {LatteEvent}
+             */
+            get: function () {
+                var _this = this;
+                if (!this._childRemove) {
+                    this._childRemove = new latte.LatteEvent(this);
+                    this._childRemove.handlerAdded.add(function () {
+                        _this.btnRemove.visible = true;
+                    });
+                }
+                return this._childRemove;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Raises the <c>childRemove</c> event
+         */
+        DataRecordChildrenView.prototype.onChildRemove = function () {
+            if (this._childRemove) {
+                this._childRemove.raise();
+            }
+        };
+        Object.defineProperty(DataRecordChildrenView.prototype, "loadChildren", {
+            /**
+             * Gets an event raised when the children must be loaded
+             *
+             * @returns {LatteEvent}
+             */
+            get: function () {
+                if (!this._loadChildren) {
+                    this._loadChildren = new latte.LatteEvent(this);
+                }
+                return this._loadChildren;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Raises the <c>loadChildren</c> event
+         */
+        DataRecordChildrenView.prototype.onLoadChildren = function () {
+            this.btnRemove.enabled = this.btnEdit.enabled = false;
+            this.children.clear();
+            if (this._loadChildren) {
+                this._loadChildren.raise();
+            }
+        };
+        Object.defineProperty(DataRecordChildrenView.prototype, "recordChanged", {
+            /**
+             * Gets an event raised when the value of the record property changes
+             *
+             * @returns {LatteEvent}
+             */
+            get: function () {
+                if (!this._recordChanged) {
+                    this._recordChanged = new latte.LatteEvent(this);
+                }
+                return this._recordChanged;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DataRecordChildrenView.prototype, "btnAdd", {
+            /**
+             * Gets the add button
+             *
+             * @returns {ButtonItem}
+             */
+            get: function () {
+                var _this = this;
+                if (!this._btnAdd) {
+                    this._btnAdd = new latte.ButtonItem(null, latte.IconItem.standard(3, 3), function () {
+                        _this.onChildrenAdd();
+                    });
+                    this._btnAdd.tooltip = strings.add;
+                    this._btnAdd.visible = false;
+                }
+                return this._btnAdd;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DataRecordChildrenView.prototype, "btnEdit", {
+            /**
+             * Gets the edit button
+             *
+             * @returns {ButtonItem}
+             */
+            get: function () {
+                var _this = this;
+                if (!this._btnEdit) {
+                    this._btnEdit = new latte.ButtonItem(null, latte.IconItem.standard(14, 8), function () {
+                        _this.onChildEdit();
+                    });
+                    this._btnEdit.tooltip = strings.edit;
+                    this._btnEdit.visible = false;
+                    this._btnEdit.enabled = false;
+                }
+                return this._btnEdit;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DataRecordChildrenView.prototype, "btnRefresh", {
+            /**
+             * Gets the refresh button
+             *
+             * @returns {ButtonItem}
+             */
+            get: function () {
+                var _this = this;
+                if (!this._btnRefresh) {
+                    this._btnRefresh = new latte.ButtonItem(null, latte.IconItem.standard(1, 4), function () {
+                        _this.onLoadChildren();
+                    });
+                }
+                return this._btnRefresh;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DataRecordChildrenView.prototype, "btnRemove", {
+            /**
+             * Gets the remove button
+             *
+             * @returns {ButtonItem}
+             */
+            get: function () {
+                var _this = this;
+                if (!this._btnRemove) {
+                    this._btnRemove = new latte.ButtonItem(null, latte.IconItem.standard(9, 1), function () {
+                        var name = _this.selectedChild.tag ? _this.selectedChild.tag.toString() : _this.selectedChild.toString();
+                        latte.DialogView.confirmDelete(name, function () {
+                            _this.onChildRemove();
+                        });
+                    });
+                    //this._btnRemove.tooltip = strings.remove;
+                    this._btnRemove.visible = false;
+                    this._btnRemove.enabled = false;
+                }
+                return this._btnRemove;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DataRecordChildrenView.prototype, "listView", {
+            /**
+             * Gets the list view of the view
+             *
+             * @returns {ListView}
+             */
+            get: function () {
+                var _this = this;
+                if (!this._listView) {
+                    this._listView = new latte.ListView();
+                    this._listView.selectedItemChanged.add(function () {
+                        _this.btnEdit.enabled = _this.btnRemove.enabled = _this.listView.selectedItem != null;
+                    });
+                }
+                return this._listView;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DataRecordChildrenView.prototype, "pagination", {
+            /**
+             * Gets the pagination item
+             *
+             * @returns {PaginationItem}
+             */
+            get: function () {
+                if (!this._pagination) {
+                    this._pagination = new latte.PaginationItem();
+                }
+                return this._pagination;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DataRecordChildrenView.prototype, "children", {
+            //endregion
+            //region Properties
+            /**
+             * Gets the collection of children of the widget
+             *
+             * @returns {Collection<SelectableItem>}
+             */
+            get: function () {
+                return this.listView.items;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DataRecordChildrenView.prototype, "record", {
+            /**
+             * Gets or sets the record parent of the children
+             *
+             * @returns {DataRecord}
+             */
+            get: function () {
+                return this._record;
+            },
+            /**
+             * Gets or sets the record parent of the children
+             *
+             * @param {DataRecord} value
+             */
+            set: function (value) {
+                // Check if value changed
+                var changed = value !== this._record;
+                // Set value
+                this._record = value;
+                // Trigger changed event
+                if (changed) {
+                    this.onRecordChanged();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DataRecordChildrenView.prototype, "selectedChild", {
+            /**
+             * Gets the selected child of the widget
+             *
+             * @returns {SelectableItem}
+             */
+            get: function () {
+                return this.listView.selectedItem;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return DataRecordChildrenView;
+    })(latte.ToolbarView);
+    latte.DataRecordChildrenView = DataRecordChildrenView;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -2123,15 +2123,15 @@ var latte;
             if (record === void 0) { record = null; }
             _super.call(this);
             var dialog = this;
-            this.saving = new LatteEvent(this);
-            this.saved = new LatteEvent(this);
+            this.saving = new latte.LatteEvent(this);
+            this.saved = new latte.LatteEvent(this);
             this.formView = new latte.DataRecordFormView(record);
-            this.saveButton = new ButtonItem();
+            this.saveButton = new latte.ButtonItem();
             this.saveButton.text = strings.save;
             this.saveButton.click.add(function () {
                 dialog.onSaving();
             });
-            this.cancelButton = new ButtonItem();
+            this.cancelButton = new latte.ButtonItem();
             this.cancelButton.text = strings.cancel;
             this.view = this.formView;
             this.items.add(this.saveButton);
@@ -2209,7 +2209,7 @@ var latte;
             configurable: true
         });
         return DataRecordDialogView;
-    })(DialogView);
+    })(latte.DialogView);
     latte.DataRecordDialogView = DataRecordDialogView;
 })(latte || (latte = {}));
 var latte;
@@ -2237,7 +2237,7 @@ var latte;
         //region Methods
         /**
          * Applies the values on form to the record. Optionally specifies which record
-         is supposed to recieve the values
+         is supposed to receive the values
          **/
         DataRecordFormItem.prototype.applyValues = function (record) {
             if (record === void 0) { record = null; }
@@ -2260,15 +2260,16 @@ var latte;
             this.inputs.clear();
             if (record) {
                 // Call form creating
-                record.onFormCreating(this);
+                //TODO: onFormCreating is deprecated, a way around must be done
+                //record.onFormCreating(this);
                 // Extract metadata
                 var metadata = record.getMetadata();
                 // Scan metadata
                 if (metadata && metadata.fields) {
                     for (var i in metadata.fields) {
                         var field = metadata.fields[i];
-                        var input = new InputItem();
-                        var value = _undef(record[i]) ? null : record[i];
+                        var input = new latte.InputItem();
+                        var value = latte._undef(record[i]) ? null : record[i];
                         input.text = field.text ? field.text : '(No name)';
                         input.type = field.type ? field.type : 'string';
                         input.name = i;
@@ -2284,17 +2285,17 @@ var latte;
                             // Assign loader function
                             d.loaderFunction = field.loaderFunction;
                             // If not record as value, load it in call
-                            if (value && field['recordType'] && !(value instanceof DataRecord)) {
+                            if (value && field['recordType'] && !(value instanceof latte.DataRecord)) {
                                 (function (d, input) {
                                     var params = {
                                         name: field['recordType'],
                                         id: value
                                     };
-                                    if (_isString(field['recordModule'])) {
-                                        log("Added module");
+                                    if (latte._isString(field['recordModule'])) {
+                                        latte.log("Added module");
                                         params['module'] = field['recordModule'];
                                     }
-                                    calls.push(new RemoteCall('_core', 'DataLatteUa', 'recordSelect', params).withHandlers(function (r) {
+                                    calls.push(new latte.RemoteCall('_core', 'DataLatteUa', 'recordSelect', params).withHandlers(function (r) {
                                         //                                    log("Arrived foreign key record:")
                                         //                                    log(r)
                                         if (r && r.recordId) {
@@ -2308,12 +2309,13 @@ var latte;
                         this.inputs.add(input);
                     }
                 }
-                record.onFormCreated(this);
+                //TODO: onFormCreated was deprecated on module separation
+                //record.onFormCreated(this);
                 /**
                  * Send calls if any
                  */
                 if (calls.length > 0) {
-                    Message.sendCalls(calls);
+                    latte.Message.sendCalls(calls);
                 }
             }
             if (this._recordChanged) {
@@ -2328,7 +2330,7 @@ var latte;
              */
             get: function () {
                 if (!this._recordChanged) {
-                    this._recordChanged = new LatteEvent(this);
+                    this._recordChanged = new latte.LatteEvent(this);
                 }
                 return this._recordChanged;
             },
@@ -2363,7 +2365,7 @@ var latte;
             configurable: true
         });
         return DataRecordFormItem;
-    })(FormItem);
+    })(latte.FormItem);
     latte.DataRecordFormItem = DataRecordFormItem;
 })(latte || (latte = {}));
 var latte;
@@ -2428,7 +2430,7 @@ var latte;
             configurable: true
         });
         return DataRecordFormView;
-    })(FormView);
+    })(latte.FormView);
     latte.DataRecordFormView = DataRecordFormView;
 })(latte || (latte = {}));
 var latte;
@@ -2443,7 +2445,7 @@ var latte;
          **/
         function DataRecordGridView() {
             _super.call(this);
-            this.records = new Collection(this._onAddRecord, this._onRemoveRecord, this);
+            this.records = new latte.Collection(this._onAddRecord, this._onRemoveRecord, this);
         }
         /**
          *
@@ -2485,8 +2487,8 @@ var latte;
          *
          **/
         DataRecordGridView.prototype._onRemoveRecord = function (record) {
-            if (!(record.tags._recordDataGridViewRow instanceof DataSetRow))
-                throw new Ex();
+            if (!(record.tags._recordDataGridViewRow instanceof latte.DataSetRow))
+                throw new latte.Ex();
             this.rows.remove(record.tags._recordDataGridViewRow);
         };
         /**
@@ -2517,13 +2519,13 @@ var latte;
             _super.prototype.onRowsAdded.call(this, dataset);
             for (var i = 0; i < dataset.rows.count; i++) {
                 var row = dataset.rows.item(i);
-                var record = new DataRecord();
+                var record = new latte.DataRecord();
                 record.recordType = this.recordType;
                 record.metadata = this._metadata;
                 this.applyValues(row, record);
                 row.tag = record;
                 record.insert(function () {
-                    sprintf("Inserted: " + record.recordId);
+                    latte.sprintf("Inserted: " + record.recordId);
                 });
             }
             this.confirmRowsAdded();
@@ -2538,7 +2540,7 @@ var latte;
                 var record = row.tag;
                 this.applyValues(row, record);
                 record.update(function () {
-                    sprintf("Updated: " + record.recordId);
+                    latte.sprintf("Updated: " + record.recordId);
                 });
             }
             this.confirmRowsChanged();
@@ -2552,7 +2554,7 @@ var latte;
                 var row = dataset.rows.item(i);
                 var record = row.tag;
                 record.remove(function () {
-                    sprintf("Removed: " + record.recordId);
+                    latte.sprintf("Removed: " + record.recordId);
                 });
             }
             this.confirmRowsRemoved();
@@ -2655,7 +2657,7 @@ var latte;
          * @param value
          */
         DataRecordValueItem.prototype.setValue = function (value) {
-            if (value instanceof DataRecord) {
+            if (value instanceof latte.DataRecord) {
                 this.record = value;
             }
         };
@@ -2674,10 +2676,10 @@ var latte;
             this.element.empty();
             if (this.record) {
                 this._textbox = null;
-                var icon = _isFunction(this.record['icon16']) ? this.record['icon16']() : null;
-                var bg = new ButtonGroupItem([
-                    new ButtonItem(this.record.toString(), icon),
-                    new ButtonItem(null, Glyph.dismiss, function () {
+                var icon = latte._isFunction(this.record['icon16']) ? this.record['icon16']() : null;
+                var bg = new latte.ButtonGroupItem([
+                    new latte.ButtonItem(this.record.toString(), icon),
+                    new latte.ButtonItem(null, latte.Glyph.dismiss, function () {
                         var txt = _this.text;
                         _this.record = null;
                         //                        this.textbox.value = txt;
@@ -2688,7 +2690,7 @@ var latte;
                 bg.appendTo(this);
             }
             else {
-                this._textbox = new TextboxItem();
+                this._textbox = new latte.TextboxItem();
                 this.textbox.appendTo(this);
                 this.textbox.filterSuggestions.add(function () {
                     if (_this.loaderFunction) {
@@ -2710,7 +2712,7 @@ var latte;
              */
             get: function () {
                 if (!this._textboxCreated) {
-                    this._textboxCreated = new LatteEvent(this);
+                    this._textboxCreated = new latte.LatteEvent(this);
                 }
                 return this._textboxCreated;
             },
@@ -2724,7 +2726,7 @@ var latte;
             if (this._textboxCreated) {
                 this._textboxCreated.raise(this.textbox);
             }
-            if (_isString(this.placeholder) && this.placeholder.length > 0) {
+            if (latte._isString(this.placeholder) && this.placeholder.length > 0) {
                 this.textbox.placeholder = this.placeholder;
             }
         };
@@ -2824,7 +2826,7 @@ var latte;
             configurable: true
         });
         return DataRecordValueItem;
-    })(ValueItem);
+    })(latte.ValueItem);
     latte.DataRecordValueItem = DataRecordValueItem;
 })(latte || (latte = {}));
 /**
@@ -2897,7 +2899,7 @@ var latte;
              */
             get: function () {
                 if (!this._recordChanged) {
-                    this._recordChanged = new LatteEvent(this);
+                    this._recordChanged = new latte.LatteEvent(this);
                 }
                 return this._recordChanged;
             },
@@ -2912,7 +2914,7 @@ var latte;
              */
             get: function () {
                 if (!this._saving) {
-                    this._saving = new LatteEvent(this);
+                    this._saving = new latte.LatteEvent(this);
                 }
                 return this._saving;
             },
@@ -2927,7 +2929,7 @@ var latte;
              */
             get: function () {
                 if (!this._saved) {
-                    this._saved = new LatteEvent(this);
+                    this._saved = new latte.LatteEvent(this);
                 }
                 return this._saved;
             },
@@ -2963,7 +2965,7 @@ var latte;
             get: function () {
                 var _this = this;
                 if (!this._btnSave) {
-                    this._btnSave = new ButtonItem(null, IconItem.standard(4, 2), function () {
+                    this._btnSave = new latte.ButtonItem(null, latte.IconItem.standard(4, 2), function () {
                         _this.form.applyValues(_this.record);
                         _this.onSaving();
                         _this.record.save(function () {
@@ -3007,7 +3009,7 @@ var latte;
             configurable: true
         });
         return DataRecordWidget;
-    })(WidgetItem);
+    })(latte.WidgetItem);
     latte.DataRecordWidget = DataRecordWidget;
 })(latte || (latte = {}));
 var latte;
@@ -3066,7 +3068,7 @@ var latte;
             configurable: true
         });
         return GridViewColumn;
-    })(DataSetColumn);
+    })(latte.DataSetColumn);
     latte.GridViewColumn = GridViewColumn;
 })(latte || (latte = {}));
 var latte;
@@ -3084,7 +3086,7 @@ var latte;
             _super.call(this, data);
         }
         return GridViewRow;
-    })(DataSetRow);
+    })(latte.DataSetRow);
     latte.GridViewRow = GridViewRow;
 })(latte || (latte = {}));
 /**
@@ -3122,7 +3124,7 @@ var latte;
          * Creates a list view item for the record
          */
         ExplorerItemDataRecord.prototype.createListViewItem = function () {
-            var item = new ListViewItem();
+            var item = new latte.ListViewItem();
             var columns = this.getColumns();
             item.icon = this.getIcon();
             for (var i = 0; i < columns.length; i++) {
@@ -3171,7 +3173,7 @@ var latte;
          * @param name
          */
         ExplorerItemDataRecord.prototype.getItemForColumn = function (name) {
-            return new LabelItem(this.record[name]);
+            return new latte.LabelItem(this.record[name]);
         };
         /**
          * Gets the detail view of the item
@@ -3265,7 +3267,7 @@ var latte;
             configurable: true
         });
         return ExplorerTreeItem;
-    })(TreeItem);
+    })(latte.TreeItem);
     latte.ExplorerTreeItem = ExplorerTreeItem;
 })(latte || (latte = {}));
 /**
@@ -3296,25 +3298,25 @@ var latte;
             //region Structure
             this.sideSize = 300;
             // Tree View Side
-            var treeSide = new ToolbarView();
+            var treeSide = new latte.ToolbarView();
             this._treeViewToolbar = treeSide.toolbar;
             treeSide.view = this.treeView;
             // Detail View Side
-            var detailSide = new ToolbarView();
+            var detailSide = new latte.ToolbarView();
             this._detailViewToolbar = detailSide.toolbar;
             detailSide.view = this.detailView;
             this.detailViewToolbar.items.add(this.btnSaveDetail);
             this.detailViewToolbar.sideItems.add(this.btnRemoveDetail);
             // ListView Side
-            var listSide = new ToolbarView();
+            var listSide = new latte.ToolbarView();
             this._listViewToolbar = listSide.toolbar;
             listSide.view = this.listView;
             this.listViewToolbar.sideItems.add(this.paginator);
             // Second split view
-            var secondSplitView = new SplitView();
+            var secondSplitView = new latte.SplitView();
             secondSplitView.sideView = detailSide;
             secondSplitView.view = listSide;
-            secondSplitView.side = Side.RIGHT;
+            secondSplitView.side = 16 /* RIGHT */;
             secondSplitView.sideSize = 400;
             // Set tree view side
             this.sideView = treeSide;
@@ -3496,7 +3498,7 @@ var latte;
             get: function () {
                 var _this = this;
                 if (!this._btnSaveDetail) {
-                    this._btnSaveDetail = new ButtonItem(strings.save, IconItem.standard(4, 2), function () {
+                    this._btnSaveDetail = new latte.ButtonItem(strings.save, latte.IconItem.standard(4, 2), function () {
                         if (_this.detailView.view) {
                             _this.detailView.view.onSaveChanges();
                         }
@@ -3517,10 +3519,10 @@ var latte;
             get: function () {
                 var _this = this;
                 if (!this._btnRemoveDetail) {
-                    this._btnRemoveDetail = new ButtonItem(null, IconItem.standard(9, 1), function () {
-                        DialogView.alert(sprintf(strings.confirmDeleteS, _this.listSelectedItem.getName()), strings.cantBeUndone, [
-                            new ButtonItem(strings.cancel),
-                            new ButtonItem(sprintf(strings.yesDeleteS, _this.listSelectedItem.getName()), null, function () {
+                    this._btnRemoveDetail = new latte.ButtonItem(null, latte.IconItem.standard(9, 1), function () {
+                        latte.DialogView.alert(latte.sprintf(strings.confirmDeleteS, _this.listSelectedItem.getName()), strings.cantBeUndone, [
+                            new latte.ButtonItem(strings.cancel),
+                            new latte.ButtonItem(latte.sprintf(strings.yesDeleteS, _this.listSelectedItem.getName()), null, function () {
                                 // Delete now
                                 if (_this.listSelectedItem instanceof latte.ExplorerItemDataRecord) {
                                     var r = _this.listSelectedItem.record;
@@ -3596,7 +3598,7 @@ var latte;
              */
             get: function () {
                 if (!this._detailView) {
-                    this._detailView = new View();
+                    this._detailView = new latte.View();
                 }
                 return this._detailView;
             },
@@ -3611,8 +3613,8 @@ var latte;
              */
             get: function () {
                 if (!this._listView) {
-                    this._listView = new ListView();
-                    this._listView.columnHeaders.add(new ColumnHeader(''));
+                    this._listView = new latte.ListView();
+                    this._listView.columnHeaders.add(new latte.ColumnHeader(''));
                 }
                 return this._listView;
             },
@@ -3628,7 +3630,7 @@ var latte;
             get: function () {
                 var _this = this;
                 if (!this._paginator) {
-                    this._paginator = new PaginationItem();
+                    this._paginator = new latte.PaginationItem();
                     this._paginator.pageChanged.add(function () {
                         if (!_this.ignorePageChange) {
                             _this.refreshList();
@@ -3660,7 +3662,7 @@ var latte;
              */
             get: function () {
                 if (!this._treeView) {
-                    this._treeView = new TreeView();
+                    this._treeView = new latte.TreeView();
                 }
                 return this._treeView;
             },
@@ -3668,6 +3670,6 @@ var latte;
             configurable: true
         });
         return ExplorerView;
-    })(SplitView);
+    })(latte.SplitView);
     latte.ExplorerView = ExplorerView;
 })(latte || (latte = {}));

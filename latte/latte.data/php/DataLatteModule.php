@@ -235,9 +235,14 @@ class DataLatteModule {
     private function createStringsArray(){
         
         $filesPath = String::combinePath($this->path, self::PATH_LANG);
-        $files = DataLatteReflection::getFileList($filesPath, 'txt');
         $response = array();
-        
+
+        if(!file_exists($filesPath)) {
+            return $response;
+        }
+
+        $files = DataLatteReflection::getFileList($filesPath, 'txt');
+
         foreach($files as $file){
             
             // File path
@@ -352,7 +357,7 @@ class DataLatteModule {
          */
         if(isset($this->metadata['ua-include-js'])){
             foreach($this->metadata['ua-include-js'] as $file){
-                $tags[] = tag('script')->src("$urlPrefix/datalatte-files/releases/$this->name/support/$file");
+                $tags[] = tag('script')->src(DATALATTE_FILES_URL . "/releases/$this->name/support/$file");
             }
         }
 
@@ -361,22 +366,29 @@ class DataLatteModule {
          */
         if(isset($this->metadata['ua-include-css'])){
             foreach($this->metadata['ua-include-css'] as $file){
-                $tags[] = tag('script')->src("$urlPrefix/datalatte-files/releases/$this->name/support/$file");
+                $tags[] = tag('script')->src(DATALATTE_FILES_URL . "/releases/$this->name/support/$file");
             }
         }
 
         /**
          * Include standard tags
          */
-        $tags = array_merge($tags, array(
-            tag('link')->rel('stylesheet')->href("/datalatte-files/releases/$this->name/$this->name.css"),
-            tag('script')->src("/datalatte-files/releases/$this->name/$this->name.js"),
-        ));
+        if(file_exists(String::combinePath(DATALATTE_FILES, "/releases/$this->name/$this->name.css"))){
+            $tags = array_merge($tags, array(
+                tag('link')->rel('stylesheet')->href(String::combineUrl(DATALATTE_FILES_URL, "/releases/$this->name/$this->name.css"))
+            ));
+        }
+
+        if(file_exists(String::combinePath(DATALATTE_FILES, "/releases/$this->name/$this->name.js"))){
+            $tags = array_merge($tags, array(
+                tag('script')->src(String::combineUrl(DATALATTE_FILES_URL, "/releases/$this->name/$this->name.js"))
+            ));
+        }
 
         if($this->lang){
             if(file_exists(String::combinePath(DATALATTE_FILES, "releases/$this->name/$this->lang.js"))){
                 $tags = array_merge($tags, array(
-                    tag('script')->src("/datalatte-files/releases/$this->name/$this->lang.js"),
+                    tag('script')->src(String::combineUrl(DATALATTE_FILES_URL, "/releases/$this->name/$this->lang.js")),
                 ));
             }
 

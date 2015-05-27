@@ -93,7 +93,7 @@ class DataLatteReflection {
         // create a handler for the directory
         $handler = opendir($directory);
         
-        if(!$handler) throw new ErrorException("Invalid directory");
+        if(!$handler) throw new ErrorException("Invalid directory: $directory");
 
         // open directory and walk through the filenames
         while ($file = readdir($handler)) {

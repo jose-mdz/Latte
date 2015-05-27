@@ -1624,177 +1624,6 @@ var latte;
     })();
     latte.Color = Color;
 })(latte || (latte = {}));
-/**
- * Created by josemanuel on 2/6/14.
- */
-var latte;
-(function (latte) {
-    /**
-     *
-     */
-    var Culture = (function () {
-        //endregion
-        /**
-         *
-         */
-        function Culture() {
-            //endregion
-            //region Fields
-            /**
-             * Short date format
-             */
-            this.shortDateFormat = 'dd/MM/yyyy';
-            /**
-             * Long date format
-             */
-            this.longDateFormat = 'dddd, d de MMMM de YYYY';
-            /**
-             * Amount of decimals to show in currency format
-             */
-            this.currencyDecimals = 2;
-            /**
-             * Separator of decimals for currency
-             */
-            this.numberDecimalsSeparator = '.';
-            /**
-             * Thousands separator for currency
-             */
-            this.numberThousandsSeparator = ',';
-            /**
-             * Symbol to use in currency
-             */
-            this.currencySymbol = '$';
-        }
-        Object.defineProperty(Culture, "current", {
-            /**
-             * Gets or sets the current culture of the system
-             *
-             * @returns {Culture}
-             */
-            get: function () {
-                if (!Culture._current) {
-                    Culture._current = Culture.esMx;
-                }
-                return this._current;
-            },
-            /**
-             * Gets or sets the current culture of the system
-             *
-             * @param {Culture} value
-             */
-            set: function (value) {
-                this._current = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Culture, "esMx", {
-            /**
-             * Gets the Español-Mexico Culture
-             *
-             * @returns {Culture}
-             */
-            get: function () {
-                if (!Culture._esMx) {
-                    Culture._esMx = new Culture();
-                    Culture._esMx.currencyDecimals = 2;
-                    Culture._esMx.numberDecimalsSeparator = '.';
-                    Culture._esMx.numberThousandsSeparator = ',';
-                    Culture._esMx.currencySymbol = '$';
-                    Culture._esMx.shortDateFormat = 'dd/MMM/yyyy';
-                    Culture._esMx.longDateFormat = 'dddd, d de MMMM de YYYY';
-                }
-                return Culture._esMx;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Culture, "enUs", {
-            /**
-             * Gets the English-USA Culture
-             *
-             * @returns {Culture}
-             */
-            get: function () {
-                if (!Culture._enUs) {
-                    Culture._enUs = new Culture();
-                    Culture._enUs.currencyDecimals = 2;
-                    Culture._enUs.numberDecimalsSeparator = '.';
-                    Culture._enUs.numberThousandsSeparator = ',';
-                    Culture._enUs.currencySymbol = '$';
-                    Culture._enUs.shortDateFormat = 'MMM/dd/yyyy';
-                    Culture._enUs.longDateFormat = 'dddd, MMMM d YYYY';
-                }
-                return Culture._enUs;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * Formats currency using the current culture
-         * @param n
-         * @returns {string}
-         */
-        Culture.formatCurrency = function (n) {
-            return Culture.current.onFormatCurrency(n);
-        };
-        /**
-         * Formats a number using the current Culture
-         * @param n
-         * @param decimals
-         * @param symbol
-         * @returns {string}
-         */
-        Culture.formatNumber = function (n, decimals, symbol) {
-            if (decimals === void 0) { decimals = 0; }
-            if (symbol === void 0) { symbol = ''; }
-            return Culture.current.onFormatNumber(n, decimals, symbol);
-        };
-        //region Private Methods
-        //endregion
-        //region Methods
-        /**
-         * Returns the specified number as a currency
-         * @param n
-         */
-        Culture.prototype.onFormatCurrency = function (n) {
-            return this.onFormatNumber(n, this.currencyDecimals, this.currencySymbol);
-        };
-        /**
-         * Formats the specified number
-         * @param n
-         * @param decimals
-         * @param symbol
-         * @returns {string}
-         */
-        Culture.prototype.onFormatNumber = function (n, decimals, symbol) {
-            if (decimals === void 0) { decimals = 0; }
-            if (symbol === void 0) { symbol = ''; }
-            var point = this.numberDecimalsSeparator; //if no decimal separator is passed we use the dot as default decimal separator (we MUST use a decimal separator)
-            //if you don't want to use a thousands separator you can pass empty string as thousands_sep value
-            var separator = this.numberThousandsSeparator;
-            var sign = (n < 0) ? '-' : '';
-            //extracting the absolute value of the integer part of the number and converting to string
-            var round = parseInt(Math.abs(n).toFixed(decimals)) + '';
-            var length = round.length;
-            var offset = ((length) > 3) ? length % 3 : 0;
-            var a = sign;
-            var b = symbol;
-            var c = (offset ? round.substr(0, offset) + separator : '');
-            var d = round.substr(offset).replace(/(\d{3})(?=\d)/g, "$1" + separator);
-            //[Hack]
-            var e = (decimals ? point + (Math.abs(n) - parseInt(round)).toFixed(decimals).slice(2) : '');
-            return a + b + c + d + e;
-        };
-        //region Static
-        /**
-         * Property field
-         */
-        Culture._current = null;
-        return Culture;
-    })();
-    latte.Culture = Culture;
-})(latte || (latte = {}));
 var latte;
 (function (latte) {
     /**
@@ -2502,6 +2331,177 @@ var latte;
     latte.InvalidCallEx = InvalidCallEx;
 })(latte || (latte = {}));
 /**
+ * Created by josemanuel on 2/6/14.
+ */
+var latte;
+(function (latte) {
+    /**
+     *
+     */
+    var Culture = (function () {
+        //endregion
+        /**
+         *
+         */
+        function Culture() {
+            //endregion
+            //region Fields
+            /**
+             * Short date format
+             */
+            this.shortDateFormat = 'dd/MM/yyyy';
+            /**
+             * Long date format
+             */
+            this.longDateFormat = 'dddd, d de MMMM de YYYY';
+            /**
+             * Amount of decimals to show in currency format
+             */
+            this.currencyDecimals = 2;
+            /**
+             * Separator of decimals for currency
+             */
+            this.numberDecimalsSeparator = '.';
+            /**
+             * Thousands separator for currency
+             */
+            this.numberThousandsSeparator = ',';
+            /**
+             * Symbol to use in currency
+             */
+            this.currencySymbol = '$';
+        }
+        Object.defineProperty(Culture, "current", {
+            /**
+             * Gets or sets the current culture of the system
+             *
+             * @returns {Culture}
+             */
+            get: function () {
+                if (!Culture._current) {
+                    Culture._current = Culture.esMx;
+                }
+                return this._current;
+            },
+            /**
+             * Gets or sets the current culture of the system
+             *
+             * @param {Culture} value
+             */
+            set: function (value) {
+                this._current = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Culture, "esMx", {
+            /**
+             * Gets the Español-Mexico Culture
+             *
+             * @returns {Culture}
+             */
+            get: function () {
+                if (!Culture._esMx) {
+                    Culture._esMx = new Culture();
+                    Culture._esMx.currencyDecimals = 2;
+                    Culture._esMx.numberDecimalsSeparator = '.';
+                    Culture._esMx.numberThousandsSeparator = ',';
+                    Culture._esMx.currencySymbol = '$';
+                    Culture._esMx.shortDateFormat = 'dd/MMM/yyyy';
+                    Culture._esMx.longDateFormat = 'dddd, d de MMMM de YYYY';
+                }
+                return Culture._esMx;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Culture, "enUs", {
+            /**
+             * Gets the English-USA Culture
+             *
+             * @returns {Culture}
+             */
+            get: function () {
+                if (!Culture._enUs) {
+                    Culture._enUs = new Culture();
+                    Culture._enUs.currencyDecimals = 2;
+                    Culture._enUs.numberDecimalsSeparator = '.';
+                    Culture._enUs.numberThousandsSeparator = ',';
+                    Culture._enUs.currencySymbol = '$';
+                    Culture._enUs.shortDateFormat = 'MMM/dd/yyyy';
+                    Culture._enUs.longDateFormat = 'dddd, MMMM d YYYY';
+                }
+                return Culture._enUs;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Formats currency using the current culture
+         * @param n
+         * @returns {string}
+         */
+        Culture.formatCurrency = function (n) {
+            return Culture.current.onFormatCurrency(n);
+        };
+        /**
+         * Formats a number using the current Culture
+         * @param n
+         * @param decimals
+         * @param symbol
+         * @returns {string}
+         */
+        Culture.formatNumber = function (n, decimals, symbol) {
+            if (decimals === void 0) { decimals = 0; }
+            if (symbol === void 0) { symbol = ''; }
+            return Culture.current.onFormatNumber(n, decimals, symbol);
+        };
+        //region Private Methods
+        //endregion
+        //region Methods
+        /**
+         * Returns the specified number as a currency
+         * @param n
+         */
+        Culture.prototype.onFormatCurrency = function (n) {
+            return this.onFormatNumber(n, this.currencyDecimals, this.currencySymbol);
+        };
+        /**
+         * Formats the specified number
+         * @param n
+         * @param decimals
+         * @param symbol
+         * @returns {string}
+         */
+        Culture.prototype.onFormatNumber = function (n, decimals, symbol) {
+            if (decimals === void 0) { decimals = 0; }
+            if (symbol === void 0) { symbol = ''; }
+            var point = this.numberDecimalsSeparator; //if no decimal separator is passed we use the dot as default decimal separator (we MUST use a decimal separator)
+            //if you don't want to use a thousands separator you can pass empty string as thousands_sep value
+            var separator = this.numberThousandsSeparator;
+            var sign = (n < 0) ? '-' : '';
+            //extracting the absolute value of the integer part of the number and converting to string
+            var round = parseInt(Math.abs(n).toFixed(decimals)) + '';
+            var length = round.length;
+            var offset = ((length) > 3) ? length % 3 : 0;
+            var a = sign;
+            var b = symbol;
+            var c = (offset ? round.substr(0, offset) + separator : '');
+            var d = round.substr(offset).replace(/(\d{3})(?=\d)/g, "$1" + separator);
+            //[Hack]
+            var e = (decimals ? point + (Math.abs(n) - parseInt(round)).toFixed(decimals).slice(2) : '');
+            return a + b + c + d + e;
+        };
+        //region Static
+        /**
+         * Property field
+         */
+        Culture._current = null;
+        return Culture;
+    })();
+    latte.Culture = Culture;
+})(latte || (latte = {}));
+/**
  * Created by josemanuel on 5/26/15.
  */
 var latte;
@@ -2857,6 +2857,106 @@ var latte;
 var latte;
 (function (latte) {
     /**
+     * Executes an action every specified amount of milliseconds
+     **/
+    var Timer = (function () {
+        /**
+         * Creates a timer that will call <c>callback</c> every specified amount of
+         <c>milliseconds</c> on the specified <c>context</c>.
+         **/
+        function Timer(callback, milliseconds, context) {
+            this.callback = callback;
+            this.milliseconds = milliseconds;
+            this.context = context;
+        }
+        Object.defineProperty(Timer.prototype, "callback", {
+            /**
+             * Gets or sets the function who will be called every tick
+             **/
+            get: function () {
+                return this._callback;
+            },
+            /**
+             * Gets or sets the function who will be called every tick
+             **/
+            set: function (value) {
+                this._callback = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Timer.prototype, "context", {
+            /**
+             * Gets or sets the context in which the function is executed
+             **/
+            get: function () {
+                return this._context;
+            },
+            /**
+             * Gets or sets the context in which the function is executed
+             **/
+            set: function (value) {
+                this._context = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Timer.prototype, "milliseconds", {
+            /**
+             * Gets or sets the milliseconds to sleep between calls
+             **/
+            get: function () {
+                return this._milliseconds;
+            },
+            /**
+             * Gets or sets the milliseconds to sleep between calls
+             **/
+            set: function (value) {
+                this._milliseconds = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Pauses the timer
+         **/
+        Timer.prototype.pause = function () {
+            this._paused = true;
+        };
+        /**
+         * Starts ticking
+         **/
+        Timer.prototype.start = function () {
+            var _this = this;
+            if (this._paused === false)
+                return;
+            this._paused = false;
+            setTimeout(function () {
+                _this.tick();
+            }, this.milliseconds);
+        };
+        /**
+         * Ticks the timer. Executes the callback and programs next tick.
+         **/
+        Timer.prototype.tick = function () {
+            var _this = this;
+            // If paused, bye bye!
+            if (this._paused === true)
+                return;
+            // Call callback
+            this.callback.apply(this.context);
+            // Program next tick
+            setTimeout(function () {
+                _this.tick();
+            }, this.milliseconds);
+        };
+        return Timer;
+    })();
+    latte.Timer = Timer;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
      * Represents a time interval.
      **/
     var TimeSpan = (function () {
@@ -3124,106 +3224,6 @@ var latte;
         return TimeSpan;
     })();
     latte.TimeSpan = TimeSpan;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
-     * Executes an action every specified amount of milliseconds
-     **/
-    var Timer = (function () {
-        /**
-         * Creates a timer that will call <c>callback</c> every specified amount of
-         <c>milliseconds</c> on the specified <c>context</c>.
-         **/
-        function Timer(callback, milliseconds, context) {
-            this.callback = callback;
-            this.milliseconds = milliseconds;
-            this.context = context;
-        }
-        Object.defineProperty(Timer.prototype, "callback", {
-            /**
-             * Gets or sets the function who will be called every tick
-             **/
-            get: function () {
-                return this._callback;
-            },
-            /**
-             * Gets or sets the function who will be called every tick
-             **/
-            set: function (value) {
-                this._callback = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Timer.prototype, "context", {
-            /**
-             * Gets or sets the context in which the function is executed
-             **/
-            get: function () {
-                return this._context;
-            },
-            /**
-             * Gets or sets the context in which the function is executed
-             **/
-            set: function (value) {
-                this._context = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Timer.prototype, "milliseconds", {
-            /**
-             * Gets or sets the milliseconds to sleep between calls
-             **/
-            get: function () {
-                return this._milliseconds;
-            },
-            /**
-             * Gets or sets the milliseconds to sleep between calls
-             **/
-            set: function (value) {
-                this._milliseconds = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * Pauses the timer
-         **/
-        Timer.prototype.pause = function () {
-            this._paused = true;
-        };
-        /**
-         * Starts ticking
-         **/
-        Timer.prototype.start = function () {
-            var _this = this;
-            if (this._paused === false)
-                return;
-            this._paused = false;
-            setTimeout(function () {
-                _this.tick();
-            }, this.milliseconds);
-        };
-        /**
-         * Ticks the timer. Executes the callback and programs next tick.
-         **/
-        Timer.prototype.tick = function () {
-            var _this = this;
-            // If paused, bye bye!
-            if (this._paused === true)
-                return;
-            // Call callback
-            this.callback.apply(this.context);
-            // Program next tick
-            setTimeout(function () {
-                _this.tick();
-            }, this.milliseconds);
-        };
-        return Timer;
-    })();
-    latte.Timer = Timer;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {

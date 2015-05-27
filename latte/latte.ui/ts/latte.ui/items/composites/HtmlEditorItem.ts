@@ -72,7 +72,7 @@ module latte{
             if(!HtmlEditorItem.rangyLoaded){
                 var script = document.createElement('script');
                 script.type = 'text/javascript';
-                script.src = 'datalatte-files/releases/_ui/support/js/rangy.js';
+                script.src = 'latte/releases/latte.ui/support/js/rangy.js';
                 document.body.appendChild(script);
 
                 HtmlEditorItem.rangyLoaded = true;

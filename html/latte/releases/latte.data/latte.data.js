@@ -1183,7 +1183,7 @@ var latte;
         /**
          * Path where requests are made
          */
-        Message.pathToRequest = "/datalatte-files/request.php";
+        Message.pathToRequest = "/latte/request.php";
         return Message;
     })();
     latte.Message = Message;

@@ -20,14 +20,6 @@
     Description:
         Purpose of the stylesheet follows.
 *//* 
-    Document   : IconItem
-    Created on : Aug 3, 2012, 9:05:12 AM
-    Author     : josemanuel
-    Description:
-        Purpose of the stylesheet follows.
-*/
-
-/* 
     Document   : Item
     Created on : Aug 3, 2012, 9:05:05 AM
     Author     : josemanuel
@@ -40,6 +32,14 @@
     display: block;
     float: left;
 }
+/* 
+    Document   : IconItem
+    Created on : Aug 3, 2012, 9:05:12 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
 /* 
     Document   : SeparatorItem
     Created on : Aug 6, 2012, 12:52:06 PM

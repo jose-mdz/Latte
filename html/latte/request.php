@@ -1,5 +1,5 @@
 <?php
     
-require_once 'datalatte.php';
+require_once 'latte.php';
 
 (new DataLatteRequest());

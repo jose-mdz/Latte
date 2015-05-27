@@ -21,7 +21,7 @@ module latte{
 
         /**
          * Applies the values on form to the record. Optionally specifies which record
-         is supposed to recieve the values
+         is supposed to receive the values
          **/
         applyValues(record: DataRecord = null){
 
@@ -54,7 +54,8 @@ module latte{
             if (record) {
 
                 // Call form creating
-                record.onFormCreating(this);
+                //TODO: onFormCreating is deprecated, a way around must be done
+                //record.onFormCreating(this);
 
                 // Extract metadata
                 var metadata = record.getMetadata();
@@ -117,7 +118,8 @@ module latte{
                     }
                 }
 
-                record.onFormCreated(this);
+                //TODO: onFormCreated was deprecated on module separation
+                //record.onFormCreated(this);
 
                 /**
                  * Send calls if any

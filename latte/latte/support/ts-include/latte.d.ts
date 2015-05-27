@@ -1086,106 +1086,6 @@ declare module latte {
         r: number;
     }
 }
-/**
- * Created by josemanuel on 2/6/14.
- */
-declare module latte {
-    /**
-     *
-     */
-    class Culture {
-        /**
-         * Property field
-         */
-        private static _current;
-        /**
-         * Gets or sets the current culture of the system
-         *
-         * @returns {Culture}
-         */
-        /**
-         * Gets or sets the current culture of the system
-         *
-         * @param {Culture} value
-         */
-        static current: Culture;
-        /**
-         * Field for esMX property
-         */
-        private static _esMx;
-        /**
-         * Gets the Español-Mexico Culture
-         *
-         * @returns {Culture}
-         */
-        static esMx: Culture;
-        /**
-         * Field for enUs property
-         */
-        private static _enUs;
-        /**
-         * Gets the English-USA Culture
-         *
-         * @returns {Culture}
-         */
-        static enUs: Culture;
-        /**
-         * Formats currency using the current culture
-         * @param n
-         * @returns {string}
-         */
-        static formatCurrency(n: number): string;
-        /**
-         * Formats a number using the current Culture
-         * @param n
-         * @param decimals
-         * @param symbol
-         * @returns {string}
-         */
-        static formatNumber(n: number, decimals?: number, symbol?: string): string;
-        /**
-         * Short date format
-         */
-        shortDateFormat: string;
-        /**
-         * Long date format
-         */
-        longDateFormat: string;
-        /**
-         * Amount of decimals to show in currency format
-         */
-        currencyDecimals: number;
-        /**
-         * Separator of decimals for currency
-         */
-        numberDecimalsSeparator: string;
-        /**
-         * Thousands separator for currency
-         */
-        numberThousandsSeparator: string;
-        /**
-         * Symbol to use in currency
-         */
-        currencySymbol: string;
-        /**
-         *
-         */
-        constructor();
-        /**
-         * Returns the specified number as a currency
-         * @param n
-         */
-        onFormatCurrency(n: number): string;
-        /**
-         * Formats the specified number
-         * @param n
-         * @param decimals
-         * @param symbol
-         * @returns {string}
-         */
-        onFormatNumber(n: number, decimals?: number, symbol?: string): string;
-    }
-}
 declare module latte {
     /**
      * Represents a specific date and time
@@ -1490,6 +1390,106 @@ declare module latte {
     }
 }
 /**
+ * Created by josemanuel on 2/6/14.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class Culture {
+        /**
+         * Property field
+         */
+        private static _current;
+        /**
+         * Gets or sets the current culture of the system
+         *
+         * @returns {Culture}
+         */
+        /**
+         * Gets or sets the current culture of the system
+         *
+         * @param {Culture} value
+         */
+        static current: Culture;
+        /**
+         * Field for esMX property
+         */
+        private static _esMx;
+        /**
+         * Gets the Español-Mexico Culture
+         *
+         * @returns {Culture}
+         */
+        static esMx: Culture;
+        /**
+         * Field for enUs property
+         */
+        private static _enUs;
+        /**
+         * Gets the English-USA Culture
+         *
+         * @returns {Culture}
+         */
+        static enUs: Culture;
+        /**
+         * Formats currency using the current culture
+         * @param n
+         * @returns {string}
+         */
+        static formatCurrency(n: number): string;
+        /**
+         * Formats a number using the current Culture
+         * @param n
+         * @param decimals
+         * @param symbol
+         * @returns {string}
+         */
+        static formatNumber(n: number, decimals?: number, symbol?: string): string;
+        /**
+         * Short date format
+         */
+        shortDateFormat: string;
+        /**
+         * Long date format
+         */
+        longDateFormat: string;
+        /**
+         * Amount of decimals to show in currency format
+         */
+        currencyDecimals: number;
+        /**
+         * Separator of decimals for currency
+         */
+        numberDecimalsSeparator: string;
+        /**
+         * Thousands separator for currency
+         */
+        numberThousandsSeparator: string;
+        /**
+         * Symbol to use in currency
+         */
+        currencySymbol: string;
+        /**
+         *
+         */
+        constructor();
+        /**
+         * Returns the specified number as a currency
+         * @param n
+         */
+        onFormatCurrency(n: number): string;
+        /**
+         * Formats the specified number
+         * @param n
+         * @param decimals
+         * @param symbol
+         * @returns {string}
+         */
+        onFormatNumber(n: number, decimals?: number, symbol?: string): string;
+    }
+}
+/**
  * Created by josemanuel on 5/26/15.
  */
 declare module latte {
@@ -1691,6 +1691,67 @@ declare module latte {
 }
 declare module latte {
     /**
+     * Executes an action every specified amount of milliseconds
+     **/
+    class Timer {
+        /**
+         *
+         **/
+        private _callback;
+        /**
+         *
+         **/
+        private _context;
+        /**
+         *
+         **/
+        private _milliseconds;
+        /**
+         *
+         **/
+        private _paused;
+        /**
+         * Creates a timer that will call <c>callback</c> every specified amount of
+         <c>milliseconds</c> on the specified <c>context</c>.
+         **/
+        constructor(callback: Function, milliseconds: number, context: any);
+        /**
+         * Gets or sets the function who will be called every tick
+         **/
+        /**
+         * Gets or sets the function who will be called every tick
+         **/
+        callback: Function;
+        /**
+         * Gets or sets the context in which the function is executed
+         **/
+        /**
+         * Gets or sets the context in which the function is executed
+         **/
+        context: any;
+        /**
+         * Gets or sets the milliseconds to sleep between calls
+         **/
+        /**
+         * Gets or sets the milliseconds to sleep between calls
+         **/
+        milliseconds: number;
+        /**
+         * Pauses the timer
+         **/
+        pause(): void;
+        /**
+         * Starts ticking
+         **/
+        start(): void;
+        /**
+         * Ticks the timer. Executes the callback and programs next tick.
+         **/
+        tick(): void;
+    }
+}
+declare module latte {
+    /**
      * Represents a time interval.
      **/
     class TimeSpan {
@@ -1821,67 +1882,6 @@ declare module latte {
          * Gets the value of this timespan expressed in whole and fractional seconds
          **/
         totalSeconds: number;
-    }
-}
-declare module latte {
-    /**
-     * Executes an action every specified amount of milliseconds
-     **/
-    class Timer {
-        /**
-         *
-         **/
-        private _callback;
-        /**
-         *
-         **/
-        private _context;
-        /**
-         *
-         **/
-        private _milliseconds;
-        /**
-         *
-         **/
-        private _paused;
-        /**
-         * Creates a timer that will call <c>callback</c> every specified amount of
-         <c>milliseconds</c> on the specified <c>context</c>.
-         **/
-        constructor(callback: Function, milliseconds: number, context: any);
-        /**
-         * Gets or sets the function who will be called every tick
-         **/
-        /**
-         * Gets or sets the function who will be called every tick
-         **/
-        callback: Function;
-        /**
-         * Gets or sets the context in which the function is executed
-         **/
-        /**
-         * Gets or sets the context in which the function is executed
-         **/
-        context: any;
-        /**
-         * Gets or sets the milliseconds to sleep between calls
-         **/
-        /**
-         * Gets or sets the milliseconds to sleep between calls
-         **/
-        milliseconds: number;
-        /**
-         * Pauses the timer
-         **/
-        pause(): void;
-        /**
-         * Starts ticking
-         **/
-        start(): void;
-        /**
-         * Ticks the timer. Executes the callback and programs next tick.
-         **/
-        tick(): void;
     }
 }
 declare module latte {

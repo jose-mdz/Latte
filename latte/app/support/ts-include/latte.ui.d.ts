@@ -2887,6 +2887,42 @@ declare module latte {
 }
 declare module latte {
     /**
+     *
+     **/
+    class SelectableLabel extends SelectableItem {
+        /**
+         * Label of item
+         **/
+        label: LabelItem;
+        /**
+         *
+         **/
+        constructor();
+        /**
+         * Gets or sets the description of the item's label
+         **/
+        /**
+         * Gets or sets the description of the item's label
+         **/
+        description: string;
+        /**
+         * Gets or sets the icon of the item's label
+         **/
+        /**
+         * Gets or sets the icon of the item's label
+         **/
+        icon: IconItem;
+        /**
+         * Gets or sets the text of the item's label
+         **/
+        /**
+         * Gets or sets the text of the item's label
+         **/
+        text: string;
+    }
+}
+declare module latte {
+    /**
      * Presents an input method for picking a date
      **/
     class DatePickerItem extends ValueItem {
@@ -3017,42 +3053,6 @@ declare module latte {
          * Gets or sets the date of the picker, as a string
          **/
         value: any;
-    }
-}
-declare module latte {
-    /**
-     *
-     **/
-    class SelectableLabel extends SelectableItem {
-        /**
-         * Label of item
-         **/
-        label: LabelItem;
-        /**
-         *
-         **/
-        constructor();
-        /**
-         * Gets or sets the description of the item's label
-         **/
-        /**
-         * Gets or sets the description of the item's label
-         **/
-        description: string;
-        /**
-         * Gets or sets the icon of the item's label
-         **/
-        /**
-         * Gets or sets the icon of the item's label
-         **/
-        icon: IconItem;
-        /**
-         * Gets or sets the text of the item's label
-         **/
-        /**
-         * Gets or sets the text of the item's label
-         **/
-        text: string;
     }
 }
 declare module latte {
@@ -4277,6 +4277,35 @@ declare module latte {
         static updateZIndexes(): void;
     }
 }
+/**
+ * Created by josemanuel on 7/1/14.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class ColorIconItem extends IconItem {
+        /**
+         *
+         */
+        constructor(color: Color, size?: number);
+        /**
+         * Property field
+         */
+        private _color;
+        /**
+         * Gets or sets the color of the icon
+         *
+         * @returns {Color}
+         */
+        /**
+         * Gets or sets the color of the icon
+         *
+         * @param {Color} value
+         */
+        color: Color;
+    }
+}
 declare module latte {
     /**
      * Provides an icon from provided built-in glyphs to indicate graphical actions.
@@ -4380,35 +4409,6 @@ declare module latte {
          * Creates the glyph
          **/
         constructor();
-    }
-}
-/**
- * Created by josemanuel on 7/1/14.
- */
-declare module latte {
-    /**
-     *
-     */
-    class ColorIconItem extends IconItem {
-        /**
-         *
-         */
-        constructor(color: Color, size?: number);
-        /**
-         * Property field
-         */
-        private _color;
-        /**
-         * Gets or sets the color of the icon
-         *
-         * @returns {Color}
-         */
-        /**
-         * Gets or sets the color of the icon
-         *
-         * @param {Color} value
-         */
-        color: Color;
     }
 }
 declare module latte {
@@ -5168,6 +5168,90 @@ declare module latte {
     }
 }
 declare module latte {
+    class HtmlEditorCommands {
+        /**
+         * Swaps selection boldness
+         */
+        static BOLD: string;
+        /**
+         * Wraps seletion into CODE tag
+         */
+        static CODE: string;
+        /**
+         * Clears all formatting on fonts and colors
+         */
+        static CLEAR_FORMAT: string;
+        /**
+         * Formats the block as something
+         */
+        static FORMAT_BLOCK: string;
+        /**
+         * Swaps selection italics
+         */
+        static ITALIC: string;
+        /**
+         * Makes selectikon super-script
+         */
+        static SUPER_SCRIPT: string;
+        /**
+         * Makes selection sub-script
+         */
+        static SUB_SCRIPT: string;
+        /**
+         * Aligns text to left
+         */
+        static JUSTIFY_LEFT: string;
+        /**
+         * Centers text
+         */
+        static JUSTIFY_CENTER: string;
+        /**
+         * Aligns text to right
+         */
+        static JUSTIFY_RIGHT: string;
+        /**
+         * Justifies text
+         */
+        static JUSTIFY_FULL: string;
+        /**
+         * Decreases indent
+         */
+        static OUTDENT: string;
+        /**
+         * Increases indent
+         */
+        static INDENT: string;
+        /**
+         * Shows a dialog to insert HTML
+         */
+        static INSERT_HTML: string;
+        /**
+         * Inserts an image
+         */
+        static INSERT_IMAGE: string;
+        /**
+         * Inserts a link
+         */
+        static INSERT_LINK: string;
+        /**
+         * Inserts an ordered list
+         */
+        static INSERT_ORDERED_LIST: string;
+        /**
+         * Inserts an unordered list
+         */
+        static INSERT_UNORDERED_LIST: string;
+        /**
+         * Shows a dialog to insert a YouTube video
+         */
+        static INSERT_YOUTUBE: string;
+        /**
+         * Unerlines selection
+         */
+        static UNDERLINE: string;
+    }
+}
+declare module latte {
     /**
      * Html Editor. Loads the <c>rangy</c> plugin.
 
@@ -5353,90 +5437,6 @@ declare module latte {
          * Gets the Window of the iframe
          **/
         window: any;
-    }
-}
-declare module latte {
-    class HtmlEditorCommands {
-        /**
-         * Swaps selection boldness
-         */
-        static BOLD: string;
-        /**
-         * Wraps seletion into CODE tag
-         */
-        static CODE: string;
-        /**
-         * Clears all formatting on fonts and colors
-         */
-        static CLEAR_FORMAT: string;
-        /**
-         * Formats the block as something
-         */
-        static FORMAT_BLOCK: string;
-        /**
-         * Swaps selection italics
-         */
-        static ITALIC: string;
-        /**
-         * Makes selectikon super-script
-         */
-        static SUPER_SCRIPT: string;
-        /**
-         * Makes selection sub-script
-         */
-        static SUB_SCRIPT: string;
-        /**
-         * Aligns text to left
-         */
-        static JUSTIFY_LEFT: string;
-        /**
-         * Centers text
-         */
-        static JUSTIFY_CENTER: string;
-        /**
-         * Aligns text to right
-         */
-        static JUSTIFY_RIGHT: string;
-        /**
-         * Justifies text
-         */
-        static JUSTIFY_FULL: string;
-        /**
-         * Decreases indent
-         */
-        static OUTDENT: string;
-        /**
-         * Increases indent
-         */
-        static INDENT: string;
-        /**
-         * Shows a dialog to insert HTML
-         */
-        static INSERT_HTML: string;
-        /**
-         * Inserts an image
-         */
-        static INSERT_IMAGE: string;
-        /**
-         * Inserts a link
-         */
-        static INSERT_LINK: string;
-        /**
-         * Inserts an ordered list
-         */
-        static INSERT_ORDERED_LIST: string;
-        /**
-         * Inserts an unordered list
-         */
-        static INSERT_UNORDERED_LIST: string;
-        /**
-         * Shows a dialog to insert a YouTube video
-         */
-        static INSERT_YOUTUBE: string;
-        /**
-         * Unerlines selection
-         */
-        static UNDERLINE: string;
     }
 }
 declare module latte {
@@ -6684,6 +6684,193 @@ declare module latte {
 }
 declare module latte {
     /**
+     * Renders an item to input data from user.
+     **/
+    class InputItem extends ValueItem {
+        /**
+         * Gets a formatted string of the value depending on the type
+         **/
+        static format(value: any, type: string, options?: any): string;
+        /**
+         * Creates the input item from a caption and a value item
+         *
+         * @param text
+         * @param item
+         */
+        static fromItem(text: string, item: ValueItem): InputItem;
+        /**
+         * Stores options
+         */
+        private _options;
+        /**
+         *
+         **/
+        private _direction;
+        /**
+         *
+         **/
+        private _name;
+        /**
+         *
+         **/
+        private _readOnly;
+        /**
+         *
+         **/
+        private _separator;
+        /**
+         *
+         **/
+        private _type;
+        /**
+         *
+         */
+        private _textWidth;
+        /**
+         *
+         **/
+        private _valueItem;
+        /**
+         * Points to the label where text is stored
+         **/
+        label: LabelItem;
+        /**
+         * Points to the label where read-only elements are shown
+         **/
+        readOnlyLabel: LabelValueItem;
+        /**
+         * Points to separator element
+         **/
+        separatorElement: JQuery;
+        /**
+         * Points to the DOM element where <c>labelElement</> is contained, i.e. the text side.
+         **/
+        textElement: JQuery;
+        /**
+         * Points to the DOM element where the value is shown, i.e. the value side
+         **/
+        valueElement: JQuery;
+        /**
+         * Creates the input element
+         **/
+        constructor(text?: string, type?: string, value?: any, readOnly?: boolean, name?: string);
+        /**
+         * Checks if the current value is valid for the field <c>type</c>
+         **/
+        isValid(): boolean;
+        /**
+         *
+         **/
+        onLayout(): void;
+        onValueChanged(): void;
+        /**
+         * Override
+         * @returns {string}
+         */
+        getValueString(): string;
+        /**
+         * Gets or sets the direction of input.
+         **/
+        /**
+         * Gets or sets the direction of input.
+         **/
+        direction: Direction;
+        /**
+         * Gets or sets the name of the input
+         **/
+        /**
+         * Gets or sets the name of the input
+         **/
+        name: string;
+        /**
+         * Gets or sets the options of the control
+         **/
+        /**
+         * Gets or sets the options of the control
+         **/
+        options: any;
+        /**
+         * Gets or sets a value indicating if the input is read-only
+         **/
+        /**
+         * Gets or sets a value indicating if the input is read-only
+         **/
+        readOnly: boolean;
+        /**
+         * Gets or sets a value indicating if the input has a separator on bottom
+         **/
+        /**
+         * Gets or sets a value indicating if the input has a separator on bottom
+         **/
+        separator: boolean;
+        /**
+         * Gets ors ets the text of the input
+         **/
+        /**
+         * Gets ors ets the text of the input
+         **/
+        text: string;
+        /**
+         * Gets or sets a value indicating if the text section is visible
+         **/
+        /**
+         * Gets or sets a value indicating if the text section is visible
+         **/
+        textVisible: boolean;
+        /**
+         * Gets or sets the with of the text part. Use value lower than 1 for percentages.
+         * Note that when horizontal input, layout may become affected.
+         *
+         * @returns {number}
+         */
+        /**
+         * Gets or sets the with of the text part.
+         * Value must be percent since it must be leveled with value part. Value size will be adjusted
+         * to 5% less large than it should to avoid edge collisions.
+         * Values lower than 1 accepted.
+         * Note that when horizontal input, layout may become affected.
+         *
+         */
+        textWidth: number;
+        /**
+         * Gets or sets the type of the input.
+         Possible values are: <c>auto</c> | <c>string</c> | <c>text</c> |
+         <c>html</c> | <c>number</c> | <c>integer</c> | <c>float</c> |
+         <c>boolean</c> | <c>password</c> | <c>md5-password</c> | <c>date</c> |
+         <c>time</c> | <c>enumeration</c> | <c>combo</c> | <c>record-combo</c> | <c>flags</c> |
+         <c>file</c> | <c>image</c> | <c>custom</c>
+
+         If input is to be a type (function), it must inherit from <c>latte.ui.ValueItem</c>
+         **/
+        /**
+         * Gets or sets the type of the input.
+         Possible values are: <c>auto</c> | <c>string</c> | <c>text</c> |
+         <c>html</c> | <c>number</c> | <c>integer</c> | <c>float</c> |
+         <c>boolean</c> | <c>password</c> | <c>md5-password</c> | <c>date</c> |
+         <c>time</c> | <c>enumeration</c> | <c>combo</c> | <c>record-combo</c> |
+         <c>radio</c> | <c>flags</c> | <c>file</c> | <c>image</c> | <c>custom</c>
+
+         If input is to be a type (function), it must inherit from <c>latte.ui.ValueItem</c>
+         **/
+        type: any;
+        /**
+         * Gets or sets the value of the input
+         **/
+        /**
+         * Gets or sets the value of the input
+         **/
+        value: any;
+        /**
+         * Gets or sets the valueItem of the input
+         **/
+        /**
+         * Gets or sets the valueItem of the input
+         **/
+        valueItem: ValueItem;
+    }
+}
+declare module latte {
+    /**
      * Label with value property
      **/
     class LabelValueItem extends ValueItem {
@@ -7541,193 +7728,6 @@ declare module latte {
          * @param {Side} value
          */
         tabsSide: Side;
-    }
-}
-declare module latte {
-    /**
-     * Renders an item to input data from user.
-     **/
-    class InputItem extends ValueItem {
-        /**
-         * Gets a formatted string of the value depending on the type
-         **/
-        static format(value: any, type: string, options?: any): string;
-        /**
-         * Creates the input item from a caption and a value item
-         *
-         * @param text
-         * @param item
-         */
-        static fromItem(text: string, item: ValueItem): InputItem;
-        /**
-         * Stores options
-         */
-        private _options;
-        /**
-         *
-         **/
-        private _direction;
-        /**
-         *
-         **/
-        private _name;
-        /**
-         *
-         **/
-        private _readOnly;
-        /**
-         *
-         **/
-        private _separator;
-        /**
-         *
-         **/
-        private _type;
-        /**
-         *
-         */
-        private _textWidth;
-        /**
-         *
-         **/
-        private _valueItem;
-        /**
-         * Points to the label where text is stored
-         **/
-        label: LabelItem;
-        /**
-         * Points to the label where read-only elements are shown
-         **/
-        readOnlyLabel: LabelValueItem;
-        /**
-         * Points to separator element
-         **/
-        separatorElement: JQuery;
-        /**
-         * Points to the DOM element where <c>labelElement</> is contained, i.e. the text side.
-         **/
-        textElement: JQuery;
-        /**
-         * Points to the DOM element where the value is shown, i.e. the value side
-         **/
-        valueElement: JQuery;
-        /**
-         * Creates the input element
-         **/
-        constructor(text?: string, type?: string, value?: any, readOnly?: boolean, name?: string);
-        /**
-         * Checks if the current value is valid for the field <c>type</c>
-         **/
-        isValid(): boolean;
-        /**
-         *
-         **/
-        onLayout(): void;
-        onValueChanged(): void;
-        /**
-         * Override
-         * @returns {string}
-         */
-        getValueString(): string;
-        /**
-         * Gets or sets the direction of input.
-         **/
-        /**
-         * Gets or sets the direction of input.
-         **/
-        direction: Direction;
-        /**
-         * Gets or sets the name of the input
-         **/
-        /**
-         * Gets or sets the name of the input
-         **/
-        name: string;
-        /**
-         * Gets or sets the options of the control
-         **/
-        /**
-         * Gets or sets the options of the control
-         **/
-        options: any;
-        /**
-         * Gets or sets a value indicating if the input is read-only
-         **/
-        /**
-         * Gets or sets a value indicating if the input is read-only
-         **/
-        readOnly: boolean;
-        /**
-         * Gets or sets a value indicating if the input has a separator on bottom
-         **/
-        /**
-         * Gets or sets a value indicating if the input has a separator on bottom
-         **/
-        separator: boolean;
-        /**
-         * Gets ors ets the text of the input
-         **/
-        /**
-         * Gets ors ets the text of the input
-         **/
-        text: string;
-        /**
-         * Gets or sets a value indicating if the text section is visible
-         **/
-        /**
-         * Gets or sets a value indicating if the text section is visible
-         **/
-        textVisible: boolean;
-        /**
-         * Gets or sets the with of the text part. Use value lower than 1 for percentages.
-         * Note that when horizontal input, layout may become affected.
-         *
-         * @returns {number}
-         */
-        /**
-         * Gets or sets the with of the text part.
-         * Value must be percent since it must be leveled with value part. Value size will be adjusted
-         * to 5% less large than it should to avoid edge collisions.
-         * Values lower than 1 accepted.
-         * Note that when horizontal input, layout may become affected.
-         *
-         */
-        textWidth: number;
-        /**
-         * Gets or sets the type of the input.
-         Possible values are: <c>auto</c> | <c>string</c> | <c>text</c> |
-         <c>html</c> | <c>number</c> | <c>integer</c> | <c>float</c> |
-         <c>boolean</c> | <c>password</c> | <c>md5-password</c> | <c>date</c> |
-         <c>time</c> | <c>enumeration</c> | <c>combo</c> | <c>record-combo</c> | <c>flags</c> |
-         <c>file</c> | <c>image</c> | <c>custom</c>
-
-         If input is to be a type (function), it must inherit from <c>latte.ui.ValueItem</c>
-         **/
-        /**
-         * Gets or sets the type of the input.
-         Possible values are: <c>auto</c> | <c>string</c> | <c>text</c> |
-         <c>html</c> | <c>number</c> | <c>integer</c> | <c>float</c> |
-         <c>boolean</c> | <c>password</c> | <c>md5-password</c> | <c>date</c> |
-         <c>time</c> | <c>enumeration</c> | <c>combo</c> | <c>record-combo</c> |
-         <c>radio</c> | <c>flags</c> | <c>file</c> | <c>image</c> | <c>custom</c>
-
-         If input is to be a type (function), it must inherit from <c>latte.ui.ValueItem</c>
-         **/
-        type: any;
-        /**
-         * Gets or sets the value of the input
-         **/
-        /**
-         * Gets or sets the value of the input
-         **/
-        value: any;
-        /**
-         * Gets or sets the valueItem of the input
-         **/
-        /**
-         * Gets or sets the valueItem of the input
-         **/
-        valueItem: ValueItem;
     }
 }
 declare module latte {

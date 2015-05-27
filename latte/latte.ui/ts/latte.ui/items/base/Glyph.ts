@@ -7,7 +7,7 @@ module latte{
         /**
          * URL used for glyphs sprite
          **/
-        static defaultUrl: string = '/datalatte-files/releases/_ui/support/imgs/glyphs.png';
+        static defaultUrl: string = '/latte/releases/latte.ui/support/imgs/glyphs.png';
 
 
         /**

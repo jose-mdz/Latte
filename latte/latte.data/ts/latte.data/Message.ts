@@ -69,7 +69,7 @@ module latte{
         /**
          * Path where requests are made
          */
-        static pathToRequest: string = "/datalatte-files/request.php";
+        static pathToRequest: string = "/latte/request.php";
 
         /**
          * Directly sends an array of calls

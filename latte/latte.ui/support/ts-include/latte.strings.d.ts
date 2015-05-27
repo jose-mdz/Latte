@@ -1,0 +1,32 @@
+declare module latte{ interface Strings{
+	justNow: string;
+	oneMinuteAgo: string;
+	SMinutesAgo: string;
+	oneHourAgo: string;
+	SHoursAgo: string;
+	yesterday: string;
+	SDaysAgo: string;
+	oneWeekAgo: string;
+	SWeeksAgo: string;
+	oneYearAgo: string;
+	SYearsAgo: string;
+	sunday: string;
+	monday: string;
+	tuesday: string;
+	wednesday: string;
+	thursday: string;
+	friday: string;
+	saturday: string;
+	january: string;
+	february: string;
+	march: string;
+	april: string;
+	may: string;
+	june: string;
+	july: string;
+	august: string;
+	september: string;
+	october: string;
+	november: string;
+	december: string;
+}}

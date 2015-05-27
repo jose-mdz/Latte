@@ -5,7 +5,7 @@ module latte{
 		_recordType: string = 'Person';
 
 		/* Name of Module where record lives*/
-		_moduleName: string = '_app';
+		_moduleName: string = 'app';
 
 		/**
 		 * Database field: int(11)
@@ -49,7 +49,7 @@ module latte{
 
 		 */
 		static search(term: string = '', page: number = 1, pageSize: number = 50): RemoteCall<PageResult<Person>>{
-			return new RemoteCall<PageResult<Person>>('_app', 'Person', 'search', {term: term, page: page, pageSize: pageSize} );
+			return new RemoteCall<PageResult<Person>>('app', 'Person', 'search', {term: term, page: page, pageSize: pageSize} );
 		}
 	}
 

@@ -11,7 +11,7 @@ module latte{
         /**
          * Default URL of sprite used if coordinates are specified, and no <c>url</c> is provided.
          **/
-        static defaultUrl: string = '/datalatte-files/releases/_ui/support/imgs/std-icons.png';
+        static defaultUrl: string = '/latte/releases/latte.ui/support/imgs/std-icons.png';
 
         /**
          * Creates an empty icon of the specified size
