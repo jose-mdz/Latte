@@ -7,12 +7,11 @@ include 'latte/latte.php';
 
 // Load base modules
 DataLatteModule::memoryLoad('latte', 'en');
-DataLatteModule::memoryLoad('latte.ui', 'en');
 DataLatteModule::memoryLoad('latte.data', 'en');
-DataLatteModule::memoryLoad('latte.data.ui', 'en');
+DataLatteModule::memoryLoad('latte.element', 'en');
 
 // Load app
-$app = new DataLatteModule('app.list');
+$app = new DataLatteModule('app.contacts');
 $app->load('en');
 $app->loadConnection();
 
@@ -28,4 +27,4 @@ foreach(DataLatteModule::$loadedModules as $module){
 }
 
 /// Load javascript main
-$doc->addScript(" $(function(){ new latte.Main() });");
+$doc->addScript(" window.addEventListener('load', function(){ new latte.Main() });");

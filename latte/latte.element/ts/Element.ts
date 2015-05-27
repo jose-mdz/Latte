@@ -20,6 +20,24 @@ module latte {
         }
 
         /**
+         * Creates an element from the latte.globalViewBank object.
+         *
+         * @param key
+         * @returns {latte.Element<HTMLElement>}
+         */
+        static fromBank(key: string): HTMLElement{
+            if(!_undef(latte['globalViewsBank']) && !_undef(latte['globalViewsBank'][key])) {
+
+                var e = document.createElement('div');
+                e.innerHTML = latte['globalViewsBank'][key];
+                return <HTMLElement>e.children[0];
+
+            }
+
+            throw sprintf("View %s not found in bank.", key);
+        }
+
+        /**
          * Searches for the specified path, clones it and returns its html element
          * @param path
          */
@@ -96,13 +114,19 @@ module latte {
             return window.pageYOffset;
         }
 
+        /**
+         * Converts the value in css format to a number
+         *
+         * @param property
+         * @returns {number}
+         */
         private getCssNumericValue(property: string): number{
 
             return parseFloat(this.style[property] || '0');
         }
 
         /**
-         * Gets the suffix for the specified property
+         * Converts the value to a value + px, depending on the property
          *
          * @param property
          * @param value
@@ -239,6 +263,7 @@ module latte {
          *
          * @param properties
          * @param duration Duration of the animation in seconds
+         * @param callback
          */
         animate(properties: any, duration: number = 0.1, callback: () => void = null){
             var starts: any = {};
@@ -371,13 +396,6 @@ module latte {
                 if(_isFunction(callback)) callback();
             });
 
-            //$(this.element).animate({ opacity: 1}, duration, 'swing', () => {
-            //
-            //    this.visible = true;
-            //
-            //    if('function' == typeof callback)
-            //        callback();
-            //});
         }
 
         /**

@@ -83,14 +83,3 @@ function errorHandler($errno, $errstr, $errfile, $errline){
  }
 
  set_error_handler("errorHandler");
-
-// Load base modules
-DataLatteModule::memoryLoad('latte', 'en');
-DataLatteModule::memoryLoad('latte.ui', 'en');
-DataLatteModule::memoryLoad('latte.data', 'en');
-DataLatteModule::memoryLoad('latte.data.ui', 'en');
-
-// Load app
-$app = new DataLatteModule('app');
-$app->load('en');
-$app->loadConnection();

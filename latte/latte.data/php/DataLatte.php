@@ -468,3 +468,5 @@
     }
 
 }
+
+class DL extends DataLatte{}
