@@ -239,15 +239,23 @@ module latte{
          * Gets the fields of the record, with values
          **/
         getFields():Object {
-            var f = {};
-            var metadata = this.getMetadata();
 
-            if (metadata && metadata.fields) {
-                for (var i in metadata.fields) {
-                    f[i] = this[i] || null;
+            var def = this.onGetFields();
+
+            if(def) {
+                return def;
+            }else {
+                var f = {};
+                var metadata = this.getMetadata();
+
+                if (metadata && metadata.fields) {
+                    for (var i in metadata.fields) {
+                        f[i] = this[i] || null;
+                    }
                 }
+                return f;
             }
-            return f;
+
         }
 
         /**
@@ -309,6 +317,13 @@ module latte{
 
             return this.recordId > 0;
 
+        }
+
+        /**
+         * Gets the fields of the record with its data.
+         */
+        onGetFields(): any {
+            return null;
         }
 
         /**
@@ -517,7 +532,6 @@ module latte{
             return this._viewCreating
         }
         //endregion
-
 
     }
 }

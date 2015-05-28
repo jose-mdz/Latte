@@ -19,6 +19,10 @@ var latte;
             /**
              * Property field
              */
+            this._contentEditable = false;
+            /**
+             * Property field
+             */
             this._isAnimated = false;
             /**
              * Property field
@@ -447,6 +451,20 @@ var latte;
             return this.element.classList.contains(className);
         };
         /**
+         * Raises the <c>contentEditable</c> event
+         */
+        Element.prototype.onContentEditableChanged = function () {
+            if (this._contentEditableChanged) {
+                this._contentEditableChanged.raise();
+            }
+            if (this.contentEditable) {
+                this.element.contentEditable = 'true';
+            }
+            else {
+                this.element.contentEditable = 'false';
+            }
+        };
+        /**
          * Raises the <c>tag</c> event
          */
         Element.prototype.onTagChanged = function () {
@@ -514,6 +532,21 @@ var latte;
             this._element = null;
             this._element = e;
         };
+        Object.defineProperty(Element.prototype, "contentEditableChanged", {
+            /**
+             * Gets an event raised when the value of the contentEditable property changes
+             *
+             * @returns {LatteEvent}
+             */
+            get: function () {
+                if (!this._contentEditableChanged) {
+                    this._contentEditableChanged = new latte.LatteEvent(this);
+                }
+                return this._contentEditableChanged;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Element.prototype, "tagChanged", {
             /**
              * Gets an event raised when the value of the tag property changes
@@ -540,6 +573,33 @@ var latte;
                     this._visibleChanged = new latte.LatteEvent(this);
                 }
                 return this._visibleChanged;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Element.prototype, "contentEditable", {
+            /**
+             * Gets or sets a value indicating if the node should de activated as editable
+             *
+             * @returns {boolean}
+             */
+            get: function () {
+                return this._contentEditable;
+            },
+            /**
+             * Gets or sets a value indicating if the node should de activated as editable
+             *
+             * @param {boolean} value
+             */
+            set: function (value) {
+                // Check if value changed
+                var changed = value !== this._contentEditable;
+                // Set value
+                this._contentEditable = value;
+                // Trigger changed event
+                if (changed) {
+                    this.onContentEditableChanged();
+                }
             },
             enumerable: true,
             configurable: true

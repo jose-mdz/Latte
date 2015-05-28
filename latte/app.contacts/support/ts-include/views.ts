@@ -1,5 +1,21 @@
 module latte{
 	export class ContactsMainViewBase extends Element<HTMLDivElement>{
+		private _btnAdd:Element<HTMLDivElement>;
+		get btnAdd():Element<HTMLDivElement> {
+			if (!this._btnAdd) {
+				this._btnAdd = new Element<HTMLDivElement>(this.find('[data-property=btnAdd]'));
+			}
+			return this._btnAdd;
+		}
+
+		private _btnEdit:Element<HTMLDivElement>;
+		get btnEdit():Element<HTMLDivElement> {
+			if (!this._btnEdit) {
+				this._btnEdit = new Element<HTMLDivElement>(this.find('[data-property=btnEdit]'));
+			}
+			return this._btnEdit;
+		}
+
 		private _detailHeader:Element<HTMLDivElement>;
 		get detailHeader():Element<HTMLDivElement> {
 			if (!this._detailHeader) {
@@ -24,6 +40,14 @@ module latte{
 			return this._detailToolbar;
 		}
 
+		private _lblAddress:Element<HTMLDivElement>;
+		get lblAddress():Element<HTMLDivElement> {
+			if (!this._lblAddress) {
+				this._lblAddress = new Element<HTMLDivElement>(this.find('[data-property=lblAddress]'));
+			}
+			return this._lblAddress;
+		}
+
 		private _lblDescription:Element<HTMLDivElement>;
 		get lblDescription():Element<HTMLDivElement> {
 			if (!this._lblDescription) {
@@ -32,12 +56,12 @@ module latte{
 			return this._lblDescription;
 		}
 
-		private _lblFullname:Element<HTMLDivElement>;
-		get lblFullname():Element<HTMLDivElement> {
-			if (!this._lblFullname) {
-				this._lblFullname = new Element<HTMLDivElement>(this.find('[data-property=lblFullname]'));
+		private _lblFirstName:Element<HTMLDivElement>;
+		get lblFirstName():Element<HTMLDivElement> {
+			if (!this._lblFirstName) {
+				this._lblFirstName = new Element<HTMLDivElement>(this.find('[data-property=lblFirstName]'));
 			}
-			return this._lblFullname;
+			return this._lblFirstName;
 		}
 
 		private _lblInitials:Element<HTMLDivElement>;
@@ -46,6 +70,38 @@ module latte{
 				this._lblInitials = new Element<HTMLDivElement>(this.find('[data-property=lblInitials]'));
 			}
 			return this._lblInitials;
+		}
+
+		private _lblLastName:Element<HTMLDivElement>;
+		get lblLastName():Element<HTMLDivElement> {
+			if (!this._lblLastName) {
+				this._lblLastName = new Element<HTMLDivElement>(this.find('[data-property=lblLastName]'));
+			}
+			return this._lblLastName;
+		}
+
+		private _lblMobile:Element<HTMLDivElement>;
+		get lblMobile():Element<HTMLDivElement> {
+			if (!this._lblMobile) {
+				this._lblMobile = new Element<HTMLDivElement>(this.find('[data-property=lblMobile]'));
+			}
+			return this._lblMobile;
+		}
+
+		private _lblNote:Element<HTMLDivElement>;
+		get lblNote():Element<HTMLDivElement> {
+			if (!this._lblNote) {
+				this._lblNote = new Element<HTMLDivElement>(this.find('[data-property=lblNote]'));
+			}
+			return this._lblNote;
+		}
+
+		private _lblPhone:Element<HTMLDivElement>;
+		get lblPhone():Element<HTMLDivElement> {
+			if (!this._lblPhone) {
+				this._lblPhone = new Element<HTMLDivElement>(this.find('[data-property=lblPhone]'));
+			}
+			return this._lblPhone;
 		}
 
 		private _listGroups:Element<HTMLDivElement>;
@@ -118,36 +174,6 @@ module latte{
 
 		constructor(){
 			super(Element.fromBank('ListItemHeader'))
-		}
-	}
-}module latte{
-	export class ContactDataRowBase extends Element<HTMLDivElement>{
-		private _lblName:Element<HTMLDivElement>;
-		get lblName():Element<HTMLDivElement> {
-			if (!this._lblName) {
-				this._lblName = new Element<HTMLDivElement>(this.find('[data-property=lblName]'));
-			}
-			return this._lblName;
-		}
-
-		private _lblValue:Element<HTMLDivElement>;
-		get lblValue():Element<HTMLDivElement> {
-			if (!this._lblValue) {
-				this._lblValue = new Element<HTMLDivElement>(this.find('[data-property=lblValue]'));
-			}
-			return this._lblValue;
-		}
-
-		private static _Model:Element<HTMLDivElement>;
-		static getModel():Element<HTMLDivElement> {
-			if (!this._Model) {
-				this._Model = new Element<HTMLDivElement>(Element.find('[data-class=ContactDataRowBase]'));
-			}
-			return this._Model;
-		}
-
-		constructor(){
-			super(Element.fromBank('ContactDataRowBase'))
 		}
 	}
 }

@@ -150,9 +150,25 @@
     padding-left: 10px;
 }
 
-.contacts-ui > .panel-detail > .header > .name-side > .name{
-    font-size: 20px;
+.contacts-ui > .panel-detail > .header > .name-side > .name-row:after{
+    content: '.';
+    visibility: hidden;
+    display: block;
+    height: 0;
+    clear: both;
 }
+
+.contacts-ui > .panel-detail > .header > .name-side > .name-row > .name{
+    font-size: 20px;
+    float: left;
+}
+
+.contacts-ui > .panel-detail > .header > .name-side > .name-row > .last{
+    font-size: 20px;
+    float: left;
+    margin-left: 10px;
+}
+
 
 .contacts-ui > .panel-detail > .rows{
     position: absolute;
@@ -188,8 +204,7 @@
 
 .contacts-ui > .panel-detail > .rows > .data > .value{
     text-align: left;
-    padding-left: 10px;
-    margin-left: 120px;
+    margin-left: 135px;
 }
 
 .contacts-ui > .panel-detail > .rows > .data > .name:not(:first-child){
@@ -216,7 +231,12 @@
     cursor: pointer;
 }
 
-.contacts-ui > .panel-detail > .toolbar .button:hover{
+.contacts-ui > .panel-detail > .toolbar .button.checked{
+    background-color: #2782F3;
+    color: white;
+}
+
+.contacts-ui > .panel-detail > .toolbar .button:not(.checked):hover{
     border-color: #2782F3;
     color: #2782F3;
 }

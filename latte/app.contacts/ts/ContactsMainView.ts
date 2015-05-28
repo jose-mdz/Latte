@@ -17,7 +17,6 @@ module latte {
         //endregion
 
         //region Fields
-        private rows: ContactDataRow[] = [];
         //endregion
 
         /**
@@ -26,19 +25,101 @@ module latte {
         constructor() {
             super();
 
-            this.loadCategories();
 
+            this.btnAdd.handle(this, 'click', this.btnAdd_Click);
+            this.btnEdit.handle(this, 'click', this.btnEdit_Click);
+            this.lblLastName.handle(this, 'focus', this.lblLastName_Focus);
+            this.lblFirstName.handle(this, 'focus', this.lblFirstName_Focus);
+            this.txtSearch.handle(this, 'change', this.txtSearch_Change);
+
+            this.loadCategories();
             this.loadContacts();
+
+            this.detailHeader.visible = false;
+            this.detailRows.visible = false;
 
         }
 
         //region Private Methods
+
+        selectCategoryItem(item: ListItem){
+
+            // Unselect everyone
+            var elems  = this.listGroups.element.querySelectorAll('.selected');
+
+            for (var i = 0; i < elems.length; i++) {
+                (new Element<HTMLElement>(<any>elems[i])).removeClass('selected');
+            }
+
+            item.addClass('selected');
+            this.selectedCategory = item.tag;
+        }
+
+        selectPersonItem(item: ListItem){
+            // Unselect everyone
+            var elems  = this.listPeople.element.querySelectorAll('.selected');
+
+            for (var i = 0; i < elems.length; i++) {
+                (new Element<HTMLElement>(<any>elems[i])).removeClass('selected');
+            }
+
+            item.addClass('selected');
+            this.person = <Person>item.tag;
+        }
+
         //endregion
 
         //region Methods
 
+        /**
+         * Event Handler.
+         */
+        btnAdd_Click(){
+
+            if(this.editMode) {
+                this.editMode = false;
+            }
+
+            this.person = new Person();
+            this.editMode = true;
+        }
+
+        /**
+         * Event Handler.
+         */
+        btnEdit_Click(){
+            this.editMode = !this.editMode;
+        }
+
+        /**
+         * Event Handler.
+         */
+        lblFirstName_Focus(){
+            setTimeout(() => {
+                document.execCommand('selectAll', false, null)
+            }, 100);
+        }
+
+        /**
+         * Event Handler.
+         */
+        lblLastName_Focus(){
+            setTimeout(() => {
+                document.execCommand('selectAll', false, null)
+            }, 100);
+        }
+
+        /**
+         * Event Handler.
+         */
         loadCategories(){
             this.listGroups.clear();
+
+            var itemAll = new ListItem();
+            itemAll.text = strings.allContacts;
+            itemAll.tag = null;
+            itemAll.addEventListener('click', () => { this.selectCategoryItem(itemAll) });
+            this.listGroups.add(itemAll);
 
             Category.fullCatalog().send((cats: Category[]) => {
 
@@ -70,10 +151,14 @@ module latte {
                         this.listGroups.add(groupItem);
 
                         for (var i = 0; i < array.length; i++) {
-                            var item = new ListItem();
-                            item.text = array[i].name;
+                            ((category:Category) => {
+                                var item = new ListItem();
+                                item.tag = category;
+                                item.text = category.name;
+                                item.addEventListener('click', () => {this.selectCategoryItem(item)});
 
-                            this.listGroups.add(item);
+                                this.listGroups.add(item);
+                            })(array[i]);
                         }
                     })(g);
                 }
@@ -82,6 +167,9 @@ module latte {
 
         }
 
+        /**
+         * Loads the contacts of the specified filters
+         */
         loadContacts(){
             this.listPeople.clear();
 
@@ -128,11 +216,17 @@ module latte {
                     var groupItem = new ListItemHeader();
                     groupItem.text = g;
 
+                    this.listPeople.add(groupItem);
+
                     for (var i = 0; i < array.length; i++) {
                         ((person:Person) => {
 
                             var item = new ListItem();
+                            item.tag = person;
                             item.text = person.fullName;
+                            item.addEventListener('click', () => {
+                                this.selectPersonItem(item);
+                            });
 
                             this.listPeople.add(item);
 
@@ -152,10 +246,31 @@ module latte {
                 this._editModeChanged.raise();
             }
 
-            this.detailHeader.visible = this.editMode;
+            this.lblFirstName   .contentEditable = this.editMode;
+            this.lblLastName    .contentEditable = this.editMode;
+            this.lblPhone       .contentEditable = this.editMode;
+            this.lblAddress     .contentEditable = this.editMode;
+            this.lblNote        .contentEditable = this.editMode;
+            this.lblDescription .contentEditable = this.editMode;
+            this.lblMobile      .contentEditable = this.editMode;
 
             if(this.editMode) {
+                this.lblFirstName.element.focus();
+                this.btnEdit.addClass('checked');
+            }else {
+                this.btnEdit.removeClass('checked');
 
+                // Save data
+                this.person.name = this.lblFirstName.text;
+                this.person.lastname = this.lblLastName.text;
+                this.person.phone = this.lblPhone.text;
+                this.person.address = this.lblAddress.text;
+                this.person.note = this.lblNote.text;
+                this.person.mobile = this.lblMobile.text;
+                this.person.company = this.lblDescription.text;
+                this.person.save(() => {
+                    //TODO: After save?
+                });
             }
 
         }
@@ -168,11 +283,17 @@ module latte {
                 this._personChanged.raise();
             }
 
-            this.detailRows.clear();
+            this.lblFirstName.text = this.person.name || strings.name;
+            this.lblLastName.text = this.person.lastname || strings.lastName;
+            this.lblPhone.text = this.person.phone || '';
+            this.lblAddress.text = this.person.address || '';
+            this.lblNote.text = this.person.note || '';
+            this.lblDescription.text = this.person.company || '';
+            this.lblMobile.text = this.person.mobile || '';
+            this.lblInitials.text = this.person.initials;
 
-            this.rows = [
-                new ContactDataRow()
-            ]
+            this.detailHeader.visible = this.person instanceof Person;
+            this.detailRows.visible = this.person instanceof Person;
 
         }
 
@@ -184,7 +305,15 @@ module latte {
                 this._selectedCategoryChanged.raise();
             }
 
+            this.loadContacts();
 
+        }
+
+        /**
+         * Event Handler.
+         */
+        txtSearch_Change(){
+            this.loadContacts();
         }
 
         //endregion

@@ -185,6 +185,10 @@ declare module latte {
          */
         hasClass(className: string): boolean;
         /**
+         * Raises the <c>contentEditable</c> event
+         */
+        onContentEditableChanged(): void;
+        /**
          * Raises the <c>tag</c> event
          */
         onTagChanged(): void;
@@ -225,6 +229,16 @@ declare module latte {
         /**
          * Back field for event
          */
+        private _contentEditableChanged;
+        /**
+         * Gets an event raised when the value of the contentEditable property changes
+         *
+         * @returns {LatteEvent}
+         */
+        contentEditableChanged: LatteEvent;
+        /**
+         * Back field for event
+         */
         private _tagChanged;
         /**
          * Gets an event raised when the value of the tag property changes
@@ -242,6 +256,21 @@ declare module latte {
          * @returns {LatteEvent}
          */
         visibleChanged: LatteEvent;
+        /**
+         * Property field
+         */
+        private _contentEditable;
+        /**
+         * Gets or sets a value indicating if the node should de activated as editable
+         *
+         * @returns {boolean}
+         */
+        /**
+         * Gets or sets a value indicating if the node should de activated as editable
+         *
+         * @param {boolean} value
+         */
+        contentEditable: boolean;
         /**
          * Property field
          */

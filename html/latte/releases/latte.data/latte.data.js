@@ -176,14 +176,20 @@ var latte;
          * Gets the fields of the record, with values
          **/
         DataRecord.prototype.getFields = function () {
-            var f = {};
-            var metadata = this.getMetadata();
-            if (metadata && metadata.fields) {
-                for (var i in metadata.fields) {
-                    f[i] = this[i] || null;
-                }
+            var def = this.onGetFields();
+            if (def) {
+                return def;
             }
-            return f;
+            else {
+                var f = {};
+                var metadata = this.getMetadata();
+                if (metadata && metadata.fields) {
+                    for (var i in metadata.fields) {
+                        f[i] = this[i] || null;
+                    }
+                }
+                return f;
+            }
         };
         /**
          * Can be overriden to return dynamically generated metadata
@@ -228,6 +234,12 @@ var latte;
          **/
         DataRecord.prototype.inserted = function () {
             return this.recordId > 0;
+        };
+        /**
+         * Gets the fields of the record with its data.
+         */
+        DataRecord.prototype.onGetFields = function () {
+            return null;
         };
         /**
          * Gets the name of the id field

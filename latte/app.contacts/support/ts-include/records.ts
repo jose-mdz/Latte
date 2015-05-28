@@ -67,6 +67,16 @@ module latte{
 		 */
 		note: any;
 
+		/**
+		 * Database field: varchar(128)
+		 */
+		company: any;
+
+		/**
+		* Override. Gets data about the fields of the record.
+		**/
+		onGetFields(): any { return {'idperson': this.idperson, 'idcategory': this.idcategory, 'title': this.title, 'name': this.name, 'lastname': this.lastname, 'birth': this.birth, 'sex': this.sex, 'address': this.address, 'phone': this.phone, 'mobile': this.mobile, 'note': this.note, 'company': this.company}; }
+
 		/*
 		 * Remote Method. 
  Searches for persons in the database
@@ -110,6 +120,11 @@ module latte{
 		 * Database field: int(11)
 		 */
 		i: any;
+
+		/**
+		* Override. Gets data about the fields of the record.
+		**/
+		onGetFields(): any { return {'idcategory': this.idcategory, 'name': this.name, 'group': this.group, 'i': this.i}; }
 
 		/*
 		 * Remote Method. 

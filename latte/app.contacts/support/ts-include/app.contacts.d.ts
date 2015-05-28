@@ -57,6 +57,14 @@ declare module latte {
          * Database field: text
          */
         note: any;
+        /**
+         * Database field: varchar(128)
+         */
+        company: any;
+        /**
+        * Override. Gets data about the fields of the record.
+        **/
+        onGetFields(): any;
         static search(options: PersonSearchOptions, page?: number, pageSize?: number): RemoteCall<PageResult<Person>>;
     }
     class categoryBase extends DataRecord {
@@ -82,23 +90,41 @@ declare module latte {
          * Database field: int(11)
          */
         i: any;
+        /**
+        * Override. Gets data about the fields of the record.
+        **/
+        onGetFields(): any;
         static fullCatalog(): RemoteCall<Category[]>;
     }
 }
 declare module latte {
     class ContactsMainViewBase extends Element<HTMLDivElement> {
+        private _btnAdd;
+        btnAdd: Element<HTMLDivElement>;
+        private _btnEdit;
+        btnEdit: Element<HTMLDivElement>;
         private _detailHeader;
         detailHeader: Element<HTMLDivElement>;
         private _detailRows;
         detailRows: Element<HTMLDivElement>;
         private _detailToolbar;
         detailToolbar: Element<HTMLDivElement>;
+        private _lblAddress;
+        lblAddress: Element<HTMLDivElement>;
         private _lblDescription;
         lblDescription: Element<HTMLDivElement>;
-        private _lblFullname;
-        lblFullname: Element<HTMLDivElement>;
+        private _lblFirstName;
+        lblFirstName: Element<HTMLDivElement>;
         private _lblInitials;
         lblInitials: Element<HTMLDivElement>;
+        private _lblLastName;
+        lblLastName: Element<HTMLDivElement>;
+        private _lblMobile;
+        lblMobile: Element<HTMLDivElement>;
+        private _lblNote;
+        lblNote: Element<HTMLDivElement>;
+        private _lblPhone;
+        lblPhone: Element<HTMLDivElement>;
         private _listGroups;
         listGroups: Element<HTMLDivElement>;
         private _listPeople;
@@ -127,66 +153,11 @@ declare module latte {
     }
 }
 declare module latte {
-    class ContactDataRowBase extends Element<HTMLDivElement> {
-        private _lblName;
-        lblName: Element<HTMLDivElement>;
-        private _lblValue;
-        lblValue: Element<HTMLDivElement>;
-        private static _Model;
-        static getModel(): Element<HTMLDivElement>;
-        constructor();
-    }
-}
-declare module latte {
     var globalViewsBank: {
         "ContactsMainViewBase": string;
         "ListItem": string;
         "ListItemHeader": string;
-        "ContactDataRowBase": string;
     };
-}
-/**
- * Created by josemanuel on 5/27/15.
- */
-declare module latte {
-    /**
-     *
-     */
-    class ContactDataRow extends ContactDataRowBase {
-        /**
-         *
-         */
-        constructor();
-        /**
-         * Raises the <c>editable</c> event
-         */
-        onEditableChanged(): void;
-        /**
-         * Back field for event
-         */
-        private _editableChanged;
-        /**
-         * Gets an event raised when the value of the editable property changes
-         *
-         * @returns {LatteEvent}
-         */
-        editableChanged: LatteEvent;
-        /**
-         * Property field
-         */
-        private _editable;
-        /**
-         * Gets or sets a value indicating if the row is in editable mode
-         *
-         * @returns {boolean}
-         */
-        /**
-         * Gets or sets a value indicating if the row is in editable mode
-         *
-         * @param {boolean} value
-         */
-        editable: boolean;
-    }
 }
 /**
  * Created by josemanuel on 5/27/15.
@@ -204,7 +175,16 @@ declare module latte {
          * Creates the view
          */
         constructor();
+        selectCategoryItem(item: ListItem): void;
+        selectPersonItem(item: ListItem): void;
+        btnAdd_Click(): void;
+        btnEdit_Click(): void;
+        lblFirstName_Focus(): void;
+        lblLastName_Focus(): void;
         loadCategories(): void;
+        /**
+         * Loads the contacts of the specified filters
+         */
         loadContacts(): void;
         /**
          * Raises the <c>editMode</c> event
@@ -218,6 +198,7 @@ declare module latte {
          * Raises the <c>selectedCategory</c> event
          */
         onSelectedCategoryChanged(): void;
+        txtSearch_Change(): void;
         /**
          * Back field for event
          */
@@ -347,5 +328,11 @@ declare module latte {
          * @returns {string}
          */
         fullName: string;
+        /**
+         * Gets the initials of the person
+         *
+         * @returns {string}
+         */
+        initials: string;
     }
 }

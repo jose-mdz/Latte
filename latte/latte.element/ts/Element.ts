@@ -493,6 +493,22 @@ module latte {
         }
 
         /**
+         * Raises the <c>contentEditable</c> event
+         */
+        onContentEditableChanged(){
+            if(this._contentEditableChanged){
+                this._contentEditableChanged.raise();
+            }
+
+
+            if(this.contentEditable) {
+                this.element.contentEditable = 'true';
+            }else {
+                this.element.contentEditable = 'false';
+            }
+        }
+
+        /**
          * Raises the <c>tag</c> event
          */
         onTagChanged(){
@@ -573,6 +589,24 @@ module latte {
         //endregion
 
         //region Events
+
+        /**
+         * Back field for event
+         */
+        private _contentEditableChanged: LatteEvent
+
+        /**
+         * Gets an event raised when the value of the contentEditable property changes
+         *
+         * @returns {LatteEvent}
+         */
+        get contentEditableChanged(): LatteEvent{
+            if(!this._contentEditableChanged){
+                this._contentEditableChanged = new LatteEvent(this);
+            }
+            return this._contentEditableChanged;
+        }
+
         /**
          * Back field for event
          */
@@ -614,6 +648,41 @@ module latte {
         /**
          * Property field
          */
+        private _contentEditable: boolean = false;
+
+        /**
+         * Gets or sets a value indicating if the node should de activated as editable
+         *
+         * @returns {boolean}
+         */
+        get contentEditable(): boolean{
+            return this._contentEditable;
+        }
+
+        /**
+         * Gets or sets a value indicating if the node should de activated as editable
+         *
+         * @param {boolean} value
+         */
+        set contentEditable(value: boolean){
+
+            // Check if value changed
+            var changed: boolean = value !== this._contentEditable;
+
+            // Set value
+            this._contentEditable = value;
+
+            // Trigger changed event
+            if(changed){
+                this.onContentEditableChanged();
+            }
+        }
+
+
+
+        /**
+         * Property field
+         */
         private _isAnimated:boolean = false;
 
         /**
@@ -624,7 +693,6 @@ module latte {
         get isAnimated():boolean {
             return this._isAnimated;
         }
-
 
         /**
          * Gets the height of the elements document
@@ -643,7 +711,6 @@ module latte {
         get documentWidth():number {
             return Element.getDocumentWidth(this.element.ownerDocument);
         }
-
 
         /**
          * Property field

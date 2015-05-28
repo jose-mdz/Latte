@@ -60,6 +60,27 @@ module latte {
             return [this.name, this.lastname].join(' ');
         }
 
+        /**
+         * Gets the initials of the person
+         *
+         * @returns {string}
+         */
+        get initials():string {
+            var f = String(this.name);
+            var l = String(this.lastname);
+            var data = [];
+
+            if(f.length) {
+                data.push(f.charAt(0).toUpperCase());
+            }
+
+            if(l.length) {
+                data.push(l.charAt(0).toUpperCase());
+            }
+
+            return data.join('');
+        }
+
 
         //endregion
 

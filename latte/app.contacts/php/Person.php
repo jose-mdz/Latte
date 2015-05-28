@@ -28,9 +28,9 @@ class Person extends personBase{
             $where[] = "(
                person.name LIKE '%$op_text%' OR
                person.lastname LIKE '%$op_text%' OR
-               person.address LIKE '%$op_text% OR
-               person.phone LIKE '%$op_text% OR
-               person.mobile LIKE '%$op_text%
+               person.address LIKE '%$op_text%' OR
+               person.phone LIKE '%$op_text%' OR
+               person.mobile LIKE '%$op_text%'
             )";
         }
 
@@ -38,7 +38,7 @@ class Person extends personBase{
             $where[] = "idcategory = '$op_idcategory'";
         }
 
-        $whereSql = sizeof($where) > 0 ? sprintf() : '';
+        $whereSql = sizeof($where) > 0 ? sprintf("WHERE %s", implode(' AND ', $where)) : '';
 
         return DataLatte::pageOf(get_class(), "
             SELECT *

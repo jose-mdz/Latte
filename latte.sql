@@ -16,6 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `category`
+--
+
+DROP TABLE IF EXISTS `category`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `category` (
+  `idcategory` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) DEFAULT NULL,
+  `group` varchar(128) DEFAULT NULL,
+  `i` int(11) DEFAULT '0',
+  PRIMARY KEY (`idcategory`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `category`
+--
+
+LOCK TABLES `category` WRITE;
+/*!40000 ALTER TABLE `category` DISABLE KEYS */;
+INSERT INTO `category` VALUES (1,'My Contacts','Personal',0),(2,'Clients','Clients',1),(3,'Providers','Providers',1),(4,'Friends','Personal',0),(5,'Family','Personal',0),(6,'Recent','Providers',0),(7,'Recent','Clients',0);
+/*!40000 ALTER TABLE `category` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `person`
 --
 
@@ -24,13 +50,19 @@ DROP TABLE IF EXISTS `person`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `person` (
   `idperson` int(11) NOT NULL AUTO_INCREMENT,
+  `idcategory` int(11) DEFAULT '0',
   `title` varchar(128) DEFAULT NULL,
   `name` varchar(128) DEFAULT NULL,
   `lastname` varchar(128) DEFAULT NULL,
   `birth` date DEFAULT NULL,
   `sex` varchar(10) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `phone` varchar(128) DEFAULT NULL,
+  `mobile` varchar(128) DEFAULT NULL,
+  `note` text,
+  `company` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`idperson`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -51,4 +83,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-08-04 16:03:10
+-- Dump completed on 2015-05-27 19:41:57

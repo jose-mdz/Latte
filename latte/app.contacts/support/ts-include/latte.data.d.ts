@@ -139,6 +139,10 @@ declare module latte {
          **/
         inserted(): boolean;
         /**
+         * Gets the fields of the record with its data.
+         */
+        onGetFields(): any;
+        /**
          * Gets the name of the id field
          * @returns {undefined}
          */
