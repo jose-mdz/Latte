@@ -11,15 +11,6 @@ module latte {
         //region Static
 
         /**
-         * Finds a node using the specified path.
-         * Current version uses JQuery for search.
-         * @param path
-         */
-        static find(path: string): HTMLElement{
-            return <HTMLElement>document.querySelector(path);
-        }
-
-        /**
          * Creates an element from the latte.globalViewBank object.
          *
          * @param key
@@ -43,7 +34,7 @@ module latte {
          */
         static outlet(path: string): HTMLElement{
 
-            var element = Element.find(path);
+            var element = <HTMLElement>document.querySelector(path);
             return <HTMLElement>element.cloneNode(true);
 
         }
@@ -153,7 +144,9 @@ module latte {
 
             if(!(element instanceof HTMLElement))
                 throw "Element Required";
+
             this._element = <T>element;
+            this._element['latte-element-instance'] = this;
         }
 
         //region Private Methods
@@ -168,18 +161,32 @@ module latte {
          * Adds an element
          * @param element
          */
-        add(element: Element<HTMLElement>){
+        add(element: Element<HTMLElement>): Element<HTMLElement>{
             this.element.appendChild(element.element);
+            return element;
         }
 
         /**
          * Adds an array of elements to this element
          * @param elements
          */
-        addArray(elements: Element<HTMLElement>[]){
+        addArray(elements: Element<HTMLElement>[]): Element<HTMLElement>[]{
             for (var i = 0; i < elements.length; i++) {
                 this.add(elements[i]);
             }
+            return elements;
+        }
+
+        /**
+         * Adds the specified collection of elements
+         *
+         * @param elements
+         */
+        addCollection(elements: ElementCollection): ElementCollection{
+            for (var i = 0; i < elements.length; i++) {
+                this.add(elements[i]);
+            }
+            return elements;
         }
 
         /**
@@ -320,6 +327,37 @@ module latte {
         }
 
         /**
+         * Binds the element to the specified object
+         * @param object
+         */
+        bind(object: any){
+
+            var list = this.element.querySelectorAll('[data-bind]');
+
+            for (var i = 0; i < list.length; i++) {
+                ((node:Node) => {
+
+                    if(node.nodeType != 1) return;
+
+                    var e = new Element<HTMLElement>(<HTMLElement>node);
+                    var prop = e.element.getAttribute('data-bind');
+
+                    // TODO: Criteria for elementProperty, elementEvent, type, DataAdapter
+                    var bind = new DataBind(e, 'text', object, prop, DataBindType.AUTO, null, 'input', sprintf('%sChanged', prop));
+
+                    this._dataBind = bind;
+
+                    //debugger;
+
+
+                })(list[i]);
+            }
+
+            //TODO: Bind [data-event]
+
+        }
+
+        /**
          * Makes the element blink
          *
          * @param callback
@@ -423,22 +461,21 @@ module latte {
         }
 
         /**
-         * Finds the native HTMLElement object
-         * @param query
-         * @returns {any}
-         */
-        find(query: string): HTMLElement{
-            return <HTMLElement>this.element.querySelector(query);
-            //return this.$element.find(query).get(0);
-        }
-
-        /**
          * Finds an element and returns it
          * @param query
          * @returns {Element}
          */
-        findElement(query: string): Element<HTMLElement>{
-            return new Element(this.find(query));
+        find(query: string): Element<HTMLElement>{
+            return new Element(this.querySelector(query));
+        }
+
+        /**
+         * Returns the collection of matched nodes who are instances of latte.Element
+         * @param query
+         * @returns {latte.ElementCollection}
+         */
+        findAll(query: string): ElementCollection{
+            return ElementCollection.fromNodeList(this.querySelectorAll(query));
         }
 
         /**
@@ -528,6 +565,24 @@ module latte {
         }
 
         /**
+         * Queries element for a native HTMLElement
+         * @param query
+         * @returns {HTMLElement}
+         */
+        querySelector(query: string): HTMLElement{
+            return <HTMLElement>this.element.querySelector(query);
+        }
+
+        /**
+         * Queries element for native HTMLElements
+         * @param query
+         * @returns {NodeList}
+         */
+        querySelectorAll(query: string): NodeList{
+            return this.element.querySelectorAll(query);
+        }
+
+        /**
          * Removes the specified child
          * @param e
          */
@@ -584,6 +639,10 @@ module latte {
         setElement(e: T){
             this._element = null;
             this._element = e;
+        }
+
+        toString(): string{
+            return sprintf("%s.%s", this.element.tagName, this.element.classList.toString());
         }
 
         //endregion
@@ -678,8 +737,6 @@ module latte {
             }
         }
 
-
-
         /**
          * Property field
          */
@@ -693,6 +750,21 @@ module latte {
         get isAnimated():boolean {
             return this._isAnimated;
         }
+
+        /**
+         * Property field
+         */
+        private _dataBind:DataBind;
+
+        /**
+         * Gets the current DataBind of the element (If any)
+         *
+         * @returns {DataBind}
+         */
+        get dataBind():DataBind {
+            return this._dataBind;
+        }
+
 
         /**
          * Gets the height of the elements document

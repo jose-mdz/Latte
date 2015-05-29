@@ -1,6 +1,29 @@
 /// <reference path="datalatte.d.ts" />
 /// <reference path="latte.d.ts" />
+/// <reference path="latte.data.d.ts" />
+/// <reference path="latte.data.strings.d.ts" />
 /// <reference path="latte.strings.d.ts" />
+/**
+ * Created by josemanuel on 5/28/15.
+ */
+declare module latte {
+    /**
+     * Requirements for an adapter. An adapter transforms the values from an latte.Element to any other object.
+     */
+    interface DataAdapter<E, V> {
+        /**
+         * Transforms the value of the record into a proper value for the element
+         *
+         * @param value
+         */
+        adaptForElement(value: V): E;
+        /**
+         * Transforms the value of the element into a proper value for the record
+         * @param value
+         */
+        adaptForRecord(value: E): V;
+    }
+}
 /**
  * Created by josemanuel on 3/25/15.
  */
@@ -9,12 +32,6 @@ declare module latte {
      *
      */
     class Element<T extends HTMLElement> {
-        /**
-         * Finds a node using the specified path.
-         * Current version uses JQuery for search.
-         * @param path
-         */
-        static find(path: string): HTMLElement;
         /**
          * Creates an element from the latte.globalViewBank object.
          *
@@ -83,12 +100,18 @@ declare module latte {
          * Adds an element
          * @param element
          */
-        add(element: Element<HTMLElement>): void;
+        add(element: Element<HTMLElement>): Element<HTMLElement>;
         /**
          * Adds an array of elements to this element
          * @param elements
          */
-        addArray(elements: Element<HTMLElement>[]): void;
+        addArray(elements: Element<HTMLElement>[]): Element<HTMLElement>[];
+        /**
+         * Adds the specified collection of elements
+         *
+         * @param elements
+         */
+        addCollection(elements: ElementCollection): ElementCollection;
         /**
          * Adds the specified class to the class list
          * @param className
@@ -132,6 +155,11 @@ declare module latte {
          */
         autohandler(container: Element<HTMLElement>, elementName: string, eventName: string): void;
         /**
+         * Binds the element to the specified object
+         * @param object
+         */
+        bind(object: any): void;
+        /**
          * Makes the element blink
          *
          * @param callback
@@ -154,17 +182,17 @@ declare module latte {
          */
         fadeOut(duration?: number, callback?: () => any): void;
         /**
-         * Finds the native HTMLElement object
-         * @param query
-         * @returns {any}
-         */
-        find(query: string): HTMLElement;
-        /**
          * Finds an element and returns it
          * @param query
          * @returns {Element}
          */
-        findElement(query: string): Element<HTMLElement>;
+        find(query: string): Element<HTMLElement>;
+        /**
+         * Returns the collection of matched nodes who are instances of latte.Element
+         * @param query
+         * @returns {latte.ElementCollection}
+         */
+        findAll(query: string): ElementCollection;
         /**
          * Gets the size of the element
          */
@@ -197,6 +225,18 @@ declare module latte {
          */
         onVisibleChanged(): void;
         /**
+         * Queries element for a native HTMLElement
+         * @param query
+         * @returns {HTMLElement}
+         */
+        querySelector(query: string): HTMLElement;
+        /**
+         * Queries element for native HTMLElements
+         * @param query
+         * @returns {NodeList}
+         */
+        querySelectorAll(query: string): NodeList;
+        /**
          * Removes the specified child
          * @param e
          */
@@ -226,6 +266,7 @@ declare module latte {
          * @param e
          */
         setElement(e: T): void;
+        toString(): string;
         /**
          * Back field for event
          */
@@ -281,6 +322,16 @@ declare module latte {
          * @returns {boolean}
          */
         isAnimated: boolean;
+        /**
+         * Property field
+         */
+        private _dataBind;
+        /**
+         * Gets the current DataBind of the element (If any)
+         *
+         * @returns {DataBind}
+         */
+        dataBind: DataBind;
         /**
          * Gets the height of the elements document
          *
@@ -562,6 +613,92 @@ declare module latte {
     }
 }
 /**
+ * Created by josemanuel on 5/28/15.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class ElementCollection extends Collection<Element<HTMLElement>> {
+        /**
+         * Creates the collection from the specified NodeList
+         * @param list
+         * @returns {latte.ElementCollection}
+         */
+        static fromNodeList(list: NodeList): ElementCollection;
+        /**
+         * Creates an array of elements of the specified base class, binds them to the specified array of records
+         * and returns them as a ElementCollection
+         *
+         * @param array
+         * @param baseClass
+         * @returns {latte.ElementCollection}
+         */
+        static fromBindArray(array: any[], baseClass: Function): ElementCollection;
+        /**
+         *
+         */
+        constructor();
+        /**
+         * Adds an event listener to the elements in the collection
+         * @param event
+         * @param handler
+         * @param capture
+         */
+        addEventListener(event: string, handler: (item: Element<HTMLElement>) => any, capture?: boolean): void;
+        /**
+         * Adds the specified class to the class list of the elements in the collection
+         * @param className
+         */
+        addClass(className: string): void;
+        /**
+         * Clears all the children of the elements in the collection
+         */
+        clear(): void;
+        /**
+         * Fades in the elements in the collection
+         * @param duration
+         * @param callback
+         */
+        fadeIn(duration?: number, callback?: () => any): void;
+        /**
+         * Fades out the elements in the collection
+         * @param duration
+         * @param callback
+         */
+        fadeOut(duration?: number, callback?: () => any): void;
+        /**
+         * Adds an event handler to the elements in the collection
+         * @param event
+         * @param f
+         */
+        handle(context: any, event: string, f: Function): void;
+        /**
+         * Removes the specified class to the class list of elements in the collection
+         *
+         * @param className
+         */
+        removeClass(className: string): void;
+        /**
+         * Sets the attribute of the elements
+         * @param property
+         * @param value
+         */
+        setAttribute(att: string, value: any): void;
+        /**
+         * Sets the property of the elements
+         * @param property
+         * @param value
+         */
+        setProperty(property: string, value: any): void;
+        /**
+         * Sets the visibility of the elements in the collection
+         * @param visible
+         */
+        setVisible(visible: boolean): void;
+    }
+}
+/**
  * Created by josemanuel on 4/15/15.
  */
 declare module latte {
@@ -673,5 +810,199 @@ declare module latte {
          * @param {string} value
          */
         value: string;
+    }
+}
+/**
+ * Created by josemanuel on 5/28/15.
+ */
+declare module latte {
+    /**
+     * Types of binding
+     */
+    enum DataBindType {
+        /**
+         * Will listen for changes on both the element and the record.
+         */
+        AUTO = 1,
+        /**
+         * Will listen for changes only on the record property in order to call apply()
+         * @type {number}
+         */
+        AUTO_APPLY = 2,
+        /**
+         * Will listen for changes only on the element, in order to call commit()
+         * @type {number}
+         */
+        AUTO_COMMIT = 3,
+        /**
+         * Will not listen for any changes. User must call apply() and commit() manually.
+         * @type {number}
+         */
+        MANUAL = 4,
+    }
+    /**
+     * Binds the property of an object to the property of an element
+     */
+    class DataBind {
+        private lastElement;
+        private lastRecord;
+        private lastElementListener;
+        private lastElementEvent;
+        private lastRecordListener;
+        private lastRecordEvent;
+        /**
+         * Creates and automatically sets up the binding
+         */
+        constructor(element: Element<HTMLElement>, elementProperty: string, record: any, recordProperty: string, type?: DataBindType, dataAdapter?: DataAdapter<any, any>, elementEvent?: string, recordEvent?: string);
+        /**
+         * Sets up the listeners, removes previous listeners and applies the binding for the first time.
+         */
+        setup(element: Element<HTMLElement>, elementProperty: string, record: any, recordProperty: string, type?: DataBindType, elementEvent?: string, recordEvent?: string): void;
+        /**
+         * Applies the data of the record to the elements property
+         */
+        apply(): void;
+        /**
+         * Raises the <c>applied</c> event
+         */
+        onApplied(): void;
+        /**
+         * Obtains the data from the element and sends it to the record
+         */
+        commit(): void;
+        /**
+         * Raises the <c>committed</c> event
+         */
+        onCommitted(): void;
+        /**
+         * Back field for event
+         */
+        private _applied;
+        /**
+         * Gets an event raised when the data of the record is applied to the element
+         *
+         * @returns {LatteEvent}
+         */
+        applied: LatteEvent;
+        /**
+         * Back field for event
+         */
+        private _committed;
+        /**
+         * Gets an event raised when the binding is returned from the element to the record
+         *
+         * @returns {LatteEvent}
+         */
+        committed: LatteEvent;
+        /**
+         * Property field
+         */
+        private _dataAdapter;
+        /**
+         * Gets or sets the data adapter of the bind
+         *
+         * @returns {DataAdapter<any, any>}
+         */
+        /**
+         * Gets or sets the data adapter of the bind
+         *
+         * @param {DataAdapter<any, any>} value
+         */
+        dataAdapter: DataAdapter<any, any>;
+        /**
+         * Property field
+         */
+        private _element;
+        /**
+         * Gets or sets the binded element
+         *
+         * @returns {Element}
+         */
+        element: Element<HTMLElement>;
+        /**
+         * Property field
+         */
+        private _elementEvent;
+        /**
+         * Gets or sets the event that will trigger obtain on change
+         *
+         * @returns {string}
+         */
+        elementEvent: string;
+        /**
+         * Property field
+         */
+        private _elementProperty;
+        /**
+         * Gets or sets the property of the element to bind
+         *
+         * @returns {string}
+         */
+        elementProperty: string;
+        /**
+         * Property field
+         */
+        private _record;
+        /**
+         * Gets or sets the record to bind
+         *
+         * @returns {any}
+         */
+        record: any;
+        /**
+         * Property field
+         */
+        private _recordEvent;
+        /**
+         * Gets or sets the name of the event that detonates a change in the record
+         *
+         * @returns {string}
+         */
+        recordEvent: string;
+        /**
+         * Property field
+         */
+        private _recordProperty;
+        /**
+         * Gets or sets the property of the record to bind
+         *
+         * @returns {string}
+         */
+        recordProperty: string;
+        /**
+         * Property field
+         */
+        private _type;
+        /**
+         * Gets the type of binding
+         *
+         * @returns {DataBindType}
+         */
+        type: DataBindType;
+    }
+}
+/**
+ * Created by josemanuel on 5/28/15.
+ */
+declare module latte {
+    /**
+     * Represents a very simple data adapter that passes the data along as strings.
+     */
+    class DefaultDataAdapter implements DataAdapter<string, string> {
+        /**
+         * Creates the adapter
+         */
+        constructor();
+        /**
+         * Transforms the value of the record into a proper value for the element
+         *
+         * @param value
+         */
+        adaptForElement(value: string): string;
+        /**
+         * Transforms the value of the element into a proper value for the record
+         * @param value
+         */
+        adaptForRecord(value: string): string;
     }
 }

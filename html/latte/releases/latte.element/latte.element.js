@@ -35,16 +35,9 @@ var latte;
             if (!(element instanceof HTMLElement))
                 throw "Element Required";
             this._element = element;
+            this._element['latte-element-instance'] = this;
         }
         //region Static
-        /**
-         * Finds a node using the specified path.
-         * Current version uses JQuery for search.
-         * @param path
-         */
-        Element.find = function (path) {
-            return document.querySelector(path);
-        };
         /**
          * Creates an element from the latte.globalViewBank object.
          *
@@ -64,7 +57,7 @@ var latte;
          * @param path
          */
         Element.outlet = function (path) {
-            var element = Element.find(path);
+            var element = document.querySelector(path);
             return element.cloneNode(true);
         };
         /**
@@ -155,6 +148,7 @@ var latte;
          */
         Element.prototype.add = function (element) {
             this.element.appendChild(element.element);
+            return element;
         };
         /**
          * Adds an array of elements to this element
@@ -164,6 +158,18 @@ var latte;
             for (var i = 0; i < elements.length; i++) {
                 this.add(elements[i]);
             }
+            return elements;
+        };
+        /**
+         * Adds the specified collection of elements
+         *
+         * @param elements
+         */
+        Element.prototype.addCollection = function (elements) {
+            for (var i = 0; i < elements.length; i++) {
+                this.add(elements[i]);
+            }
+            return elements;
         };
         /**
          * Adds the specified class to the class list
@@ -289,6 +295,25 @@ var latte;
             });
         };
         /**
+         * Binds the element to the specified object
+         * @param object
+         */
+        Element.prototype.bind = function (object) {
+            var _this = this;
+            var list = this.element.querySelectorAll('[data-bind]');
+            for (var i = 0; i < list.length; i++) {
+                (function (node) {
+                    if (node.nodeType != 1)
+                        return;
+                    var e = new Element(node);
+                    var prop = e.element.getAttribute('data-bind');
+                    var bind = new latte.DataBind(e, 'text', object, prop, 1 /* AUTO */, null, 'input', latte.sprintf('%sChanged', prop));
+                    _this._dataBind = bind;
+                    //debugger;
+                })(list[i]);
+            }
+        };
+        /**
          * Makes the element blink
          *
          * @param callback
@@ -391,21 +416,20 @@ var latte;
             //});
         };
         /**
-         * Finds the native HTMLElement object
-         * @param query
-         * @returns {any}
-         */
-        Element.prototype.find = function (query) {
-            return this.element.querySelector(query);
-            //return this.$element.find(query).get(0);
-        };
-        /**
          * Finds an element and returns it
          * @param query
          * @returns {Element}
          */
-        Element.prototype.findElement = function (query) {
-            return new Element(this.find(query));
+        Element.prototype.find = function (query) {
+            return new Element(this.querySelector(query));
+        };
+        /**
+         * Returns the collection of matched nodes who are instances of latte.Element
+         * @param query
+         * @returns {latte.ElementCollection}
+         */
+        Element.prototype.findAll = function (query) {
+            return latte.ElementCollection.fromNodeList(this.querySelectorAll(query));
         };
         /**
          * Gets the size of the element
@@ -481,6 +505,22 @@ var latte;
             }
         };
         /**
+         * Queries element for a native HTMLElement
+         * @param query
+         * @returns {HTMLElement}
+         */
+        Element.prototype.querySelector = function (query) {
+            return this.element.querySelector(query);
+        };
+        /**
+         * Queries element for native HTMLElements
+         * @param query
+         * @returns {NodeList}
+         */
+        Element.prototype.querySelectorAll = function (query) {
+            return this.element.querySelectorAll(query);
+        };
+        /**
          * Removes the specified child
          * @param e
          */
@@ -531,6 +571,9 @@ var latte;
         Element.prototype.setElement = function (e) {
             this._element = null;
             this._element = e;
+        };
+        Element.prototype.toString = function () {
+            return latte.sprintf("%s.%s", this.element.tagName, this.element.classList.toString());
         };
         Object.defineProperty(Element.prototype, "contentEditableChanged", {
             /**
@@ -612,6 +655,18 @@ var latte;
              */
             get: function () {
                 return this._isAnimated;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Element.prototype, "dataBind", {
+            /**
+             * Gets the current DataBind of the element (If any)
+             *
+             * @returns {DataBind}
+             */
+            get: function () {
+                return this._dataBind;
             },
             enumerable: true,
             configurable: true
@@ -1171,6 +1226,177 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 /**
+ * Created by josemanuel on 5/28/15.
+ */
+var latte;
+(function (latte) {
+    /**
+     *
+     */
+    var ElementCollection = (function (_super) {
+        __extends(ElementCollection, _super);
+        //endregion
+        //region Fields
+        //endregion
+        /**
+         *
+         */
+        function ElementCollection() {
+            _super.call(this);
+        }
+        //region Static
+        /**
+         * Creates the collection from the specified NodeList
+         * @param list
+         * @returns {latte.ElementCollection}
+         */
+        ElementCollection.fromNodeList = function (list) {
+            var collection = new ElementCollection();
+            for (var i = 0; i < list.length; i++) {
+                (function (node) {
+                    if (node['latte-element-instance'] instanceof latte.Element) {
+                        collection.add(node['latte-element-instance']);
+                    }
+                })(list[i]);
+            }
+            return collection;
+        };
+        /**
+         * Creates an array of elements of the specified base class, binds them to the specified array of records
+         * and returns them as a ElementCollection
+         *
+         * @param array
+         * @param baseClass
+         * @returns {latte.ElementCollection}
+         */
+        ElementCollection.fromBindArray = function (array, baseClass) {
+            var collection = new ElementCollection();
+            for (var i = 0; i < array.length; i++) {
+                (function (object) {
+                    var c = baseClass;
+                    var element = (new c);
+                    element.bind(object);
+                    collection.add(element);
+                })(array[i]);
+            }
+            return collection;
+        };
+        //region Private Methods
+        //endregion
+        //region Methods
+        /**
+         * Adds an event listener to the elements in the collection
+         * @param event
+         * @param handler
+         * @param capture
+         */
+        ElementCollection.prototype.addEventListener = function (event, handler, capture) {
+            var _this = this;
+            if (capture === void 0) { capture = false; }
+            this.each(function (e) {
+                e.addEventListener(event, function () {
+                    var args = [e];
+                    for (var i = 0; i < arguments.length; i++)
+                        args.push(arguments[i]);
+                    handler.apply(_this, args);
+                }, capture);
+            });
+        };
+        /**
+         * Adds the specified class to the class list of the elements in the collection
+         * @param className
+         */
+        ElementCollection.prototype.addClass = function (className) {
+            this.each(function (e) {
+                e.addClass(className);
+            });
+        };
+        /**
+         * Clears all the children of the elements in the collection
+         */
+        ElementCollection.prototype.clear = function () {
+            this.each(function (e) {
+                e.clear();
+            });
+        };
+        /**
+         * Fades in the elements in the collection
+         * @param duration
+         * @param callback
+         */
+        ElementCollection.prototype.fadeIn = function (duration, callback) {
+            if (duration === void 0) { duration = 0.1; }
+            if (callback === void 0) { callback = null; }
+            this.each(function (e) {
+                e.fadeIn(duration, callback);
+            });
+        };
+        /**
+         * Fades out the elements in the collection
+         * @param duration
+         * @param callback
+         */
+        ElementCollection.prototype.fadeOut = function (duration, callback) {
+            if (duration === void 0) { duration = 0.1; }
+            if (callback === void 0) { callback = null; }
+            this.each(function (e) {
+                e.fadeOut(duration, callback);
+            });
+        };
+        /**
+         * Adds an event handler to the elements in the collection
+         * @param event
+         * @param f
+         */
+        ElementCollection.prototype.handle = function (context, event, f) {
+            this.each(function (e) {
+                e.handle(context, event, f);
+            });
+        };
+        /**
+         * Removes the specified class to the class list of elements in the collection
+         *
+         * @param className
+         */
+        ElementCollection.prototype.removeClass = function (className) {
+            this.each(function (e) {
+                e.removeClass(className);
+            });
+        };
+        /**
+         * Sets the attribute of the elements
+         * @param property
+         * @param value
+         */
+        ElementCollection.prototype.setAttribute = function (att, value) {
+            this.each(function (e) {
+                e.element.setAttribute(att, value);
+            });
+        };
+        /**
+         * Sets the property of the elements
+         * @param property
+         * @param value
+         */
+        ElementCollection.prototype.setProperty = function (property, value) {
+            this.each(function (e) {
+                e[property] = value;
+            });
+        };
+        /**
+         * Sets the visibility of the elements in the collection
+         * @param visible
+         */
+        ElementCollection.prototype.setVisible = function (visible) {
+            this.each(function (e) {
+                e.visible = visible;
+            });
+        };
+        return ElementCollection;
+    })(latte.Collection);
+    latte.ElementCollection = ElementCollection;
+})(latte || (latte = {}));
+/**
  * Created by josemanuel on 4/15/15.
  */
 var latte;
@@ -1404,4 +1630,347 @@ var latte;
         return Textbox;
     })(latte.Element);
     latte.Textbox = Textbox;
+})(latte || (latte = {}));
+/**
+ * Created by josemanuel on 5/28/15.
+ */
+var latte;
+(function (latte) {
+    /**
+     * Types of binding
+     */
+    (function (DataBindType) {
+        /**
+         * Will listen for changes on both the element and the record.
+         */
+        DataBindType[DataBindType["AUTO"] = 1] = "AUTO";
+        /**
+         * Will listen for changes only on the record property in order to call apply()
+         * @type {number}
+         */
+        DataBindType[DataBindType["AUTO_APPLY"] = 2] = "AUTO_APPLY";
+        /**
+         * Will listen for changes only on the element, in order to call commit()
+         * @type {number}
+         */
+        DataBindType[DataBindType["AUTO_COMMIT"] = 3] = "AUTO_COMMIT";
+        /**
+         * Will not listen for any changes. User must call apply() and commit() manually.
+         * @type {number}
+         */
+        DataBindType[DataBindType["MANUAL"] = 4] = "MANUAL";
+    })(latte.DataBindType || (latte.DataBindType = {}));
+    var DataBindType = latte.DataBindType;
+    /**
+     * Binds the property of an object to the property of an element
+     */
+    var DataBind = (function () {
+        //endregion
+        /**
+         * Creates and automatically sets up the binding
+         */
+        function DataBind(element, elementProperty, record, recordProperty, type, dataAdapter, elementEvent, recordEvent) {
+            if (type === void 0) { type = 1 /* AUTO */; }
+            if (dataAdapter === void 0) { dataAdapter = null; }
+            if (elementEvent === void 0) { elementEvent = null; }
+            if (recordEvent === void 0) { recordEvent = null; }
+            //endregion
+            //region Properties
+            /**
+             * Property field
+             */
+            this._dataAdapter = null;
+            /**
+             * Property field
+             */
+            this._element = null;
+            /**
+             * Property field
+             */
+            this._elementEvent = null;
+            /**
+             * Property field
+             */
+            this._elementProperty = null;
+            /**
+             * Property field
+             */
+            this._record = null;
+            /**
+             * Property field
+             */
+            this._recordEvent = null;
+            /**
+             * Property field
+             */
+            this._recordProperty = null;
+            if (dataAdapter) {
+                this.dataAdapter = dataAdapter;
+            }
+            this.setup(element, elementProperty, record, recordProperty, type, elementEvent, recordEvent);
+        }
+        //region Private Methods
+        /**
+         * Sets up the listeners, removes previous listeners and applies the binding for the first time.
+         */
+        DataBind.prototype.setup = function (element, elementProperty, record, recordProperty, type, elementEvent, recordEvent) {
+            var _this = this;
+            if (type === void 0) { type = 4 /* MANUAL */; }
+            if (elementEvent === void 0) { elementEvent = null; }
+            if (recordEvent === void 0) { recordEvent = null; }
+            this._element = element;
+            this._elementProperty = elementProperty;
+            this._record = record;
+            this._recordProperty = recordProperty;
+            this._elementEvent = elementEvent;
+            this._recordEvent = recordEvent;
+            this._type = type;
+            if (this.lastElementListener) {
+                this.lastElement.element.removeEventListener(this.lastElementEvent, this.lastElementListener);
+            }
+            if (this.lastRecordListener) {
+                this.lastRecord[this.lastRecordEvent].remove(this.lastRecordListener);
+            }
+            if (this.type == 1 /* AUTO */ || this.type == 3 /* AUTO_COMMIT */) {
+                if (this.element instanceof latte.Element && latte._isString(this.elementEvent)) {
+                    this.lastElement = this.element;
+                    this.lastElementEvent = this.elementEvent;
+                    this.lastElementListener = function () {
+                        _this.commit();
+                    };
+                    // Obtain when element changes
+                    this.element.addEventListener(this.elementEvent, this.lastElementListener);
+                }
+                else {
+                    latte.log(latte.sprintf("Warning: Binding -> commit not possible (Element: %s; %s; elementProperty: %s; recordProperty: %s).", String(this.element), String(this.record), String(this.elementProperty), String(this.recordProperty)));
+                }
+            }
+            if (this.type == 1 /* AUTO */ || this.type == 2 /* AUTO_APPLY */) {
+                if (this.record && latte._isString(this.recordEvent) && this.record[this.recordEvent]) {
+                    this.lastRecord = this.record;
+                    this.lastRecordEvent = this.recordEvent;
+                    this.lastRecordListener = function () {
+                        _this.apply();
+                    };
+                    // Apply when data on record changes
+                    this.record[this.recordEvent].add(this.lastRecordListener);
+                }
+                else {
+                    latte.log(latte.sprintf("Warning: Binding -> apply not possible (Element: %s; %s; elementProperty: %s; recordProperty: %s).", String(this.element), String(this.record), String(this.elementProperty), String(this.recordProperty)));
+                }
+            }
+            this.apply();
+        };
+        //endregion
+        //region Methods
+        /**
+         * Applies the data of the record to the elements property
+         */
+        DataBind.prototype.apply = function () {
+            this.element[this.elementProperty] = this.dataAdapter.adaptForElement(this.record[this.recordProperty]);
+            this.onApplied();
+        };
+        /**
+         * Raises the <c>applied</c> event
+         */
+        DataBind.prototype.onApplied = function () {
+            if (this._applied) {
+                this._applied.raise();
+            }
+        };
+        /**
+         * Obtains the data from the element and sends it to the record
+         */
+        DataBind.prototype.commit = function () {
+            this.record[this.recordProperty] = this.dataAdapter.adaptForRecord(this.element[this.elementProperty]);
+            this.onCommitted();
+        };
+        /**
+         * Raises the <c>committed</c> event
+         */
+        DataBind.prototype.onCommitted = function () {
+            if (this._committed) {
+                this._committed.raise();
+            }
+        };
+        Object.defineProperty(DataBind.prototype, "applied", {
+            /**
+             * Gets an event raised when the data of the record is applied to the element
+             *
+             * @returns {LatteEvent}
+             */
+            get: function () {
+                if (!this._applied) {
+                    this._applied = new latte.LatteEvent(this);
+                }
+                return this._applied;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DataBind.prototype, "committed", {
+            /**
+             * Gets an event raised when the binding is returned from the element to the record
+             *
+             * @returns {LatteEvent}
+             */
+            get: function () {
+                if (!this._committed) {
+                    this._committed = new latte.LatteEvent(this);
+                }
+                return this._committed;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DataBind.prototype, "dataAdapter", {
+            /**
+             * Gets or sets the data adapter of the bind
+             *
+             * @returns {DataAdapter<any, any>}
+             */
+            get: function () {
+                if (!this._dataAdapter) {
+                    this._dataAdapter = new latte.DefaultDataAdapter();
+                }
+                return this._dataAdapter;
+            },
+            /**
+             * Gets or sets the data adapter of the bind
+             *
+             * @param {DataAdapter<any, any>} value
+             */
+            set: function (value) {
+                this._dataAdapter = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DataBind.prototype, "element", {
+            /**
+             * Gets or sets the binded element
+             *
+             * @returns {Element}
+             */
+            get: function () {
+                return this._element;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DataBind.prototype, "elementEvent", {
+            /**
+             * Gets or sets the event that will trigger obtain on change
+             *
+             * @returns {string}
+             */
+            get: function () {
+                return this._elementEvent;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DataBind.prototype, "elementProperty", {
+            /**
+             * Gets or sets the property of the element to bind
+             *
+             * @returns {string}
+             */
+            get: function () {
+                return this._elementProperty;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DataBind.prototype, "record", {
+            /**
+             * Gets or sets the record to bind
+             *
+             * @returns {any}
+             */
+            get: function () {
+                return this._record;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DataBind.prototype, "recordEvent", {
+            /**
+             * Gets or sets the name of the event that detonates a change in the record
+             *
+             * @returns {string}
+             */
+            get: function () {
+                return this._recordEvent;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DataBind.prototype, "recordProperty", {
+            /**
+             * Gets or sets the property of the record to bind
+             *
+             * @returns {string}
+             */
+            get: function () {
+                return this._recordProperty;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DataBind.prototype, "type", {
+            /**
+             * Gets the type of binding
+             *
+             * @returns {DataBindType}
+             */
+            get: function () {
+                return this._type;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return DataBind;
+    })();
+    latte.DataBind = DataBind;
+})(latte || (latte = {}));
+/**
+ * Created by josemanuel on 5/28/15.
+ */
+var latte;
+(function (latte) {
+    /**
+     * Represents a very simple data adapter that passes the data along as strings.
+     */
+    var DefaultDataAdapter = (function () {
+        //region Static
+        //endregion
+        //region Fields
+        //endregion
+        /**
+         * Creates the adapter
+         */
+        function DefaultDataAdapter() {
+        }
+        //region Private Methods
+        //endregion
+        //region Methods
+        /**
+         * Transforms the value of the record into a proper value for the element
+         *
+         * @param value
+         */
+        DefaultDataAdapter.prototype.adaptForElement = function (value) {
+            return value;
+        };
+        /**
+         * Transforms the value of the element into a proper value for the record
+         * @param value
+         */
+        DefaultDataAdapter.prototype.adaptForRecord = function (value) {
+            return value;
+        };
+        return DefaultDataAdapter;
+    })();
+    latte.DefaultDataAdapter = DefaultDataAdapter;
 })(latte || (latte = {}));

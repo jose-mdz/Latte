@@ -30,7 +30,7 @@ module latte {
             this.btnEdit.handle(this, 'click', this.btnEdit_Click);
             this.lblLastName.handle(this, 'focus', this.lblLastName_Focus);
             this.lblFirstName.handle(this, 'focus', this.lblFirstName_Focus);
-            this.txtSearch.handle(this, 'change', this.txtSearch_Change);
+            //this.txtSearch.handle(this, 'change', this.txtSearch_Change);
 
             this.loadCategories();
             this.loadContacts();
@@ -42,29 +42,35 @@ module latte {
 
         //region Private Methods
 
-        selectCategoryItem(item: ListItem){
+        /**
+         * Selects the specified category item
+         * @param item
+         */
+        selectCategoryItem(item: Element<HTMLElement>){
 
-            // Unselect everyone
-            var elems  = this.listGroups.element.querySelectorAll('.selected');
+            // Deselect everyone
+            this.listGroups.findAll('.selected').removeClass('selected');
 
-            for (var i = 0; i < elems.length; i++) {
-                (new Element<HTMLElement>(<any>elems[i])).removeClass('selected');
-            }
-
+            // Select item
             item.addClass('selected');
-            this.selectedCategory = item.tag;
+
+            // Pass selection
+            this.selectedCategory = item.dataBind ? item.dataBind.record : null;
         }
 
-        selectPersonItem(item: ListItem){
-            // Unselect everyone
-            var elems  = this.listPeople.element.querySelectorAll('.selected');
+        /**
+         * Selects the specified category item
+         * @param item
+         */
+        selectPersonItem(item: Element<HTMLElement>){
+            // Deselect everyone
+            this.listPeople.findAll('.selected').removeClass('selected');
 
-            for (var i = 0; i < elems.length; i++) {
-                (new Element<HTMLElement>(<any>elems[i])).removeClass('selected');
-            }
-
+            // Select ittem
             item.addClass('selected');
-            this.person = <Person>item.tag;
+
+            // Pass selection
+            this.person = <Person>item.dataBind.record;
         }
 
         //endregion
@@ -115,11 +121,10 @@ module latte {
         loadCategories(){
             this.listGroups.clear();
 
-            var itemAll = new ListItem();
-            itemAll.text = strings.allContacts;
-            itemAll.tag = null;
-            itemAll.addEventListener('click', () => { this.selectCategoryItem(itemAll) });
-            this.listGroups.add(itemAll);
+            // All Contacts Item
+            var all = this.listGroups.add(new CategoryListItem());
+            all.text = strings.allContacts;
+            all.addEventListener('click', () => { this.selectCategoryItem(all); });
 
             Category.fullCatalog().send((cats: Category[]) => {
 
@@ -142,24 +147,19 @@ module latte {
                     ((g) => {
                         var array: Category[] = groups[g];
 
-                        // Sort categories
+                        // Sort categories by index i.
                         array.sort((a: Category, b: Category )=> {return a.i - b.i});
 
-                        var groupItem = new ListItemHeader();
+                        // Add Group Item
+                        var groupItem = this.listGroups.add(new ListItemHeader());
                         groupItem.text = g;
 
-                        this.listGroups.add(groupItem);
+                        // Create Items
+                        var items = this.listGroups.addCollection(ElementCollection.fromBindArray(array, CategoryListItem));
 
-                        for (var i = 0; i < array.length; i++) {
-                            ((category:Category) => {
-                                var item = new ListItem();
-                                item.tag = category;
-                                item.text = category.name;
-                                item.addEventListener('click', () => {this.selectCategoryItem(item)});
+                        // Add Click Listener
+                        items.addEventListener('click', (item) => { this.selectCategoryItem(item) });
 
-                                this.listGroups.add(item);
-                            })(array[i]);
-                        }
                     })(g);
                 }
 
@@ -211,27 +211,18 @@ module latte {
                 //endregion
 
                 for(var g in groups){
-                    var array: Person[] = groups[g];
 
-                    var groupItem = new ListItemHeader();
+                    // Add Group Item
+                    var groupItem = this.listPeople.add(new ListItemHeader());
                     groupItem.text = g;
 
-                    this.listPeople.add(groupItem);
+                    // Crete Person Items
+                    var items: ElementCollection = this.listPeople.addCollection(
+                        ElementCollection.fromBindArray(groups[g], PersonListItem));
 
-                    for (var i = 0; i < array.length; i++) {
-                        ((person:Person) => {
+                    // Assign Click
+                    items.addEventListener('click', (item) => { this.selectPersonItem(item) });
 
-                            var item = new ListItem();
-                            item.tag = person;
-                            item.text = person.fullName;
-                            item.addEventListener('click', () => {
-                                this.selectPersonItem(item);
-                            });
-
-                            this.listPeople.add(item);
-
-                        })(array[i]);
-                    }
                 }
 
             });
@@ -246,13 +237,8 @@ module latte {
                 this._editModeChanged.raise();
             }
 
-            this.lblFirstName   .contentEditable = this.editMode;
-            this.lblLastName    .contentEditable = this.editMode;
-            this.lblPhone       .contentEditable = this.editMode;
-            this.lblAddress     .contentEditable = this.editMode;
-            this.lblNote        .contentEditable = this.editMode;
-            this.lblDescription .contentEditable = this.editMode;
-            this.lblMobile      .contentEditable = this.editMode;
+            // Set edit mode of the binded elements
+            this.findAll('[data-bind]').setProperty('contentEditable', this.editMode);
 
             if(this.editMode) {
                 this.lblFirstName.element.focus();
@@ -261,15 +247,8 @@ module latte {
                 this.btnEdit.removeClass('checked');
 
                 // Save data
-                this.person.name = this.lblFirstName.text;
-                this.person.lastname = this.lblLastName.text;
-                this.person.phone = this.lblPhone.text;
-                this.person.address = this.lblAddress.text;
-                this.person.note = this.lblNote.text;
-                this.person.mobile = this.lblMobile.text;
-                this.person.company = this.lblDescription.text;
                 this.person.save(() => {
-                    //TODO: After save?
+                    //this.onPersonChanged();
                 });
             }
 
@@ -283,15 +262,7 @@ module latte {
                 this._personChanged.raise();
             }
 
-            this.lblFirstName.text = this.person.name || strings.name;
-            this.lblLastName.text = this.person.lastname || strings.lastName;
-            this.lblPhone.text = this.person.phone || '';
-            this.lblAddress.text = this.person.address || '';
-            this.lblNote.text = this.person.note || '';
-            this.lblDescription.text = this.person.company || '';
-            this.lblMobile.text = this.person.mobile || '';
-            this.lblInitials.text = this.person.initials;
-
+            this.panelDetail.bind(this.person);
             this.detailHeader.visible = this.person instanceof Person;
             this.detailRows.visible = this.person instanceof Person;
 
@@ -307,13 +278,6 @@ module latte {
 
             this.loadContacts();
 
-        }
-
-        /**
-         * Event Handler.
-         */
-        txtSearch_Change(){
-            this.loadContacts();
         }
 
         //endregion
@@ -352,6 +316,23 @@ module latte {
                 this._personChanged = new LatteEvent(this);
             }
             return this._personChanged;
+        }
+
+        /**
+         * Back field for event
+         */
+        private _searchTextChanged: LatteEvent
+
+        /**
+         * Gets an event raised when the value of the searchText property changes
+         *
+         * @returns {LatteEvent}
+         */
+        get searchTextChanged(): LatteEvent{
+            if(!this._searchTextChanged){
+                this._searchTextChanged = new LatteEvent(this);
+            }
+            return this._searchTextChanged;
         }
 
         /**

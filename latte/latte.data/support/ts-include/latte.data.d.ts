@@ -165,6 +165,11 @@ declare module latte {
          */
         saveCall(): RemoteCall<any>;
         /**
+         * Represents the person as a string
+         * @returns {string}
+         */
+        toString(): string;
+        /**
          * Sends an update message to the record
          **/
         update(callback: VoidCallback): Message;
@@ -174,6 +179,20 @@ declare module latte {
          * @returns {latte.RemoteCall<string>}
          */
         updateCall(): RemoteCall<string>;
+        /**
+         * Back field for event
+         */
+        private _fieldValueChanged;
+        /**
+         * Gets an event raised when the value of a field is changed
+         *
+         * @returns {LatteEvent}
+         */
+        fieldValueChanged: LatteEvent;
+        /**
+         * Raises the <c>fieldValueChanged</c> event
+         */
+        onFieldValueChanged(field: string, value: any): void;
         /**
          * Property field
          */

@@ -193,25 +193,6 @@ module latte{
          **/
         metadata:any;
 
-        /**
-         * Raised before a form for this record is created.
-         **/
-        _formCreating:LatteEvent;
-
-        /**
-         * Raised when a form for this record has been created and filled with record fields.
-         **/
-        _formCreated:LatteEvent;
-
-        /**
-         * Raised before a view for this record is created.
-         **/
-        _viewCreating:LatteEvent;
-
-        /**
-         * Raised when a view for this record has been created and filled with record fields.
-         **/
-        _viewCreated:LatteEvent;
         //endregion
 
         /**
@@ -380,6 +361,14 @@ module latte{
         }
 
         /**
+         * Represents the person as a string
+         * @returns {string}
+         */
+        toString(): string{
+            return sprintf("%s: %s", this.recordType, JSON.stringify(this.getFields()));
+        }
+
+        /**
          * Sends an update message to the record
          **/
         update(callback:VoidCallback): Message {
@@ -413,6 +402,37 @@ module latte{
 
             return call;
         }
+
+        //endregion
+
+        //region Events
+
+        /**
+         * Back field for event
+         */
+        private _fieldValueChanged: LatteEvent;
+
+        /**
+         * Gets an event raised when the value of a field is changed
+         *
+         * @returns {LatteEvent}
+         */
+        get fieldValueChanged(): LatteEvent{
+            if(!this._fieldValueChanged){
+                this._fieldValueChanged = new LatteEvent(this);
+            }
+            return this._fieldValueChanged;
+        }
+
+        /**
+         * Raises the <c>fieldValueChanged</c> event
+         */
+        onFieldValueChanged(field: string, value: any){
+            if(this._fieldValueChanged){
+                this._fieldValueChanged.raise(field, value);
+            }
+        }
+
         //endregion
 
         //region Properties
@@ -438,30 +458,6 @@ module latte{
          */
         public set moduleName(value:string) {
             this._moduleName = value;
-        }
-
-        /**
-         * Gets an event raised when a form about the record is solicited
-         * @returns {LatteEvent}
-         */
-        get formCreating(): LatteEvent{
-            if(!this._formCreating){
-                this._formCreating = new LatteEvent(this);
-            }
-
-            return this._formCreating
-        }
-
-        /**
-         * Gets an event raised when a form about the record has been created
-         * @returns {LatteEvent}
-         */
-        get formCreated(): LatteEvent{
-            if(!this._formCreated){
-                this._formCreated = new LatteEvent(this);
-            }
-
-            return this._formCreated
         }
 
         /**
@@ -508,29 +504,7 @@ module latte{
             this._tag = value;
         }
 
-        /**
-         * Gets an event raised when a View about the record has been created
-         * @returns {LatteEvent}
-         */
-        get viewCreated(): LatteEvent{
-            if(!this._viewCreated){
-                this._viewCreated = new LatteEvent(this);
-            }
 
-            return this._viewCreated
-        }
-
-        /**
-         * Gets an event raised when a View about the record is being requested
-         * @returns {LatteEvent}
-         */
-        get viewCreating(): LatteEvent{
-            if(!this._viewCreating){
-                this._viewCreating = new LatteEvent(this);
-            }
-
-            return this._viewCreating
-        }
         //endregion
 
     }

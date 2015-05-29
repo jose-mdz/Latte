@@ -25,9 +25,74 @@ module latte {
         //endregion
 
         //region Methods
+
+        onFieldValueChanged(name: string, value: any){
+            super.onFieldValueChanged(name, value);
+
+            if(name == 'name' || name == 'lastname') {
+                this.onFullNameChanged();
+                this.onInitialsChanged();
+            }
+
+        }
+
+        /**
+         * Raises the <c>initialsChanged</c> event
+         */
+        onInitialsChanged(){
+            if(this._initialsChanged){
+                this._initialsChanged.raise();
+            }
+        }
+
+        /**
+         * Raises the <c>fullNameChanged</c> event
+         */
+        onFullNameChanged(){
+            if(this._fullNameChanged){
+                this._fullNameChanged.raise();
+            }
+        }
+
         //endregion
 
         //region Events
+
+        /**
+         * Back field for event
+         */
+        private _fullNameChanged: LatteEvent;
+
+        /**
+         * Gets an event raised when the full name changes
+         *
+         * @returns {LatteEvent}
+         */
+        get fullNameChanged(): LatteEvent{
+            if(!this._fullNameChanged){
+                this._fullNameChanged = new LatteEvent(this);
+            }
+            return this._fullNameChanged;
+        }
+
+
+        /**
+         * Back field for event
+         */
+        private _initialsChanged: LatteEvent;
+
+        /**
+         * Gets an event raised when the initials change
+         *
+         * @returns {LatteEvent}
+         */
+        get initialsChanged(): LatteEvent{
+            if(!this._initialsChanged){
+                this._initialsChanged = new LatteEvent(this);
+            }
+            return this._initialsChanged;
+        }
+
         //endregion
 
         //region Properties
@@ -66,8 +131,8 @@ module latte {
          * @returns {string}
          */
         get initials():string {
-            var f = String(this.name);
-            var l = String(this.lastname);
+            var f = String(this.name || '');
+            var l = String(this.lastname || '');
             var data = [];
 
             if(f.length) {

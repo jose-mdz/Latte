@@ -287,6 +287,13 @@ var latte;
             }
         };
         /**
+         * Represents the person as a string
+         * @returns {string}
+         */
+        DataRecord.prototype.toString = function () {
+            return latte.sprintf("%s: %s", this.recordType, JSON.stringify(this.getFields()));
+        };
+        /**
          * Sends an update message to the record
          **/
         DataRecord.prototype.update = function (callback) {
@@ -311,6 +318,29 @@ var latte;
             // Create call
             var call = new latte.RemoteCall(this.moduleName, 'DataLatteUa', 'recordUpdate', { name: this.recordType, id: this.recordId, fields: values });
             return call;
+        };
+        Object.defineProperty(DataRecord.prototype, "fieldValueChanged", {
+            /**
+             * Gets an event raised when the value of a field is changed
+             *
+             * @returns {LatteEvent}
+             */
+            get: function () {
+                if (!this._fieldValueChanged) {
+                    this._fieldValueChanged = new latte.LatteEvent(this);
+                }
+                return this._fieldValueChanged;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Raises the <c>fieldValueChanged</c> event
+         */
+        DataRecord.prototype.onFieldValueChanged = function (field, value) {
+            if (this._fieldValueChanged) {
+                this._fieldValueChanged.raise(field, value);
+            }
         };
         Object.defineProperty(DataRecord.prototype, "moduleName", {
             /**
