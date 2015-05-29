@@ -6,6 +6,111 @@
 /// <reference path="latte.element.d.ts" />
 /// <reference path="latte.strings.d.ts" />
 declare module latte {
+    class categoryBase extends DataRecord {
+        _recordType: string;
+        _moduleName: string;
+        /**
+         * Database field: int(11)
+         */
+        _idcategory: any;
+        /**
+         * Gets or sets the value of the idcategory field of type int(11)
+         */
+        /**
+         * Gets or sets the value of the idcategory field of type int(11)
+         */
+        idcategory: any;
+        /**
+         * Back field for event
+         */
+        _idcategoryChanged: LatteEvent;
+        /**
+         * Gets an event raised when the value of the idcategory property changes
+         */
+        idcategoryChanged: LatteEvent;
+        /**
+         * Raises the <c>idcategoryChanged</c> event
+         */
+        onIdcategoryChanged(): void;
+        /**
+        * Gets the name of the autoincrement field
+        **/
+        onGetRecordIdName(): string;
+        /**
+         * Database field: varchar(128)
+         */
+        _name: any;
+        /**
+         * Gets or sets the value of the name field of type varchar(128)
+         */
+        /**
+         * Gets or sets the value of the name field of type varchar(128)
+         */
+        name: any;
+        /**
+         * Back field for event
+         */
+        _nameChanged: LatteEvent;
+        /**
+         * Gets an event raised when the value of the name property changes
+         */
+        nameChanged: LatteEvent;
+        /**
+         * Raises the <c>nameChanged</c> event
+         */
+        onNameChanged(): void;
+        /**
+         * Database field: varchar(128)
+         */
+        _group: any;
+        /**
+         * Gets or sets the value of the group field of type varchar(128)
+         */
+        /**
+         * Gets or sets the value of the group field of type varchar(128)
+         */
+        group: any;
+        /**
+         * Back field for event
+         */
+        _groupChanged: LatteEvent;
+        /**
+         * Gets an event raised when the value of the group property changes
+         */
+        groupChanged: LatteEvent;
+        /**
+         * Raises the <c>groupChanged</c> event
+         */
+        onGroupChanged(): void;
+        /**
+         * Database field: int(11)
+         */
+        _i: any;
+        /**
+         * Gets or sets the value of the i field of type int(11)
+         */
+        /**
+         * Gets or sets the value of the i field of type int(11)
+         */
+        i: any;
+        /**
+         * Back field for event
+         */
+        _iChanged: LatteEvent;
+        /**
+         * Gets an event raised when the value of the i property changes
+         */
+        iChanged: LatteEvent;
+        /**
+         * Raises the <c>iChanged</c> event
+         */
+        onIChanged(): void;
+        /**
+        * Override. Gets data about the fields of the record.
+        **/
+        onGetFields(): any;
+        static fullCatalog(): RemoteCall<Category[]>;
+    }
     class personBase extends DataRecord {
         _recordType: string;
         _moduleName: string;
@@ -290,138 +395,10 @@ declare module latte {
          */
         onCompanyChanged(): void;
         /**
-         * Database field: varchar(128)
-         */
-        _email: any;
-        /**
-         * Gets or sets the value of the email field of type varchar(128)
-         */
-        /**
-         * Gets or sets the value of the email field of type varchar(128)
-         */
-        email: any;
-        /**
-         * Back field for event
-         */
-        _emailChanged: LatteEvent;
-        /**
-         * Gets an event raised when the value of the email property changes
-         */
-        emailChanged: LatteEvent;
-        /**
-         * Raises the <c>emailChanged</c> event
-         */
-        onEmailChanged(): void;
-        /**
         * Override. Gets data about the fields of the record.
         **/
         onGetFields(): any;
         static search(options: PersonSearchOptions, page?: number, pageSize?: number): RemoteCall<PageResult<Person>>;
-    }
-    class categoryBase extends DataRecord {
-        _recordType: string;
-        _moduleName: string;
-        /**
-         * Database field: int(11)
-         */
-        _idcategory: any;
-        /**
-         * Gets or sets the value of the idcategory field of type int(11)
-         */
-        /**
-         * Gets or sets the value of the idcategory field of type int(11)
-         */
-        idcategory: any;
-        /**
-         * Back field for event
-         */
-        _idcategoryChanged: LatteEvent;
-        /**
-         * Gets an event raised when the value of the idcategory property changes
-         */
-        idcategoryChanged: LatteEvent;
-        /**
-         * Raises the <c>idcategoryChanged</c> event
-         */
-        onIdcategoryChanged(): void;
-        /**
-        * Gets the name of the autoincrement field
-        **/
-        onGetRecordIdName(): string;
-        /**
-         * Database field: varchar(128)
-         */
-        _name: any;
-        /**
-         * Gets or sets the value of the name field of type varchar(128)
-         */
-        /**
-         * Gets or sets the value of the name field of type varchar(128)
-         */
-        name: any;
-        /**
-         * Back field for event
-         */
-        _nameChanged: LatteEvent;
-        /**
-         * Gets an event raised when the value of the name property changes
-         */
-        nameChanged: LatteEvent;
-        /**
-         * Raises the <c>nameChanged</c> event
-         */
-        onNameChanged(): void;
-        /**
-         * Database field: varchar(128)
-         */
-        _group: any;
-        /**
-         * Gets or sets the value of the group field of type varchar(128)
-         */
-        /**
-         * Gets or sets the value of the group field of type varchar(128)
-         */
-        group: any;
-        /**
-         * Back field for event
-         */
-        _groupChanged: LatteEvent;
-        /**
-         * Gets an event raised when the value of the group property changes
-         */
-        groupChanged: LatteEvent;
-        /**
-         * Raises the <c>groupChanged</c> event
-         */
-        onGroupChanged(): void;
-        /**
-         * Database field: int(11)
-         */
-        _i: any;
-        /**
-         * Gets or sets the value of the i field of type int(11)
-         */
-        /**
-         * Gets or sets the value of the i field of type int(11)
-         */
-        i: any;
-        /**
-         * Back field for event
-         */
-        _iChanged: LatteEvent;
-        /**
-         * Gets an event raised when the value of the i property changes
-         */
-        iChanged: LatteEvent;
-        /**
-         * Raises the <c>iChanged</c> event
-         */
-        onIChanged(): void;
-        /**
-        * Override. Gets data about the fields of the record.
-        **/
-        onGetFields(): any;
-        static fullCatalog(): RemoteCall<Category[]>;
     }
 }
 declare module latte {
@@ -642,6 +619,20 @@ declare module latte {
     /**
      *
      */
+    class Main {
+        /**
+         *
+         */
+        constructor();
+    }
+}
+/**
+ * Created by josemanuel on 5/27/15.
+ */
+declare module latte {
+    /**
+     *
+     */
     class Person extends personBase {
         /**
          *
@@ -704,20 +695,6 @@ declare module latte {
      *
      */
     class Category extends categoryBase {
-        /**
-         *
-         */
-        constructor();
-    }
-}
-/**
- * Created by josemanuel on 5/27/15.
- */
-declare module latte {
-    /**
-     *
-     */
-    class Main {
         /**
          *
          */

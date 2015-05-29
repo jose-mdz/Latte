@@ -6,6 +6,221 @@ var __extends = this.__extends || function (d, b) {
 };
 var latte;
 (function (latte) {
+    var categoryBase = (function (_super) {
+        __extends(categoryBase, _super);
+        function categoryBase() {
+            _super.apply(this, arguments);
+            /* Name of Php record */
+            this._recordType = 'Category';
+            /* Name of Module where record lives */
+            this._moduleName = 'app.contacts';
+            /**
+             * Database field: int(11)
+             */
+            this._idcategory = null;
+            /**
+             * Database field: varchar(128)
+             */
+            this._name = null;
+            /**
+             * Database field: varchar(128)
+             */
+            this._group = null;
+            /**
+             * Database field: int(11)
+             */
+            this._i = null;
+        }
+        Object.defineProperty(categoryBase.prototype, "idcategory", {
+            /**
+             * Gets or sets the value of the idcategory field of type int(11)
+             */
+            get: function () {
+                return this._idcategory;
+            },
+            /**
+             * Gets or sets the value of the idcategory field of type int(11)
+             */
+            set: function (value) {
+                var changed = value !== this._idcategory;
+                this._idcategory = value;
+                if (changed) {
+                    this.onIdcategoryChanged();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(categoryBase.prototype, "idcategoryChanged", {
+            /**
+             * Gets an event raised when the value of the idcategory property changes
+             */
+            get: function () {
+                if (!this._idcategoryChanged) {
+                    this._idcategoryChanged = new latte.LatteEvent(this);
+                }
+                return this._idcategoryChanged;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Raises the <c>idcategoryChanged</c> event
+         */
+        categoryBase.prototype.onIdcategoryChanged = function () {
+            if (this._idcategoryChanged) {
+                this._idcategoryChanged.raise();
+            }
+            this.onFieldValueChanged('idcategory', this.idcategory);
+        };
+        /**
+        * Gets the name of the autoincrement field
+        **/
+        categoryBase.prototype.onGetRecordIdName = function () {
+            return 'idcategory';
+        };
+        Object.defineProperty(categoryBase.prototype, "name", {
+            /**
+             * Gets or sets the value of the name field of type varchar(128)
+             */
+            get: function () {
+                return this._name;
+            },
+            /**
+             * Gets or sets the value of the name field of type varchar(128)
+             */
+            set: function (value) {
+                var changed = value !== this._name;
+                this._name = value;
+                if (changed) {
+                    this.onNameChanged();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(categoryBase.prototype, "nameChanged", {
+            /**
+             * Gets an event raised when the value of the name property changes
+             */
+            get: function () {
+                if (!this._nameChanged) {
+                    this._nameChanged = new latte.LatteEvent(this);
+                }
+                return this._nameChanged;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Raises the <c>nameChanged</c> event
+         */
+        categoryBase.prototype.onNameChanged = function () {
+            if (this._nameChanged) {
+                this._nameChanged.raise();
+            }
+            this.onFieldValueChanged('name', this.name);
+        };
+        Object.defineProperty(categoryBase.prototype, "group", {
+            /**
+             * Gets or sets the value of the group field of type varchar(128)
+             */
+            get: function () {
+                return this._group;
+            },
+            /**
+             * Gets or sets the value of the group field of type varchar(128)
+             */
+            set: function (value) {
+                var changed = value !== this._group;
+                this._group = value;
+                if (changed) {
+                    this.onGroupChanged();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(categoryBase.prototype, "groupChanged", {
+            /**
+             * Gets an event raised when the value of the group property changes
+             */
+            get: function () {
+                if (!this._groupChanged) {
+                    this._groupChanged = new latte.LatteEvent(this);
+                }
+                return this._groupChanged;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Raises the <c>groupChanged</c> event
+         */
+        categoryBase.prototype.onGroupChanged = function () {
+            if (this._groupChanged) {
+                this._groupChanged.raise();
+            }
+            this.onFieldValueChanged('group', this.group);
+        };
+        Object.defineProperty(categoryBase.prototype, "i", {
+            /**
+             * Gets or sets the value of the i field of type int(11)
+             */
+            get: function () {
+                return this._i;
+            },
+            /**
+             * Gets or sets the value of the i field of type int(11)
+             */
+            set: function (value) {
+                var changed = value !== this._i;
+                this._i = value;
+                if (changed) {
+                    this.onIChanged();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(categoryBase.prototype, "iChanged", {
+            /**
+             * Gets an event raised when the value of the i property changes
+             */
+            get: function () {
+                if (!this._iChanged) {
+                    this._iChanged = new latte.LatteEvent(this);
+                }
+                return this._iChanged;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Raises the <c>iChanged</c> event
+         */
+        categoryBase.prototype.onIChanged = function () {
+            if (this._iChanged) {
+                this._iChanged.raise();
+            }
+            this.onFieldValueChanged('i', this.i);
+        };
+        /**
+        * Override. Gets data about the fields of the record.
+        **/
+        categoryBase.prototype.onGetFields = function () {
+            return { 'idcategory': this.idcategory, 'name': this.name, 'group': this.group, 'i': this.i };
+        };
+        /*
+         * Remote Method.
+
+         */
+        categoryBase.fullCatalog = function () {
+            return new latte.RemoteCall('app.contacts', 'Category', 'fullCatalog', {});
+        };
+        return categoryBase;
+    })(latte.DataRecord);
+    latte.categoryBase = categoryBase;
     var personBase = (function (_super) {
         __extends(personBase, _super);
         function personBase() {
@@ -62,10 +277,6 @@ var latte;
              * Database field: varchar(128)
              */
             this._company = null;
-            /**
-             * Database field: varchar(128)
-             */
-            this._email = null;
         }
         Object.defineProperty(personBase.prototype, "idperson", {
             /**
@@ -577,53 +788,11 @@ var latte;
             }
             this.onFieldValueChanged('company', this.company);
         };
-        Object.defineProperty(personBase.prototype, "email", {
-            /**
-             * Gets or sets the value of the email field of type varchar(128)
-             */
-            get: function () {
-                return this._email;
-            },
-            /**
-             * Gets or sets the value of the email field of type varchar(128)
-             */
-            set: function (value) {
-                var changed = value !== this._email;
-                this._email = value;
-                if (changed) {
-                    this.onEmailChanged();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(personBase.prototype, "emailChanged", {
-            /**
-             * Gets an event raised when the value of the email property changes
-             */
-            get: function () {
-                if (!this._emailChanged) {
-                    this._emailChanged = new latte.LatteEvent(this);
-                }
-                return this._emailChanged;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * Raises the <c>emailChanged</c> event
-         */
-        personBase.prototype.onEmailChanged = function () {
-            if (this._emailChanged) {
-                this._emailChanged.raise();
-            }
-            this.onFieldValueChanged('email', this.email);
-        };
         /**
         * Override. Gets data about the fields of the record.
         **/
         personBase.prototype.onGetFields = function () {
-            return { 'idperson': this.idperson, 'idcategory': this.idcategory, 'title': this.title, 'name': this.name, 'lastname': this.lastname, 'birth': this.birth, 'sex': this.sex, 'address': this.address, 'phone': this.phone, 'mobile': this.mobile, 'note': this.note, 'company': this.company, 'email': this.email };
+            return { 'idperson': this.idperson, 'idcategory': this.idcategory, 'title': this.title, 'name': this.name, 'lastname': this.lastname, 'birth': this.birth, 'sex': this.sex, 'address': this.address, 'phone': this.phone, 'mobile': this.mobile, 'note': this.note, 'company': this.company };
         };
         /*
          * Remote Method.
@@ -639,221 +808,6 @@ var latte;
         return personBase;
     })(latte.DataRecord);
     latte.personBase = personBase;
-    var categoryBase = (function (_super) {
-        __extends(categoryBase, _super);
-        function categoryBase() {
-            _super.apply(this, arguments);
-            /* Name of Php record */
-            this._recordType = 'Category';
-            /* Name of Module where record lives */
-            this._moduleName = 'app.contacts';
-            /**
-             * Database field: int(11)
-             */
-            this._idcategory = null;
-            /**
-             * Database field: varchar(128)
-             */
-            this._name = null;
-            /**
-             * Database field: varchar(128)
-             */
-            this._group = null;
-            /**
-             * Database field: int(11)
-             */
-            this._i = null;
-        }
-        Object.defineProperty(categoryBase.prototype, "idcategory", {
-            /**
-             * Gets or sets the value of the idcategory field of type int(11)
-             */
-            get: function () {
-                return this._idcategory;
-            },
-            /**
-             * Gets or sets the value of the idcategory field of type int(11)
-             */
-            set: function (value) {
-                var changed = value !== this._idcategory;
-                this._idcategory = value;
-                if (changed) {
-                    this.onIdcategoryChanged();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(categoryBase.prototype, "idcategoryChanged", {
-            /**
-             * Gets an event raised when the value of the idcategory property changes
-             */
-            get: function () {
-                if (!this._idcategoryChanged) {
-                    this._idcategoryChanged = new latte.LatteEvent(this);
-                }
-                return this._idcategoryChanged;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * Raises the <c>idcategoryChanged</c> event
-         */
-        categoryBase.prototype.onIdcategoryChanged = function () {
-            if (this._idcategoryChanged) {
-                this._idcategoryChanged.raise();
-            }
-            this.onFieldValueChanged('idcategory', this.idcategory);
-        };
-        /**
-        * Gets the name of the autoincrement field
-        **/
-        categoryBase.prototype.onGetRecordIdName = function () {
-            return 'idcategory';
-        };
-        Object.defineProperty(categoryBase.prototype, "name", {
-            /**
-             * Gets or sets the value of the name field of type varchar(128)
-             */
-            get: function () {
-                return this._name;
-            },
-            /**
-             * Gets or sets the value of the name field of type varchar(128)
-             */
-            set: function (value) {
-                var changed = value !== this._name;
-                this._name = value;
-                if (changed) {
-                    this.onNameChanged();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(categoryBase.prototype, "nameChanged", {
-            /**
-             * Gets an event raised when the value of the name property changes
-             */
-            get: function () {
-                if (!this._nameChanged) {
-                    this._nameChanged = new latte.LatteEvent(this);
-                }
-                return this._nameChanged;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * Raises the <c>nameChanged</c> event
-         */
-        categoryBase.prototype.onNameChanged = function () {
-            if (this._nameChanged) {
-                this._nameChanged.raise();
-            }
-            this.onFieldValueChanged('name', this.name);
-        };
-        Object.defineProperty(categoryBase.prototype, "group", {
-            /**
-             * Gets or sets the value of the group field of type varchar(128)
-             */
-            get: function () {
-                return this._group;
-            },
-            /**
-             * Gets or sets the value of the group field of type varchar(128)
-             */
-            set: function (value) {
-                var changed = value !== this._group;
-                this._group = value;
-                if (changed) {
-                    this.onGroupChanged();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(categoryBase.prototype, "groupChanged", {
-            /**
-             * Gets an event raised when the value of the group property changes
-             */
-            get: function () {
-                if (!this._groupChanged) {
-                    this._groupChanged = new latte.LatteEvent(this);
-                }
-                return this._groupChanged;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * Raises the <c>groupChanged</c> event
-         */
-        categoryBase.prototype.onGroupChanged = function () {
-            if (this._groupChanged) {
-                this._groupChanged.raise();
-            }
-            this.onFieldValueChanged('group', this.group);
-        };
-        Object.defineProperty(categoryBase.prototype, "i", {
-            /**
-             * Gets or sets the value of the i field of type int(11)
-             */
-            get: function () {
-                return this._i;
-            },
-            /**
-             * Gets or sets the value of the i field of type int(11)
-             */
-            set: function (value) {
-                var changed = value !== this._i;
-                this._i = value;
-                if (changed) {
-                    this.onIChanged();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(categoryBase.prototype, "iChanged", {
-            /**
-             * Gets an event raised when the value of the i property changes
-             */
-            get: function () {
-                if (!this._iChanged) {
-                    this._iChanged = new latte.LatteEvent(this);
-                }
-                return this._iChanged;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * Raises the <c>iChanged</c> event
-         */
-        categoryBase.prototype.onIChanged = function () {
-            if (this._iChanged) {
-                this._iChanged.raise();
-            }
-            this.onFieldValueChanged('i', this.i);
-        };
-        /**
-        * Override. Gets data about the fields of the record.
-        **/
-        categoryBase.prototype.onGetFields = function () {
-            return { 'idcategory': this.idcategory, 'name': this.name, 'group': this.group, 'i': this.i };
-        };
-        /*
-         * Remote Method.
-
-         */
-        categoryBase.fullCatalog = function () {
-            return new latte.RemoteCall('app.contacts', 'Category', 'fullCatalog', {});
-        };
-        return categoryBase;
-    })(latte.DataRecord);
-    latte.categoryBase = categoryBase;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -1056,7 +1010,7 @@ var latte;
 var latte;
 (function (latte) {
     latte.globalViewsBank = {
-        "ContactsMainViewBase": "<div data-class=\"ContactsMainViewBase\" class=\"contacts-ui\">\n\n    <!-- GROUPS PANEL -->\n    <div data-property=\"listGroups\" class=\"panel-groups\">\n        \n        \n        <div class=\"list-item\">All iCloud</div>\n        <div class=\"list-item\">Group A</div>\n        <div class=\"list-item\">Group B</div>\n        <div class=\"list-item-header\">Facebook</div>\n        <div class=\"list-item\">All Facebook</div>\n        <div class=\"list-item-header\">Smart Groups</div>\n        <div class=\"list-item\">Last Import</div>\n    </div>\n\n    <!-- NAMES LIST PANEL -->\n    <div class=\"panel-list\">\n        <div class=\"search-box\">\n            <input data-property=\"txtSearch\" data-event=\"input:loadContacts\" type=\"text\" placeholder=\"Search\">\n        </div>\n\n        <div data-property=\"listPeople\" class=\"list\">\n            <div class=\"no-items\">No contacts found</div>\n            <div class=\"list-item-header\">A</div>\n            \n            <div class=\"list-item selected\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item-header\">B</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item-header\">D</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n        </div>\n    </div>\n\n    <!-- CONTACT DETAIL PANEL -->\n    <div data-property=\"panelDetail\" class=\"panel-detail\">\n        <div data-property=\"detailHeader\" class=\"header\">\n            <div class=\"picture-side\">\n                <div class=\"picture\">\n                    <div data-property=\"lblInitials\" data-bind=\"initials\">AJ</div>\n                </div>\n            </div>\n            <div class=\"name-side\">\n                <div class=\"name-row\">\n                    <div data-property=\"lblFirstName\" data-bind=\"lastname\" class=\"name\">Alchemist</div>\n                    <div data-property=\"lblLastName\" data-bind=\"name\" class=\"last\">Joe</div>\n                </div>\n                <div data-property=\"lblDescription\" data-bind=\"company\" class=\"description\">Superworks, Inc.</div>\n            </div>\n        </div>\n        <div data-property=\"detailRows\" class=\"rows\">\n            <div class=\"data\">\n                <div class=\"name\">email</div>\n                <div data-bind=\"email\" class=\"value\">a@a.com</div>\n            </div>\n            <div class=\"data\">\n                <div class=\"name\">phone</div>\n                <div data-bind=\"phone\" class=\"value\">+(55) 123456789</div>\n            </div>\n            <div class=\"data\">\n                <div class=\"name\">mobile</div>\n                <div data-bind=\"mobile\" class=\"value\">+(54) 123456789</div>\n            </div>\n            <div class=\"data\">\n                <div class=\"name\">address</div>\n                <div data-bind=\"address\" class=\"value\">Elm Street 1090, TX, PA 9875</div>\n            </div>\n            <div class=\"data\">\n                <div class=\"name\">note</div>\n                <div data-bind=\"note\" class=\"value\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus consequat molestie enim, vel viverra odio malesuada quis. Nulla gravida vulputate nulla, non egestas elit pretium et. </div>\n            </div>\n        </div>\n        <div data-property=\"detailToolbar\" class=\"toolbar\">\n            <div data-property=\"btnAdd\" class=\"button btn-add\">+</div>\n            <div class=\"button btn-export\">...</div>\n            <div data-property=\"btnEdit\" class=\"button btn-edit\">Edit</div>\n        </div>\n    </div>\n</div>",
+        "ContactsMainViewBase": "<div data-class=\"ContactsMainViewBase\" class=\"contacts-ui\">\n\n    <!-- GROUPS PANEL -->\n    <div data-property=\"listGroups\" class=\"panel-groups\">\n        \n        \n        <div class=\"list-item\">All iCloud</div>\n        <div class=\"list-item\">Group A</div>\n        <div class=\"list-item\">Group B</div>\n        <div class=\"list-item-header\">Facebook</div>\n        <div class=\"list-item\">All Facebook</div>\n        <div class=\"list-item-header\">Smart Groups</div>\n        <div class=\"list-item\">Last Import</div>\n    </div>\n\n    <!-- NAMES LIST PANEL -->\n    <div class=\"panel-list\">\n        <div class=\"search-box\">\n            <input data-property=\"txtSearch\" data-event=\"input:loadContacts\" type=\"text\" placeholder=\"Search\">\n        </div>\n\n        <div data-property=\"listPeople\" class=\"list\">\n            <div class=\"no-items\">No contacts found</div>\n            <div class=\"list-item-header\">A</div>\n            \n            <div class=\"list-item selected\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item-header\">B</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item-header\">D</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n        </div>\n    </div>\n\n    <!-- CONTACT DETAIL PANEL -->\n    <div data-property=\"panelDetail\" class=\"panel-detail\">\n        <div data-property=\"detailHeader\" class=\"header\">\n            <div class=\"picture-side\">\n                <div class=\"picture\">\n                    <div data-property=\"lblInitials\" data-bind=\"initials\">AJ</div>\n                </div>\n            </div>\n            <div class=\"name-side\">\n                <div class=\"name-row\">\n                    <div data-property=\"lblFirstName\" data-event=\"lblFirstName_Focus\" data-bind=\"name\" class=\"name\">Alchemist</div>\n                    <div data-property=\"lblLastName\" data-bind=\"lastname\" data-event=\"lblLastName_Focus\" class=\"last\">Joe</div>\n                </div>\n                <div data-property=\"lblDescription\" data-bind=\"company\" class=\"description\">Superworks, Inc.</div>\n            </div>\n        </div>\n        <div data-property=\"detailRows\" class=\"rows\">\n            <div class=\"data\">\n                <div class=\"name\">email</div>\n                <div data-bind=\"email\" class=\"value\">a@a.com</div>\n            </div>\n            <div class=\"data\">\n                <div class=\"name\">phone</div>\n                <div data-bind=\"phone\" class=\"value\">+(55) 123456789</div>\n            </div>\n            <div class=\"data\">\n                <div class=\"name\">mobile</div>\n                <div data-bind=\"mobile\" class=\"value\">+(54) 123456789</div>\n            </div>\n            <div class=\"data\">\n                <div class=\"name\">address</div>\n                <div data-bind=\"address\" class=\"value\">Elm Street 1090, TX, PA 9875</div>\n            </div>\n            <div class=\"data\">\n                <div class=\"name\">note</div>\n                <div data-bind=\"note\" class=\"value\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus consequat molestie enim, vel viverra odio malesuada quis. Nulla gravida vulputate nulla, non egestas elit pretium et. </div>\n            </div>\n        </div>\n        <div data-property=\"detailToolbar\" class=\"toolbar\">\n            <div data-property=\"btnAdd\" data-event=\"click: btnAdd_Click\" class=\"button btn-add\">+</div>\n            <div class=\"button btn-export\">...</div>\n            <div data-property=\"btnEdit\" data-event=\"click: btnEdit_Click\" class=\"button btn-edit\">Edit</div>\n        </div>\n    </div>\n</div>",
         "CategoryListItem": "<div class=\"list-item\" data-class=\"CategoryListItem\"><span data-bind=\"name\">All Contacts</span></div>",
         "ListItemHeader": "<div class=\"list-item-header\" data-class=\"ListItemHeader\">iCloud</div>",
         "PersonListItem": "<div class=\"list-item\" data-class=\"PersonListItem\"><span data-bind=\"fullName\">Alchemist Joe</span></div>"
@@ -1095,11 +1049,9 @@ var latte;
              * Property field
              */
             this._person = null;
-            this.btnAdd.handle(this, 'click', this.btnAdd_Click);
-            this.btnEdit.handle(this, 'click', this.btnEdit_Click);
+            this.bind(this);
             this.lblLastName.handle(this, 'focus', this.lblLastName_Focus);
             this.lblFirstName.handle(this, 'focus', this.lblFirstName_Focus);
-            //this.txtSearch.handle(this, 'change', this.txtSearch_Change);
             this.loadCategories();
             this.loadContacts();
             this.detailHeader.visible = false;
@@ -1443,6 +1395,29 @@ var latte;
     /**
      *
      */
+    var Main = (function () {
+        //region Static
+        //endregion
+        //region Fields
+        //endregion
+        /**
+         *
+         */
+        function Main() {
+            document.body.appendChild((new latte.ContactsMainView()).element);
+        }
+        return Main;
+    })();
+    latte.Main = Main;
+})(latte || (latte = {}));
+/**
+ * Created by josemanuel on 5/27/15.
+ */
+var latte;
+(function (latte) {
+    /**
+     *
+     */
     var Person = (function (_super) {
         __extends(Person, _super);
         //region Static
@@ -1595,27 +1570,4 @@ var latte;
         return Category;
     })(latte.categoryBase);
     latte.Category = Category;
-})(latte || (latte = {}));
-/**
- * Created by josemanuel on 5/27/15.
- */
-var latte;
-(function (latte) {
-    /**
-     *
-     */
-    var Main = (function () {
-        //region Static
-        //endregion
-        //region Fields
-        //endregion
-        /**
-         *
-         */
-        function Main() {
-            document.body.appendChild((new latte.ContactsMainView()).element);
-        }
-        return Main;
-    })();
-    latte.Main = Main;
 })(latte || (latte = {}));

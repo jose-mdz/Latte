@@ -14,8 +14,6 @@ var latte;
          * Creates an element
          */
         function Element(element) {
-            //endregion
-            //region Properties
             /**
              * Property field
              */
@@ -307,10 +305,31 @@ var latte;
                         return;
                     var e = new Element(node);
                     var prop = e.element.getAttribute('data-bind');
+                    // TODO: Criteria for elementProperty, elementEvent, type, DataAdapter
                     var bind = new latte.DataBind(e, 'text', object, prop, 1 /* AUTO */, null, 'input', latte.sprintf('%sChanged', prop));
                     _this._dataBind = bind;
+                    _this.bindedElements.push(e);
                     //debugger;
                 })(list[i]);
+            }
+            var elist = this.element.querySelectorAll('[data-event]');
+            for (var i = 0; i < elist.length; i++) {
+                (function (node) {
+                    var e = new Element(node);
+                    var prop = e.element.getAttribute('data-event');
+                    var binds = prop.split(';');
+                    for (var j = 0; j < binds.length; j++) {
+                        var parts = binds[j].split(':');
+                        if (parts.length == 2) {
+                            var bind = new latte.EventBind(e, parts[0].trim(), object, parts[1].trim());
+                            e.eventBinds.push(bind);
+                            _this.bindedElements.push(e);
+                        }
+                        else {
+                            latte.log("[data-event] Bad Syntax: " + binds[j]);
+                        }
+                    }
+                })(elist[i]);
             }
         };
         /**
@@ -620,6 +639,21 @@ var latte;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(Element.prototype, "bindedElements", {
+            /**
+             * Gets the binded elements of this element
+             *
+             * @returns {Element<HTMLElement>[]}
+             */
+            get: function () {
+                if (!this._bindedElements) {
+                    this._bindedElements = [];
+                }
+                return this._bindedElements;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Element.prototype, "contentEditable", {
             /**
              * Gets or sets a value indicating if the node should de activated as editable
@@ -703,6 +737,21 @@ var latte;
              */
             get: function () {
                 return this._element;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Element.prototype, "eventBinds", {
+            /**
+             * Gets the event binds of the element
+             *
+             * @returns {EventBind[]}
+             */
+            get: function () {
+                if (!this._eventBinds) {
+                    this._eventBinds = [];
+                }
+                return this._eventBinds;
             },
             enumerable: true,
             configurable: true
@@ -1973,4 +2022,120 @@ var latte;
         return DefaultDataAdapter;
     })();
     latte.DefaultDataAdapter = DefaultDataAdapter;
+})(latte || (latte = {}));
+/**
+ * Created by josemanuel on 5/28/15.
+ */
+var latte;
+(function (latte) {
+    /**
+     *
+     */
+    var EventBind = (function () {
+        //region Static
+        //endregion
+        //region Fields
+        //endregion
+        /**
+         *
+         */
+        function EventBind(element, elementEvent, record, recordMethod) {
+            this.setup(element, elementEvent, record, recordMethod);
+        }
+        //region Private Methods
+        //endregion
+        //region Methods
+        /**
+         * Sets up the bind
+         * @param element
+         * @param elementEvethis.bindedElements.push(e);nt
+         * @param record
+         * @param recordMethod
+         */
+        EventBind.prototype.setup = function (element, elementEvent, record, recordMethod) {
+            var _this = this;
+            this._element = element;
+            this._elementEvent = elementEvent;
+            this._record = record;
+            this._recordMethod = recordMethod;
+            if (this.element[this.elementEvent] instanceof latte.LatteEvent) {
+                this.element[this.elementEvent].add(function () {
+                    var args = [];
+                    for (var i = 0; i < arguments.length; i++) {
+                        args.push(arguments[i]);
+                    }
+                    if (latte._isFunction(_this.record[_this.recordMethod])) {
+                        _this.record[_this.recordMethod].apply(_this.record, args);
+                    }
+                    else {
+                        latte.log(latte.sprintf("Warning: Method %s is not present in %s", _this.recordMethod, String(_this.record)));
+                    }
+                });
+            }
+            else {
+                this.element.addEventListener(this.elementEvent, function () {
+                    var args = [];
+                    for (var i = 0; i < arguments.length; i++) {
+                        args.push(arguments[i]);
+                    }
+                    if (latte._isFunction(_this.record[_this.recordMethod])) {
+                        _this.record[_this.recordMethod].apply(_this.record, args);
+                    }
+                    else {
+                        latte.log(latte.sprintf("Warning: Method %s is not present in %s", _this.recordMethod, String(_this.record)));
+                    }
+                });
+            }
+        };
+        Object.defineProperty(EventBind.prototype, "element", {
+            /**
+             * Gets the element to bind
+             *
+             * @returns {Element<HTMLElement>}
+             */
+            get: function () {
+                return this._element;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EventBind.prototype, "elementEvent", {
+            /**
+             * Gets the element event
+             *
+             * @returns {string}
+             */
+            get: function () {
+                return this._elementEvent;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EventBind.prototype, "record", {
+            /**
+             * Gets the record to bind
+             *
+             * @returns {any}
+             */
+            get: function () {
+                return this._record;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EventBind.prototype, "recordMethod", {
+            /**
+             * Gets the method to execute on the record
+             *
+             * @returns {string}
+             */
+            get: function () {
+                return this._recordMethod;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return EventBind;
+    })();
+    latte.EventBind = EventBind;
 })(latte || (latte = {}));

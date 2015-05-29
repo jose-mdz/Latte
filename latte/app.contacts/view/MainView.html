@@ -85,8 +85,8 @@
             </div>
             <div class="name-side">
                 <div class="name-row">
-                    <div data-property="lblFirstName" data-bind="lastname" class="name">Alchemist</div>
-                    <div data-property="lblLastName" data-bind="name" class="last">Joe</div>
+                    <div data-property="lblFirstName" data-event="lblFirstName_Focus" data-bind="name" class="name">Alchemist</div>
+                    <div data-property="lblLastName" data-bind="lastname" data-event="lblLastName_Focus" class="last">Joe</div>
                 </div>
                 <div data-property="lblDescription" data-bind="company" class="description">Superworks, Inc.</div>
             </div>
@@ -114,9 +114,9 @@
             </div>
         </div>
         <div data-property="detailToolbar" class="toolbar">
-            <div data-property="btnAdd" class="button btn-add">+</div>
+            <div data-property="btnAdd" data-event="click: btnAdd_Click" class="button btn-add">+</div>
             <div class="button btn-export">...</div>
-            <div data-property="btnEdit" class="button btn-edit">Edit</div>
+            <div data-property="btnEdit" data-event="click: btnEdit_Click" class="button btn-edit">Edit</div>
         </div>
     </div>
 </div>

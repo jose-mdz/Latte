@@ -25,12 +25,7 @@ module latte {
         constructor() {
             super();
 
-
-            this.btnAdd.handle(this, 'click', this.btnAdd_Click);
-            this.btnEdit.handle(this, 'click', this.btnEdit_Click);
-            this.lblLastName.handle(this, 'focus', this.lblLastName_Focus);
-            this.lblFirstName.handle(this, 'focus', this.lblFirstName_Focus);
-            //this.txtSearch.handle(this, 'change', this.txtSearch_Change);
+            this.bind(this);
 
             this.loadCategories();
             this.loadContacts();

@@ -347,13 +347,37 @@ module latte {
 
                     this._dataBind = bind;
 
+                    this.bindedElements.push(e);
                     //debugger;
 
 
                 })(list[i]);
             }
 
-            //TODO: Bind [data-event]
+
+            var elist = this.element.querySelectorAll('[data-event]');
+
+            for (var i = 0; i < elist.length; i++) {
+                ((node:Node) => {
+
+                    var e = new Element<HTMLElement>(<any>node);
+                    var prop = e.element.getAttribute('data-event');
+                    var binds = prop.split(';');
+
+                    for (var j = 0; j < binds.length; j++) {
+                        var parts = binds[j].split(':');
+
+                        if(parts.length == 2) {
+                            var bind = new EventBind(e, parts[0].trim(), object, parts[1].trim());
+                            e.eventBinds.push(bind);
+                            this.bindedElements.push(e);
+                        }else {
+                            log("[data-event] Bad Syntax: " + binds[j]);
+                        }
+                    }
+
+                })(elist[i]);
+            }
 
         }
 
@@ -705,6 +729,24 @@ module latte {
         //region Properties
 
         /**
+         * Field for bindedElements property
+         */
+        private _bindedElements:Element<HTMLElement>[];
+
+        /**
+         * Gets the binded elements of this element
+         *
+         * @returns {Element<HTMLElement>[]}
+         */
+        get bindedElements():Element<HTMLElement>[] {
+            if (!this._bindedElements) {
+                this._bindedElements = [];
+            }
+            return this._bindedElements;
+        }
+
+
+        /**
          * Property field
          */
         private _contentEditable: boolean = false;
@@ -765,7 +807,6 @@ module latte {
             return this._dataBind;
         }
 
-
         /**
          * Gets the height of the elements document
          *
@@ -797,6 +838,24 @@ module latte {
         get element():T {
             return this._element;
         }
+
+        /**
+         * Field for eventBinds property
+         */
+        private _eventBinds:EventBind[];
+
+        /**
+         * Gets the event binds of the element
+         *
+         * @returns {EventBind[]}
+         */
+        get eventBinds():EventBind[] {
+            if (!this._eventBinds) {
+                this._eventBinds = [];
+            }
+            return this._eventBinds;
+        }
+
 
         /**
          * Gets or sets the height of the element in pixels

@@ -298,6 +298,16 @@ declare module latte {
          */
         visibleChanged: LatteEvent;
         /**
+         * Field for bindedElements property
+         */
+        private _bindedElements;
+        /**
+         * Gets the binded elements of this element
+         *
+         * @returns {Element<HTMLElement>[]}
+         */
+        bindedElements: Element<HTMLElement>[];
+        /**
          * Property field
          */
         private _contentEditable;
@@ -354,6 +364,16 @@ declare module latte {
          * @returns {HTMLDivElement}
          */
         element: T;
+        /**
+         * Field for eventBinds property
+         */
+        private _eventBinds;
+        /**
+         * Gets the event binds of the element
+         *
+         * @returns {EventBind[]}
+         */
+        eventBinds: EventBind[];
         /**
          * Gets or sets the height of the element in pixels
          *
@@ -1004,5 +1024,67 @@ declare module latte {
          * @param value
          */
         adaptForRecord(value: string): string;
+    }
+}
+/**
+ * Created by josemanuel on 5/28/15.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class EventBind {
+        /**
+         *
+         */
+        constructor(element: Element<HTMLElement>, elementEvent: string, record: any, recordMethod: string);
+        /**
+         * Sets up the bind
+         * @param element
+         * @param elementEvethis.bindedElements.push(e);nt
+         * @param record
+         * @param recordMethod
+         */
+        setup(element: Element<HTMLElement>, elementEvent: string, record: any, recordMethod: string): void;
+        /**
+         * Property field
+         */
+        private _element;
+        /**
+         * Gets the element to bind
+         *
+         * @returns {Element<HTMLElement>}
+         */
+        element: Element<HTMLElement>;
+        /**
+         * Property field
+         */
+        private _elementEvent;
+        /**
+         * Gets the element event
+         *
+         * @returns {string}
+         */
+        elementEvent: string;
+        /**
+         * Property field
+         */
+        private _record;
+        /**
+         * Gets the record to bind
+         *
+         * @returns {any}
+         */
+        record: any;
+        /**
+         * Property field
+         */
+        private _recordMethod;
+        /**
+         * Gets the method to execute on the record
+         *
+         * @returns {string}
+         */
+        recordMethod: string;
     }
 }
