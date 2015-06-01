@@ -53,7 +53,7 @@ module latte {
                         this.record[this.recordMethod].apply(this.record, args);
 
                     }else {
-                        log(sprintf("Warning: Method %s is not present in %s", this.recordMethod, String(this.record)));
+                        //log(sprintf("Warning: Method %s is not present in %s", this.recordMethod, String(this.record)));
                     }
 
                 });
@@ -69,7 +69,7 @@ module latte {
                         this.record[this.recordMethod].apply(this.record, args);
 
                     }else {
-                        log(sprintf("Warning: Method %s is not present in %s", this.recordMethod, String(this.record)));
+                        //log(sprintf("Warning: Method %s is not present in %s", this.recordMethod, String(this.record)));
                     }
                 })
             }

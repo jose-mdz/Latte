@@ -101,50 +101,6 @@ module latte{
 		}
 
 		/**
-		 * Database field: varchar(128)
-		 */
-		_group: any = null;
-
-		/**
-		 * Gets or sets the value of the group field of type varchar(128)
-		 */
-		get group(): any{
-			return this._group;
-		}
-
-		/**
-		 * Gets or sets the value of the group field of type varchar(128)
-		 */
-		set group(value: any){
-			var changed: boolean = value !== this._group
-			this._group = value;
-			if(changed){ this.onGroupChanged(); }
-		}
-
-		/**
-		 * Back field for event
-		 */
-		_groupChanged: LatteEvent;
-
-		/**
-		 * Gets an event raised when the value of the group property changes
-		 */
-		get groupChanged(): LatteEvent{
-			if(!this._groupChanged){ this._groupChanged = new LatteEvent(this); }
-			return this._groupChanged;
-		}
-
-		/**
-		 * Raises the <c>groupChanged</c> event
-		 */
-		onGroupChanged(){
-			if(this._groupChanged){
-				this._groupChanged.raise()
-			}
-			this.onFieldValueChanged('group', this.group)
-		}
-
-		/**
 		 * Database field: int(11)
 		 */
 		_i: any = null;
@@ -191,7 +147,7 @@ module latte{
 		/**
 		* Override. Gets data about the fields of the record.
 		**/
-		onGetFields(): any { return {'idcategory': this.idcategory, 'name': this.name, 'group': this.group, 'i': this.i}; }
+		onGetFields(): any { return {'idcategory': this.idcategory, 'name': this.name, 'i': this.i}; }
 
 		/*
 		 * Remote Method. 
@@ -744,9 +700,53 @@ module latte{
 		}
 
 		/**
+		 * Database field: varchar(128)
+		 */
+		_email: any = null;
+
+		/**
+		 * Gets or sets the value of the email field of type varchar(128)
+		 */
+		get email(): any{
+			return this._email;
+		}
+
+		/**
+		 * Gets or sets the value of the email field of type varchar(128)
+		 */
+		set email(value: any){
+			var changed: boolean = value !== this._email
+			this._email = value;
+			if(changed){ this.onEmailChanged(); }
+		}
+
+		/**
+		 * Back field for event
+		 */
+		_emailChanged: LatteEvent;
+
+		/**
+		 * Gets an event raised when the value of the email property changes
+		 */
+		get emailChanged(): LatteEvent{
+			if(!this._emailChanged){ this._emailChanged = new LatteEvent(this); }
+			return this._emailChanged;
+		}
+
+		/**
+		 * Raises the <c>emailChanged</c> event
+		 */
+		onEmailChanged(){
+			if(this._emailChanged){
+				this._emailChanged.raise()
+			}
+			this.onFieldValueChanged('email', this.email)
+		}
+
+		/**
 		* Override. Gets data about the fields of the record.
 		**/
-		onGetFields(): any { return {'idperson': this.idperson, 'idcategory': this.idcategory, 'title': this.title, 'name': this.name, 'lastname': this.lastname, 'birth': this.birth, 'sex': this.sex, 'address': this.address, 'phone': this.phone, 'mobile': this.mobile, 'note': this.note, 'company': this.company}; }
+		onGetFields(): any { return {'idperson': this.idperson, 'idcategory': this.idcategory, 'title': this.title, 'name': this.name, 'lastname': this.lastname, 'birth': this.birth, 'sex': this.sex, 'address': this.address, 'phone': this.phone, 'mobile': this.mobile, 'note': this.note, 'company': this.company, 'email': this.email}; }
 
 		/*
 		 * Remote Method. 

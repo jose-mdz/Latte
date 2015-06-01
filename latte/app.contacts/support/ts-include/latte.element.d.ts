@@ -96,6 +96,7 @@ declare module latte {
          * Creates an element
          */
         constructor(element: HTMLElement);
+        private addBindedElement(e);
         /**
          * Adds an element
          * @param element
@@ -158,7 +159,7 @@ declare module latte {
          * Binds the element to the specified object
          * @param object
          */
-        bind(object: any): void;
+        bind(object: any, hide?: boolean): void;
         /**
          * Makes the element blink
          *
@@ -333,15 +334,15 @@ declare module latte {
          */
         isAnimated: boolean;
         /**
-         * Property field
+         * Field for dataBinds property
          */
-        private _dataBind;
+        private _dataBinds;
         /**
-         * Gets the current DataBind of the element (If any)
+         * Gets the data binds of the element
          *
-         * @returns {DataBind}
+         * @returns {DataBind[]}
          */
-        dataBind: DataBind;
+        dataBinds: DataBind[];
         /**
          * Gets the height of the elements document
          *

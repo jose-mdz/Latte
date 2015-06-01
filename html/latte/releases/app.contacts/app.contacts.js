@@ -23,10 +23,6 @@ var latte;
              */
             this._name = null;
             /**
-             * Database field: varchar(128)
-             */
-            this._group = null;
-            /**
              * Database field: int(11)
              */
             this._i = null;
@@ -121,48 +117,6 @@ var latte;
             }
             this.onFieldValueChanged('name', this.name);
         };
-        Object.defineProperty(categoryBase.prototype, "group", {
-            /**
-             * Gets or sets the value of the group field of type varchar(128)
-             */
-            get: function () {
-                return this._group;
-            },
-            /**
-             * Gets or sets the value of the group field of type varchar(128)
-             */
-            set: function (value) {
-                var changed = value !== this._group;
-                this._group = value;
-                if (changed) {
-                    this.onGroupChanged();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(categoryBase.prototype, "groupChanged", {
-            /**
-             * Gets an event raised when the value of the group property changes
-             */
-            get: function () {
-                if (!this._groupChanged) {
-                    this._groupChanged = new latte.LatteEvent(this);
-                }
-                return this._groupChanged;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * Raises the <c>groupChanged</c> event
-         */
-        categoryBase.prototype.onGroupChanged = function () {
-            if (this._groupChanged) {
-                this._groupChanged.raise();
-            }
-            this.onFieldValueChanged('group', this.group);
-        };
         Object.defineProperty(categoryBase.prototype, "i", {
             /**
              * Gets or sets the value of the i field of type int(11)
@@ -209,7 +163,7 @@ var latte;
         * Override. Gets data about the fields of the record.
         **/
         categoryBase.prototype.onGetFields = function () {
-            return { 'idcategory': this.idcategory, 'name': this.name, 'group': this.group, 'i': this.i };
+            return { 'idcategory': this.idcategory, 'name': this.name, 'i': this.i };
         };
         /*
          * Remote Method.
@@ -277,6 +231,10 @@ var latte;
              * Database field: varchar(128)
              */
             this._company = null;
+            /**
+             * Database field: varchar(128)
+             */
+            this._email = null;
         }
         Object.defineProperty(personBase.prototype, "idperson", {
             /**
@@ -788,11 +746,53 @@ var latte;
             }
             this.onFieldValueChanged('company', this.company);
         };
+        Object.defineProperty(personBase.prototype, "email", {
+            /**
+             * Gets or sets the value of the email field of type varchar(128)
+             */
+            get: function () {
+                return this._email;
+            },
+            /**
+             * Gets or sets the value of the email field of type varchar(128)
+             */
+            set: function (value) {
+                var changed = value !== this._email;
+                this._email = value;
+                if (changed) {
+                    this.onEmailChanged();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(personBase.prototype, "emailChanged", {
+            /**
+             * Gets an event raised when the value of the email property changes
+             */
+            get: function () {
+                if (!this._emailChanged) {
+                    this._emailChanged = new latte.LatteEvent(this);
+                }
+                return this._emailChanged;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Raises the <c>emailChanged</c> event
+         */
+        personBase.prototype.onEmailChanged = function () {
+            if (this._emailChanged) {
+                this._emailChanged.raise();
+            }
+            this.onFieldValueChanged('email', this.email);
+        };
         /**
         * Override. Gets data about the fields of the record.
         **/
         personBase.prototype.onGetFields = function () {
-            return { 'idperson': this.idperson, 'idcategory': this.idcategory, 'title': this.title, 'name': this.name, 'lastname': this.lastname, 'birth': this.birth, 'sex': this.sex, 'address': this.address, 'phone': this.phone, 'mobile': this.mobile, 'note': this.note, 'company': this.company };
+            return { 'idperson': this.idperson, 'idcategory': this.idcategory, 'title': this.title, 'name': this.name, 'lastname': this.lastname, 'birth': this.birth, 'sex': this.sex, 'address': this.address, 'phone': this.phone, 'mobile': this.mobile, 'note': this.note, 'company': this.company, 'email': this.email };
         };
         /*
          * Remote Method.
@@ -815,7 +815,18 @@ var latte;
         __extends(ContactsMainViewBase, _super);
         function ContactsMainViewBase() {
             _super.call(this, latte.Element.fromBank('ContactsMainViewBase'));
+            this.bind(this, true);
         }
+        Object.defineProperty(ContactsMainViewBase.prototype, "allContactsItem", {
+            get: function () {
+                if (!this._allContactsItem) {
+                    this._allContactsItem = new latte.Element(this.querySelector('[data-property=allContactsItem]'));
+                }
+                return this._allContactsItem;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(ContactsMainViewBase.prototype, "btnAdd", {
             get: function () {
                 if (!this._btnAdd) {
@@ -836,72 +847,12 @@ var latte;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(ContactsMainViewBase.prototype, "detailHeader", {
-            get: function () {
-                if (!this._detailHeader) {
-                    this._detailHeader = new latte.Element(this.querySelector('[data-property=detailHeader]'));
-                }
-                return this._detailHeader;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ContactsMainViewBase.prototype, "detailRows", {
-            get: function () {
-                if (!this._detailRows) {
-                    this._detailRows = new latte.Element(this.querySelector('[data-property=detailRows]'));
-                }
-                return this._detailRows;
-            },
-            enumerable: true,
-            configurable: true
-        });
         Object.defineProperty(ContactsMainViewBase.prototype, "detailToolbar", {
             get: function () {
                 if (!this._detailToolbar) {
                     this._detailToolbar = new latte.Element(this.querySelector('[data-property=detailToolbar]'));
                 }
                 return this._detailToolbar;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ContactsMainViewBase.prototype, "lblDescription", {
-            get: function () {
-                if (!this._lblDescription) {
-                    this._lblDescription = new latte.Element(this.querySelector('[data-property=lblDescription]'));
-                }
-                return this._lblDescription;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ContactsMainViewBase.prototype, "lblFirstName", {
-            get: function () {
-                if (!this._lblFirstName) {
-                    this._lblFirstName = new latte.Element(this.querySelector('[data-property=lblFirstName]'));
-                }
-                return this._lblFirstName;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ContactsMainViewBase.prototype, "lblInitials", {
-            get: function () {
-                if (!this._lblInitials) {
-                    this._lblInitials = new latte.Element(this.querySelector('[data-property=lblInitials]'));
-                }
-                return this._lblInitials;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ContactsMainViewBase.prototype, "lblLastName", {
-            get: function () {
-                if (!this._lblLastName) {
-                    this._lblLastName = new latte.Element(this.querySelector('[data-property=lblLastName]'));
-                }
-                return this._lblLastName;
             },
             enumerable: true,
             configurable: true
@@ -926,12 +877,32 @@ var latte;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(ContactsMainViewBase.prototype, "myContacts", {
+            get: function () {
+                if (!this._myContacts) {
+                    this._myContacts = new latte.Element(this.querySelector('[data-property=myContacts]'));
+                }
+                return this._myContacts;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(ContactsMainViewBase.prototype, "panelDetail", {
             get: function () {
                 if (!this._panelDetail) {
                     this._panelDetail = new latte.Element(this.querySelector('[data-property=panelDetail]'));
                 }
                 return this._panelDetail;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ContactsMainViewBase.prototype, "personWrapper", {
+            get: function () {
+                if (!this._personWrapper) {
+                    this._personWrapper = new latte.Element(this.querySelector('[data-property=personWrapper]'));
+                }
+                return this._personWrapper;
             },
             enumerable: true,
             configurable: true
@@ -962,6 +933,7 @@ var latte;
         __extends(CategoryListItem, _super);
         function CategoryListItem() {
             _super.call(this, latte.Element.fromBank('CategoryListItem'));
+            this.bind(this, true);
         }
         CategoryListItem.getModel = function () {
             if (!this._Model) {
@@ -975,20 +947,21 @@ var latte;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
-    var ListItemHeader = (function (_super) {
-        __extends(ListItemHeader, _super);
-        function ListItemHeader() {
-            _super.call(this, latte.Element.fromBank('ListItemHeader'));
+    var ListItemHeaderBase = (function (_super) {
+        __extends(ListItemHeaderBase, _super);
+        function ListItemHeaderBase() {
+            _super.call(this, latte.Element.fromBank('ListItemHeaderBase'));
+            this.bind(this, true);
         }
-        ListItemHeader.getModel = function () {
+        ListItemHeaderBase.getModel = function () {
             if (!this._Model) {
-                this._Model = new latte.Element(latte.Element.fromBank('ListItemHeader'));
+                this._Model = new latte.Element(latte.Element.fromBank('ListItemHeaderBase'));
             }
             return this._Model;
         };
-        return ListItemHeader;
+        return ListItemHeaderBase;
     })(latte.Element);
-    latte.ListItemHeader = ListItemHeader;
+    latte.ListItemHeaderBase = ListItemHeaderBase;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -996,6 +969,7 @@ var latte;
         __extends(PersonListItem, _super);
         function PersonListItem() {
             _super.call(this, latte.Element.fromBank('PersonListItem'));
+            this.bind(this, true);
         }
         PersonListItem.getModel = function () {
             if (!this._Model) {
@@ -1009,11 +983,90 @@ var latte;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
+    var PersonViewBase = (function (_super) {
+        __extends(PersonViewBase, _super);
+        function PersonViewBase() {
+            _super.call(this, latte.Element.fromBank('PersonViewBase'));
+            this.bind(this, true);
+        }
+        Object.defineProperty(PersonViewBase.prototype, "detailHeader", {
+            get: function () {
+                if (!this._detailHeader) {
+                    this._detailHeader = new latte.Element(this.querySelector('[data-property=detailHeader]'));
+                }
+                return this._detailHeader;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PersonViewBase.prototype, "detailRows", {
+            get: function () {
+                if (!this._detailRows) {
+                    this._detailRows = new latte.Element(this.querySelector('[data-property=detailRows]'));
+                }
+                return this._detailRows;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PersonViewBase.prototype, "lblDescription", {
+            get: function () {
+                if (!this._lblDescription) {
+                    this._lblDescription = new latte.Element(this.querySelector('[data-property=lblDescription]'));
+                }
+                return this._lblDescription;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PersonViewBase.prototype, "lblFirstName", {
+            get: function () {
+                if (!this._lblFirstName) {
+                    this._lblFirstName = new latte.Element(this.querySelector('[data-property=lblFirstName]'));
+                }
+                return this._lblFirstName;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PersonViewBase.prototype, "lblInitials", {
+            get: function () {
+                if (!this._lblInitials) {
+                    this._lblInitials = new latte.Element(this.querySelector('[data-property=lblInitials]'));
+                }
+                return this._lblInitials;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PersonViewBase.prototype, "lblLastName", {
+            get: function () {
+                if (!this._lblLastName) {
+                    this._lblLastName = new latte.Element(this.querySelector('[data-property=lblLastName]'));
+                }
+                return this._lblLastName;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PersonViewBase.getModel = function () {
+            if (!this._Model) {
+                this._Model = new latte.Element(latte.Element.fromBank('PersonViewBase'));
+            }
+            return this._Model;
+        };
+        return PersonViewBase;
+    })(latte.Element);
+    latte.PersonViewBase = PersonViewBase;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
     latte.globalViewsBank = {
-        "ContactsMainViewBase": "<div data-class=\"ContactsMainViewBase\" class=\"contacts-ui\">\n\n    <!-- GROUPS PANEL -->\n    <div data-property=\"listGroups\" class=\"panel-groups\">\n        \n        \n        <div class=\"list-item\">All iCloud</div>\n        <div class=\"list-item\">Group A</div>\n        <div class=\"list-item\">Group B</div>\n        <div class=\"list-item-header\">Facebook</div>\n        <div class=\"list-item\">All Facebook</div>\n        <div class=\"list-item-header\">Smart Groups</div>\n        <div class=\"list-item\">Last Import</div>\n    </div>\n\n    <!-- NAMES LIST PANEL -->\n    <div class=\"panel-list\">\n        <div class=\"search-box\">\n            <input data-property=\"txtSearch\" data-event=\"input:loadContacts\" type=\"text\" placeholder=\"Search\">\n        </div>\n\n        <div data-property=\"listPeople\" class=\"list\">\n            <div class=\"no-items\">No contacts found</div>\n            <div class=\"list-item-header\">A</div>\n            \n            <div class=\"list-item selected\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item-header\">B</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item-header\">D</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n        </div>\n    </div>\n\n    <!-- CONTACT DETAIL PANEL -->\n    <div data-property=\"panelDetail\" class=\"panel-detail\">\n        <div data-property=\"detailHeader\" class=\"header\">\n            <div class=\"picture-side\">\n                <div class=\"picture\">\n                    <div data-property=\"lblInitials\" data-bind=\"initials\">AJ</div>\n                </div>\n            </div>\n            <div class=\"name-side\">\n                <div class=\"name-row\">\n                    <div data-property=\"lblFirstName\" data-event=\"lblFirstName_Focus\" data-bind=\"name\" class=\"name\">Alchemist</div>\n                    <div data-property=\"lblLastName\" data-bind=\"lastname\" data-event=\"lblLastName_Focus\" class=\"last\">Joe</div>\n                </div>\n                <div data-property=\"lblDescription\" data-bind=\"company\" class=\"description\">Superworks, Inc.</div>\n            </div>\n        </div>\n        <div data-property=\"detailRows\" class=\"rows\">\n            <div class=\"data\">\n                <div class=\"name\">email</div>\n                <div data-bind=\"email\" class=\"value\">a@a.com</div>\n            </div>\n            <div class=\"data\">\n                <div class=\"name\">phone</div>\n                <div data-bind=\"phone\" class=\"value\">+(55) 123456789</div>\n            </div>\n            <div class=\"data\">\n                <div class=\"name\">mobile</div>\n                <div data-bind=\"mobile\" class=\"value\">+(54) 123456789</div>\n            </div>\n            <div class=\"data\">\n                <div class=\"name\">address</div>\n                <div data-bind=\"address\" class=\"value\">Elm Street 1090, TX, PA 9875</div>\n            </div>\n            <div class=\"data\">\n                <div class=\"name\">note</div>\n                <div data-bind=\"note\" class=\"value\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus consequat molestie enim, vel viverra odio malesuada quis. Nulla gravida vulputate nulla, non egestas elit pretium et. </div>\n            </div>\n        </div>\n        <div data-property=\"detailToolbar\" class=\"toolbar\">\n            <div data-property=\"btnAdd\" data-event=\"click: btnAdd_Click\" class=\"button btn-add\">+</div>\n            <div class=\"button btn-export\">...</div>\n            <div data-property=\"btnEdit\" data-event=\"click: btnEdit_Click\" class=\"button btn-edit\">Edit</div>\n        </div>\n    </div>\n</div>",
-        "CategoryListItem": "<div class=\"list-item\" data-class=\"CategoryListItem\"><span data-bind=\"name\">All Contacts</span></div>",
-        "ListItemHeader": "<div class=\"list-item-header\" data-class=\"ListItemHeader\">iCloud</div>",
-        "PersonListItem": "<div class=\"list-item\" data-class=\"PersonListItem\"><span data-bind=\"fullName\">Alchemist Joe</span></div>"
+        "ContactsMainViewBase": "<div data-class=\"ContactsMainViewBase\" class=\"contacts-ui\">\n\n    <!-- GROUPS PANEL -->\n    <div data-property=\"listGroups\" class=\"panel-groups\">\n        <div class=\"list-item\" data-property=\"allContactsItem\" data-event=\"click:loadAllContacts\">All Contacts</div>\n        <div class=\"list-item-header\">My Contacts</div>\n        <div data-property=\"myContacts\">\n            \n            <div class=\"list-item\">Family</div>\n            <div class=\"list-item\">Other</div>\n        </div>\n    </div>\n\n    <!-- NAMES LIST PANEL -->\n    <div class=\"panel-list\">\n        <div class=\"search-box\">\n            <input data-property=\"txtSearch\" data-event=\"input:loadContacts\" type=\"text\" placeholder=\"Search\">\n        </div>\n\n        <div data-property=\"listPeople\" class=\"list\">\n            <div class=\"no-items\">No contacts found</div>\n            \n            \n            <div class=\"list-item selected\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item\">Alchemist Joe</div>\n            <div class=\"list-item-header\">B</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item\">Bradbury Jack</div>\n            <div class=\"list-item-header\">D</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n            <div class=\"list-item\">Doe John</div>\n        </div>\n    </div>\n\n    <!-- CONTACT DETAIL PANEL -->\n    <div data-property=\"panelDetail\" class=\"panel-detail\">\n        <div data-property=\"personWrapper\">\n            \n        </div>\n        <div data-property=\"detailToolbar\" class=\"toolbar\">\n            <div data-property=\"btnAdd\" data-event=\"click: btnAdd_Click\" class=\"button btn-add\">+</div>\n            <div class=\"button btn-export\">...</div>\n            <div data-property=\"btnEdit\" data-event=\"click: btnEdit_Click\" class=\"button btn-edit\">Edit</div>\n        </div>\n    </div>\n</div>",
+        "CategoryListItem": "<div class=\"list-item\" data-class=\"CategoryListItem\"><span data-bind=\"name\">Friends</span></div>",
+        "ListItemHeaderBase": "<div class=\"list-item-header\" data-class=\"ListItemHeaderBase\">A</div>",
+        "PersonListItem": "<div class=\"list-item\" data-class=\"PersonListItem\"><span data-bind=\"fullName\">Alchemist Joe</span></div>",
+        "PersonViewBase": "<div data-class=\"PersonViewBase\">\n                <div data-property=\"detailHeader\" class=\"header\">\n                    <div class=\"picture-side\">\n                        <div class=\"picture\">\n                            <div data-property=\"lblInitials\" data-bind=\"initials\">AJ</div>\n                        </div>\n                    </div>\n                    <div class=\"name-side\">\n                        <div class=\"name-row\">\n                            <div data-property=\"lblFirstName\" data-event=\"focus: lblFirstName_Focus\" data-bind=\"name\" class=\"name\">Alchemist</div>\n                            <div data-property=\"lblLastName\" data-bind=\"lastname\" data-event=\"focus: lblLastName_Focus\" class=\"last\">Joe</div>\n                        </div>\n                        <div data-property=\"lblDescription\" data-bind=\"company\" class=\"description\">Superworks, Inc.</div>\n                    </div>\n                </div>\n                <div data-property=\"detailRows\" class=\"rows\">\n                    <div class=\"data\">\n                        <div class=\"name\">email</div>\n                        <div data-bind=\"email\" class=\"value\">a@a.com</div>\n                    </div>\n                    <div class=\"data\">\n                        <div class=\"name\">phone</div>\n                        <div data-bind=\"phone\" class=\"value\">+(55) 123456789</div>\n                    </div>\n                    <div class=\"data\">\n                        <div class=\"name\">mobile</div>\n                        <div data-bind=\"mobile\" class=\"value\">+(54) 123456789</div>\n                    </div>\n                    <div class=\"data\">\n                        <div class=\"name\">address</div>\n                        <div data-bind=\"address\" class=\"value\">Elm Street 1090, TX, PA 9875</div>\n                    </div>\n                    <div class=\"data\">\n                        <div class=\"name\">note</div>\n                        <div data-bind=\"note\" class=\"value\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus consequat molestie enim, vel viverra odio malesuada quis. Nulla gravida vulputate nulla, non egestas elit pretium et. </div>\n                    </div>\n                </div>\n            </div>"
     };
 })(latte || (latte = {}));
 /**
@@ -1040,22 +1093,13 @@ var latte;
             /**
              * Property field
              */
+            this._personView = null;
+            /**
+             * Property field
+             */
             this._selectedCategory = null;
-            /**
-             * Property field
-             */
-            this._editMode = null;
-            /**
-             * Property field
-             */
-            this._person = null;
-            this.bind(this);
-            this.lblLastName.handle(this, 'focus', this.lblLastName_Focus);
-            this.lblFirstName.handle(this, 'focus', this.lblFirstName_Focus);
             this.loadCategories();
             this.loadContacts();
-            this.detailHeader.visible = false;
-            this.detailRows.visible = false;
         }
         //region Private Methods
         /**
@@ -1068,7 +1112,7 @@ var latte;
             // Select item
             item.addClass('selected');
             // Pass selection
-            this.selectedCategory = item.dataBind ? item.dataBind.record : null;
+            this.selectedCategory = item.dataBinds.length > 0 ? item.dataBinds[0].record : null;
         };
         /**
          * Selects the specified category item
@@ -1080,7 +1124,7 @@ var latte;
             // Select ittem
             item.addClass('selected');
             // Pass selection
-            this.person = item.dataBind.record;
+            this.personView = new latte.PersonView(item.dataBinds[0].record);
         };
         //endregion
         //region Methods
@@ -1088,74 +1132,39 @@ var latte;
          * Event Handler.
          */
         ContactsMainView.prototype.btnAdd_Click = function () {
-            if (this.editMode) {
-                this.editMode = false;
+            if (this.personView.editMode) {
+                this.personView.editMode = false;
             }
-            this.person = new latte.Person();
-            this.editMode = true;
+            this.personView.person = new latte.Person();
+            this.personView.person.idcategory = this.selectedCategory instanceof latte.Category ? this.selectedCategory.idcategory : 0;
+            this.personView.editMode = true;
         };
         /**
          * Event Handler.
          */
         ContactsMainView.prototype.btnEdit_Click = function () {
-            this.editMode = !this.editMode;
-        };
-        /**
-         * Event Handler.
-         */
-        ContactsMainView.prototype.lblFirstName_Focus = function () {
-            setTimeout(function () {
-                document.execCommand('selectAll', false, null);
-            }, 100);
-        };
-        /**
-         * Event Handler.
-         */
-        ContactsMainView.prototype.lblLastName_Focus = function () {
-            setTimeout(function () {
-                document.execCommand('selectAll', false, null);
-            }, 100);
+            this.personView.editMode = !this.personView.editMode;
         };
         /**
          * Event Handler.
          */
         ContactsMainView.prototype.loadCategories = function () {
             var _this = this;
-            this.listGroups.clear();
-            // All Contacts Item
-            var all = this.listGroups.add(new latte.CategoryListItem());
-            all.text = strings.allContacts;
-            all.addEventListener('click', function () {
-                _this.selectCategoryItem(all);
-            });
+            this.myContacts.clear();
             latte.Category.fullCatalog().send(function (cats) {
-                var groups = {};
-                for (var i = 0; i < cats.length; i++) {
-                    var c = cats[i];
-                    if (latte._undef(groups[c.group])) {
-                        groups[c.group] = [];
-                    }
-                    groups[c.group].push(c);
-                }
-                for (var g in groups) {
-                    (function (g) {
-                        var array = groups[g];
-                        // Sort categories by index i.
-                        array.sort(function (a, b) {
-                            return a.i - b.i;
-                        });
-                        // Add Group Item
-                        var groupItem = _this.listGroups.add(new latte.ListItemHeader());
-                        groupItem.text = g;
-                        // Create Items
-                        var items = _this.listGroups.addCollection(latte.ElementCollection.fromBindArray(array, latte.CategoryListItem));
-                        // Add Click Listener
-                        items.addEventListener('click', function (item) {
-                            _this.selectCategoryItem(item);
-                        });
-                    })(g);
-                }
+                // Create Items
+                var items = _this.myContacts.addCollection(latte.ElementCollection.fromBindArray(cats, latte.CategoryListItem));
+                // Add Listener
+                items.addEventListener('click', function (item) {
+                    _this.selectCategoryItem(item);
+                });
             });
+        };
+        /**
+         * Loads contacts of all categories
+         */
+        ContactsMainView.prototype.loadAllContacts = function () {
+            this.selectCategoryItem(this.allContactsItem);
         };
         /**
          * Loads the contacts of the specified filters
@@ -1202,36 +1211,22 @@ var latte;
             });
         };
         /**
-         * Raises the <c>editMode</c> event
+         * Raises the <c>personView</c> event
          */
-        ContactsMainView.prototype.onEditModeChanged = function () {
-            if (this._editModeChanged) {
-                this._editModeChanged.raise();
+        ContactsMainView.prototype.onPersonViewChanged = function () {
+            var _this = this;
+            if (this._personViewChanged) {
+                this._personViewChanged.raise();
             }
-            // Set edit mode of the binded elements
-            this.findAll('[data-bind]').setProperty('contentEditable', this.editMode);
-            if (this.editMode) {
-                this.lblFirstName.element.focus();
-                this.btnEdit.addClass('checked');
-            }
-            else {
-                this.btnEdit.removeClass('checked');
-                // Save data
-                this.person.save(function () {
-                    //this.onPersonChanged();
-                });
-            }
-        };
-        /**
-         * Raises the <c>person</c> event
-         */
-        ContactsMainView.prototype.onPersonChanged = function () {
-            if (this._personChanged) {
-                this._personChanged.raise();
-            }
-            this.panelDetail.bind(this.person);
-            this.detailHeader.visible = this.person instanceof latte.Person;
-            this.detailRows.visible = this.person instanceof latte.Person;
+            this.personWrapper.setContent(this.personView);
+            this.personView.editModeChanged.add(function () {
+                if (_this.personView.editMode) {
+                    _this.btnEdit.addClass('checked');
+                }
+                else {
+                    _this.btnEdit.removeClass('checked');
+                }
+            });
         };
         /**
          * Raises the <c>selectedCategory</c> event
@@ -1242,32 +1237,17 @@ var latte;
             }
             this.loadContacts();
         };
-        Object.defineProperty(ContactsMainView.prototype, "editModeChanged", {
+        Object.defineProperty(ContactsMainView.prototype, "personViewChanged", {
             /**
-             * Gets an event raised when the value of the editMode property changes
+             * Gets an event raised when the value of the personView property changes
              *
              * @returns {LatteEvent}
              */
             get: function () {
-                if (!this._editModeChanged) {
-                    this._editModeChanged = new latte.LatteEvent(this);
+                if (!this._personViewChanged) {
+                    this._personViewChanged = new latte.LatteEvent(this);
                 }
-                return this._editModeChanged;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ContactsMainView.prototype, "personChanged", {
-            /**
-             * Gets an event raised when the value of the person property changes
-             *
-             * @returns {LatteEvent}
-             */
-            get: function () {
-                if (!this._personChanged) {
-                    this._personChanged = new latte.LatteEvent(this);
-                }
-                return this._personChanged;
+                return this._personViewChanged;
             },
             enumerable: true,
             configurable: true
@@ -1302,6 +1282,33 @@ var latte;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(ContactsMainView.prototype, "personView", {
+            /**
+             * Gets or sets the person view
+             *
+             * @returns {PersonView}
+             */
+            get: function () {
+                return this._personView;
+            },
+            /**
+             * Gets or sets the person view
+             *
+             * @param {PersonView} value
+             */
+            set: function (value) {
+                // Check if value changed
+                var changed = value !== this._personView;
+                // Set value
+                this._personView = value;
+                // Trigger changed event
+                if (changed) {
+                    this.onPersonViewChanged();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(ContactsMainView.prototype, "selectedCategory", {
             /**
              * Gets or sets the currently selected category, if any.
@@ -1329,7 +1336,174 @@ var latte;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(ContactsMainView.prototype, "editMode", {
+        return ContactsMainView;
+    })(latte.ContactsMainViewBase);
+    latte.ContactsMainView = ContactsMainView;
+})(latte || (latte = {}));
+/**
+ * Created by josemanuel on 5/29/15.
+ */
+var latte;
+(function (latte) {
+    /**
+     *
+     */
+    var ListItemHeader = (function (_super) {
+        __extends(ListItemHeader, _super);
+        //region Static
+        //endregion
+        //region Fields
+        //endregion
+        /**
+         * Creates the header with the specified text
+         */
+        function ListItemHeader(text) {
+            if (text === void 0) { text = null; }
+            _super.call(this);
+            if (text) {
+                this.text = text;
+            }
+        }
+        return ListItemHeader;
+    })(latte.ListItemHeaderBase);
+    latte.ListItemHeader = ListItemHeader;
+})(latte || (latte = {}));
+/**
+ * Created by josemanuel on 5/27/15.
+ */
+var latte;
+(function (latte) {
+    /**
+     *
+     */
+    var Main = (function () {
+        //region Static
+        //endregion
+        //region Fields
+        //endregion
+        /**
+         *
+         */
+        function Main() {
+            document.body.appendChild((new latte.ContactsMainView()).element);
+        }
+        return Main;
+    })();
+    latte.Main = Main;
+})(latte || (latte = {}));
+/**
+ * Created by josemanuel on 5/29/15.
+ */
+var latte;
+(function (latte) {
+    /**
+     *
+     */
+    var PersonView = (function (_super) {
+        __extends(PersonView, _super);
+        //region Static
+        //endregion
+        //region Fields
+        //endregion
+        /**
+         *
+         */
+        function PersonView(person) {
+            _super.call(this);
+            //endregion
+            //region Properties
+            /**
+             * Property field
+             */
+            this._editMode = null;
+            /**
+             * Property field
+             */
+            this._person = null;
+            if (person) {
+                this.person = person;
+            }
+        }
+        //region Private Methods
+        //endregion
+        //region Methods
+        /**
+         * Event Handler.
+         */
+        PersonView.prototype.lblFirstName_Focus = function () {
+            setTimeout(function () {
+                document.execCommand('selectAll', false, null);
+            }, 50);
+        };
+        /**
+         * Event Handler.
+         */
+        PersonView.prototype.lblLastName_Focus = function () {
+            setTimeout(function () {
+                document.execCommand('selectAll', false, null);
+            }, 50);
+        };
+        /**
+         * Raises the <c>editMode</c> event
+         */
+        PersonView.prototype.onEditModeChanged = function () {
+            if (this._editModeChanged) {
+                this._editModeChanged.raise();
+            }
+            // Set edit mode of the binded elements
+            this.findAll('[data-bind]').setProperty('contentEditable', this.editMode);
+            if (this.editMode) {
+                this.lblFirstName.element.focus();
+            }
+            else {
+                // Save data
+                this.person.save(function () {
+                    //this.onPersonChanged();
+                });
+            }
+        };
+        /**
+         * Raises the <c>person</c> event
+         */
+        PersonView.prototype.onPersonChanged = function () {
+            if (this._personChanged) {
+                this._personChanged.raise();
+            }
+            if (this.person) {
+                this.bind(this.person);
+            }
+        };
+        Object.defineProperty(PersonView.prototype, "editModeChanged", {
+            /**
+             * Gets an event raised when the value of the editMode property changes
+             *
+             * @returns {LatteEvent}
+             */
+            get: function () {
+                if (!this._editModeChanged) {
+                    this._editModeChanged = new latte.LatteEvent(this);
+                }
+                return this._editModeChanged;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PersonView.prototype, "personChanged", {
+            /**
+             * Gets an event raised when the value of the person property changes
+             *
+             * @returns {LatteEvent}
+             */
+            get: function () {
+                if (!this._personChanged) {
+                    this._personChanged = new latte.LatteEvent(this);
+                }
+                return this._personChanged;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PersonView.prototype, "editMode", {
             /**
              * Gets or sets a value indicating if the view is in edit mode
              *
@@ -1356,7 +1530,7 @@ var latte;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(ContactsMainView.prototype, "person", {
+        Object.defineProperty(PersonView.prototype, "person", {
             /**
              * Gets or sets the person of the detail zone
              *
@@ -1383,9 +1557,9 @@ var latte;
             enumerable: true,
             configurable: true
         });
-        return ContactsMainView;
-    })(latte.ContactsMainViewBase);
-    latte.ContactsMainView = ContactsMainView;
+        return PersonView;
+    })(latte.PersonViewBase);
+    latte.PersonView = PersonView;
 })(latte || (latte = {}));
 /**
  * Created by josemanuel on 5/27/15.
@@ -1395,7 +1569,8 @@ var latte;
     /**
      *
      */
-    var Main = (function () {
+    var Category = (function (_super) {
+        __extends(Category, _super);
         //region Static
         //endregion
         //region Fields
@@ -1403,12 +1578,12 @@ var latte;
         /**
          *
          */
-        function Main() {
-            document.body.appendChild((new latte.ContactsMainView()).element);
+        function Category() {
+            _super.call(this);
         }
-        return Main;
-    })();
-    latte.Main = Main;
+        return Category;
+    })(latte.categoryBase);
+    latte.Category = Category;
 })(latte || (latte = {}));
 /**
  * Created by josemanuel on 5/27/15.
@@ -1546,28 +1721,4 @@ var latte;
         return Person;
     })(latte.personBase);
     latte.Person = Person;
-})(latte || (latte = {}));
-/**
- * Created by josemanuel on 5/27/15.
- */
-var latte;
-(function (latte) {
-    /**
-     *
-     */
-    var Category = (function (_super) {
-        __extends(Category, _super);
-        //region Static
-        //endregion
-        //region Fields
-        //endregion
-        /**
-         *
-         */
-        function Category() {
-            _super.call(this);
-        }
-        return Category;
-    })(latte.categoryBase);
-    latte.Category = Category;
 })(latte || (latte = {}));

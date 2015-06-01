@@ -92,13 +92,7 @@ module latte {
             this._recordEvent = recordEvent;
             this._type = type;
 
-            if(this.lastElementListener) {
-                this.lastElement.element.removeEventListener(this.lastElementEvent, this.lastElementListener);
-            }
-
-            if(this.lastRecordListener) {
-                this.lastRecord[this.lastRecordEvent].remove(this.lastRecordListener);
-            }
+            this.uninstall();
 
             if(this.type == DataBindType.AUTO || this.type == DataBindType.AUTO_COMMIT) {
 
@@ -127,8 +121,11 @@ module latte {
                     // Apply when data on record changes
                     this.record[this.recordEvent].add(this.lastRecordListener);
                 }else {
-                    log(sprintf("Warning: Binding -> apply not possible (Element: %s; %s; elementProperty: %s; recordProperty: %s).",
-                        String(this.element), String(this.record), String(this.elementProperty), String(this.recordProperty)));
+
+                    if(!_undef(this.record[this.recordProperty])){
+                        log(sprintf("Warning: Binding -> apply not possible (Element: %s; Record: %s; elementProperty: %s; recordProperty: %s).",
+                            String(this.element), String(this.record), String(this.elementProperty), String(this.recordProperty)));
+                    }
                 }
 
 
@@ -136,6 +133,19 @@ module latte {
 
             this.apply();
 
+        }
+
+        /**
+         * Uninstalls the last assigned listeners
+         */
+        uninstall(){
+            if(this.lastElementListener) {
+                this.lastElement.element.removeEventListener(this.lastElementEvent, this.lastElementListener);
+            }
+
+            if(this.lastRecordListener) {
+                this.lastRecord[this.lastRecordEvent].remove(this.lastRecordListener);
+            }
         }
 
         //endregion

@@ -19,10 +19,14 @@ module latte {
         static fromBank(key: string): HTMLElement{
             if(!_undef(latte['globalViewsBank']) && !_undef(latte['globalViewsBank'][key])) {
 
-                var e = document.createElement('div');
-                e.innerHTML = latte['globalViewsBank'][key];
-                return <HTMLElement>e.children[0];
+                // Bring from bank into a wrap
+                var wrap = document.createElement('div');
+                wrap.innerHTML = latte['globalViewsBank'][key];
 
+                // Obtain generated element
+                var e = <HTMLElement>wrap.children[0];
+
+                return e;
             }
 
             throw sprintf("View %s not found in bank.", key);
@@ -151,7 +155,15 @@ module latte {
 
         //region Private Methods
 
+        private addBindedElement(e: Element<HTMLElement>){
+            for (var i = 0; i < this.bindedElements.length; i++) {
+                if(this.bindedElements[i] === e) {
+                    return
+                }
+            }
 
+            this.bindedElements.push(e);
+        }
 
         //endregion
 
@@ -330,7 +342,7 @@ module latte {
          * Binds the element to the specified object
          * @param object
          */
-        bind(object: any){
+        bind(object: any, hide: boolean = false){
 
             var list = this.element.querySelectorAll('[data-bind]');
 
@@ -345,10 +357,11 @@ module latte {
                     // TODO: Criteria for elementProperty, elementEvent, type, DataAdapter
                     var bind = new DataBind(e, 'text', object, prop, DataBindType.AUTO, null, 'input', sprintf('%sChanged', prop));
 
-                    this._dataBind = bind;
+                    if(!hide){
+                        this.dataBinds.push(bind);
+                    }
 
-                    this.bindedElements.push(e);
-                    //debugger;
+                    this.addBindedElement(e);
 
 
                 })(list[i]);
@@ -370,7 +383,7 @@ module latte {
                         if(parts.length == 2) {
                             var bind = new EventBind(e, parts[0].trim(), object, parts[1].trim());
                             e.eventBinds.push(bind);
-                            this.bindedElements.push(e);
+                            this.addBindedElement(e);
                         }else {
                             log("[data-event] Bad Syntax: " + binds[j]);
                         }
@@ -745,7 +758,6 @@ module latte {
             return this._bindedElements;
         }
 
-
         /**
          * Property field
          */
@@ -794,18 +806,22 @@ module latte {
         }
 
         /**
-         * Property field
+         * Field for dataBinds property
          */
-        private _dataBind:DataBind;
+        private _dataBinds:DataBind[];
 
         /**
-         * Gets the current DataBind of the element (If any)
+         * Gets the data binds of the element
          *
-         * @returns {DataBind}
+         * @returns {DataBind[]}
          */
-        get dataBind():DataBind {
-            return this._dataBind;
+        get dataBinds():DataBind[] {
+            if (!this._dataBinds) {
+                this._dataBinds = [];
+            }
+            return this._dataBinds;
         }
+
 
         /**
          * Gets the height of the elements document

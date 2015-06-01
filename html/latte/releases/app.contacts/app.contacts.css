@@ -56,11 +56,11 @@
     bottom: 0;
 }
 
-.contacts-ui > .panel-groups > .list-item{
+.contacts-ui > .panel-groups  .list-item{
     padding: 5px 0 5px 15px;
 }
 
-.contacts-ui > .panel-groups > .list-item-header{
+.contacts-ui > .panel-groups  .list-item-header{
     font-size: 11px;
     font-weight: bolder;
     color: gray;
@@ -115,7 +115,7 @@
     padding: 5px 0 5px 25px;
 }
 
-.contacts-ui > .panel-detail > .header{
+.contacts-ui > .panel-detail > div > .header{
     position: absolute;
 
     top: 0;
@@ -124,13 +124,13 @@
     height: 100px;
 }
 
-.contacts-ui > .panel-detail > .header > .picture-side{
+.contacts-ui > .panel-detail  .header > .picture-side{
     float: left;
     padding-left: 60px;
     padding-top: 20px;
 }
 
-.contacts-ui > .panel-detail > .header > .picture-side > .picture{
+.contacts-ui > .panel-detail  .header > .picture-side > .picture{
     width: 66px;
     height: 66px;
     border-radius: 100%;
@@ -140,17 +140,17 @@
     text-align: center;
 }
 
-.contacts-ui > .panel-detail > .header > .picture-side > .picture > div{
+.contacts-ui > .panel-detail  .header > .picture-side > .picture > div{
     padding-top: 20px;
 }
 
-.contacts-ui > .panel-detail > .header > .name-side{
+.contacts-ui > .panel-detail  .header > .name-side{
     padding-top: 20px;
     float: left;
     padding-left: 10px;
 }
 
-.contacts-ui > .panel-detail > .header > .name-side > .name-row:after{
+.contacts-ui > .panel-detail  .header > .name-side > .name-row:after{
     content: '.';
     visibility: hidden;
     display: block;
@@ -158,19 +158,19 @@
     clear: both;
 }
 
-.contacts-ui > .panel-detail > .header > .name-side > .name-row > .name{
+.contacts-ui > .panel-detail  .header > .name-side > .name-row > .name{
     font-size: 20px;
     float: left;
 }
 
-.contacts-ui > .panel-detail > .header > .name-side > .name-row > .last{
+.contacts-ui > .panel-detail  .header > .name-side > .name-row > .last{
     font-size: 20px;
     float: left;
     margin-left: 10px;
 }
 
 
-.contacts-ui > .panel-detail > .rows{
+.contacts-ui > .panel-detail  .rows{
     position: absolute;
 
     top: 100px;
@@ -181,13 +181,13 @@
     overflow: auto;
 }
 
-.contacts-ui > .panel-detail > .rows > .data{
+.contacts-ui > .panel-detail  .rows > .data{
     margin: 0 15px;
     border-top: solid 1px #e8e8e8;
     padding: 8px 10px 7px 0;
 }
 
-.contacts-ui > .panel-detail > .rows > .data:after{
+.contacts-ui > .panel-detail  .rows > .data:after{
     content: '.';
     visibility: hidden;
     display: block;
@@ -195,19 +195,19 @@
     clear: both;
 }
 
-.contacts-ui > .panel-detail > .rows > .data > .name{
+.contacts-ui > .panel-detail  .rows > .data > .name{
     width: 120px;
     float: left;
     text-align: right;
     color: gray;
 }
 
-.contacts-ui > .panel-detail > .rows > .data > .value{
+.contacts-ui > .panel-detail  .rows > .data > .value{
     text-align: left;
     margin-left: 135px;
 }
 
-.contacts-ui > .panel-detail > .rows > .data > .name:not(:first-child){
+.contacts-ui > .panel-detail  .rows > .data > .name:not(:first-child){
     width: auto;
     padding-left: 10px;
 }

@@ -25,13 +25,9 @@ module latte {
         constructor() {
             super();
 
-            this.bind(this);
-
             this.loadCategories();
             this.loadContacts();
 
-            this.detailHeader.visible = false;
-            this.detailRows.visible = false;
 
         }
 
@@ -50,7 +46,7 @@ module latte {
             item.addClass('selected');
 
             // Pass selection
-            this.selectedCategory = item.dataBind ? item.dataBind.record : null;
+            this.selectedCategory = item.dataBinds.length > 0 ? item.dataBinds[0].record : null;
         }
 
         /**
@@ -65,7 +61,7 @@ module latte {
             item.addClass('selected');
 
             // Pass selection
-            this.person = <Person>item.dataBind.record;
+            this.personView = new PersonView(<Person>item.dataBinds[0].record);
         }
 
         //endregion
@@ -77,89 +73,45 @@ module latte {
          */
         btnAdd_Click(){
 
-            if(this.editMode) {
-                this.editMode = false;
+            if(this.personView.editMode) {
+                this.personView.editMode = false;
             }
 
-            this.person = new Person();
-            this.editMode = true;
+            this.personView.person = new Person();
+            this.personView.person.idcategory = this.selectedCategory instanceof Category ? this.selectedCategory.idcategory : 0;
+            this.personView.editMode = true;
         }
 
         /**
          * Event Handler.
          */
         btnEdit_Click(){
-            this.editMode = !this.editMode;
-        }
-
-        /**
-         * Event Handler.
-         */
-        lblFirstName_Focus(){
-            setTimeout(() => {
-                document.execCommand('selectAll', false, null)
-            }, 100);
-        }
-
-        /**
-         * Event Handler.
-         */
-        lblLastName_Focus(){
-            setTimeout(() => {
-                document.execCommand('selectAll', false, null)
-            }, 100);
+            this.personView.editMode = !this.personView.editMode;
         }
 
         /**
          * Event Handler.
          */
         loadCategories(){
-            this.listGroups.clear();
-
-            // All Contacts Item
-            var all = this.listGroups.add(new CategoryListItem());
-            all.text = strings.allContacts;
-            all.addEventListener('click', () => { this.selectCategoryItem(all); });
+            this.myContacts.clear();
 
             Category.fullCatalog().send((cats: Category[]) => {
 
-                var groups = {};
+                // Create Items
+                var items = this.myContacts.addCollection(ElementCollection.fromBindArray(cats, CategoryListItem));
 
-                //region Group by groups
-                for (var i = 0; i < cats.length; i++) {
-
-                    var c: Category = cats[i];
-
-                    if(_undef(groups[c.group])) {
-                        groups[c.group] = [];
-                    }
-
-                    groups[c.group].push(c);
-                }
-                //endregion
-
-                for(var g in groups){
-                    ((g) => {
-                        var array: Category[] = groups[g];
-
-                        // Sort categories by index i.
-                        array.sort((a: Category, b: Category )=> {return a.i - b.i});
-
-                        // Add Group Item
-                        var groupItem = this.listGroups.add(new ListItemHeader());
-                        groupItem.text = g;
-
-                        // Create Items
-                        var items = this.listGroups.addCollection(ElementCollection.fromBindArray(array, CategoryListItem));
-
-                        // Add Click Listener
-                        items.addEventListener('click', (item) => { this.selectCategoryItem(item) });
-
-                    })(g);
-                }
+                // Add Listener
+                items.addEventListener('click', (item) => { this.selectCategoryItem(item) });
 
             });
 
+        }
+
+        /**
+         * Loads contacts of all categories
+         */
+        loadAllContacts(){
+            this.selectCategoryItem(this.allContactsItem);
         }
 
         /**
@@ -225,42 +177,22 @@ module latte {
         }
 
         /**
-         * Raises the <c>editMode</c> event
+         * Raises the <c>personView</c> event
          */
-        onEditModeChanged(){
-            if(this._editModeChanged) {
-                this._editModeChanged.raise();
+        onPersonViewChanged(){
+            if(this._personViewChanged){
+                this._personViewChanged.raise();
             }
 
-            // Set edit mode of the binded elements
-            this.findAll('[data-bind]').setProperty('contentEditable', this.editMode);
+            this.personWrapper.setContent(this.personView);
 
-            if(this.editMode) {
-                this.lblFirstName.element.focus();
-                this.btnEdit.addClass('checked');
-            }else {
-                this.btnEdit.removeClass('checked');
-
-                // Save data
-                this.person.save(() => {
-                    //this.onPersonChanged();
-                });
-            }
-
-        }
-
-        /**
-         * Raises the <c>person</c> event
-         */
-        onPersonChanged(){
-            if(this._personChanged){
-                this._personChanged.raise();
-            }
-
-            this.panelDetail.bind(this.person);
-            this.detailHeader.visible = this.person instanceof Person;
-            this.detailRows.visible = this.person instanceof Person;
-
+            this.personView.editModeChanged.add(() => {
+                if(this.personView.editMode) {
+                    this.btnEdit.addClass('checked');
+                }else {
+                    this.btnEdit.removeClass('checked');
+                }
+            });
         }
 
         /**
@@ -282,35 +214,18 @@ module latte {
         /**
          * Back field for event
          */
-        private _editModeChanged: LatteEvent
+        private _personViewChanged: LatteEvent
 
         /**
-         * Gets an event raised when the value of the editMode property changes
+         * Gets an event raised when the value of the personView property changes
          *
          * @returns {LatteEvent}
          */
-        get editModeChanged(): LatteEvent{
-            if(!this._editModeChanged){
-                this._editModeChanged = new LatteEvent(this);
+        get personViewChanged(): LatteEvent{
+            if(!this._personViewChanged){
+                this._personViewChanged = new LatteEvent(this);
             }
-            return this._editModeChanged;
-        }
-
-        /**
-         * Back field for event
-         */
-        private _personChanged: LatteEvent
-
-        /**
-         * Gets an event raised when the value of the person property changes
-         *
-         * @returns {LatteEvent}
-         */
-        get personChanged(): LatteEvent{
-            if(!this._personChanged){
-                this._personChanged = new LatteEvent(this);
-            }
-            return this._personChanged;
+            return this._personViewChanged;
         }
 
         /**
@@ -347,10 +262,42 @@ module latte {
             return this._selectedCategoryChanged;
         }
 
-
         //endregion
 
         //region Properties
+
+        /**
+         * Property field
+         */
+        private _personView: PersonView = null;
+
+        /**
+         * Gets or sets the person view
+         *
+         * @returns {PersonView}
+         */
+        get personView(): PersonView{
+            return this._personView;
+        }
+
+        /**
+         * Gets or sets the person view
+         *
+         * @param {PersonView} value
+         */
+        set personView(value: PersonView){
+
+            // Check if value changed
+            var changed: boolean = value !== this._personView;
+
+            // Set value
+            this._personView = value;
+
+            // Trigger changed event
+            if(changed){
+                this.onPersonViewChanged();
+            }
+        }
 
         /**
          * Property field
@@ -382,72 +329,6 @@ module latte {
             // Trigger changed event
             if(changed){
                 this.onSelectedCategoryChanged();
-            }
-        }
-
-        /**
-         * Property field
-         */
-        private _editMode: boolean = null;
-        
-        /**
-         * Gets or sets a value indicating if the view is in edit mode
-         *
-         * @returns {boolean}
-         */
-        get editMode(): boolean{
-            return this._editMode;
-        }
-        
-        /**
-         * Gets or sets a value indicating if the view is in edit mode
-         *
-         * @param {boolean} value
-         */
-        set editMode(value: boolean){
-        
-            // Check if value changed
-            var changed: boolean = value !== this._editMode;
-            
-            // Set value
-            this._editMode = value;
-            
-            // Trigger changed event
-            if(changed){
-                this.onEditModeChanged();
-            }
-        }
-
-        /**
-         * Property field
-         */
-        private _person: Person = null;
-
-        /**
-         * Gets or sets the person of the detail zone
-         *
-         * @returns {Person}
-         */
-        get person(): Person{
-            return this._person;
-        }
-
-        /**
-         * Gets or sets the person of the detail zone
-         *
-         * @param {Person} value
-         */
-        set person(value: Person){
-
-            // Check if value changed
-            var changed: boolean = value !== this._person;
-
-            // Set value
-            this._person = value;
-
-            // Trigger changed event
-            if(changed){
-                this.onPersonChanged();
             }
         }
 

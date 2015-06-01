@@ -291,7 +291,7 @@ var latte;
          * @returns {string}
          */
         DataRecord.prototype.toString = function () {
-            return latte.sprintf("%s: %s", this.recordType, JSON.stringify(this.getFields()));
+            return latte.sprintf("[%s: %s]", this.recordType, this.recordId);
         };
         /**
          * Sends an update message to the record
@@ -362,34 +362,6 @@ var latte;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(DataRecord.prototype, "formCreating", {
-            /**
-             * Gets an event raised when a form about the record is solicited
-             * @returns {LatteEvent}
-             */
-            get: function () {
-                if (!this._formCreating) {
-                    this._formCreating = new latte.LatteEvent(this);
-                }
-                return this._formCreating;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(DataRecord.prototype, "formCreated", {
-            /**
-             * Gets an event raised when a form about the record has been created
-             * @returns {LatteEvent}
-             */
-            get: function () {
-                if (!this._formCreated) {
-                    this._formCreated = new latte.LatteEvent(this);
-                }
-                return this._formCreated;
-            },
-            enumerable: true,
-            configurable: true
-        });
         Object.defineProperty(DataRecord.prototype, "recordId", {
             /**
              * Gets or sets the record id
@@ -434,34 +406,6 @@ var latte;
              **/
             set: function (value) {
                 this._tag = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(DataRecord.prototype, "viewCreated", {
-            /**
-             * Gets an event raised when a View about the record has been created
-             * @returns {LatteEvent}
-             */
-            get: function () {
-                if (!this._viewCreated) {
-                    this._viewCreated = new latte.LatteEvent(this);
-                }
-                return this._viewCreated;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(DataRecord.prototype, "viewCreating", {
-            /**
-             * Gets an event raised when a View about the record is being requested
-             * @returns {LatteEvent}
-             */
-            get: function () {
-                if (!this._viewCreating) {
-                    this._viewCreating = new latte.LatteEvent(this);
-                }
-                return this._viewCreating;
             },
             enumerable: true,
             configurable: true

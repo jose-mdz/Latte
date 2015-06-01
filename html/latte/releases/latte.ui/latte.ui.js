@@ -5997,6 +5997,76 @@ var latte;
 var latte;
 (function (latte) {
     /**
+     *
+     **/
+    var SelectableLabel = (function (_super) {
+        __extends(SelectableLabel, _super);
+        /**
+         *
+         **/
+        function SelectableLabel() {
+            _super.call(this);
+            this.addClass('with-label');
+            // Init element
+            this.label = new latte.LabelItem();
+            this.label.appendTo(this);
+            this.element.clear();
+        }
+        Object.defineProperty(SelectableLabel.prototype, "description", {
+            /**
+             * Gets or sets the description of the item's label
+             **/
+            get: function () {
+                return this.label.description;
+            },
+            /**
+             * Gets or sets the description of the item's label
+             **/
+            set: function (value) {
+                this.label.description = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(SelectableLabel.prototype, "icon", {
+            /**
+             * Gets or sets the icon of the item's label
+             **/
+            get: function () {
+                return this.label.icon;
+            },
+            /**
+             * Gets or sets the icon of the item's label
+             **/
+            set: function (value) {
+                this.label.icon = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(SelectableLabel.prototype, "text", {
+            /**
+             * Gets or sets the text of the item's label
+             **/
+            get: function () {
+                return this.label.text;
+            },
+            /**
+             * Gets or sets the text of the item's label
+             **/
+            set: function (value) {
+                this.label.text = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return SelectableLabel;
+    })(latte.SelectableItem);
+    latte.SelectableLabel = SelectableLabel;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
      * Presents an input method for picking a date
      **/
     var DatePickerItem = (function (_super) {
@@ -6331,76 +6401,6 @@ var latte;
         return DatePickerItem;
     })(latte.ValueItem);
     latte.DatePickerItem = DatePickerItem;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
-     *
-     **/
-    var SelectableLabel = (function (_super) {
-        __extends(SelectableLabel, _super);
-        /**
-         *
-         **/
-        function SelectableLabel() {
-            _super.call(this);
-            this.addClass('with-label');
-            // Init element
-            this.label = new latte.LabelItem();
-            this.label.appendTo(this);
-            this.element.clear();
-        }
-        Object.defineProperty(SelectableLabel.prototype, "description", {
-            /**
-             * Gets or sets the description of the item's label
-             **/
-            get: function () {
-                return this.label.description;
-            },
-            /**
-             * Gets or sets the description of the item's label
-             **/
-            set: function (value) {
-                this.label.description = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(SelectableLabel.prototype, "icon", {
-            /**
-             * Gets or sets the icon of the item's label
-             **/
-            get: function () {
-                return this.label.icon;
-            },
-            /**
-             * Gets or sets the icon of the item's label
-             **/
-            set: function (value) {
-                this.label.icon = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(SelectableLabel.prototype, "text", {
-            /**
-             * Gets or sets the text of the item's label
-             **/
-            get: function () {
-                return this.label.text;
-            },
-            /**
-             * Gets or sets the text of the item's label
-             **/
-            set: function (value) {
-                this.label.text = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return SelectableLabel;
-    })(latte.SelectableItem);
-    latte.SelectableLabel = SelectableLabel;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -8896,6 +8896,67 @@ var latte;
     })();
     latte.ZIndex = ZIndex;
 })(latte || (latte = {}));
+/**
+ * Created by josemanuel on 7/1/14.
+ */
+var latte;
+(function (latte) {
+    /**
+     *
+     */
+    var ColorIconItem = (function (_super) {
+        __extends(ColorIconItem, _super);
+        //region Static
+        //endregion
+        //region Fields
+        //endregion
+        /**
+         *
+         */
+        function ColorIconItem(color, size) {
+            if (size === void 0) { size = 16; }
+            _super.call(this);
+            //region Private Methods
+            //endregion
+            //region Methods
+            //endregion
+            //region Events
+            //endregion
+            //region Properties
+            /**
+             * Property field
+             */
+            this._color = null;
+            this.u = 1;
+            this.v = 1;
+            this.size = size;
+            this.color = color;
+        }
+        Object.defineProperty(ColorIconItem.prototype, "color", {
+            /**
+             * Gets or sets the color of the icon
+             *
+             * @returns {Color}
+             */
+            get: function () {
+                return this._color;
+            },
+            /**
+             * Gets or sets the color of the icon
+             *
+             * @param {Color} value
+             */
+            set: function (value) {
+                this._color = value;
+                this.css('background', value.toString());
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return ColorIconItem;
+    })(latte.IconItem);
+    latte.ColorIconItem = ColorIconItem;
+})(latte || (latte = {}));
 var latte;
 (function (latte) {
     /**
@@ -9141,67 +9202,6 @@ var latte;
         return Glyph;
     })(latte.IconItem);
     latte.Glyph = Glyph;
-})(latte || (latte = {}));
-/**
- * Created by josemanuel on 7/1/14.
- */
-var latte;
-(function (latte) {
-    /**
-     *
-     */
-    var ColorIconItem = (function (_super) {
-        __extends(ColorIconItem, _super);
-        //region Static
-        //endregion
-        //region Fields
-        //endregion
-        /**
-         *
-         */
-        function ColorIconItem(color, size) {
-            if (size === void 0) { size = 16; }
-            _super.call(this);
-            //region Private Methods
-            //endregion
-            //region Methods
-            //endregion
-            //region Events
-            //endregion
-            //region Properties
-            /**
-             * Property field
-             */
-            this._color = null;
-            this.u = 1;
-            this.v = 1;
-            this.size = size;
-            this.color = color;
-        }
-        Object.defineProperty(ColorIconItem.prototype, "color", {
-            /**
-             * Gets or sets the color of the icon
-             *
-             * @returns {Color}
-             */
-            get: function () {
-                return this._color;
-            },
-            /**
-             * Gets or sets the color of the icon
-             *
-             * @param {Color} value
-             */
-            set: function (value) {
-                this._color = value;
-                this.css('background', value.toString());
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return ColorIconItem;
-    })(latte.IconItem);
-    latte.ColorIconItem = ColorIconItem;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -10876,6 +10876,100 @@ var latte;
     })(latte.ItemStack);
     latte.FormItem = FormItem;
 })(latte || (latte = {}));
+/*
+ * Commands available for <c>HtmlEditorItem</c>
+ *
+ * @enum
+ */
+var latte;
+(function (latte) {
+    var HtmlEditorCommands = (function () {
+        function HtmlEditorCommands() {
+        }
+        /**
+         * Swaps selection boldness
+         */
+        HtmlEditorCommands.BOLD = 'bold';
+        /**
+         * Wraps seletion into CODE tag
+         */
+        HtmlEditorCommands.CODE = 'code';
+        /**
+         * Clears all formatting on fonts and colors
+         */
+        HtmlEditorCommands.CLEAR_FORMAT = 'clearformat';
+        /**
+         * Formats the block as something
+         */
+        HtmlEditorCommands.FORMAT_BLOCK = 'formatblock';
+        /**
+         * Swaps selection italics
+         */
+        HtmlEditorCommands.ITALIC = 'italic';
+        /**
+         * Makes selectikon super-script
+         */
+        HtmlEditorCommands.SUPER_SCRIPT = 'superscript';
+        /**
+         * Makes selection sub-script
+         */
+        HtmlEditorCommands.SUB_SCRIPT = 'subscript';
+        /**
+         * Aligns text to left
+         */
+        HtmlEditorCommands.JUSTIFY_LEFT = 'justifyleft';
+        /**
+         * Centers text
+         */
+        HtmlEditorCommands.JUSTIFY_CENTER = 'justifycenter';
+        /**
+         * Aligns text to right
+         */
+        HtmlEditorCommands.JUSTIFY_RIGHT = 'justifyright';
+        /**
+         * Justifies text
+         */
+        HtmlEditorCommands.JUSTIFY_FULL = 'justifyfull';
+        /**
+         * Decreases indent
+         */
+        HtmlEditorCommands.OUTDENT = 'outdent';
+        /**
+         * Increases indent
+         */
+        HtmlEditorCommands.INDENT = 'indent';
+        /**
+         * Shows a dialog to insert HTML
+         */
+        HtmlEditorCommands.INSERT_HTML = 'inserthtml';
+        /**
+         * Inserts an image
+         */
+        HtmlEditorCommands.INSERT_IMAGE = 'insertimage';
+        /**
+         * Inserts a link
+         */
+        HtmlEditorCommands.INSERT_LINK = 'insertlink';
+        /**
+         * Inserts an ordered list
+         */
+        HtmlEditorCommands.INSERT_ORDERED_LIST = 'insertorderedlist';
+        /**
+         * Inserts an unordered list
+         */
+        HtmlEditorCommands.INSERT_UNORDERED_LIST = 'insertunorderedlist';
+        /**
+         * Shows a dialog to insert a YouTube video
+         */
+        HtmlEditorCommands.INSERT_YOUTUBE = 'insertyoutube';
+        /**
+         * Unerlines selection
+         */
+        HtmlEditorCommands.UNDERLINE = 'underline';
+        return HtmlEditorCommands;
+    })();
+    latte.HtmlEditorCommands = HtmlEditorCommands;
+})(latte || (latte = {}));
 var latte;
 (function (latte) {
     /**
@@ -11473,100 +11567,6 @@ var latte;
         return HtmlEditorItem;
     })(latte.ValueItem);
     latte.HtmlEditorItem = HtmlEditorItem;
-})(latte || (latte = {}));
-/*
- * Commands available for <c>HtmlEditorItem</c>
- *
- * @enum
- */
-var latte;
-(function (latte) {
-    var HtmlEditorCommands = (function () {
-        function HtmlEditorCommands() {
-        }
-        /**
-         * Swaps selection boldness
-         */
-        HtmlEditorCommands.BOLD = 'bold';
-        /**
-         * Wraps seletion into CODE tag
-         */
-        HtmlEditorCommands.CODE = 'code';
-        /**
-         * Clears all formatting on fonts and colors
-         */
-        HtmlEditorCommands.CLEAR_FORMAT = 'clearformat';
-        /**
-         * Formats the block as something
-         */
-        HtmlEditorCommands.FORMAT_BLOCK = 'formatblock';
-        /**
-         * Swaps selection italics
-         */
-        HtmlEditorCommands.ITALIC = 'italic';
-        /**
-         * Makes selectikon super-script
-         */
-        HtmlEditorCommands.SUPER_SCRIPT = 'superscript';
-        /**
-         * Makes selection sub-script
-         */
-        HtmlEditorCommands.SUB_SCRIPT = 'subscript';
-        /**
-         * Aligns text to left
-         */
-        HtmlEditorCommands.JUSTIFY_LEFT = 'justifyleft';
-        /**
-         * Centers text
-         */
-        HtmlEditorCommands.JUSTIFY_CENTER = 'justifycenter';
-        /**
-         * Aligns text to right
-         */
-        HtmlEditorCommands.JUSTIFY_RIGHT = 'justifyright';
-        /**
-         * Justifies text
-         */
-        HtmlEditorCommands.JUSTIFY_FULL = 'justifyfull';
-        /**
-         * Decreases indent
-         */
-        HtmlEditorCommands.OUTDENT = 'outdent';
-        /**
-         * Increases indent
-         */
-        HtmlEditorCommands.INDENT = 'indent';
-        /**
-         * Shows a dialog to insert HTML
-         */
-        HtmlEditorCommands.INSERT_HTML = 'inserthtml';
-        /**
-         * Inserts an image
-         */
-        HtmlEditorCommands.INSERT_IMAGE = 'insertimage';
-        /**
-         * Inserts a link
-         */
-        HtmlEditorCommands.INSERT_LINK = 'insertlink';
-        /**
-         * Inserts an ordered list
-         */
-        HtmlEditorCommands.INSERT_ORDERED_LIST = 'insertorderedlist';
-        /**
-         * Inserts an unordered list
-         */
-        HtmlEditorCommands.INSERT_UNORDERED_LIST = 'insertunorderedlist';
-        /**
-         * Shows a dialog to insert a YouTube video
-         */
-        HtmlEditorCommands.INSERT_YOUTUBE = 'insertyoutube';
-        /**
-         * Unerlines selection
-         */
-        HtmlEditorCommands.UNDERLINE = 'underline';
-        return HtmlEditorCommands;
-    })();
-    latte.HtmlEditorCommands = HtmlEditorCommands;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -14086,6 +14086,498 @@ var latte;
 var latte;
 (function (latte) {
     /**
+     * Renders an item to input data from user.
+     **/
+    var InputItem = (function (_super) {
+        __extends(InputItem, _super);
+        /**
+         * Creates the input element
+         **/
+        function InputItem(text, type, value, readOnly, name) {
+            if (text === void 0) { text = ''; }
+            if (type === void 0) { type = ''; }
+            if (value === void 0) { value = null; }
+            if (readOnly === void 0) { readOnly = false; }
+            if (name === void 0) { name = null; }
+            _super.call(this);
+            /**
+             *
+             */
+            this._textWidth = 0.2;
+            this.element.addClass('input');
+            // Create elements
+            this.textElement = $('<div>').addClass('text').appendTo(this.element).hide();
+            this.valueElement = $('<div>').addClass('value').appendTo(this.element);
+            this.separatorElement = $('<div>').addClass('separator').appendTo(this.element);
+            this.element.clear();
+            // Create items
+            this.label = new latte.LabelItem();
+            this.label.appendTo(this.textElement);
+            this.readOnlyLabel = new latte.LabelValueItem();
+            this.readOnlyLabel.appendTo(this.valueElement);
+            this.readOnlyLabel.addClass('read-only');
+            this.readOnlyLabel.visible = (false);
+            // Default props
+            this.type = 'string';
+            this.direction = latte.View.smallScreen ? 1 /* VERTICAL */ : 0 /* HORIZONTAL */;
+            if (text)
+                this.text = (text);
+            if (type)
+                this.type = (type);
+            if (value)
+                this.value = (value);
+            if (readOnly)
+                this.readOnly = (readOnly);
+            if (name)
+                this.name = name;
+        }
+        //region Static
+        /**
+         * Gets a formatted string of the value depending on the type
+         **/
+        InputItem.format = function (value, type, options) {
+            if (options === void 0) { options = null; }
+            switch (type) {
+                case 'boolean':
+                    return value === true || value === 1 ? strings.yes : strings.no;
+                case 'record-combo':
+                    // IMPORTANT: Do not modify call of literal
+                    // This is necessary to compile without data module
+                    var c = new latte['DataRecordCollection']();
+                    // Try to prepare collection
+                    if (options)
+                        try {
+                            c.add(options);
+                        }
+                        catch (e) {
+                            throw new latte.InvalidArgumentEx('value');
+                        }
+                    var r = c.byId(value);
+                    if (r)
+                        return r.getMetadata().name;
+                    return value;
+                case 'combo':
+                    if ((latte._isArray(options) || (typeof options === 'object')) && !latte._undef(options[value]))
+                        return options[value];
+                    return value;
+                    break;
+                default:
+                    return value;
+            }
+        };
+        /**
+         * Creates the input item from a caption and a value item
+         *
+         * @param text
+         * @param item
+         */
+        InputItem.fromItem = function (text, item) {
+            var input = new InputItem(text, 'custom');
+            input.valueItem = item;
+            return input;
+        };
+        //region Methods
+        /**
+         * Checks if the current value is valid for the field <c>type</c>
+         **/
+        InputItem.prototype.isValid = function () {
+            var value = this.value;
+            switch (this.type()) {
+                case "integer":
+                    var allowed = "1234567890";
+                    for (var i = 0; i < value.length; i++)
+                        if (allowed.indexOf(value.charAt(i)) < 0)
+                            return false;
+                    return true;
+                case "number":
+                case "float":
+                    return !isNaN(value);
+            }
+            return true;
+        };
+        /**
+         *
+         **/
+        InputItem.prototype.onLayout = function () {
+            _super.prototype.onLayout.call(this);
+            this.valueItem.onLayout();
+        };
+        InputItem.prototype.onValueChanged = function () {
+            _super.prototype.onValueChanged.call(this);
+            if (this.readOnly) {
+                this.readOnly = this.readOnly;
+            }
+        };
+        /**
+         * Override
+         * @returns {string}
+         */
+        InputItem.prototype.getValueString = function () {
+            if (this.valueItem) {
+                return this.valueItem.valueString;
+            }
+            else {
+                return _super.prototype.getValueString.call(this);
+            }
+        };
+        Object.defineProperty(InputItem.prototype, "direction", {
+            //endregion
+            //region Properties
+            /**
+             * Gets or sets the direction of input.
+             **/
+            get: function () {
+                return this._direction;
+            },
+            /**
+             * Gets or sets the direction of input.
+             **/
+            set: function (value) {
+                if (value !== 1 /* VERTICAL */ && value !== 0 /* HORIZONTAL */)
+                    throw new latte.InvalidArgumentEx('value', value);
+                if (value === 1 /* VERTICAL */) {
+                    this.element.removeClass('horizontal').addClass('vertical');
+                }
+                else {
+                    this.element.removeClass('vertical').addClass('horizontal');
+                }
+                this._direction = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(InputItem.prototype, "name", {
+            /**
+             * Gets or sets the name of the input
+             **/
+            get: function () {
+                return this._name;
+            },
+            /**
+             * Gets or sets the name of the input
+             **/
+            set: function (value) {
+                this._name = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(InputItem.prototype, "options", {
+            /**
+             * Gets or sets the options of the control
+             **/
+            get: function () {
+                return this._options;
+            },
+            /**
+             * Gets or sets the options of the control
+             **/
+            set: function (value) {
+                if (this.valueItem instanceof latte.ComboItem) {
+                    this.valueItem.options = (value);
+                }
+                if (this.valueItem instanceof latte.RadioGroup) {
+                    this.valueItem.options = (value);
+                }
+                this._options = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(InputItem.prototype, "readOnly", {
+            /**
+             * Gets or sets a value indicating if the input is read-only
+             **/
+            get: function () {
+                return this._readOnly;
+            },
+            /**
+             * Gets or sets a value indicating if the input is read-only
+             **/
+            set: function (value) {
+                if (!latte._isBoolean(value))
+                    throw new latte.InvalidArgumentEx('value', value);
+                this._readOnly = value;
+                // Switch visibility
+                this.readOnlyLabel.value = (this.valueItem.valueString);
+                this.readOnlyLabel.visible = (value);
+                this.valueItem.visible = (!value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(InputItem.prototype, "separator", {
+            /**
+             * Gets or sets a value indicating if the input has a separator on bottom
+             **/
+            get: function () {
+                return this._separator;
+            },
+            /**
+             * Gets or sets a value indicating if the input has a separator on bottom
+             **/
+            set: function (value) {
+                if (!latte._isBoolean(value))
+                    throw new latte.InvalidArgumentEx('value', value);
+                this._separator = value;
+                if (value) {
+                    this.separatorElement.show();
+                }
+                else {
+                    this.separatorElement.hide();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(InputItem.prototype, "text", {
+            /**
+             * Gets ors ets the text of the input
+             **/
+            get: function () {
+                return this.label.text;
+            },
+            /**
+             * Gets ors ets the text of the input
+             **/
+            set: function (value) {
+                this.label.text = (value);
+                if (!this.textVisible)
+                    this.textVisible = (true);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(InputItem.prototype, "textVisible", {
+            /**
+             * Gets or sets a value indicating if the text section is visible
+             **/
+            get: function () {
+                return this.textElement.is(':visible');
+            },
+            /**
+             * Gets or sets a value indicating if the text section is visible
+             **/
+            set: function (value) {
+                if (value) {
+                    this.textElement.show();
+                    this.element.removeClass('no-text');
+                }
+                else {
+                    this.textElement.hide();
+                    this.element.addClass('no-text');
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(InputItem.prototype, "textWidth", {
+            /**
+             * Gets or sets the with of the text part. Use value lower than 1 for percentages.
+             * Note that when horizontal input, layout may become affected.
+             *
+             * @returns {number}
+             */
+            get: function () {
+                return this._textWidth;
+            },
+            /**
+             * Gets or sets the with of the text part.
+             * Value must be percent since it must be leveled with value part. Value size will be adjusted
+             * to 5% less large than it should to avoid edge collisions.
+             * Values lower than 1 accepted.
+             * Note that when horizontal input, layout may become affected.
+             *
+             */
+            set: function (value) {
+                this._textWidth = value;
+                if (value < 0) {
+                    this.textElement.css('width', (value * 100) + '%');
+                    this.valueElement.css('width', ((100 - value - 0.05) * 100) + '%');
+                }
+                else {
+                    this.textElement.css('width', (value) + '%');
+                    this.valueElement.css('width', ((value - 0.1)) + '%');
+                }
+                this.onLayout();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(InputItem.prototype, "type", {
+            /**
+             * Gets or sets the type of the input.
+             Possible values are: <c>auto</c> | <c>string</c> | <c>text</c> |
+             <c>html</c> | <c>number</c> | <c>integer</c> | <c>float</c> |
+             <c>boolean</c> | <c>password</c> | <c>md5-password</c> | <c>date</c> |
+             <c>time</c> | <c>enumeration</c> | <c>combo</c> | <c>record-combo</c> | <c>flags</c> |
+             <c>file</c> | <c>image</c> | <c>custom</c>
+    
+             If input is to be a type (function), it must inherit from <c>latte.ui.ValueItem</c>
+             **/
+            get: function () {
+                return this._type;
+            },
+            /**
+             * Gets or sets the type of the input.
+             Possible values are: <c>auto</c> | <c>string</c> | <c>text</c> |
+             <c>html</c> | <c>number</c> | <c>integer</c> | <c>float</c> |
+             <c>boolean</c> | <c>password</c> | <c>md5-password</c> | <c>date</c> |
+             <c>time</c> | <c>enumeration</c> | <c>combo</c> | <c>record-combo</c> |
+             <c>radio</c> | <c>flags</c> | <c>file</c> | <c>image</c> | <c>custom</c>
+    
+             If input is to be a type (function), it must inherit from <c>latte.ui.ValueItem</c>
+             **/
+            set: function (value) {
+                var item = null;
+                this._type = value;
+                if (latte._isFunction(value)) {
+                    item = new value();
+                    //                log("Created %s", value.toString())
+                    if (!(item instanceof latte.ValueItem))
+                        throw new latte.InvalidArgumentEx('value');
+                }
+                else {
+                    switch (value) {
+                        case "auto":
+                        case "label":
+                            item = new latte.LabelValueItem();
+                            break;
+                        case "string":
+                            item = new latte.TextboxItem();
+                            break;
+                        case "text":
+                            item = new latte.TextboxItem();
+                            item.multiline = (true);
+                            break;
+                        case "html":
+                            item = new latte.HtmlEditorItem();
+                            break;
+                        case "number":
+                            item = new latte.TextboxItem();
+                            break;
+                        case "integer":
+                            item = new latte.TextboxItem();
+                            break;
+                        case "float":
+                            item = new latte.TextboxItem();
+                            break;
+                        case "boolean":
+                            item = new latte.CheckboxItem();
+                            break;
+                        case "password":
+                            item = new latte.TextboxItem();
+                            item.password = (true);
+                            break;
+                        case "md5-password":
+                            item = new latte.TextboxItem();
+                            item.password = (true);
+                            break;
+                        case "date":
+                            item = new latte.DatePickerItem();
+                            break;
+                        case "time":
+                            item = new latte.TimePickerItem();
+                            break;
+                        case "datetime":
+                            item = new latte.DatePickerItem();
+                            item.timeVisible = (true);
+                            break;
+                        case "enumeration":
+                            item = new latte.ComboItem();
+                            break;
+                        case "combo":
+                            item = new latte.ComboItem();
+                            break;
+                        case "radio":
+                            item = new latte.RadioGroup();
+                            break;
+                        case "record-combo":
+                            item = new latte.ComboItem();
+                            break;
+                        case "flags":
+                            item = new latte.LabelValueItem();
+                            break;
+                        case "color":
+                            item = new latte.ColorValueItem();
+                            break;
+                        case "file":
+                            item = new latte.FileValueItem();
+                            break;
+                        case "image":
+                            item = new latte.LabelValueItem();
+                            break;
+                        case "custom":
+                            item = new latte.LabelValueItem();
+                            break;
+                        case "record":
+                            // IMPORTANT: Do not modify call of literal
+                            // This is necessary to compile without data module
+                            item = new latte['DataRecordValueItem']();
+                            break;
+                        default:
+                            throw new latte.InvalidArgumentEx('value');
+                    }
+                }
+                if (item instanceof latte.ValueItem) {
+                    this.valueItem = (item);
+                }
+                else {
+                    throw new latte.InvalidCallEx("What the hey?");
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(InputItem.prototype, "value", {
+            /**
+             * Gets or sets the value of the input
+             **/
+            get: function () {
+                return this.valueItem.value;
+            },
+            /**
+             * Gets or sets the value of the input
+             **/
+            set: function (value) {
+                this.valueItem.value = (value);
+                this.readOnlyLabel.value = (this.valueItem.valueString);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(InputItem.prototype, "valueItem", {
+            /**
+             * Gets or sets the valueItem of the input
+             **/
+            get: function () {
+                return this._valueItem;
+            },
+            /**
+             * Gets or sets the valueItem of the input
+             **/
+            set: function (value) {
+                var _this = this;
+                if (!(value instanceof latte.ValueItem))
+                    throw new latte.InvalidArgumentEx('value', value);
+                if (this._valueItem)
+                    this._valueItem.element.remove();
+                this._valueItem = value;
+                this.valueElement.append(value.element);
+                value.valueChanged.add(function () {
+                    _this.onValueChanged();
+                });
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return InputItem;
+    })(latte.ValueItem);
+    latte.InputItem = InputItem;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
      * Label with value property
      **/
     var LabelValueItem = (function (_super) {
@@ -16062,498 +16554,6 @@ var latte;
         return TabView;
     })(latte.AnchorView);
     latte.TabView = TabView;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
-     * Renders an item to input data from user.
-     **/
-    var InputItem = (function (_super) {
-        __extends(InputItem, _super);
-        /**
-         * Creates the input element
-         **/
-        function InputItem(text, type, value, readOnly, name) {
-            if (text === void 0) { text = ''; }
-            if (type === void 0) { type = ''; }
-            if (value === void 0) { value = null; }
-            if (readOnly === void 0) { readOnly = false; }
-            if (name === void 0) { name = null; }
-            _super.call(this);
-            /**
-             *
-             */
-            this._textWidth = 0.2;
-            this.element.addClass('input');
-            // Create elements
-            this.textElement = $('<div>').addClass('text').appendTo(this.element).hide();
-            this.valueElement = $('<div>').addClass('value').appendTo(this.element);
-            this.separatorElement = $('<div>').addClass('separator').appendTo(this.element);
-            this.element.clear();
-            // Create items
-            this.label = new latte.LabelItem();
-            this.label.appendTo(this.textElement);
-            this.readOnlyLabel = new latte.LabelValueItem();
-            this.readOnlyLabel.appendTo(this.valueElement);
-            this.readOnlyLabel.addClass('read-only');
-            this.readOnlyLabel.visible = (false);
-            // Default props
-            this.type = 'string';
-            this.direction = latte.View.smallScreen ? 1 /* VERTICAL */ : 0 /* HORIZONTAL */;
-            if (text)
-                this.text = (text);
-            if (type)
-                this.type = (type);
-            if (value)
-                this.value = (value);
-            if (readOnly)
-                this.readOnly = (readOnly);
-            if (name)
-                this.name = name;
-        }
-        //region Static
-        /**
-         * Gets a formatted string of the value depending on the type
-         **/
-        InputItem.format = function (value, type, options) {
-            if (options === void 0) { options = null; }
-            switch (type) {
-                case 'boolean':
-                    return value === true || value === 1 ? strings.yes : strings.no;
-                case 'record-combo':
-                    // IMPORTANT: Do not modify call of literal
-                    // This is necessary to compile without data module
-                    var c = new latte['DataRecordCollection']();
-                    // Try to prepare collection
-                    if (options)
-                        try {
-                            c.add(options);
-                        }
-                        catch (e) {
-                            throw new latte.InvalidArgumentEx('value');
-                        }
-                    var r = c.byId(value);
-                    if (r)
-                        return r.getMetadata().name;
-                    return value;
-                case 'combo':
-                    if ((latte._isArray(options) || (typeof options === 'object')) && !latte._undef(options[value]))
-                        return options[value];
-                    return value;
-                    break;
-                default:
-                    return value;
-            }
-        };
-        /**
-         * Creates the input item from a caption and a value item
-         *
-         * @param text
-         * @param item
-         */
-        InputItem.fromItem = function (text, item) {
-            var input = new InputItem(text, 'custom');
-            input.valueItem = item;
-            return input;
-        };
-        //region Methods
-        /**
-         * Checks if the current value is valid for the field <c>type</c>
-         **/
-        InputItem.prototype.isValid = function () {
-            var value = this.value;
-            switch (this.type()) {
-                case "integer":
-                    var allowed = "1234567890";
-                    for (var i = 0; i < value.length; i++)
-                        if (allowed.indexOf(value.charAt(i)) < 0)
-                            return false;
-                    return true;
-                case "number":
-                case "float":
-                    return !isNaN(value);
-            }
-            return true;
-        };
-        /**
-         *
-         **/
-        InputItem.prototype.onLayout = function () {
-            _super.prototype.onLayout.call(this);
-            this.valueItem.onLayout();
-        };
-        InputItem.prototype.onValueChanged = function () {
-            _super.prototype.onValueChanged.call(this);
-            if (this.readOnly) {
-                this.readOnly = this.readOnly;
-            }
-        };
-        /**
-         * Override
-         * @returns {string}
-         */
-        InputItem.prototype.getValueString = function () {
-            if (this.valueItem) {
-                return this.valueItem.valueString;
-            }
-            else {
-                return _super.prototype.getValueString.call(this);
-            }
-        };
-        Object.defineProperty(InputItem.prototype, "direction", {
-            //endregion
-            //region Properties
-            /**
-             * Gets or sets the direction of input.
-             **/
-            get: function () {
-                return this._direction;
-            },
-            /**
-             * Gets or sets the direction of input.
-             **/
-            set: function (value) {
-                if (value !== 1 /* VERTICAL */ && value !== 0 /* HORIZONTAL */)
-                    throw new latte.InvalidArgumentEx('value', value);
-                if (value === 1 /* VERTICAL */) {
-                    this.element.removeClass('horizontal').addClass('vertical');
-                }
-                else {
-                    this.element.removeClass('vertical').addClass('horizontal');
-                }
-                this._direction = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(InputItem.prototype, "name", {
-            /**
-             * Gets or sets the name of the input
-             **/
-            get: function () {
-                return this._name;
-            },
-            /**
-             * Gets or sets the name of the input
-             **/
-            set: function (value) {
-                this._name = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(InputItem.prototype, "options", {
-            /**
-             * Gets or sets the options of the control
-             **/
-            get: function () {
-                return this._options;
-            },
-            /**
-             * Gets or sets the options of the control
-             **/
-            set: function (value) {
-                if (this.valueItem instanceof latte.ComboItem) {
-                    this.valueItem.options = (value);
-                }
-                if (this.valueItem instanceof latte.RadioGroup) {
-                    this.valueItem.options = (value);
-                }
-                this._options = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(InputItem.prototype, "readOnly", {
-            /**
-             * Gets or sets a value indicating if the input is read-only
-             **/
-            get: function () {
-                return this._readOnly;
-            },
-            /**
-             * Gets or sets a value indicating if the input is read-only
-             **/
-            set: function (value) {
-                if (!latte._isBoolean(value))
-                    throw new latte.InvalidArgumentEx('value', value);
-                this._readOnly = value;
-                // Switch visibility
-                this.readOnlyLabel.value = (this.valueItem.valueString);
-                this.readOnlyLabel.visible = (value);
-                this.valueItem.visible = (!value);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(InputItem.prototype, "separator", {
-            /**
-             * Gets or sets a value indicating if the input has a separator on bottom
-             **/
-            get: function () {
-                return this._separator;
-            },
-            /**
-             * Gets or sets a value indicating if the input has a separator on bottom
-             **/
-            set: function (value) {
-                if (!latte._isBoolean(value))
-                    throw new latte.InvalidArgumentEx('value', value);
-                this._separator = value;
-                if (value) {
-                    this.separatorElement.show();
-                }
-                else {
-                    this.separatorElement.hide();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(InputItem.prototype, "text", {
-            /**
-             * Gets ors ets the text of the input
-             **/
-            get: function () {
-                return this.label.text;
-            },
-            /**
-             * Gets ors ets the text of the input
-             **/
-            set: function (value) {
-                this.label.text = (value);
-                if (!this.textVisible)
-                    this.textVisible = (true);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(InputItem.prototype, "textVisible", {
-            /**
-             * Gets or sets a value indicating if the text section is visible
-             **/
-            get: function () {
-                return this.textElement.is(':visible');
-            },
-            /**
-             * Gets or sets a value indicating if the text section is visible
-             **/
-            set: function (value) {
-                if (value) {
-                    this.textElement.show();
-                    this.element.removeClass('no-text');
-                }
-                else {
-                    this.textElement.hide();
-                    this.element.addClass('no-text');
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(InputItem.prototype, "textWidth", {
-            /**
-             * Gets or sets the with of the text part. Use value lower than 1 for percentages.
-             * Note that when horizontal input, layout may become affected.
-             *
-             * @returns {number}
-             */
-            get: function () {
-                return this._textWidth;
-            },
-            /**
-             * Gets or sets the with of the text part.
-             * Value must be percent since it must be leveled with value part. Value size will be adjusted
-             * to 5% less large than it should to avoid edge collisions.
-             * Values lower than 1 accepted.
-             * Note that when horizontal input, layout may become affected.
-             *
-             */
-            set: function (value) {
-                this._textWidth = value;
-                if (value < 0) {
-                    this.textElement.css('width', (value * 100) + '%');
-                    this.valueElement.css('width', ((100 - value - 0.05) * 100) + '%');
-                }
-                else {
-                    this.textElement.css('width', (value) + '%');
-                    this.valueElement.css('width', ((value - 0.1)) + '%');
-                }
-                this.onLayout();
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(InputItem.prototype, "type", {
-            /**
-             * Gets or sets the type of the input.
-             Possible values are: <c>auto</c> | <c>string</c> | <c>text</c> |
-             <c>html</c> | <c>number</c> | <c>integer</c> | <c>float</c> |
-             <c>boolean</c> | <c>password</c> | <c>md5-password</c> | <c>date</c> |
-             <c>time</c> | <c>enumeration</c> | <c>combo</c> | <c>record-combo</c> | <c>flags</c> |
-             <c>file</c> | <c>image</c> | <c>custom</c>
-    
-             If input is to be a type (function), it must inherit from <c>latte.ui.ValueItem</c>
-             **/
-            get: function () {
-                return this._type;
-            },
-            /**
-             * Gets or sets the type of the input.
-             Possible values are: <c>auto</c> | <c>string</c> | <c>text</c> |
-             <c>html</c> | <c>number</c> | <c>integer</c> | <c>float</c> |
-             <c>boolean</c> | <c>password</c> | <c>md5-password</c> | <c>date</c> |
-             <c>time</c> | <c>enumeration</c> | <c>combo</c> | <c>record-combo</c> |
-             <c>radio</c> | <c>flags</c> | <c>file</c> | <c>image</c> | <c>custom</c>
-    
-             If input is to be a type (function), it must inherit from <c>latte.ui.ValueItem</c>
-             **/
-            set: function (value) {
-                var item = null;
-                this._type = value;
-                if (latte._isFunction(value)) {
-                    item = new value();
-                    //                log("Created %s", value.toString())
-                    if (!(item instanceof latte.ValueItem))
-                        throw new latte.InvalidArgumentEx('value');
-                }
-                else {
-                    switch (value) {
-                        case "auto":
-                        case "label":
-                            item = new latte.LabelValueItem();
-                            break;
-                        case "string":
-                            item = new latte.TextboxItem();
-                            break;
-                        case "text":
-                            item = new latte.TextboxItem();
-                            item.multiline = (true);
-                            break;
-                        case "html":
-                            item = new latte.HtmlEditorItem();
-                            break;
-                        case "number":
-                            item = new latte.TextboxItem();
-                            break;
-                        case "integer":
-                            item = new latte.TextboxItem();
-                            break;
-                        case "float":
-                            item = new latte.TextboxItem();
-                            break;
-                        case "boolean":
-                            item = new latte.CheckboxItem();
-                            break;
-                        case "password":
-                            item = new latte.TextboxItem();
-                            item.password = (true);
-                            break;
-                        case "md5-password":
-                            item = new latte.TextboxItem();
-                            item.password = (true);
-                            break;
-                        case "date":
-                            item = new latte.DatePickerItem();
-                            break;
-                        case "time":
-                            item = new latte.TimePickerItem();
-                            break;
-                        case "datetime":
-                            item = new latte.DatePickerItem();
-                            item.timeVisible = (true);
-                            break;
-                        case "enumeration":
-                            item = new latte.ComboItem();
-                            break;
-                        case "combo":
-                            item = new latte.ComboItem();
-                            break;
-                        case "radio":
-                            item = new latte.RadioGroup();
-                            break;
-                        case "record-combo":
-                            item = new latte.ComboItem();
-                            break;
-                        case "flags":
-                            item = new latte.LabelValueItem();
-                            break;
-                        case "color":
-                            item = new latte.ColorValueItem();
-                            break;
-                        case "file":
-                            item = new latte.FileValueItem();
-                            break;
-                        case "image":
-                            item = new latte.LabelValueItem();
-                            break;
-                        case "custom":
-                            item = new latte.LabelValueItem();
-                            break;
-                        case "record":
-                            // IMPORTANT: Do not modify call of literal
-                            // This is necessary to compile without data module
-                            item = new latte['DataRecordValueItem']();
-                            break;
-                        default:
-                            throw new latte.InvalidArgumentEx('value');
-                    }
-                }
-                if (item instanceof latte.ValueItem) {
-                    this.valueItem = (item);
-                }
-                else {
-                    throw new latte.InvalidCallEx("What the hey?");
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(InputItem.prototype, "value", {
-            /**
-             * Gets or sets the value of the input
-             **/
-            get: function () {
-                return this.valueItem.value;
-            },
-            /**
-             * Gets or sets the value of the input
-             **/
-            set: function (value) {
-                this.valueItem.value = (value);
-                this.readOnlyLabel.value = (this.valueItem.valueString);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(InputItem.prototype, "valueItem", {
-            /**
-             * Gets or sets the valueItem of the input
-             **/
-            get: function () {
-                return this._valueItem;
-            },
-            /**
-             * Gets or sets the valueItem of the input
-             **/
-            set: function (value) {
-                var _this = this;
-                if (!(value instanceof latte.ValueItem))
-                    throw new latte.InvalidArgumentEx('value', value);
-                if (this._valueItem)
-                    this._valueItem.element.remove();
-                this._valueItem = value;
-                this.valueElement.append(value.element);
-                value.valueChanged.add(function () {
-                    _this.onValueChanged();
-                });
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return InputItem;
-    })(latte.ValueItem);
-    latte.InputItem = InputItem;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {

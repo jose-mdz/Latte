@@ -12,15 +12,13 @@
 
     <!-- GROUPS PANEL -->
     <div data-property="listGroups" class="panel-groups">
-        <div class="list-item" data-class="CategoryListItem"><span data-bind="name">All Contacts</span></div>
-        <div class="list-item-header" data-class="ListItemHeader">iCloud</div>
-        <div class="list-item">All iCloud</div>
-        <div class="list-item">Group A</div>
-        <div class="list-item">Group B</div>
-        <div class="list-item-header">Facebook</div>
-        <div class="list-item">All Facebook</div>
-        <div class="list-item-header">Smart Groups</div>
-        <div class="list-item">Last Import</div>
+        <div class="list-item" data-property="allContactsItem" data-event="click:loadAllContacts">All Contacts</div>
+        <div class="list-item-header">My Contacts</div>
+        <div data-property="myContacts">
+            <div class="list-item" data-class="CategoryListItem"><span data-bind="name">Friends</span></div>
+            <div class="list-item">Family</div>
+            <div class="list-item">Other</div>
+        </div>
     </div>
 
     <!-- NAMES LIST PANEL -->
@@ -31,7 +29,7 @@
 
         <div data-property="listPeople" class="list">
             <div class="no-items">No contacts found</div>
-            <div class="list-item-header">A</div>
+            <div class="list-item-header" data-class="ListItemHeaderBase">A</div>
             <div class="list-item" data-class="PersonListItem"><span data-bind="fullName">Alchemist Joe</span></div>
             <div class="list-item selected">Alchemist Joe</div>
             <div class="list-item">Alchemist Joe</div>
@@ -77,40 +75,44 @@
 
     <!-- CONTACT DETAIL PANEL -->
     <div data-property="panelDetail" class="panel-detail">
-        <div data-property="detailHeader" class="header">
-            <div class="picture-side">
-                <div class="picture">
-                    <div data-property="lblInitials" data-bind="initials">AJ</div>
+        <div data-property="personWrapper">
+            <div data-class="PersonViewBase">
+                <div data-property="detailHeader" class="header">
+                    <div class="picture-side">
+                        <div class="picture">
+                            <div data-property="lblInitials" data-bind="initials">AJ</div>
+                        </div>
+                    </div>
+                    <div class="name-side">
+                        <div class="name-row">
+                            <div data-property="lblFirstName" data-event="focus: lblFirstName_Focus" data-bind="name" class="name">Alchemist</div>
+                            <div data-property="lblLastName" data-bind="lastname" data-event="focus: lblLastName_Focus" class="last">Joe</div>
+                        </div>
+                        <div data-property="lblDescription" data-bind="company" class="description">Superworks, Inc.</div>
+                    </div>
                 </div>
-            </div>
-            <div class="name-side">
-                <div class="name-row">
-                    <div data-property="lblFirstName" data-event="lblFirstName_Focus" data-bind="name" class="name">Alchemist</div>
-                    <div data-property="lblLastName" data-bind="lastname" data-event="lblLastName_Focus" class="last">Joe</div>
+                <div data-property="detailRows" class="rows">
+                    <div class="data">
+                        <div class="name">email</div>
+                        <div data-bind="email" class="value">a@a.com</div>
+                    </div>
+                    <div class="data">
+                        <div class="name">phone</div>
+                        <div data-bind="phone" class="value">+(55) 123456789</div>
+                    </div>
+                    <div class="data">
+                        <div class="name">mobile</div>
+                        <div data-bind="mobile" class="value">+(54) 123456789</div>
+                    </div>
+                    <div class="data">
+                        <div class="name">address</div>
+                        <div data-bind="address" class="value">Elm Street 1090, TX, PA 9875</div>
+                    </div>
+                    <div class="data">
+                        <div class="name">note</div>
+                        <div data-bind="note" class="value">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus consequat molestie enim, vel viverra odio malesuada quis. Nulla gravida vulputate nulla, non egestas elit pretium et. </div>
+                    </div>
                 </div>
-                <div data-property="lblDescription" data-bind="company" class="description">Superworks, Inc.</div>
-            </div>
-        </div>
-        <div data-property="detailRows" class="rows">
-            <div class="data">
-                <div class="name">email</div>
-                <div data-bind="email" class="value">a@a.com</div>
-            </div>
-            <div class="data">
-                <div class="name">phone</div>
-                <div data-bind="phone" class="value">+(55) 123456789</div>
-            </div>
-            <div class="data">
-                <div class="name">mobile</div>
-                <div data-bind="mobile" class="value">+(54) 123456789</div>
-            </div>
-            <div class="data">
-                <div class="name">address</div>
-                <div data-bind="address" class="value">Elm Street 1090, TX, PA 9875</div>
-            </div>
-            <div class="data">
-                <div class="name">note</div>
-                <div data-bind="note" class="value">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus consequat molestie enim, vel viverra odio malesuada quis. Nulla gravida vulputate nulla, non egestas elit pretium et. </div>
             </div>
         </div>
         <div data-property="detailToolbar" class="toolbar">

@@ -44,9 +44,12 @@ var latte;
          */
         Element.fromBank = function (key) {
             if (!latte._undef(latte['globalViewsBank']) && !latte._undef(latte['globalViewsBank'][key])) {
-                var e = document.createElement('div');
-                e.innerHTML = latte['globalViewsBank'][key];
-                return e.children[0];
+                // Bring from bank into a wrap
+                var wrap = document.createElement('div');
+                wrap.innerHTML = latte['globalViewsBank'][key];
+                // Obtain generated element
+                var e = wrap.children[0];
+                return e;
             }
             throw latte.sprintf("View %s not found in bank.", key);
         };
@@ -138,6 +141,14 @@ var latte;
             }
         };
         //region Private Methods
+        Element.prototype.addBindedElement = function (e) {
+            for (var i = 0; i < this.bindedElements.length; i++) {
+                if (this.bindedElements[i] === e) {
+                    return;
+                }
+            }
+            this.bindedElements.push(e);
+        };
         //endregion
         //region Methods
         /**
@@ -296,8 +307,9 @@ var latte;
          * Binds the element to the specified object
          * @param object
          */
-        Element.prototype.bind = function (object) {
+        Element.prototype.bind = function (object, hide) {
             var _this = this;
+            if (hide === void 0) { hide = false; }
             var list = this.element.querySelectorAll('[data-bind]');
             for (var i = 0; i < list.length; i++) {
                 (function (node) {
@@ -307,9 +319,10 @@ var latte;
                     var prop = e.element.getAttribute('data-bind');
                     // TODO: Criteria for elementProperty, elementEvent, type, DataAdapter
                     var bind = new latte.DataBind(e, 'text', object, prop, 1 /* AUTO */, null, 'input', latte.sprintf('%sChanged', prop));
-                    _this._dataBind = bind;
-                    _this.bindedElements.push(e);
-                    //debugger;
+                    if (!hide) {
+                        _this.dataBinds.push(bind);
+                    }
+                    _this.addBindedElement(e);
                 })(list[i]);
             }
             var elist = this.element.querySelectorAll('[data-event]');
@@ -323,7 +336,7 @@ var latte;
                         if (parts.length == 2) {
                             var bind = new latte.EventBind(e, parts[0].trim(), object, parts[1].trim());
                             e.eventBinds.push(bind);
-                            _this.bindedElements.push(e);
+                            _this.addBindedElement(e);
                         }
                         else {
                             latte.log("[data-event] Bad Syntax: " + binds[j]);
@@ -693,14 +706,17 @@ var latte;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Element.prototype, "dataBind", {
+        Object.defineProperty(Element.prototype, "dataBinds", {
             /**
-             * Gets the current DataBind of the element (If any)
+             * Gets the data binds of the element
              *
-             * @returns {DataBind}
+             * @returns {DataBind[]}
              */
             get: function () {
-                return this._dataBind;
+                if (!this._dataBinds) {
+                    this._dataBinds = [];
+                }
+                return this._dataBinds;
             },
             enumerable: true,
             configurable: true
@@ -1681,6 +1697,31 @@ var latte;
     latte.Textbox = Textbox;
 })(latte || (latte = {}));
 /**
+ * Created by josemanuel on 5/29/15.
+ */
+var latte;
+(function (latte) {
+    /**
+     *
+     */
+    var CollectionDataBind = (function () {
+        //region Static
+        //endregion
+        //region Fields
+        //endregion
+        /**
+         * Creates and automatically sets up the binding
+         */
+        function CollectionDataBind(element, elementProperty, collection, type) {
+            if (type === void 0) { type = 1 /* AUTO */; }
+            collection.each(function (object) {
+            });
+        }
+        return CollectionDataBind;
+    })();
+    latte.CollectionDataBind = CollectionDataBind;
+})(latte || (latte = {}));
+/**
  * Created by josemanuel on 5/28/15.
  */
 var latte;
@@ -1774,12 +1815,7 @@ var latte;
             this._elementEvent = elementEvent;
             this._recordEvent = recordEvent;
             this._type = type;
-            if (this.lastElementListener) {
-                this.lastElement.element.removeEventListener(this.lastElementEvent, this.lastElementListener);
-            }
-            if (this.lastRecordListener) {
-                this.lastRecord[this.lastRecordEvent].remove(this.lastRecordListener);
-            }
+            this.uninstall();
             if (this.type == 1 /* AUTO */ || this.type == 3 /* AUTO_COMMIT */) {
                 if (this.element instanceof latte.Element && latte._isString(this.elementEvent)) {
                     this.lastElement = this.element;
@@ -1805,10 +1841,23 @@ var latte;
                     this.record[this.recordEvent].add(this.lastRecordListener);
                 }
                 else {
-                    latte.log(latte.sprintf("Warning: Binding -> apply not possible (Element: %s; %s; elementProperty: %s; recordProperty: %s).", String(this.element), String(this.record), String(this.elementProperty), String(this.recordProperty)));
+                    if (!latte._undef(this.record[this.recordProperty])) {
+                        latte.log(latte.sprintf("Warning: Binding -> apply not possible (Element: %s; Record: %s; elementProperty: %s; recordProperty: %s).", String(this.element), String(this.record), String(this.elementProperty), String(this.recordProperty)));
+                    }
                 }
             }
             this.apply();
+        };
+        /**
+         * Uninstalls the last assigned listeners
+         */
+        DataBind.prototype.uninstall = function () {
+            if (this.lastElementListener) {
+                this.lastElement.element.removeEventListener(this.lastElementEvent, this.lastElementListener);
+            }
+            if (this.lastRecordListener) {
+                this.lastRecord[this.lastRecordEvent].remove(this.lastRecordListener);
+            }
         };
         //endregion
         //region Methods
@@ -2068,7 +2117,6 @@ var latte;
                         _this.record[_this.recordMethod].apply(_this.record, args);
                     }
                     else {
-                        latte.log(latte.sprintf("Warning: Method %s is not present in %s", _this.recordMethod, String(_this.record)));
                     }
                 });
             }
@@ -2082,7 +2130,6 @@ var latte;
                         _this.record[_this.recordMethod].apply(_this.record, args);
                     }
                     else {
-                        latte.log(latte.sprintf("Warning: Method %s is not present in %s", _this.recordMethod, String(_this.record)));
                     }
                 });
             }

@@ -365,7 +365,7 @@ module latte{
          * @returns {string}
          */
         toString(): string{
-            return sprintf("%s: %s", this.recordType, JSON.stringify(this.getFields()));
+            return sprintf("[%s: %s]", this.recordType, this.recordId);
         }
 
         /**

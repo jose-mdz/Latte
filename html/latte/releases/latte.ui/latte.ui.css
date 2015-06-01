@@ -20,6 +20,14 @@
     Description:
         Purpose of the stylesheet follows.
 *//* 
+    Document   : IconItem
+    Created on : Aug 3, 2012, 9:05:12 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
     Document   : Item
     Created on : Aug 3, 2012, 9:05:05 AM
     Author     : josemanuel
@@ -32,14 +40,6 @@
     display: block;
     float: left;
 }
-/* 
-    Document   : IconItem
-    Created on : Aug 3, 2012, 9:05:12 AM
-    Author     : josemanuel
-    Description:
-        Purpose of the stylesheet follows.
-*/
-
 /* 
     Document   : SeparatorItem
     Created on : Aug 6, 2012, 12:52:06 PM
@@ -331,35 +331,6 @@
     background-color: #EAEFF8;
     background-color: rgba(87, 141, 217, 0.1);
 }/* 
-    Document   : FormItem
-    Created on : Feb 3, 2013, 8:52:46 AM
-    Author     : menendezpoo
-    Description:
-        Purpose of the stylesheet follows.
-*/
-.latte-item.form {
-    padding: 20px;
-
-}
-
-.latte-item.form.with-face{
-    background: white;
-    border: solid 1px silver;
-    border-radius: 5px;
-}
-
-.latte-item.form > .container > .latte-item{
-    margin-bottom: 15px;
-}
-
-.latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox{
-    float: none;
-}
-
-.latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox input,
-.latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox textarea{
-    width: 100%;
-}/* 
     Document   : HtmlEditorItem
     Created on : Feb 6, 2013, 3:34:32 PM
     Author     : josemanuel
@@ -398,6 +369,35 @@ body.html-editor table{
 body.html-editor td{
     border: solid 1px silver;
     padding: 8px;
+}/* 
+    Document   : FormItem
+    Created on : Feb 3, 2013, 8:52:46 AM
+    Author     : menendezpoo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.latte-item.form {
+    padding: 20px;
+
+}
+
+.latte-item.form.with-face{
+    background: white;
+    border: solid 1px silver;
+    border-radius: 5px;
+}
+
+.latte-item.form > .container > .latte-item{
+    margin-bottom: 15px;
+}
+
+.latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox{
+    float: none;
+}
+
+.latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox input,
+.latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox textarea{
+    width: 100%;
 }/* 
     Document   : ItemStack
     Created on : Sep 24, 2012, 12:55:04 PM
@@ -1096,20 +1096,6 @@ body.html-editor td{
     /*float: none;*/
     margin-top: 5px;
 }/* 
-    Document   : DatePickerItem
-    Created on : Feb 27, 2013, 1:09:58 PM
-    Author     : josemanuel
-    Description:
-        Purpose of the stylesheet follows.
-*/
-.latte-item.date-picker .latte-item.button{
-    margin-right: 2px;
-}
-
-.latte-item.date-picker .latte-item.value.checkbox{
-    margin-top: 5px;
-    margin-right: 5px;
-}/* 
     Document   : InputItem
     Created on : Aug 13, 2012, 11:57:01 AM
     Author     : josemanuel
@@ -1179,15 +1165,19 @@ body.html-editor td{
     clear: both;
 }
 /* 
-    Document   : LabelValueItem
-    Created on : Jan 22, 2013, 2:49:19 PM
+    Document   : DatePickerItem
+    Created on : Feb 27, 2013, 1:09:58 PM
     Author     : josemanuel
     Description:
         Purpose of the stylesheet follows.
 */
+.latte-item.date-picker .latte-item.button{
+    margin-right: 2px;
+}
 
-.latte-item.label-value .latte-item.label .label-content{
-    white-space: pre-wrap;
+.latte-item.date-picker .latte-item.value.checkbox{
+    margin-top: 5px;
+    margin-right: 5px;
 }/* 
     Document   : ProgressItem
     Created on : Sep 24, 2012, 4:50:37 PM
@@ -1218,6 +1208,16 @@ body.html-editor td{
 .latte-item.radio > .latte-item.label{
     /*float: none;*/
     cursor: default;
+}/* 
+    Document   : LabelValueItem
+    Created on : Jan 22, 2013, 2:49:19 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.label-value .latte-item.label .label-content{
+    white-space: pre-wrap;
 }/* 
     Document   : TextboxItem
     Created on : Jan 16, 2013, 2:32:43 PM

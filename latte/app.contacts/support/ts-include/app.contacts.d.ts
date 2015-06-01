@@ -60,29 +60,6 @@ declare module latte {
          */
         onNameChanged(): void;
         /**
-         * Database field: varchar(128)
-         */
-        _group: any;
-        /**
-         * Gets or sets the value of the group field of type varchar(128)
-         */
-        /**
-         * Gets or sets the value of the group field of type varchar(128)
-         */
-        group: any;
-        /**
-         * Back field for event
-         */
-        _groupChanged: LatteEvent;
-        /**
-         * Gets an event raised when the value of the group property changes
-         */
-        groupChanged: LatteEvent;
-        /**
-         * Raises the <c>groupChanged</c> event
-         */
-        onGroupChanged(): void;
-        /**
          * Database field: int(11)
          */
         _i: any;
@@ -395,6 +372,29 @@ declare module latte {
          */
         onCompanyChanged(): void;
         /**
+         * Database field: varchar(128)
+         */
+        _email: any;
+        /**
+         * Gets or sets the value of the email field of type varchar(128)
+         */
+        /**
+         * Gets or sets the value of the email field of type varchar(128)
+         */
+        email: any;
+        /**
+         * Back field for event
+         */
+        _emailChanged: LatteEvent;
+        /**
+         * Gets an event raised when the value of the email property changes
+         */
+        emailChanged: LatteEvent;
+        /**
+         * Raises the <c>emailChanged</c> event
+         */
+        onEmailChanged(): void;
+        /**
         * Override. Gets data about the fields of the record.
         **/
         onGetFields(): any;
@@ -403,30 +403,24 @@ declare module latte {
 }
 declare module latte {
     class ContactsMainViewBase extends Element<HTMLDivElement> {
+        private _allContactsItem;
+        allContactsItem: Element<HTMLDivElement>;
         private _btnAdd;
         btnAdd: Element<HTMLDivElement>;
         private _btnEdit;
         btnEdit: Element<HTMLDivElement>;
-        private _detailHeader;
-        detailHeader: Element<HTMLDivElement>;
-        private _detailRows;
-        detailRows: Element<HTMLDivElement>;
         private _detailToolbar;
         detailToolbar: Element<HTMLDivElement>;
-        private _lblDescription;
-        lblDescription: Element<HTMLDivElement>;
-        private _lblFirstName;
-        lblFirstName: Element<HTMLDivElement>;
-        private _lblInitials;
-        lblInitials: Element<HTMLDivElement>;
-        private _lblLastName;
-        lblLastName: Element<HTMLDivElement>;
         private _listGroups;
         listGroups: Element<HTMLDivElement>;
         private _listPeople;
         listPeople: Element<HTMLDivElement>;
+        private _myContacts;
+        myContacts: Element<HTMLDivElement>;
         private _panelDetail;
         panelDetail: Element<HTMLDivElement>;
+        private _personWrapper;
+        personWrapper: Element<HTMLDivElement>;
         private _txtSearch;
         txtSearch: Textbox;
         private static _Model;
@@ -442,7 +436,7 @@ declare module latte {
     }
 }
 declare module latte {
-    class ListItemHeader extends Element<HTMLDivElement> {
+    class ListItemHeaderBase extends Element<HTMLDivElement> {
         private static _Model;
         static getModel(): Element<HTMLDivElement>;
         constructor();
@@ -456,11 +450,31 @@ declare module latte {
     }
 }
 declare module latte {
+    class PersonViewBase extends Element<HTMLDivElement> {
+        private _detailHeader;
+        detailHeader: Element<HTMLDivElement>;
+        private _detailRows;
+        detailRows: Element<HTMLDivElement>;
+        private _lblDescription;
+        lblDescription: Element<HTMLDivElement>;
+        private _lblFirstName;
+        lblFirstName: Element<HTMLDivElement>;
+        private _lblInitials;
+        lblInitials: Element<HTMLDivElement>;
+        private _lblLastName;
+        lblLastName: Element<HTMLDivElement>;
+        private static _Model;
+        static getModel(): Element<HTMLDivElement>;
+        constructor();
+    }
+}
+declare module latte {
     var globalViewsBank: {
         "ContactsMainViewBase": string;
         "CategoryListItem": string;
-        "ListItemHeader": string;
+        "ListItemHeaderBase": string;
         "PersonListItem": string;
+        "PersonViewBase": string;
     };
 }
 /**
@@ -500,27 +514,19 @@ declare module latte {
         /**
          * Event Handler.
          */
-        lblFirstName_Focus(): void;
-        /**
-         * Event Handler.
-         */
-        lblLastName_Focus(): void;
-        /**
-         * Event Handler.
-         */
         loadCategories(): void;
+        /**
+         * Loads contacts of all categories
+         */
+        loadAllContacts(): void;
         /**
          * Loads the contacts of the specified filters
          */
         loadContacts(): void;
         /**
-         * Raises the <c>editMode</c> event
+         * Raises the <c>personView</c> event
          */
-        onEditModeChanged(): void;
-        /**
-         * Raises the <c>person</c> event
-         */
-        onPersonChanged(): void;
+        onPersonViewChanged(): void;
         /**
          * Raises the <c>selectedCategory</c> event
          */
@@ -528,23 +534,13 @@ declare module latte {
         /**
          * Back field for event
          */
-        private _editModeChanged;
+        private _personViewChanged;
         /**
-         * Gets an event raised when the value of the editMode property changes
+         * Gets an event raised when the value of the personView property changes
          *
          * @returns {LatteEvent}
          */
-        editModeChanged: LatteEvent;
-        /**
-         * Back field for event
-         */
-        private _personChanged;
-        /**
-         * Gets an event raised when the value of the person property changes
-         *
-         * @returns {LatteEvent}
-         */
-        personChanged: LatteEvent;
+        personViewChanged: LatteEvent;
         /**
          * Back field for event
          */
@@ -568,6 +564,21 @@ declare module latte {
         /**
          * Property field
          */
+        private _personView;
+        /**
+         * Gets or sets the person view
+         *
+         * @returns {PersonView}
+         */
+        /**
+         * Gets or sets the person view
+         *
+         * @param {PersonView} value
+         */
+        personView: PersonView;
+        /**
+         * Property field
+         */
         private _selectedCategory;
         /**
          * Gets or sets the currently selected category, if any.
@@ -580,6 +591,84 @@ declare module latte {
          * @param {Category} value
          */
         selectedCategory: Category;
+    }
+}
+/**
+ * Created by josemanuel on 5/29/15.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class ListItemHeader extends ListItemHeaderBase {
+        /**
+         * Creates the header with the specified text
+         */
+        constructor(text?: string);
+    }
+}
+/**
+ * Created by josemanuel on 5/27/15.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class Main {
+        /**
+         *
+         */
+        constructor();
+    }
+}
+/**
+ * Created by josemanuel on 5/29/15.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class PersonView extends PersonViewBase {
+        /**
+         *
+         */
+        constructor(person: Person);
+        /**
+         * Event Handler.
+         */
+        lblFirstName_Focus(): void;
+        /**
+         * Event Handler.
+         */
+        lblLastName_Focus(): void;
+        /**
+         * Raises the <c>editMode</c> event
+         */
+        onEditModeChanged(): void;
+        /**
+         * Raises the <c>person</c> event
+         */
+        onPersonChanged(): void;
+        /**
+         * Back field for event
+         */
+        private _editModeChanged;
+        /**
+         * Gets an event raised when the value of the editMode property changes
+         *
+         * @returns {LatteEvent}
+         */
+        editModeChanged: LatteEvent;
+        /**
+         * Back field for event
+         */
+        private _personChanged;
+        /**
+         * Gets an event raised when the value of the person property changes
+         *
+         * @returns {LatteEvent}
+         */
+        personChanged: LatteEvent;
         /**
          * Property field
          */
@@ -619,7 +708,7 @@ declare module latte {
     /**
      *
      */
-    class Main {
+    class Category extends categoryBase {
         /**
          *
          */
@@ -685,19 +774,5 @@ declare module latte {
          * @returns {string}
          */
         initials: string;
-    }
-}
-/**
- * Created by josemanuel on 5/27/15.
- */
-declare module latte {
-    /**
-     *
-     */
-    class Category extends categoryBase {
-        /**
-         *
-         */
-        constructor();
     }
 }

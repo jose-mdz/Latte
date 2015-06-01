@@ -97,22 +97,6 @@ declare module latte {
          **/
         metadata: any;
         /**
-         * Raised before a form for this record is created.
-         **/
-        _formCreating: LatteEvent;
-        /**
-         * Raised when a form for this record has been created and filled with record fields.
-         **/
-        _formCreated: LatteEvent;
-        /**
-         * Raised before a view for this record is created.
-         **/
-        _viewCreating: LatteEvent;
-        /**
-         * Raised when a view for this record has been created and filled with record fields.
-         **/
-        _viewCreated: LatteEvent;
-        /**
          * Creates the record
          **/
         constructor();
@@ -209,16 +193,6 @@ declare module latte {
          */
         moduleName: string;
         /**
-         * Gets an event raised when a form about the record is solicited
-         * @returns {LatteEvent}
-         */
-        formCreating: LatteEvent;
-        /**
-         * Gets an event raised when a form about the record has been created
-         * @returns {LatteEvent}
-         */
-        formCreated: LatteEvent;
-        /**
          * Gets or sets the record id
          **/
         /**
@@ -239,16 +213,6 @@ declare module latte {
          * Gets or sets an arbitrary value for the record
          **/
         tag: string;
-        /**
-         * Gets an event raised when a View about the record has been created
-         * @returns {LatteEvent}
-         */
-        viewCreated: LatteEvent;
-        /**
-         * Gets an event raised when a View about the record is being requested
-         * @returns {LatteEvent}
-         */
-        viewCreating: LatteEvent;
     }
 }
 declare module latte {

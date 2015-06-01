@@ -96,6 +96,7 @@ declare module latte {
          * Creates an element
          */
         constructor(element: HTMLElement);
+        private addBindedElement(e);
         /**
          * Adds an element
          * @param element
@@ -158,7 +159,7 @@ declare module latte {
          * Binds the element to the specified object
          * @param object
          */
-        bind(object: any): void;
+        bind(object: any, hide?: boolean): void;
         /**
          * Makes the element blink
          *
@@ -333,15 +334,15 @@ declare module latte {
          */
         isAnimated: boolean;
         /**
-         * Property field
+         * Field for dataBinds property
          */
-        private _dataBind;
+        private _dataBinds;
         /**
-         * Gets the current DataBind of the element (If any)
+         * Gets the data binds of the element
          *
-         * @returns {DataBind}
+         * @returns {DataBind[]}
          */
-        dataBind: DataBind;
+        dataBinds: DataBind[];
         /**
          * Gets the height of the elements document
          *
@@ -833,6 +834,20 @@ declare module latte {
     }
 }
 /**
+ * Created by josemanuel on 5/29/15.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class CollectionDataBind {
+        /**
+         * Creates and automatically sets up the binding
+         */
+        constructor(element: Element<HTMLElement>, elementProperty: string, collection: Collection<any>, type?: DataBindType);
+    }
+}
+/**
  * Created by josemanuel on 5/28/15.
  */
 declare module latte {
@@ -878,6 +893,10 @@ declare module latte {
          * Sets up the listeners, removes previous listeners and applies the binding for the first time.
          */
         setup(element: Element<HTMLElement>, elementProperty: string, record: any, recordProperty: string, type?: DataBindType, elementEvent?: string, recordEvent?: string): void;
+        /**
+         * Uninstalls the last assigned listeners
+         */
+        uninstall(): void;
         /**
          * Applies the data of the record to the elements property
          */

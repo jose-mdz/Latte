@@ -97,22 +97,6 @@ declare module latte {
          **/
         metadata: any;
         /**
-         * Raised before a form for this record is created.
-         **/
-        _formCreating: LatteEvent;
-        /**
-         * Raised when a form for this record has been created and filled with record fields.
-         **/
-        _formCreated: LatteEvent;
-        /**
-         * Raised before a view for this record is created.
-         **/
-        _viewCreating: LatteEvent;
-        /**
-         * Raised when a view for this record has been created and filled with record fields.
-         **/
-        _viewCreated: LatteEvent;
-        /**
          * Creates the record
          **/
         constructor();
@@ -139,6 +123,10 @@ declare module latte {
          **/
         inserted(): boolean;
         /**
+         * Gets the fields of the record with its data.
+         */
+        onGetFields(): any;
+        /**
          * Gets the name of the id field
          * @returns {undefined}
          */
@@ -161,6 +149,11 @@ declare module latte {
          */
         saveCall(): RemoteCall<any>;
         /**
+         * Represents the person as a string
+         * @returns {string}
+         */
+        toString(): string;
+        /**
          * Sends an update message to the record
          **/
         update(callback: VoidCallback): Message;
@@ -170,6 +163,20 @@ declare module latte {
          * @returns {latte.RemoteCall<string>}
          */
         updateCall(): RemoteCall<string>;
+        /**
+         * Back field for event
+         */
+        private _fieldValueChanged;
+        /**
+         * Gets an event raised when the value of a field is changed
+         *
+         * @returns {LatteEvent}
+         */
+        fieldValueChanged: LatteEvent;
+        /**
+         * Raises the <c>fieldValueChanged</c> event
+         */
+        onFieldValueChanged(field: string, value: any): void;
         /**
          * Property field
          */
@@ -185,16 +192,6 @@ declare module latte {
          * @param {string} value
          */
         moduleName: string;
-        /**
-         * Gets an event raised when a form about the record is solicited
-         * @returns {LatteEvent}
-         */
-        formCreating: LatteEvent;
-        /**
-         * Gets an event raised when a form about the record has been created
-         * @returns {LatteEvent}
-         */
-        formCreated: LatteEvent;
         /**
          * Gets or sets the record id
          **/
@@ -216,16 +213,6 @@ declare module latte {
          * Gets or sets an arbitrary value for the record
          **/
         tag: string;
-        /**
-         * Gets an event raised when a View about the record has been created
-         * @returns {LatteEvent}
-         */
-        viewCreated: LatteEvent;
-        /**
-         * Gets an event raised when a View about the record is being requested
-         * @returns {LatteEvent}
-         */
-        viewCreating: LatteEvent;
     }
 }
 declare module latte {
