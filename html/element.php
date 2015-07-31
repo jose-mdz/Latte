@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * PHP ELEMENT INDEX
+ *
+ * Use this index for including latte.element library elements
+ */
+
 error_reporting(-1);
 
 /// Include DataLatte
