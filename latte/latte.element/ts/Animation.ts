@@ -59,7 +59,7 @@ module latte {
                 var value = a.currentValue;
 
                 //log("Updating: %s-%s -> %s", a.startValue, a.endValue, a.currentValue)
-                if(now.compareTo(a.endTime) > 0 /*|| value >= a.endValue*/) {
+                if(now.compareTo(a.endTime) > 0 || value >= a.endValue) {
                     a._running = false;
                     a.onUpdate(a.endValue);
                     a.onEnded();

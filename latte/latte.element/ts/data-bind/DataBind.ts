@@ -123,8 +123,8 @@ module latte {
                 }else {
 
                     if(!_undef(this.record[this.recordProperty])){
-                        log(sprintf("Warning: Binding -> apply not possible (Element: %s; Record: %s; elementProperty: %s; recordProperty: %s).",
-                            String(this.element), String(this.record), String(this.elementProperty), String(this.recordProperty)));
+                        //log(sprintf("Warning: Binding -> apply not possible (Element: %s; Record: %s; elementProperty: %s; recordProperty: %s).",
+                           // String(this.element), String(this.record), String(this.elementProperty), String(this.recordProperty)));
                     }
                 }
 
@@ -157,7 +157,12 @@ module latte {
          */
         apply(){
 
-            this.element[this.elementProperty] = this.dataAdapter.adaptForElement(this.record[this.recordProperty]);
+            var value = this.record[this.recordProperty];
+
+            //Is this all right? value will be only applied when value is not undefined
+            if(!_undef(value)) {
+                this.element[this.elementProperty] = this.dataAdapter.adaptForElement(value);
+            }
 
             this.onApplied();
         }

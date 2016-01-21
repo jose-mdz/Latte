@@ -9,6 +9,17 @@ module latte {
     export class Textbox extends Element<HTMLInputElement> {
 
         //region Static
+
+        /**
+         * Checks if email is valid
+         * @param email
+         * @returns {boolean}
+         */
+        static validEmail(email: string): boolean{
+            var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+            return re.test(email);
+        }
+
         //endregion
 
         //region Fields
@@ -42,11 +53,11 @@ module latte {
          * in the validChars string.
          * @param validChars
          */
-        charCheck(validChars: string): boolean{
+        static charCheck(text: string, validChars: string): boolean{
             validChars = String(validChars);
 
-            for (var i = 0; i < this.value.length; i++) {
-                if(validChars.indexOf(this.value.charAt(i)) < 0){
+            for (var i = 0; i < text.length; i++) {
+                if(validChars.indexOf(text.charAt(i)) < 0){
                     return false
                 }
             }
@@ -89,7 +100,7 @@ module latte {
          * @returns {boolean}
          */
         get isAlphanumeric():boolean{
-            return this.charCheck('1234567890qwertyuiopasdfghjklzxcvbnm');
+            return Textbox.charCheck(this.value, '1234567890qwertyuiopasdfghjklzxcvbnm');
         }
 
         /**
@@ -107,7 +118,7 @@ module latte {
          * @returns {boolean}
          */
         get isInt():boolean{
-            return this.charCheck('1234567890');
+            return Textbox.charCheck(this.value, '1234567890');
         }
 
         /**
@@ -115,7 +126,7 @@ module latte {
          * @returns {boolean}
          */
         get isFloat():boolean{
-            return this.charCheck('123456789.');
+            return Textbox.charCheck(this.value, '123456789.');
         }
 
         /**

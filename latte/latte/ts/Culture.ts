@@ -21,7 +21,7 @@ module latte {
          */
         public static get current():Culture {
             if(!Culture._current) {
-                Culture._current = Culture.esMx;
+                Culture._current = Culture.enUs;
             }
             return this._current;
         }
@@ -48,13 +48,22 @@ module latte {
          */
         public static get esMx():Culture {
             if (!Culture._esMx) {
+
+                var _zeroPad = (n: number): string => { return n <= 9 ? '0' + n.toString() : n.toString() };
+
                 Culture._esMx = new Culture();
                 Culture._esMx.currencyDecimals = 2;
                 Culture._esMx.numberDecimalsSeparator = '.';
                 Culture._esMx.numberThousandsSeparator = ',';
                 Culture._esMx.currencySymbol = '$';
                 Culture._esMx.shortDateFormat = 'dd/MMM/yyyy';
-                Culture._esMx.longDateFormat = 'dddd, d de MMMM de YYYY';
+                Culture._esMx.longDateFormat = 'dddd, d de MMMM de yyyy';
+                Culture._esMx.onFormatShortDate = (d: DateTime): string => {
+                    return sprintf("%s/%s/%s", _zeroPad(d.day), d.monthStringShort, d.year);
+                };
+                Culture._esMx.onFormatLongDate = (d: DateTime): string => {
+                    return sprintf("%s, %s de %s de %s", d.dayOfWeekString, d.day, d.monthString, d.year);
+                };
             }
             return Culture._esMx;
         }
@@ -71,13 +80,21 @@ module latte {
          */
         public static get enUs():Culture {
             if (!Culture._enUs) {
+                var _zeroPad = (n: number): string => { return n <= 9 ? '0' + n.toString() : n.toString() };
                 Culture._enUs = new Culture();
                 Culture._enUs.currencyDecimals = 2;
                 Culture._enUs.numberDecimalsSeparator = '.';
                 Culture._enUs.numberThousandsSeparator = ',';
                 Culture._enUs.currencySymbol = '$';
                 Culture._enUs.shortDateFormat = 'MMM/dd/yyyy';
-                Culture._enUs.longDateFormat = 'dddd, MMMM d YYYY';
+                Culture._enUs.longDateFormat = 'dddd, MMMM d yyyy';
+                Culture._enUs.onFormatShortDate = (d: DateTime): string => {
+                    return sprintf("%s/%s/%s", d.monthStringShort, _zeroPad(d.day), d.year);
+                };
+                Culture._enUs.onFormatLongDate = (d: DateTime): string => {
+                    return sprintf("%s, %s %s %s", d.dayOfWeekString, d.monthString, d.day, d.year);
+                };
+
             }
             return Culture._enUs;
         }
@@ -89,6 +106,22 @@ module latte {
          */
         static formatCurrency(n: number): string{
             return Culture.current.onFormatCurrency(n);
+        }
+
+        /**
+         * Returns the date as a short format
+         * @param d
+         */
+        static formatShortDate(d: DateTime): string{
+            return Culture.current.onFormatShortDate(d);
+        }
+
+        /**
+         * Returns the date as a short format
+         * @param d
+         */
+        static formatLongDate(d: DateTime): string{
+            return Culture.current.onFormatLongDate(d);
         }
 
         /**
@@ -187,6 +220,23 @@ module latte {
 
             return a + b + c + d + e;
         }
+
+        /**
+         * Returns the date as a long format
+         * @param d
+         */
+        onFormatLongDate(d: DateTime): string{
+            return "NotImplemented";
+        }
+
+        /**
+         * Returns the date as a short format
+         * @param d
+         */
+        onFormatShortDate(d: DateTime): string{
+            return "NotImplemented";
+        }
+
 
         //endregion
 

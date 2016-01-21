@@ -40,17 +40,18 @@ module latte {
             this._record = record;
             this._recordMethod = recordMethod;
 
+            var __this = this;
 
             if(this.element[this.elementEvent] instanceof LatteEvent) {
-                this.element[this.elementEvent].add(() => {
+                this.element[this.elementEvent].add(function(){
                     var args = [];
 
                     for (var i = 0; i < arguments.length; i++) {
                         args.push(arguments[i]);
                     }
 
-                    if(_isFunction(this.record[this.recordMethod])) {
-                        this.record[this.recordMethod].apply(this.record, args);
+                    if(_isFunction(__this.record[__this.recordMethod])) {
+                        __this.record[__this.recordMethod].apply(__this.record, args);
 
                     }else {
                         //log(sprintf("Warning: Method %s is not present in %s", this.recordMethod, String(this.record)));
@@ -59,14 +60,14 @@ module latte {
                 });
 
             }else {
-                this.element.addEventListener(this.elementEvent, () => {
+                this.element.addEventListener(this.elementEvent, function() {
                     var args = [];
 
                     for (var i = 0; i < arguments.length; i++) {
                         args.push(arguments[i]);
                     }
-                    if(_isFunction(this.record[this.recordMethod])) {
-                        this.record[this.recordMethod].apply(this.record, args);
+                    if(_isFunction(__this.record[__this.recordMethod])) {
+                        __this.record[__this.recordMethod].apply(__this.record, args);
 
                     }else {
                         //log(sprintf("Warning: Method %s is not present in %s", this.recordMethod, String(this.record)));

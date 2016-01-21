@@ -79,16 +79,13 @@ module latte {
             //Prepare params
             for(var i in data){
                 fdata.append(i, data[i]);
-                //params.push(sprintf("%s=%s", i, data[i]));
             }
 
             req.open("POST", url);
-            req.send(fdata);
+            try{
+                req.send(fdata);
+            }catch(e){}
 
-            //setTimeout(() => {
-            //    req.open("POST", url);
-            //    req.send(fdata);
-            //}, 1000);
         }
 
         //endregion

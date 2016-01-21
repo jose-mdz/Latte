@@ -726,6 +726,13 @@ declare module latte {
      */
     function log(...any: any[]): void;
     /**
+     * Merges the two objects
+     * @param a
+     * @param b
+     * @private
+     */
+    function _merge(a: any, b: any): any;
+    /**
      * sprintf for only %s strings
      */
     function sprintf(...any: any[]): string;
@@ -1087,197 +1094,6 @@ declare module latte {
     }
 }
 declare module latte {
-    /**
-     * Represents a specific date and time
-     **/
-    class DateTime {
-        /**
-         * Amount of days in months of a non-leap year
-         **/
-        static monthDays: number[];
-        /**
-         * Amount of days in months of leap year
-         **/
-        static monthDaysLeapYear: number[];
-        /**
-         * Returns the absolute number of days on the specified day-month-year
-         **/
-        static absoluteDays(year: number, month: number, day: number): number;
-        /**
-         * Returns the amount of days in the specified month of the specified year
-         **/
-        static daysInMonth(year: number, month: number): number;
-        /**
-         * Returns a DateTime object from the specifed date and time components
-         **/
-        static fromDateAndTime(date: DateTime, time: TimeSpan): DateTime;
-        /**
-         * Returns a DateTime object from the specified amount of milliseconds
-         **/
-        static fromMilliseconds(milliseconds: number): DateTime;
-        /**
-         * Creates a DateTime object from the specified string.
-         String should be in the format <c>yyyy-mm-dd hh:mm:ss</c>
-         **/
-        static fromString(dateTimeString: string): DateTime;
-        /**
-         * Returns a value indicating if the specified year is leap year
-         **/
-        static isLeapYear(year: number): boolean;
-        /**
-         * Gets a DateTime representing the current millisecond
-         **/
-        static now: DateTime;
-        /**
-         * Gets a DateTime representing the current day without time component
-         **/
-        static today: DateTime;
-        /**
-         * Gets a DateTime representing the day of tomorrow without time component
-         **/
-        static tomorrow: DateTime;
-        /**
-         * Gets a DateTime representing the day of yesterday without time component
-         **/
-        static yesterday: DateTime;
-        _span: TimeSpan;
-        /**
-         * Creates the DateTime object
-         **/
-        constructor(year?: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, millisecond?: number);
-        /**
-         * Prepends a zero to the number if lower than 10
-         **/
-        private _zeroPad(n);
-        /**
-         * Returns the specified element of date.
-         Possible values for <c>what</c> are: <c>year</c> | <c>month</c> | <c>dayyear</c> | <c>day</c>
-         **/
-        private fromTimeSpan(what);
-        /**
-         * Returns the result of adding the specified timespan to this date
-         **/
-        add(timespan: TimeSpan): DateTime;
-        /**
-         * Returns the result of adding the specified amount of days to this date
-         **/
-        addDays(days: number): DateTime;
-        /**
-         * Returns the result of adding the specified amount of hours to this date
-         **/
-        addHours(hours: number): DateTime;
-        /**
-         * Returns the result of adding the specified amount of milliseconds to this date
-         **/
-        addMilliseconds(milliseconds: number): DateTime;
-        /**
-         * Returns the result of adding the specified amount of minutes to this date
-         **/
-        addMinutes(minutes: number): DateTime;
-        /**
-         * Returns the result of adding the specified amount of months to this date
-         **/
-        addMonths(months: number): DateTime;
-        /**
-         * Returns the result of adding the specified amount of seconds to this date
-         **/
-        addSeconds(seconds: number): DateTime;
-        /**
-         * Returns the result of adding the specified amount of years to this date
-         **/
-        addYears(years: number): DateTime;
-        /**
-         * Returns the result of comparing this datetime to the specified datetime
-         **/
-        compareTo(datetime: DateTime): number;
-        /**
-         * Returns just the date component of this datetime
-         **/
-        date: DateTime;
-        /**
-         * Gets a value indicating if the specified datetime is equals to this datetime
-         **/
-        equals(datetime: DateTime): boolean;
-        /**
-         * Returns a value indicating if the date is contained in the range specified by the arguments
-         **/
-        onRange(start: DateTime, end: DateTime): boolean;
-        /**
-         * Returns the result of subtracting the specified datetime to this datetime
-         **/
-        subtractDate(datetime: DateTime): TimeSpan;
-        /**
-         * Returns the result of subtracting the specified timespan to this datetime
-         **/
-        subtractTime(timespan: TimeSpan): DateTime;
-        /**
-         * Returns a relative representatio of the date, like "Yesterday 10:00AM"
-         **/
-        toRelativeString(): string;
-        /**
-         * Gets the day of this datetime
-         **/
-        day: number;
-        /**
-         * Gets the day of week this datetime. Sunday is 0 and Saturday is 6.
-         **/
-        dayOfWeek: number;
-        /**
-         * Gets the name of the day of the week
-         * @returns {*}
-         */
-        dayOfWeekString: string;
-        /**
-         * Gets the day of year datetime
-         **/
-        dayOfYear: number;
-        /**
-         * Gets the hour of the datetime
-         **/
-        hour: number;
-        /**
-         * Gets the millisecond of the date
-         **/
-        millisecond: number;
-        /**
-         * Gets the minute of the time
-         **/
-        minute: number;
-        /**
-         * Gets the month of the date
-         **/
-        month: number;
-        /**
-         * Gets the name of the month of the date
-         **/
-        monthString: string;
-        /**
-         * Gets the second of the date
-         **/
-        second: number;
-        /**
-         * Gets the time component of this datetime
-         **/
-        timeOfDay: TimeSpan;
-        /**
-         * Returns a formatted string
-         **/
-        toFormattedString(): string;
-        /**
-         * Gets the DateTime as a string
-         **/
-        toString(): string;
-        /**
-         * Gets the week number of date. First week of year is 1
-         **/
-        weekOfYear: number;
-        /**
-         * Gets the year of the date
-         **/
-        year: number;
-    }
-}
-declare module latte {
     class EventHandler {
         handler: Function;
         context: any;
@@ -1389,104 +1205,219 @@ declare module latte {
         toString(): string;
     }
 }
-/**
- * Created by josemanuel on 2/6/14.
- */
 declare module latte {
     /**
-     *
-     */
-    class Culture {
+     * Represents a specific date and time
+     **/
+    class DateTime {
         /**
-         * Property field
-         */
-        private static _current;
+         * Amount of days in months of a non-leap year
+         **/
+        static monthDays: number[];
         /**
-         * Gets or sets the current culture of the system
+         * Amount of days in months of leap year
+         **/
+        static monthDaysLeapYear: number[];
+        /**
+         * Returns the absolute number of days on the specified day-month-year
+         **/
+        static absoluteDays(year: number, month: number, day: number): number;
+        /**
+         * Returns the amount of days in the specified month of the specified year
+         **/
+        static daysInMonth(year: number, month: number): number;
+        /**
+         * Returns a DateTime object from the specifed date and time components
+         **/
+        static fromDateAndTime(date: DateTime, time: TimeSpan): DateTime;
+        /**
+         * Returns a DateTime object from the specified amount of milliseconds
+         **/
+        static fromMilliseconds(milliseconds: number): DateTime;
+        /**
+         * Creates a DateTime object from the specified string.
+         String should be in the format <c>yyyy-mm-dd hh:mm:ss</c>
+         **/
+        static fromString(dateTimeString: string): DateTime;
+        /**
+         * Returns a value indicating if the specified year is leap year
+         **/
+        static isLeapYear(year: number): boolean;
+        /**
+         * Gets a DateTime representing the current millisecond
+         **/
+        static now: DateTime;
+        /**
+         * Gets a DateTime representing the current day without time component
+         **/
+        static today: DateTime;
+        /**
+         * Gets a DateTime representing the day of tomorrow without time component
+         **/
+        static tomorrow: DateTime;
+        /**
+         * Gets a DateTime representing the day of yesterday without time component
+         **/
+        static yesterday: DateTime;
+        _span: TimeSpan;
+        /**
+         * Creates the DateTime object
+         **/
+        constructor(year?: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, millisecond?: number);
+        /**
+         * Prepends a zero to the number if lower than 10
+         **/
+        private _zeroPad(n);
+        /**
+         * Returns the specified element of date.
+         Possible values for <c>what</c> are: <c>year</c> | <c>month</c> | <c>dayyear</c> | <c>day</c>
+         **/
+        private fromTimeSpan(what);
+        /**
+         * Returns the result of adding the specified timespan to this date
+         **/
+        add(timespan: TimeSpan): DateTime;
+        /**
+         * Returns the result of adding the specified amount of days to this date
+         **/
+        addDays(days: number): DateTime;
+        /**
+         * Returns the result of adding the specified amount of hours to this date
+         **/
+        addHours(hours: number): DateTime;
+        /**
+         * Returns the result of adding the specified amount of milliseconds to this date
+         **/
+        addMilliseconds(milliseconds: number): DateTime;
+        /**
+         * Returns the result of adding the specified amount of minutes to this date
+         **/
+        addMinutes(minutes: number): DateTime;
+        /**
+         * Returns the result of adding the specified amount of months to this date
+         **/
+        addMonths(months: number): DateTime;
+        /**
+         * Returns the result of adding the specified amount of seconds to this date
+         **/
+        addSeconds(seconds: number): DateTime;
+        /**
+         * Returns the result of adding the specified amount of years to this date
+         **/
+        addYears(years: number): DateTime;
+        /**
+         * Returns the result of comparing this datetime to the specified datetime
+         **/
+        compareTo(datetime: DateTime): number;
+        /**
+         * Gets the comparer value of the date
          *
-         * @returns {Culture}
+         * @returns {number}
          */
+        comparer: number;
         /**
-         * Gets or sets the current culture of the system
-         *
-         * @param {Culture} value
-         */
-        static current: Culture;
+         * Returns just the date component of this datetime
+         **/
+        date: DateTime;
         /**
-         * Field for esMX property
-         */
-        private static _esMx;
+         * Gets a value indicating if the specified datetime is equals to this datetime
+         **/
+        equals(datetime: DateTime): boolean;
         /**
-         * Gets the Español-Mexico Culture
-         *
-         * @returns {Culture}
-         */
-        static esMx: Culture;
+         * Returns a value indicating if the date is contained in the range specified by the arguments
+         **/
+        onRange(start: DateTime, end: DateTime): boolean;
         /**
-         * Field for enUs property
-         */
-        private static _enUs;
+         * Returns the result of subtracting the specified datetime to this datetime
+         **/
+        subtractDate(datetime: DateTime): TimeSpan;
         /**
-         * Gets the English-USA Culture
-         *
-         * @returns {Culture}
-         */
-        static enUs: Culture;
+         * Returns the result of subtracting the specified timespan to this datetime
+         **/
+        subtractTime(timespan: TimeSpan): DateTime;
         /**
-         * Formats currency using the current culture
-         * @param n
-         * @returns {string}
-         */
-        static formatCurrency(n: number): string;
+         * Returns a relative representatio of the date, like "Yesterday 10:00AM"
+         **/
+        toRelativeString(): string;
         /**
-         * Formats a number using the current Culture
-         * @param n
-         * @param decimals
-         * @param symbol
-         * @returns {string}
-         */
-        static formatNumber(n: number, decimals?: number, symbol?: string): string;
+         * Gets the day of this datetime
+         **/
+        day: number;
         /**
-         * Short date format
-         */
-        shortDateFormat: string;
+         * Gets the day of week this datetime. Sunday is 0 and Saturday is 6.
+         **/
+        dayOfWeek: number;
         /**
-         * Long date format
+         * Gets the name of the day of the week
+         * @returns {*}
          */
-        longDateFormat: string;
+        dayOfWeekString: string;
         /**
-         * Amount of decimals to show in currency format
+         * Gets the name of the day of the week
+         * @returns {*}
          */
-        currencyDecimals: number;
+        dayOfWeekStringShort: string;
         /**
-         * Separator of decimals for currency
+         * Gets the name of the day of the week
+         * @returns {*}
          */
-        numberDecimalsSeparator: string;
+        dayOfWeekStringInitial: string;
         /**
-         * Thousands separator for currency
-         */
-        numberThousandsSeparator: string;
+         * Gets the day of year datetime
+         **/
+        dayOfYear: number;
         /**
-         * Symbol to use in currency
-         */
-        currencySymbol: string;
+         * Gets the hour of the datetime
+         **/
+        hour: number;
         /**
-         *
-         */
-        constructor();
+         * Gets the millisecond of the date
+         **/
+        millisecond: number;
         /**
-         * Returns the specified number as a currency
-         * @param n
-         */
-        onFormatCurrency(n: number): string;
+         * Gets the minute of the time
+         **/
+        minute: number;
         /**
-         * Formats the specified number
-         * @param n
-         * @param decimals
-         * @param symbol
-         * @returns {string}
-         */
-        onFormatNumber(n: number, decimals?: number, symbol?: string): string;
+         * Gets the month of the date
+         **/
+        month: number;
+        /**
+         * Gets the name of the month of the date
+         **/
+        monthString: string;
+        /**
+         * Gets the name of the month of the date
+         **/
+        monthStringShort: string;
+        /**
+         * Gets the name of the month of the date
+         **/
+        monthStringInitial: string;
+        /**
+         * Gets the second of the date
+         **/
+        second: number;
+        /**
+         * Gets the time component of this datetime
+         **/
+        timeOfDay: TimeSpan;
+        /**
+         * Returns a formatted string
+         **/
+        toFormattedString(format?: string): string;
+        /**
+         * Gets the DateTime as a string
+         **/
+        toString(includeTime?: boolean): string;
+        /**
+         * Gets the week number of date. First week of year is 1
+         **/
+        weekOfYear: number;
+        /**
+         * Gets the year of the date
+         **/
+        year: number;
     }
 }
 /**
@@ -1577,6 +1508,334 @@ declare module latte {
          * @param {string} value
          */
         loadingText: string;
+    }
+}
+/**
+ * Created by josemanuel on 5/12/14.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class Point {
+        /**
+         * Gets the distance between two points
+         * @param a
+         * @param b
+         */
+        static distance(a: Point, b: Point): number;
+        /**
+         * Returns an empty point
+         * @returns {latte.Point}
+         */
+        static empty(): Point;
+        /**
+         * Returns a point situated on the origin
+         * @returns {latte.Point}
+         */
+        static origin(): Point;
+        /**
+         * Creates a new point, optionally
+         */
+        constructor(x?: number, y?: number);
+        /**
+         * Returns the offset operation of the point
+         *
+         * @param x
+         * @param y
+         * @returns {latte.Point}
+         */
+        offset(x: number, y: number): Point;
+        /**
+         * Gets string representation of the point
+         * @returns {string}
+         */
+        toString(): string;
+        /**
+         * Gets a value indicating if the point is empty (No value has been set)
+         *
+         * @returns {boolean}
+         */
+        isEmpty: boolean;
+        /**
+         * Property field
+         */
+        private _x;
+        /**
+         * Gets or sets the X of the point
+         *
+         * @returns {number}
+         */
+        x: number;
+        /**
+         * Property field
+         */
+        private _y;
+        /**
+         * Gets the Y coordinate of the point
+         *
+         * @returns {number}
+         */
+        y: number;
+    }
+}
+/**
+ * Created by josemanuel on 2/6/14.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class Culture {
+        /**
+         * Property field
+         */
+        private static _current;
+        /**
+         * Gets or sets the current culture of the system
+         *
+         * @returns {Culture}
+         */
+        /**
+         * Gets or sets the current culture of the system
+         *
+         * @param {Culture} value
+         */
+        static current: Culture;
+        /**
+         * Field for esMX property
+         */
+        private static _esMx;
+        /**
+         * Gets the Español-Mexico Culture
+         *
+         * @returns {Culture}
+         */
+        static esMx: Culture;
+        /**
+         * Field for enUs property
+         */
+        private static _enUs;
+        /**
+         * Gets the English-USA Culture
+         *
+         * @returns {Culture}
+         */
+        static enUs: Culture;
+        /**
+         * Formats currency using the current culture
+         * @param n
+         * @returns {string}
+         */
+        static formatCurrency(n: number): string;
+        /**
+         * Returns the date as a short format
+         * @param d
+         */
+        static formatShortDate(d: DateTime): string;
+        /**
+         * Returns the date as a short format
+         * @param d
+         */
+        static formatLongDate(d: DateTime): string;
+        /**
+         * Formats a number using the current Culture
+         * @param n
+         * @param decimals
+         * @param symbol
+         * @returns {string}
+         */
+        static formatNumber(n: number, decimals?: number, symbol?: string): string;
+        /**
+         * Short date format
+         */
+        shortDateFormat: string;
+        /**
+         * Long date format
+         */
+        longDateFormat: string;
+        /**
+         * Amount of decimals to show in currency format
+         */
+        currencyDecimals: number;
+        /**
+         * Separator of decimals for currency
+         */
+        numberDecimalsSeparator: string;
+        /**
+         * Thousands separator for currency
+         */
+        numberThousandsSeparator: string;
+        /**
+         * Symbol to use in currency
+         */
+        currencySymbol: string;
+        /**
+         *
+         */
+        constructor();
+        /**
+         * Returns the specified number as a currency
+         * @param n
+         */
+        onFormatCurrency(n: number): string;
+        /**
+         * Formats the specified number
+         * @param n
+         * @param decimals
+         * @param symbol
+         * @returns {string}
+         */
+        onFormatNumber(n: number, decimals?: number, symbol?: string): string;
+        /**
+         * Returns the date as a long format
+         * @param d
+         */
+        onFormatLongDate(d: DateTime): string;
+        /**
+         * Returns the date as a short format
+         * @param d
+         */
+        onFormatShortDate(d: DateTime): string;
+    }
+}
+declare module latte {
+    /**
+     * Represents a time interval.
+     **/
+    class TimeSpan {
+        millis: number;
+        /**
+         * Creates a TimeSpan from the specified amount of days
+         **/
+        static fromDays(days: number): TimeSpan;
+        /**
+         * Creates a TimeSpan from the specified amount of hours
+         **/
+        static fromHours(hours: number): TimeSpan;
+        /**
+         * Creates a TimeSpan from the specified amount of milliseconds
+         **/
+        static fromMilliseconds(milliseconds: number): TimeSpan;
+        /**
+         * Creates a TimeSpan from the specified amount of minutes
+         **/
+        static fromMinutes(minutes: number): TimeSpan;
+        /**
+         * Creates a TimeSpan from the specified amount of seconds
+         **/
+        static fromSeconds(seconds: number): TimeSpan;
+        /**
+         * Creates a TimeSpan object from the specified string.
+         String should be in the format <c>hh:mm:ss</c>
+         **/
+        static fromString(timeString: string): TimeSpan;
+        /**
+         * Gets a timespan with the time passed since the specified date and time
+         * @param d
+         */
+        static timeSince(d: DateTime): TimeSpan;
+        /**
+         * Creates the TimeSpan with the specified parameters. Parameters not specified will be asumed to be zero.
+         **/
+        constructor(days?: number, hours?: number, minutes?: number, seconds?: number, milliseconds?: number);
+        /**
+         * Makes math rounding depending on the sign of the milliseconds
+         **/
+        private _rounder(number);
+        /**
+         * Prepends a zero to the number if lower than 10
+         **/
+        private _zeroPad(n);
+        /**
+         * Returns the result of adding the specified timespan to this timespan
+         **/
+        add(timespan: TimeSpan): TimeSpan;
+        /**
+         * Returns the result of adding the specified amount of hours to this timespan
+         **/
+        addHours(hours: number): TimeSpan;
+        /**
+         * Returns the result of adding the specified amount of minutes to this timespan
+         **/
+        addMinutes(minutes: number): TimeSpan;
+        /**
+         * Returns the result of adding the specified amount of seconds to this timespan
+         **/
+        addSeconds(seconds: number): TimeSpan;
+        /**
+         * Returns the result of comparing this timespan against the provided timespan
+         **/
+        compareTo(timespan: TimeSpan): number;
+        /**
+         * Returns a timespan representing the actual duration of the timespan
+         **/
+        duration(): TimeSpan;
+        /**
+         * Returns a value indicating if this timespan represents the same than the specified timespan
+         **/
+        equals(timespan: TimeSpan): boolean;
+        /**
+         * Negates the timespan duration
+         **/
+        negate(): void;
+        /**
+         * Returns the result of subtracting the specified timespan to this timespan
+         **/
+        subtract(timespan: TimeSpan): TimeSpan;
+        /**
+         * Returns this timespan as a string
+         **/
+        toString(includeMilliseconds?: boolean): string;
+        /**
+         * Returns the timespan as a shor string, e.g. 5 minutes or 5m
+         * @param shortNames
+         */
+        toShortString(shortNames?: boolean): string;
+        /**
+         * Gets the days component of the time interval represented by this object
+         **/
+        days: number;
+        /**
+         * Gets the hours component of the time interval represented by this object
+         **/
+        hours: number;
+        /**
+         * Gets a value indicating if the total time this timespan represents is zero
+         **/
+        isEmpty: boolean;
+        /**
+         * Gets the milliseconds component of the time interval represented by this object
+         **/
+        milliseconds: number;
+        /**
+         * Gets the minutes component of the time interval represented by this object
+         **/
+        minutes: number;
+        /**
+         * Gets the seconds component of the time interval represented by this object
+         **/
+        seconds: number;
+        /**
+         * Gets the value of this timespan expressed in whole and fractional days
+         **/
+        totalDays: number;
+        /**
+         * Gets the value of this timespan expressed in whole and fractional hours
+         **/
+        totalHours: number;
+        /**
+         * Gets the value of this timespan expressed in milliseconds
+         **/
+        totalMilliseconds: number;
+        /**
+         * Gets the value of this timespan expressed in whole and fractional minutes
+         **/
+        totalMinutes: number;
+        /**
+         * Gets the value of this timespan expressed in whole and fractional seconds
+         **/
+        totalSeconds: number;
     }
 }
 declare module latte {
@@ -1751,140 +2010,80 @@ declare module latte {
     }
 }
 declare module latte {
-    /**
-     * Represents a time interval.
-     **/
-    class TimeSpan {
-        millis: number;
-        /**
-         * Creates a TimeSpan from the specified amount of days
-         **/
-        static fromDays(days: number): TimeSpan;
-        /**
-         * Creates a TimeSpan from the specified amount of hours
-         **/
-        static fromHours(hours: number): TimeSpan;
-        /**
-         * Creates a TimeSpan from the specified amount of milliseconds
-         **/
-        static fromMilliseconds(milliseconds: number): TimeSpan;
-        /**
-         * Creates a TimeSpan from the specified amount of minutes
-         **/
-        static fromMinutes(minutes: number): TimeSpan;
-        /**
-         * Creates a TimeSpan from the specified amount of seconds
-         **/
-        static fromSeconds(seconds: number): TimeSpan;
-        /**
-         * Creates a TimeSpan object from the specified string.
-         String should be in the format <c>hh:mm:ss</c>
-         **/
-        static fromString(timeString: string): TimeSpan;
-        /**
-         * Gets a timespan with the time passed since the specified date and time
-         * @param d
-         */
-        static timeSince(d: DateTime): TimeSpan;
-        /**
-         * Creates the TimeSpan with the specified parameters. Parameters not specified will be asumed to be zero.
-         **/
-        constructor(days?: number, hours?: number, minutes?: number, seconds?: number, milliseconds?: number);
-        /**
-         * Makes math rounding depending on the sign of the milliseconds
-         **/
-        private _rounder(number);
-        /**
-         * Prepends a zero to the number if lower than 10
-         **/
-        private _zeroPad(n);
-        /**
-         * Returns the result of adding the specified timespan to this timespan
-         **/
-        add(timespan: TimeSpan): TimeSpan;
-        /**
-         * Returns the result of adding the specified amount of hours to this timespan
-         **/
-        addHours(hours: number): TimeSpan;
-        /**
-         * Returns the result of adding the specified amount of minutes to this timespan
-         **/
-        addMinutes(minutes: number): TimeSpan;
-        /**
-         * Returns the result of adding the specified amount of seconds to this timespan
-         **/
-        addSeconds(seconds: number): TimeSpan;
-        /**
-         * Returns the result of comparing this timespan against the provided timespan
-         **/
-        compareTo(timespan: TimeSpan): number;
-        /**
-         * Returns a timespan representing the actual duration of the timespan
-         **/
-        duration(): TimeSpan;
-        /**
-         * Returns a value indicating if this timespan represents the same than the specified timespan
-         **/
-        equals(timespan: TimeSpan): boolean;
-        /**
-         * Negates the timespan duration
-         **/
-        negate(): void;
-        /**
-         * Returns the result of subtracting the specified timespan to this timespan
-         **/
-        subtract(timespan: TimeSpan): TimeSpan;
-        /**
-         * Returns this timespan as a string
-         **/
-        toString(): string;
-        /**
-         * Gets the days component of the time interval represented by this object
-         **/
-        days: number;
-        /**
-         * Gets the hours component of the time interval represented by this object
-         **/
-        hours: number;
-        /**
-         * Gets a value indicating if the total time this timespan represents is zero
-         **/
-        isEmpty: boolean;
-        /**
-         * Gets the milliseconds component of the time interval represented by this object
-         **/
-        milliseconds: number;
-        /**
-         * Gets the minutes component of the time interval represented by this object
-         **/
-        minutes: number;
-        /**
-         * Gets the seconds component of the time interval represented by this object
-         **/
-        seconds: number;
-        /**
-         * Gets the value of this timespan expressed in whole and fractional days
-         **/
-        totalDays: number;
-        /**
-         * Gets the value of this timespan expressed in whole and fractional hours
-         **/
-        totalHours: number;
-        /**
-         * Gets the value of this timespan expressed in milliseconds
-         **/
-        totalMilliseconds: number;
-        /**
-         * Gets the value of this timespan expressed in whole and fractional minutes
-         **/
-        totalMinutes: number;
-        /**
-         * Gets the value of this timespan expressed in whole and fractional seconds
-         **/
-        totalSeconds: number;
+    class HEvent<T> {
     }
 }
+/**
+ * Created by josemanuel on 5/12/14.
+ */
 declare module latte {
-    class HEvent<T> {
+    /**
+     *
+     */
+    class Size {
+        /**
+         * Returns an empty size
+         * @returns {latte.Size}
+         */
+        static empty(): Size;
+        /**
+         * Returns a size of zero width and zero height
+         * @returns {latte.Point}
+         */
+        static zero(): Size;
+        /**
+         * Creates a new Size, optionally sets its Width and Height components
+         */
+        constructor(width?: number, height?: number);
+        /**
+         * Inflates the size on the specified width and height
+         *
+         * @param width
+         * @param height
+         * @returns {latte.Size}
+         */
+        inflate(width: number, height: number): Size;
+        /**
+         * Inflates the size uniformly
+         * @param wide
+         */
+        inflateUniform(wide: number): Size;
+        /**
+         * Gets string representation of the size
+         * @returns {string}
+         */
+        toString(): string;
+        /**
+         * Gets the area represented by the size
+         *
+         * @returns {number}
+         */
+        area: number;
+        /**
+         * Gets a value indicating if the size has no compnents assigned or initialized
+         *
+         * @returns {boolean}
+         */
+        isEmpty: boolean;
+        /**
+         * Property field
+         */
+        private _height;
+        /**
+         * Gets the Height component of the size
+         *
+         * @returns {number}
+         */
+        height: number;
+        /**
+         * Property field
+         */
+        private _width;
+        /**
+         * Gets the Width component of the size
+         *
+         * @returns {number}
+         */
+        width: number;
     }
 }

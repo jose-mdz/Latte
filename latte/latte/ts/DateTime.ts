@@ -352,6 +352,16 @@ module latte{
         }
 
         /**
+         * Gets the comparer value of the date
+         *
+         * @returns {number}
+         */
+        get comparer():number {
+            return this._span.totalMilliseconds;
+        }
+
+
+        /**
          * Returns just the date component of this datetime
          **/
         get date(): DateTime{
@@ -401,40 +411,42 @@ module latte{
         /**
          * Returns a relative representatio of the date, like "Yesterday 10:00AM"
          **/
-            toRelativeString(){
+        toRelativeString(){
 
 
             var now = DateTime.now;
             var today = DateTime.today;
             var yesterday = DateTime.yesterday;
+            var tomorrow = DateTime.tomorrow;
             var timePart = this._zeroPad(this.hour) + ':' + this._zeroPad(this.minute);
             var datePart = "";
             var d = this.date;
             var t = this.timeOfDay;
             var diff;
 
-            if(this.date.equals(today)){
+            if(this.date.equals(today)) {
                 diff = now.timeOfDay.subtract(t);
 
                 var hours = Math.ceil(diff.totalHours);
                 var minutes = Math.ceil(diff.totalMinutes);
 
-
-                if(diff.totalSeconds < 60){
+                if (diff.totalSeconds < 60) {
                     return strings.justNow;
 
-                }else if(diff.totalMinutes == 1){
+                } else if (diff.totalMinutes == 1) {
                     return strings.oneMinuteAgo;
 
-                }else if(minutes < 60){
+                } else if (minutes < 60) {
                     return sprintf(strings.SMinutesAgo, minutes);
 
-                }else if(hours == 1){
+                } else if (hours == 1) {
                     return strings.oneHourAgo;
 
-                }else{
+                } else {
                     return sprintf(strings.SHoursAgo, hours);
                 }
+            }else if (d.equals(tomorrow)){
+                datePart = strings.tomorrow;
 
             }else if(d.equals(yesterday)){
                 datePart = strings.yesterday;
@@ -499,6 +511,24 @@ module latte{
         }
 
         /**
+         * Gets the name of the day of the week
+         * @returns {*}
+         */
+        get dayOfWeekStringShort(): string{
+            var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            return strings[days[this.dayOfWeek] + 'Short'];
+        }
+
+        /**
+         * Gets the name of the day of the week
+         * @returns {*}
+         */
+        get dayOfWeekStringInitial(): string{
+            var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            return strings[days[this.dayOfWeek] + 'Initial'];
+        }
+
+        /**
          * Gets the day of year datetime
          **/
         get dayOfYear(): number{
@@ -553,6 +583,24 @@ module latte{
         }
 
         /**
+         * Gets the name of the month of the date
+         **/
+        get monthStringShort(): string{
+
+            return strings["january february march april may june july august september october november december".split(" ")[(this.month - 1)] + 'Short'];
+
+        }
+
+        /**
+         * Gets the name of the month of the date
+         **/
+        get monthStringInitial(): string{
+
+            return strings["january february march april may june july august september october november december".split(" ")[(this.month - 1)] + 'Initial'];
+
+        }
+
+        /**
          * Gets the second of the date
          **/
         get second(): number{
@@ -573,23 +621,14 @@ module latte{
         /**
          * Returns a formatted string
          **/
-        toFormattedString(): string{
-
-            var datepart = sprintf('%s/%s/%s', this.day, this.monthString, this.year);
-            var timepart = this._zeroPad(this.hour) + ':' + this._zeroPad(this.minute);
-
-            if(this.timeOfDay.totalSeconds > 0){
-                return sprintf('%s %s', datepart, timepart);
-            }else{
-                return datepart;
-            }
-
+        toFormattedString(format: string = null): string{
+            return Culture.formatShortDate(this);
         }
 
         /**
          * Gets the DateTime as a string
          **/
-        toString(): string{
+        toString(includeTime = true): string{
 
 
             if(isNaN(this.year)) return '';
@@ -597,7 +636,7 @@ module latte{
             var t = this.timeOfDay;
             var r = this.year + '-' + this._zeroPad(this.month) + '-' + this._zeroPad(this.day);
 
-            if(!t.isEmpty){
+            if(includeTime){
                 r += ' ' + this._zeroPad(t.hours) + ":" + this._zeroPad(t.minutes) + ':'
                     + this._zeroPad(t.seconds);
             }

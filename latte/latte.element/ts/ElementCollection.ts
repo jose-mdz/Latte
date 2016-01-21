@@ -80,13 +80,13 @@ module latte {
         addEventListener(event: string, handler: (item: Element<HTMLElement>) => any, capture: boolean = false){
 
             this.each((e: Element<HTMLElement>) => {
-                e.addEventListener(event, () => {
+                e.addEventListener(event, function(){
 
                     var args = [e];
 
                     for (var i = 0; i < arguments.length; i++) args.push(arguments[i]);
 
-                    handler.apply(this, args);
+                    handler.apply(e, args);
 
                 }, capture);
             });
@@ -138,6 +138,7 @@ module latte {
 
         /**
          * Adds an event handler to the elements in the collection
+         * @param context
          * @param event
          * @param f
          */

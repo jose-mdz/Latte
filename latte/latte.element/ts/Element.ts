@@ -11,6 +11,26 @@ module latte {
         //region Static
 
         /**
+         * Creates a new element in memory from the specified tag name
+         * @param tagName
+         * @returns {latte.Element<HTMLElement>}
+         */
+        static create(tagName: string = 'div'){
+            var parts = tagName.split('.');
+
+            var tagName = parts[0];
+
+            var element =new Element<HTMLElement>(document.createElement(tagName));
+
+
+            for (var i = 1; i < parts.length; i++) {
+                element.addClass(parts[i]);
+            }
+
+            return element;
+        }
+
+        /**
          * Creates an element from the latte.globalViewBank object.
          *
          * @param key
@@ -139,6 +159,7 @@ module latte {
         //endregion
 
         //region Fields
+        private dataElements: Element<HTMLElement>[] = [];
         //endregion
 
         /**
@@ -155,11 +176,19 @@ module latte {
 
         //region Private Methods
 
-        private addBindedElement(e: Element<HTMLElement>){
+        private addBindedElement(e: Element<HTMLElement>, ebind: EventBind, dbind: DataBind){
             for (var i = 0; i < this.bindedElements.length; i++) {
                 if(this.bindedElements[i] === e) {
                     return
                 }
+            }
+
+            if(ebind){
+                this.onEventBindAdded(ebind);
+            }
+
+            if(dbind) {
+                this.onDataBindAdded(dbind);
             }
 
             this.bindedElements.push(e);
@@ -341,6 +370,7 @@ module latte {
         /**
          * Binds the element to the specified object
          * @param object
+         * @param hide
          */
         bind(object: any, hide: boolean = false){
 
@@ -353,15 +383,32 @@ module latte {
 
                     var e = new Element<HTMLElement>(<HTMLElement>node);
                     var prop = e.element.getAttribute('data-bind');
+                    var dataBinds = prop.split(";");
 
-                    // TODO: Criteria for elementProperty, elementEvent, type, DataAdapter
-                    var bind = new DataBind(e, 'text', object, prop, DataBindType.AUTO, null, 'input', sprintf('%sChanged', prop));
+                    for (var j = 0; j < dataBinds.length; j++) {
+                        var parts = dataBinds[j].split(":");
+                        var elementProperty = parts.length == 2 ? parts[0] : 'text';
+                        var recordProperty = parts.length == 2 ? parts[1] : parts[0];
 
-                    if(!hide){
-                        this.dataBinds.push(bind);
+                        var bind = new DataBind(e,elementProperty, object, recordProperty, DataBindType.AUTO, null, 'input', sprintf('%sChanged', prop));
+
+                        if(!hide){
+                            this.dataBinds.push(bind);
+                        }
+
+                        this.addBindedElement(e, null, bind);
                     }
 
-                    this.addBindedElement(e);
+                    //// TODO: Criteria for elementProperty, elementEvent, type, DataAdapter
+                    //var bind = new DataBind(e, 'text', object, prop, DataBindType.AUTO, null, 'input', sprintf('%sChanged', prop));
+                    //
+                    //if(!hide){
+                    //    this.dataBinds.push(bind);
+                    //}
+                    //
+                    //this.addBindedElement(e);
+
+
 
 
                 })(list[i]);
@@ -382,8 +429,9 @@ module latte {
 
                         if(parts.length == 2) {
                             var bind = new EventBind(e, parts[0].trim(), object, parts[1].trim());
+
                             e.eventBinds.push(bind);
-                            this.addBindedElement(e);
+                            this.addBindedElement(e, bind, null);
                         }else {
                             log("[data-event] Bad Syntax: " + binds[j]);
                         }
@@ -456,6 +504,53 @@ module latte {
         }
 
         /**
+         * Called when the data of the element has loaded successfully
+         */
+        dataDidLoad(){
+            for (var i = 0; i < this.dataElements.length; i++) {
+                this.dataElements[i].dataDidLoad();
+            }
+        }
+
+        /**
+         * Called when the data load failed
+         */
+        dataLoadFailed(errorDescription: string){
+            for (var i = 0; i < this.dataElements.length; i++) {
+                this.dataElements[i].dataLoadFailed(errorDescription);
+            }
+        }
+
+        /**
+         * Called when data load is about to start
+         */
+        dataWillLoad(){
+            for (var i = 0; i < this.dataElements.length; i++) {
+                this.dataElements[i].dataWillLoad();
+            }
+        }
+
+        /**
+         * Called when the element has been assigned as only child of another element, using the setContent method
+         */
+        didLoad(){
+
+        }
+
+        /**
+         * If conditional is true, ensures element has class, if not, ensures it doesn't
+         * @param className
+         * @param condition
+         */
+        ensureClass(className: string, condition: boolean){
+            if(condition) {
+                this.addClass(className);
+            }else {
+                this.removeClass(className);
+            }
+        }
+
+        /**
          * Fades the element in
          * @param duration
          * @param callback
@@ -516,6 +611,13 @@ module latte {
         }
 
         /**
+         * Gets the children of the element as an ElementCollection
+         */
+        getCollection(): ElementCollection{
+            return ElementCollection.fromNodeList(this.element.childNodes);
+        }
+
+        /**
          * Gets the size of the element
          */
         getSize(): {width: number; height: number}{
@@ -567,6 +669,42 @@ module latte {
         }
 
         /**
+         * Loads the data of the data calls
+         */
+        loadData(){
+
+            var calls = this.loadDataCalls();
+
+            if(calls.length > 0) {
+
+                // Data will load
+                this.dataWillLoad();
+
+                // Create message
+                var m = Message.sendCalls(calls);
+
+                // Handle fail
+                m.failed.add((errorDesc) => {
+                    this.dataLoadFailed(errorDesc);
+                });
+
+                // Handle arrival
+                m.responseArrived.add(() => {
+                    this.dataDidLoad();
+                });
+
+            }
+        }
+
+        /**
+         * Override this method to indicate the element loads data
+         * @returns {null}
+         */
+        loadDataCalls(): RemoteCall<any>[]{
+            return [];
+        }
+
+        /**
          * Raises the <c>contentEditable</c> event
          */
         onContentEditableChanged(){
@@ -576,9 +714,9 @@ module latte {
 
 
             if(this.contentEditable) {
-                this.element.contentEditable = 'true';
+                this.element['contentEditable']= 'true';
             }else {
-                this.element.contentEditable = 'false';
+                this.element['contentEditable'] = 'false';
             }
         }
 
@@ -653,9 +791,14 @@ module latte {
          * Sets the content of the element, deleting all existing children.
          * @param e
          */
-        setContent(e: Element<HTMLElement>){
+        setContent(e: Element<HTMLElement>, silent: boolean = false){
             this.clear();
             this.add(e);
+
+            if(!silent) {
+                e.visible = true;
+                e.didLoad();
+            }
         }
 
         /**
@@ -670,12 +813,34 @@ module latte {
         }
 
         /**
+         * Sets the children of the element as the elements of the collection
+         * @param c
+         */
+        setCollection(c: ElementCollection){
+            this.clear();
+            this.addCollection(c);
+            return c;
+        }
+
+        /**
          * Replaces the element
          * @param e
          */
         setElement(e: T){
             this._element = null;
             this._element = e;
+        }
+
+        /**
+         * Alternates the class, adds it if no present and removes it if present.
+         * @param className
+         */
+        swapClass(className: string){
+            if(this.hasClass(className)) {
+                this.removeClass(className);
+            }else{
+                this.addClass(className);
+            }
         }
 
         toString(): string{
@@ -701,6 +866,60 @@ module latte {
                 this._contentEditableChanged = new LatteEvent(this);
             }
             return this._contentEditableChanged;
+        }
+
+
+        /**
+         * Back field for event
+         */
+        private _dataBindAdded: LatteEvent;
+
+        /**
+         * Gets an event raised when a data bind is added
+         *
+         * @returns {LatteEvent}
+         */
+        get dataBindAdded(): LatteEvent{
+            if(!this._dataBindAdded){
+                this._dataBindAdded = new LatteEvent(this);
+            }
+            return this._dataBindAdded;
+        }
+
+        /**
+         * Raises the <c>dataBindAdded</c> event
+         */
+        onDataBindAdded(b: DataBind){
+            if(this._dataBindAdded){
+                this._dataBindAdded.raise(b);
+            }
+        }
+
+
+        /**
+         * Back field for event
+         */
+        private _eventBindAdded: LatteEvent;
+
+        /**
+         * Gets an event raised when an event bind is added
+         *
+         * @returns {LatteEvent}
+         */
+        get eventBindAdded(): LatteEvent{
+            if(!this._eventBindAdded){
+                this._eventBindAdded = new LatteEvent(this);
+            }
+            return this._eventBindAdded;
+        }
+
+        /**
+         * Raises the <c>eventBindAdded</c> event
+         */
+        onEventBindAdded(b: EventBind){
+            if(this._eventBindAdded){
+                this._eventBindAdded.raise(b);
+            }
         }
 
         /**
@@ -740,6 +959,40 @@ module latte {
         //endregion
 
         //region Properties
+
+        /**
+         * Gets or sets the background color of the element
+         * @returns {string}
+         */
+        get backgroundColor(): string{
+            return this.style.backgroundColor;
+        }
+
+        /**
+         * Gets or sets the background color of the element
+         * @param value
+         */
+        set backgroundColor(value: string){
+            this.style.backgroundColor = value;
+        }
+
+        /**
+         * Gets or sets the background image url
+         *
+         * @returns {string}
+         */
+        get backgroundImageUrl():string {
+            return this.element.style.backgroundImage;
+        }
+
+        /**
+         * Gets or sets the background image url
+         *
+         * @param {string} value
+         */
+        set backgroundImageUrl(value:string) {
+            this.element.style.backgroundImage = sprintf("url(%s)", value)
+        }
 
         /**
          * Field for bindedElements property
@@ -822,7 +1075,6 @@ module latte {
             return this._dataBinds;
         }
 
-
         /**
          * Gets the height of the elements document
          *
@@ -872,7 +1124,6 @@ module latte {
             return this._eventBinds;
         }
 
-
         /**
          * Gets or sets the height of the element in pixels
          *
@@ -892,8 +1143,15 @@ module latte {
          * @param {number} value
          */
         set height(value:number) {
-            if(value == null){
-                this.style.height = '';
+            if(isNaN(value)){
+                this.element.style.height = 'auto';
+
+            }else if(value == null){
+                this.element.style.height = '';
+
+            }
+            else if(value < 1){
+                this.element.style.height = (value * 100) + 'px';
             }
             else{
                 this.element.style.height = value + 'px';
@@ -957,7 +1215,17 @@ module latte {
          * @returns {string}
          */
         get text():string {
-            return this.element.innerHTML;
+
+
+            var tagName = this.element.tagName.toLowerCase();
+
+            //log("was " +tagName)
+
+            if(tagName == 'input' || tagName == 'textarea') {
+                return this.element['value']
+            }else{
+                return this.element.innerHTML;
+            }
         }
 
         /**
@@ -966,7 +1234,14 @@ module latte {
          * @param {string} value
          */
         set text(value:string) {
-            this.element.innerHTML = value;
+            var tagName = this.element.tagName.toLowerCase();
+
+            if(tagName == 'input' || tagName == 'textarea' && !_undef(value)) {
+                this.element['value'] = value
+            }else{
+                this.element['innerHTML'] = value;
+            }
+
         }
 
         /**
@@ -1054,6 +1329,25 @@ module latte {
          */
         set width(value:number) {
             this.element.style.width = value + 'px';
+        }
+
+
+        /**
+         * Gets or sets the tooltip of the elent
+         *
+         * @returns {string}
+         */
+        get tooltip():string {
+            return this.element.title;
+        }
+
+        /**
+         * Gets or sets the tooltip of the elent
+         *
+         * @param {string} value
+         */
+        set tooltip(value:string) {
+            this.element['title'] = value;
         }
 
         //endregion

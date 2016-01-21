@@ -1,30 +1,91 @@
-justNow Ahora
-oneMinuteAgo Hace un minuto
-SMinutesAgo Hace %s minutos
-oneHourAgo Hace una hora
-SHoursAgo Hace %s horas
-yesterday Ayer
-SDaysAgo Hace %s días
-oneWeekAgo Hace una semana
-SWeeksAgo Hace %s semanas
-oneYearAgo Hace un año
-SYearsAgo Hace %s años
-sunday Domingo
-monday Lunes
-tuesday Martes
-wednesday Miércoles
-thursday Jueves
-friday Viernes
-saturday Sábado
-january Enero
-february Febrero
-march Marzo
-april Abril
-may Mayo
-june Junio
-july Julio
-august Agosto
-september Septiembre
-october Octubre
-november Noviembre
-december Diciembre
+justNow Now
+oneMinuteAgo One minute ago
+SMinutesAgo %s minutes ago
+oneHourAgo One hour ago
+SHoursAgo %s hours ago
+yesterday Yesterday
+SDaysAgo %s days ago
+oneWeekAgo One week ago
+SWeeksAgo %s weeks ago
+oneYearAgo One year ago
+SYearsAgo %s years ago
+sunday Sunday
+monday Monday
+tuesday Tuesday
+wednesday Wednesday
+thursday Thursday
+friday Friday
+saturday Saturday
+sundayShort Sun
+mondayShort Mon
+tuesdayShort Tue
+wednesdayShort Wed
+thursdayShort Thu
+fridayShort Fri
+saturdayShort Sat
+sundayInitial S
+mondayInitial M
+tuesdayInitial T
+wednesdayInitial W
+thursdayInitial T
+fridayInitial F
+saturdayInitial S
+january January
+february February
+march March
+april April
+may May
+june June
+july July
+august August
+september September
+october October
+november November
+december December
+januaryShort Jan
+februaryShort Feb
+marchShort Mar
+aprilShort Apr
+mayShort May
+juneShort Jun
+julyShort Jul
+augustShort Aug
+septemberShort Sept
+octoberShort Oct
+novemberShort Nov
+decemberShort Dec
+januaryInitial J
+februaryInitial F
+marchInitial M
+aprilInitial A
+mayInitial M
+juneInitial J
+julyInitial J
+augustInitial A
+septemberInitial S
+octoberInitial O
+novemberInitial N
+decemberInitial D
+Smillis %s milliseconds
+oneSecond 1 second
+Sseconds %s seconds
+oneMinute 1 minute
+Sminutes %s minutes
+oneHour 1 hour
+Shours %s hours
+oneDay 1 day
+Sdays %s days
+oneWeek 1 week
+Sweeks %s weeks
+SmillisShort = %sms
+oneSecondShort 1s
+SsecondsShort %ss
+oneMinuteShort 1m
+SminutesShort %sm
+oneHourShort 1h
+ShoursShort %sh
+oneDayShort 1d
+SdaysShort %sd
+oneWeekShort 1w
+SweeksShort %sw
+tomorrow Tomorrow

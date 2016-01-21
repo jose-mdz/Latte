@@ -105,7 +105,7 @@ module latte{
          **/
         private _zeroPad(n: number): string{
 
-            return n <= 9 ? '0' + n.toString : n.toString();
+            return n <= 9 ? '0' + n.toString() : n.toString();
 
         }
 
@@ -209,15 +209,40 @@ module latte{
         /**
          * Returns this timespan as a string
          **/
-        toString(): string{
+        toString(includeMilliseconds: boolean = false): string{
 
             return  (this.millis < 0 ? '-' : '') +
                 (this.days ? this.days + ' ' : '') +
                 this._zeroPad(this.hours) + ":" +
                 this._zeroPad(this.minutes) +
                 (this.seconds ? ':' + this._zeroPad(this.seconds) : '') +
-                (this.milliseconds ? '.' + Math.abs(this.milliseconds) : '');
+                (includeMilliseconds ? '.' + Math.abs(this.milliseconds) : '');
 
+        }
+
+        /**
+         * Returns the timespan as a shor string, e.g. 5 minutes or 5m
+         * @param shortNames
+         */
+        toShortString(shortNames:boolean = false){
+
+            var suf = shortNames ? 'Short' : '';
+
+            if(this.totalSeconds < 1) {
+                return sprintf(strings['Smillis' + suf], this.totalMilliseconds)
+
+            }else if(this.totalMinutes < 1) {
+                var seconds = Math.round(this.totalSeconds);
+                return sprintf(strings[(seconds == 1 ? 'oneSecond' : 'Sseconds') + suf], seconds);
+
+            }else if(this.totalHours < 1) {
+                var minutes = Math.round(this.totalMinutes);
+                return sprintf(strings[(minutes == 1 ? 'oneMinute' : 'Sminutes') + suf], minutes);
+
+            }else {
+                var hours = Math.round(this.totalHours);
+                return sprintf(strings[(hours == 1 ? 'oneHour' : 'Shours') + suf], Culture.formatNumber(hours));
+            }
         }
 
         /**

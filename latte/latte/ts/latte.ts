@@ -157,6 +157,19 @@ module latte{
     };
 
     /**
+     * Merges the two objects
+     * @param a
+     * @param b
+     * @private
+     */
+    export function _merge(a, b){
+        for(var i in a){
+            b[i] = a[i];
+        }
+        return b;
+    }
+
+    /**
      * sprintf for only %s strings
      */
     export function sprintf(...any){
