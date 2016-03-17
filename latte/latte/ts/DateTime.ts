@@ -478,7 +478,12 @@ module latte{
             }else{
                 return this.toString();
             }
-            return datePart + ' ' + timePart;
+
+            if(this.minute == 0 && this.hour == 0) {
+                timePart = '';
+            }
+
+            return timePart ? datePart + ' ' + timePart : datePart;
 
 
         }

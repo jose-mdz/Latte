@@ -612,6 +612,55 @@ declare module latte {
 }
 declare module latte {
     /**
+     * Enumerates week days
+     */
+    enum WeekDay {
+        /**
+         * Sunday
+         *
+         * @type {number}
+         */
+        SUNDAY = 0,
+        /**
+         * Monday
+         *
+         * @type {number}
+         */
+        MONDAY = 1,
+        /**
+         * Tuesday
+         *
+         * @type {number}
+         */
+        TUESDAY = 2,
+        /**
+         * Wednesday
+         *
+         * @type {number}
+         */
+        WEDNESDAY = 3,
+        /**
+         * Thursday
+         *
+         * @type {number}
+         */
+        THURSDAY = 4,
+        /**
+         * Friday
+         *
+         * @type {number}
+         */
+        FRIDAY = 5,
+        /**
+         * Saturday
+         *
+         * @type {number}
+         */
+        SATURDAY = 6,
+    }
+}
+declare module latte {
+    /**
      * Holds a list of already included plugins
      *
      * @type {Array<string>}
@@ -694,55 +743,6 @@ declare module latte {
      * @param alternateUse
      */
     function warnDeprecated(code: string, alternateUse: string): void;
-}
-declare module latte {
-    /**
-     * Enumerates week days
-     */
-    enum WeekDay {
-        /**
-         * Sunday
-         *
-         * @type {number}
-         */
-        SUNDAY = 0,
-        /**
-         * Monday
-         *
-         * @type {number}
-         */
-        MONDAY = 1,
-        /**
-         * Tuesday
-         *
-         * @type {number}
-         */
-        TUESDAY = 2,
-        /**
-         * Wednesday
-         *
-         * @type {number}
-         */
-        WEDNESDAY = 3,
-        /**
-         * Thursday
-         *
-         * @type {number}
-         */
-        THURSDAY = 4,
-        /**
-         * Friday
-         *
-         * @type {number}
-         */
-        FRIDAY = 5,
-        /**
-         * Saturday
-         *
-         * @type {number}
-         */
-        SATURDAY = 6,
-    }
 }
 declare module latte {
     /**

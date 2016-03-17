@@ -4,6 +4,7 @@ module latte{
      * Object who contains marshalled call data
      */
     export interface IRemoteCall{
+        moduleName: string;
         className: string;
         method: string;
         id: number;
@@ -28,7 +29,7 @@ module latte{
 
         /**
          * Creates the procedure with optional parameters
-         * @param module
+         * @param moduleName
          * @param className
          * @param method
          * @param params
@@ -63,9 +64,9 @@ module latte{
         /**
          * Raises the <c>failure</c> event
          */
-        onFailure(){
+        onFailure(errorDescription: string, errorCode: string){
             if(this._failure instanceof LatteEvent){
-                this._failure.raise();
+                this._failure.raise(errorDescription, errorCode);
             }
         }
 
@@ -92,7 +93,7 @@ module latte{
         /**
          * Creates a Message object and sends the call, additionally handlers for success and failure may be added.
          */
-        send(success: (data: T) => void = null, failure: () => void = null): Message{
+        send(success: (data: T) => void = null, failure: (errorDescription: string) => void = null): Message{
 
             this.withHandlers(success, failure);
 
@@ -150,7 +151,7 @@ module latte{
          * @param failure
          * @returns {latte.RemoteCall}
          */
-        withHandlers(success: (data: T) => void = null, failure: () => void = null){
+        withHandlers(success: (data: T) => void = null, failure: (errorDescription: string) => void = null): RemoteCall<any>{
 
             // Add success handler
             if(success){
@@ -325,8 +326,8 @@ module latte{
 
             if(value.success){
                 this.onSuccess(value.data);
-            }else{
-                this.onFailure();
+            //}else{
+            //    this.onFailure(value.errorCode, value.errorDescription);
             }
         }
 

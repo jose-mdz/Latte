@@ -217,6 +217,19 @@ module latte{
         //region Methods
 
         /**
+         * Copies the data
+         * @param r
+         */
+        copyFieldsDataFrom(r: DataRecord){
+
+            var fields = r.onGetFields();
+
+            for(var i in fields){
+                this[i] = fields[i];
+            }
+        }
+
+        /**
          * Gets the fields of the record, with values
          **/
         getFields():Object {

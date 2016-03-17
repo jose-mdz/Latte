@@ -37,16 +37,6 @@ module latte{
         public static log: Array<Message> = [];
 
         /**
-         * Flag to indicate if network is
-         **/
-        private static _networkAvailable: boolean = true;
-
-        /**
-         * Pointer to messages
-         **/
-        private static _pendentMessages: Collection<Message> = null;
-
-        /**
          * Holds the current amount of seconds to execute next retry
          **/
         private static _retryCountdown: number;
@@ -87,18 +77,72 @@ module latte{
         }
 
         /**
-         * Checks if newtowrk is currently available, according to last message sent.
-         **/
-        static get networkAvailable(): boolean{
-
-            return Message._networkAvailable;
-
-        }
-
-        /**
          * Assign a function to this property to be executed on global fail. Its executed on the context of the failed message
          **/
         static globalFailed: Function;
+
+        //region Network Availability
+
+        /**
+         * Property field
+         */
+        private static _networkAvailable: boolean = true;
+
+        /**
+         * Gets or sets a value indicating if the Network is currently available
+         *
+         * @returns {boolean}
+         */
+        static get networkAvailable(): boolean{
+            return Message._networkAvailable;
+        }
+
+        /**
+         * Gets or sets a value indicating if the Network is currently available
+         *
+         * @param {boolean} value
+         */
+        static set networkAvailable(value: boolean){
+
+            // Check if value changed
+            var changed: boolean = value !== Message._networkAvailable;
+
+            // Set value
+            Message._networkAvailable = value;
+
+            // Trigger changed event
+            if(changed){
+                Message.onNetworkAvailableChanged();
+            }
+        }
+
+        /**
+         * Back field for event
+         */
+        private static _networkAvailableChanged: LatteEvent;
+
+        /**
+         * Gets an event raised when the value of the networkAvailable property changes
+         *
+         * @returns {LatteEvent}
+         */
+        static get networkAvailableChanged(): LatteEvent{
+            if(!Message._networkAvailableChanged){
+                Message._networkAvailableChanged = new LatteEvent(Message);
+            }
+            return Message._networkAvailableChanged;
+        }
+
+        /**
+         * Raises the <c>networkAvailable</c> event
+         */
+        static onNetworkAvailableChanged(){
+            if(Message._networkAvailableChanged){
+                Message._networkAvailableChanged.raise();
+            }
+        }
+        //endregion
+
         //endregion
 
         //region Fields
@@ -152,15 +196,12 @@ module latte{
         /**
          * Creates the message with the specified call
          **/
-        constructor(moduleName: string = null, className: string = null, method: string = null, arguments: any = null, id: number = 0){
+        constructor(moduleName: string = null, className: string = null, method: string = null, methodArgs: any = null, id: number = 0){
 
             // Add first standard call
             if(className !== null){
-                this.calls.push(new RemoteCall(moduleName, className, method, arguments, id));
+                this.calls.push(new RemoteCall(moduleName, className, method, methodArgs, id));
             }
-
-            if(Message._pendentMessages === null)
-                Message._pendentMessages = new Collection<Message>();
 
         }
 
@@ -170,7 +211,16 @@ module latte{
          * @param calls
          */
         addCalls(calls: Array<RemoteCall<any>>){
-            this._calls = this._calls.concat(calls);
+
+            var filtered = [];
+
+            for (var i = 0; i < calls.length; i++) {
+                if(calls[i]) {
+                    filtered.push(calls[i]);
+                }
+            }
+
+            this._calls = this._calls.concat(filtered);
         }
 
         /**
@@ -187,7 +237,7 @@ module latte{
             this.response = data;
 
             /// Network is available
-            Message._networkAvailable = true;
+            Message.networkAvailable = true;
 
             /// Raise received handler
             this.onResponseArrived();
@@ -220,23 +270,7 @@ module latte{
                 this.onFailed("Can't parse or response is not an array.");
             }
 
-            if(Message.networkAvailable){
-
-                if(!Message._pendentMessages){
-                    Message._pendentMessages = new latte.Collection<latte.Message>();
-                }
-
-                // Send all messages
-                Message._pendentMessages.each(function(m){
-                    m.send();
-                });
-
-                // Clear collection
-                Message._pendentMessages.clear();
-            }
-
         }
-
 
         /**
          * Raises the failed event
@@ -247,7 +281,10 @@ module latte{
             log(errorDescription)
             log("On call(s):");
             for(var i = 0; i < this.calls.length; i++){
-                log(this.calls[i].toString());
+                var call = this.calls[i];
+                if(call) {
+                    log(call.toString());
+                }
             }
             log(this.response);
 
@@ -266,9 +303,15 @@ module latte{
          **/
         onNetworkFailed(){
 
-
             /// Networks appears to be unavailable
-            Message._networkAvailable = false;
+            Message.networkAvailable = false;
+
+            /// Raise event
+            if(this._networkFailed){
+                this._networkFailed.raise();
+            }
+
+
 
             // If no retryLeader
             if(Message._retryLeader === null){
@@ -278,15 +321,11 @@ module latte{
 
             }else if(Message._retryLeader !== this){
 
-                // Add me to pendent messages and good bye.
-                Message._pendentMessages.add(this);
+                // This used to Add me to pendent messages and good bye.
                 return;
             }
 
-            /// Raise event
-            if(this._networkFailed){
-                this._networkFailed.raise();
-            }
+
 //            this.onNetworkFailed();
 
             /// Ensure loader is there
@@ -323,7 +362,7 @@ module latte{
                 // Retry now?
                 if(Message._retryCountdown == 0){
                     LoadInfo.instance.loadingText = strings.reconnecting;
-                    Message._networkAvailable = true;
+                    Message.networkAvailable = true;
                     this.send();
                 }else if(Message._retryCountdown < 0){
                     Message._retryTimer.pause();
@@ -367,15 +406,7 @@ module latte{
         /**
          * Sends the message. Optionally adds event handlers for <c>succeeded</c> and <c>failed</c> events
          **/
-        send(success: (data:any) => any = null, failure: () => any = null): Message{
-
-            if(!Message.networkAvailable){
-
-                // Add to pendent messages
-                Message._pendentMessages.add(this);
-
-                return this;
-            }
+        send(success: (data:any) => any = null, failure: (errorDesc:string) => any = null): Message{
 
             if(success || failure){
                 if(this.calls.length !== 1){
@@ -396,7 +427,11 @@ module latte{
             var calls: Array<IRemoteCall> = [];
 
             for(var i = 0; i < this.calls.length; i++){
-                calls.push(this.calls[i].marshall());
+                var call = this.calls[i];
+
+                if(call) {
+                    calls.push(call.marshall());
+                }
             }
 
             //log(sprintf("Call: %s, %s", DateTime.now.toString(), JSON.stringify(calls)));
@@ -420,7 +455,7 @@ module latte{
             }, (error: string) => {
                 this._working = false;
 
-                log("Message.send() [Error]: " + error);
+                //log("Message.send() [Error]: " + error);
 
                 this.onNetworkFailed();
             });
@@ -497,7 +532,6 @@ module latte{
             }
             return this._failed;
         }
-
 
         /**
          * Gets an event raised when the network fails
