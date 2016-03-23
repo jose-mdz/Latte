@@ -41,11 +41,10 @@ module latte{
          */
         private _tag: any;
 
-
         /**
          * Creates a rectangle with the specified left, top, width and height.
          **/
-            constructor(left: number = 0, top: number = 0, width: number = 0, height: number = 0){
+        constructor(left: number = 0, top: number = 0, width: number = 0, height: number = 0){
 
             this.top = top;
             this.left = left;
@@ -57,7 +56,7 @@ module latte{
         /**
          * Returns the result of centering this into the specified container
          **/
-            center(container: Rectangle): Rectangle{
+        center(container: Rectangle): Rectangle{
 
             var c = new Rectangle( container.left + (container.width - this.width) / 2,
                 container.top + (container.height - this.height) / 2, this.width, this.height );
@@ -68,8 +67,7 @@ module latte{
         /**
          * Gets a value indicating if the specified point is contained
          **/
-    contains(x: number, y: number): boolean{
-
+        contains(x: number, y: number): boolean{
 
             return this._left <= x && this.right >= x
                 && this._top <= y && this.bottom >= y
@@ -79,7 +77,7 @@ module latte{
         /**
          * Gets a value indicating if the rectangle is contained inside this rectangle
          **/
-            containsRectangle(rectangle: Rectangle): boolean{
+        containsRectangle(rectangle: Rectangle): boolean{
 
             return this.contains( rectangle.left, rectangle.top)
                 && this.contains( rectangle.right, rectangle.bottom);
@@ -89,7 +87,7 @@ module latte{
         /**
          * Returns the result of inflating the rectangle vertically and horizontally on each edge.
          **/
-            inflate(horizontal: number, vertical: number): Rectangle{
+        inflate(horizontal: number, vertical: number): Rectangle{
 
 
             // Check arguments
@@ -104,7 +102,7 @@ module latte{
         /**
          * Returns the rectangle result of intersecting this with passed rectangle
          **/
-            intersection(rectangle: Rectangle): Rectangle{
+        intersection(rectangle: Rectangle): Rectangle{
 
             return Rectangle.fromLRTB(
                 Math.max(this.left, rectangle.left),
@@ -118,7 +116,7 @@ module latte{
         /**
          * Gets a value indicating if the rectangle intersects specified rectangle
          **/
-            intersects(rectangle: Rectangle): boolean{
+        intersects(rectangle: Rectangle): boolean{
 
             return this.contains(rectangle.left, rectangle.top)
                 || this.contains(rectangle.right, rectangle.top)
@@ -130,7 +128,7 @@ module latte{
         /**
          * Returns a string describing the rectangle
          **/
-            toString(): string{
+        toString(): string{
 
             return "Rectangle: " + [this._left, this._top, this._width, this._height].join(', ');
 
@@ -139,7 +137,7 @@ module latte{
         /**
          * Gets a rectangle representing the union of this rectangle and the passed one
          **/
-            union(rectangle: Rectangle): Rectangle{
+        union(rectangle: Rectangle): Rectangle{
 
             return Rectangle.fromLRTB(
                 Math.min(this.left, rectangle.left),

@@ -60,7 +60,7 @@ module latte{
                     this.width = r.width;
                     break;
                 default:
-                    throw new Ex(); break;
+                    throw new Ex();
             }
 
 //            this.appendTo('body');

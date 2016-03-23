@@ -432,7 +432,7 @@ module latte{
 
             var r = [];
 
-            var item = this;
+            var item: TreeItem = this;
 
             while(item != null){
                 r.push(item.text);

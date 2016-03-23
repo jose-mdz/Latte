@@ -1,8 +1,7 @@
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var latte;
 (function (latte) {
@@ -112,9 +111,7 @@ var latte;
         /**
         * Gets the name of the autoincrement field
         **/
-        personBase.prototype.onGetRecordIdName = function () {
-            return 'idperson';
-        };
+        personBase.prototype.onGetRecordIdName = function () { return 'idperson'; };
         Object.defineProperty(personBase.prototype, "idcategory", {
             /**
              * Gets or sets the value of the idcategory field of type int(11)
@@ -622,9 +619,7 @@ var latte;
         /**
         * Override. Gets data about the fields of the record.
         **/
-        personBase.prototype.onGetFields = function () {
-            return { 'idperson': this.idperson, 'idcategory': this.idcategory, 'title': this.title, 'name': this.name, 'lastname': this.lastname, 'birth': this.birth, 'sex': this.sex, 'address': this.address, 'phone': this.phone, 'mobile': this.mobile, 'note': this.note, 'company': this.company, 'email': this.email };
-        };
+        personBase.prototype.onGetFields = function () { return { 'idperson': this.idperson, 'idcategory': this.idcategory, 'title': this.title, 'name': this.name, 'lastname': this.lastname, 'birth': this.birth, 'sex': this.sex, 'address': this.address, 'phone': this.phone, 'mobile': this.mobile, 'note': this.note, 'company': this.company, 'email': this.email }; };
         /*
          * Remote Method.
  Searches for persons in the database
@@ -638,31 +633,8 @@ var latte;
             return new latte.RemoteCall('app.list', 'Person', 'search', { term: term, page: page, pageSize: pageSize });
         };
         return personBase;
-    })(latte.DataRecord);
+    }(latte.DataRecord));
     latte.personBase = personBase;
-})(latte || (latte = {}));
-/**
- * Created by josemanuel on 6/11/14.
- */
-var latte;
-(function (latte) {
-    /**
-     *
-     */
-    var Main = (function () {
-        //region Static
-        //endregion
-        //region Fields
-        //endregion
-        /**
-         *
-         */
-        function Main() {
-            latte.View.mainView = new latte.MainView();
-        }
-        return Main;
-    })();
-    latte.Main = Main;
 })(latte || (latte = {}));
 /**
  * Created by josemanuel on 6/11/14.
@@ -695,10 +667,9 @@ var latte;
             var _this = this;
             var p = new latte.Person();
             var d = new latte.DataRecordDialogView(p);
+            d.title = strings.newPerson;
             d.show();
-            d.saved.add(function () {
-                _this.loadList();
-            });
+            d.saved.add(function () { _this.loadList(); });
         };
         //endregion
         //region Methods
@@ -732,9 +703,7 @@ var latte;
             get: function () {
                 var _this = this;
                 if (!this._btnNew) {
-                    this._btnNew = new latte.ButtonItem(strings.newPerson, latte.IconItem.standard(2, 1), function () {
-                        _this.btnNew_Click();
-                    });
+                    this._btnNew = new latte.ButtonItem(strings.newPerson, latte.IconItem.standard(2, 1), function () { _this.btnNew_Click(); });
                 }
                 return this._btnNew;
             },
@@ -751,9 +720,7 @@ var latte;
                 var _this = this;
                 if (!this._paginator) {
                     this._paginator = new latte.PaginationItem();
-                    this._paginator.pageChanged.add(function () {
-                        _this.loadList();
-                    });
+                    this._paginator.pageChanged.add(function () { _this.loadList(); });
                 }
                 return this._paginator;
             },
@@ -782,8 +749,31 @@ var latte;
             configurable: true
         });
         return MainView;
-    })(latte.ToolbarView);
+    }(latte.ToolbarView));
     latte.MainView = MainView;
+})(latte || (latte = {}));
+/**
+ * Created by josemanuel on 6/11/14.
+ */
+var latte;
+(function (latte) {
+    /**
+     *
+     */
+    var Main = (function () {
+        //region Static
+        //endregion
+        //region Fields
+        //endregion
+        /**
+         *
+         */
+        function Main() {
+            latte.View.mainView = new latte.MainView();
+        }
+        return Main;
+    }());
+    latte.Main = Main;
 })(latte || (latte = {}));
 /**
  * Created by josemanuel on 6/11/14.
@@ -830,6 +820,20 @@ var latte;
             };
         };
         return Person;
-    })(latte.personBase);
+    }(latte.personBase));
     latte.Person = Person;
 })(latte || (latte = {}));
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/app.list/support/ts-include/app.list.strings.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/app.list/support/ts-include/datalatte.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/app.list/support/ts-include/jquery.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/app.list/support/ts-include/latte.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/app.list/support/ts-include/latte.data.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/app.list/support/ts-include/latte.data.strings.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/app.list/support/ts-include/latte.data.ui.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/app.list/support/ts-include/latte.strings.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/app.list/support/ts-include/latte.ui.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/app.list/support/ts-include/latte.ui.strings.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/app.list/support/ts-include/records.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/app.list/ts/views/MainView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/app.list/ts/Main.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/app.list/ts/views/Person.ts" /> 

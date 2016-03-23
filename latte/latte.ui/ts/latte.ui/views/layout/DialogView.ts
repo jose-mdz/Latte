@@ -218,9 +218,6 @@ module latte{
          **/
         constructor(view:View = null, items:Array<Item> = null) {
 
-
-            var d = this;
-
             super();
             DialogView._initialize();
 

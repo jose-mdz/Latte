@@ -1,48 +1,8 @@
-var latte;
-(function (latte) {
-    /**
-     * Saves full lists of records in Memory
-     *
-     * <example>
-     * // Load cache of users
-     * Cache.load('User', 'users');
-     *
-     * // After load, now we can use the users cache
-     * // Cache.users is a DataRecordCollection object
-     * for(var i = 0; i < Cache.users.count; i++)
-     *  console.log(Cache.users.item(i));
-     * </example>
-     *
-     */
-    var Cache = (function () {
-        function Cache() {
-        }
-        /**
-         * Loads a cache of the specified name into cache itself.
-         * @param recordType
-         * @param name
-         * @param callback
-         * @returns {null}
-         */
-        Cache.prototype.load = function (recordType, name, callback) {
-            /*
-            DataRecord.fromListing(recordType, '/', {}, function(stages){
-
-                // Add users to cache
-                latte.Cache[name] = new latte.DataRecordCollection();
-                latte.Cache[name].add(stages);
-
-                // Call callback
-                if(_isFunction(callback))
-                    callback.call(this);
-            });*/
-            if (callback === void 0) { callback = null; }
-            return null;
-        };
-        return Cache;
-    })();
-    latte.Cache = Cache;
-})(latte || (latte = {}));
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var latte;
 (function (latte) {
     /**
@@ -102,7 +62,8 @@ var latte;
          * Creates a record from the specified name and id. If no id is specified, empty record will arrive.
          **/
         DataRecord.fromName = function (name, id, callback) {
-            var m = new latte.Message('_core', 'DataLatteUa', 'recordSelect', { name: name, id: id }).send(function (record) {
+            var m = new latte.Message('_core', 'DataLatteUa', 'recordSelect', { name: name, id: id })
+                .send(function (record) {
                 // Execute callback with record
                 callback(record);
             });
@@ -134,6 +95,7 @@ var latte;
                 for (i in obj.properties) {
                     // If property is an array
                     if (latte._isArray(obj.properties[i])) {
+                        // Check if contains records
                         for (j = 0; j < obj.properties[i].length; j++) {
                             obj.properties[i][j] = latte.DataRecord.fromServerObject(obj.properties[i][j]);
                         }
@@ -169,9 +131,21 @@ var latte;
          is a packed Object
          **/
         DataRecord.isPackedRecord = function (object) {
-            return latte._isObject(object) && object.type == 'DataRecord' && !latte._undef(object.recordType);
+            return latte._isObject(object)
+                && object.type == 'DataRecord'
+                && !latte._undef(object.recordType);
         };
         //region Methods
+        /**
+         * Copies the data
+         * @param r
+         */
+        DataRecord.prototype.copyFieldsDataFrom = function (r) {
+            var fields = r.onGetFields();
+            for (var i in fields) {
+                this[i] = fields[i];
+            }
+        };
         /**
          * Gets the fields of the record, with values
          **/
@@ -215,6 +189,7 @@ var latte;
         DataRecord.prototype.insertCall = function () {
             var _this = this;
             var values = this.getFields();
+            // Change null values to empty values
             for (var i in values) {
                 if (values[i] === null) {
                     values[i] = '';
@@ -310,6 +285,7 @@ var latte;
          */
         DataRecord.prototype.updateCall = function () {
             var values = this.getFields();
+            // Change null values to empty values
             for (var i in values) {
                 if (values[i] === null) {
                     values[i] = '';
@@ -415,15 +391,9 @@ var latte;
          */
         DataRecord.recordsNamespaceName = 'latte';
         return DataRecord;
-    })();
+    }());
     latte.DataRecord = DataRecord;
 })(latte || (latte = {}));
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
 var latte;
 (function (latte) {
     /**
@@ -456,8 +426,53 @@ var latte;
             return null;
         };
         return DataRecordCollection;
-    })(latte.Collection);
+    }(latte.Collection));
     latte.DataRecordCollection = DataRecordCollection;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
+     * Saves full lists of records in Memory
+     *
+     * <example>
+     * // Load cache of users
+     * Cache.load('User', 'users');
+     *
+     * // After load, now we can use the users cache
+     * // Cache.users is a DataRecordCollection object
+     * for(var i = 0; i < Cache.users.count; i++)
+     *  console.log(Cache.users.item(i));
+     * </example>
+     *
+     */
+    var Cache = (function () {
+        function Cache() {
+        }
+        /**
+         * Loads a cache of the specified name into cache itself.
+         * @param recordType
+         * @param name
+         * @param callback
+         * @returns {null}
+         */
+        Cache.prototype.load = function (recordType, name, callback) {
+            /*
+            DataRecord.fromListing(recordType, '/', {}, function(stages){
+
+                // Add users to cache
+                latte.Cache[name] = new latte.DataRecordCollection();
+                latte.Cache[name].add(stages);
+
+                // Call callback
+                if(_isFunction(callback))
+                    callback.call(this);
+            });*/
+            if (callback === void 0) { callback = null; }
+            return null;
+        };
+        return Cache;
+    }());
+    latte.Cache = Cache;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -573,7 +588,7 @@ var latte;
             return this;
         };
         return DataSet;
-    })();
+    }());
     latte.DataSet = DataSet;
 })(latte || (latte = {}));
 var latte;
@@ -683,7 +698,7 @@ var latte;
             configurable: true
         });
         return DataSetColumn;
-    })();
+    }());
     latte.DataSetColumn = DataSetColumn;
 })(latte || (latte = {}));
 var latte;
@@ -766,7 +781,7 @@ var latte;
             this.data[index] = value;
         };
         return DataSetRow;
-    })();
+    }());
     latte.DataSetRow = DataSetRow;
 })(latte || (latte = {}));
 var latte;
@@ -801,11 +816,11 @@ var latte;
         /**
          * Creates the message with the specified call
          **/
-        function Message(moduleName, className, method, arguments, id) {
+        function Message(moduleName, className, method, methodArgs, id) {
             if (moduleName === void 0) { moduleName = null; }
             if (className === void 0) { className = null; }
             if (method === void 0) { method = null; }
-            if (arguments === void 0) { arguments = null; }
+            if (methodArgs === void 0) { methodArgs = null; }
             if (id === void 0) { id = 0; }
             /**
              *
@@ -813,10 +828,8 @@ var latte;
             this._calls = [];
             // Add first standard call
             if (className !== null) {
-                this.calls.push(new latte.RemoteCall(moduleName, className, method, arguments, id));
+                this.calls.push(new latte.RemoteCall(moduleName, className, method, methodArgs, id));
             }
-            if (Message._pendentMessages === null)
-                Message._pendentMessages = new latte.Collection();
         }
         /**
          * Directly sends an array of calls
@@ -831,21 +844,67 @@ var latte;
         };
         Object.defineProperty(Message, "networkAvailable", {
             /**
-             * Checks if newtowrk is currently available, according to last message sent.
-             **/
+             * Gets or sets a value indicating if the Network is currently available
+             *
+             * @returns {boolean}
+             */
             get: function () {
                 return Message._networkAvailable;
+            },
+            /**
+             * Gets or sets a value indicating if the Network is currently available
+             *
+             * @param {boolean} value
+             */
+            set: function (value) {
+                // Check if value changed
+                var changed = value !== Message._networkAvailable;
+                // Set value
+                Message._networkAvailable = value;
+                // Trigger changed event
+                if (changed) {
+                    Message.onNetworkAvailableChanged();
+                }
             },
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(Message, "networkAvailableChanged", {
+            /**
+             * Gets an event raised when the value of the networkAvailable property changes
+             *
+             * @returns {LatteEvent}
+             */
+            get: function () {
+                if (!Message._networkAvailableChanged) {
+                    Message._networkAvailableChanged = new latte.LatteEvent(Message);
+                }
+                return Message._networkAvailableChanged;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Raises the <c>networkAvailable</c> event
+         */
+        Message.onNetworkAvailableChanged = function () {
+            if (Message._networkAvailableChanged) {
+                Message._networkAvailableChanged.raise();
+            }
+        };
         //region Methods
         /**
          * Adds calls to the calls array
          * @param calls
          */
         Message.prototype.addCalls = function (calls) {
-            this._calls = this._calls.concat(calls);
+            var filtered = [];
+            for (var i = 0; i < calls.length; i++) {
+                if (calls[i]) {
+                    filtered.push(calls[i]);
+                }
+            }
+            this._calls = this._calls.concat(filtered);
         };
         /**
          * Reacts to data arrived
@@ -857,23 +916,24 @@ var latte;
             /// Assign response
             this.response = data;
             /// Network is available
-            Message._networkAvailable = true;
+            Message.networkAvailable = true;
             /// Raise received handler
             this.onResponseArrived();
             // Check if data arrived
             if (data.length == 0) {
                 this.onFailed("Empty response from server");
             }
+            // Try to parse JSON
             try {
                 result = JSON.parse(data);
                 parsed = true;
             }
-            catch (ex) {
-            }
+            catch (ex) { }
             if (parsed && latte._isArray(result)) {
                 if (result.length !== this.calls.length) {
                     this.onFailed("Different amount of response than calls");
                 }
+                // Report response for each sent call
                 for (var i = 0; i < this.calls.length; i++) {
                     this.calls[i].respond(result[i]);
                 }
@@ -881,17 +941,6 @@ var latte;
             else {
                 /// Raise failed event
                 this.onFailed("Can't parse or response is not an array.");
-            }
-            if (Message.networkAvailable) {
-                if (!Message._pendentMessages) {
-                    Message._pendentMessages = new latte.Collection();
-                }
-                // Send all messages
-                Message._pendentMessages.each(function (m) {
-                    m.send();
-                });
-                // Clear collection
-                Message._pendentMessages.clear();
             }
         };
         /**
@@ -902,7 +951,10 @@ var latte;
             latte.log(errorDescription);
             latte.log("On call(s):");
             for (var i = 0; i < this.calls.length; i++) {
-                latte.log(this.calls[i].toString());
+                var call = this.calls[i];
+                if (call) {
+                    latte.log(call.toString());
+                }
             }
             latte.log(this.response);
             if (this._failed instanceof latte.LatteEvent) {
@@ -917,20 +969,19 @@ var latte;
          **/
         Message.prototype.onNetworkFailed = function () {
             /// Networks appears to be unavailable
-            Message._networkAvailable = false;
+            Message.networkAvailable = false;
+            /// Raise event
+            if (this._networkFailed) {
+                this._networkFailed.raise();
+            }
             // If no retryLeader
             if (Message._retryLeader === null) {
                 // I am the retry leader
                 Message._retryLeader = this;
             }
             else if (Message._retryLeader !== this) {
-                // Add me to pendent messages and good bye.
-                Message._pendentMessages.add(this);
+                // This used to Add me to pendent messages and good bye.
                 return;
-            }
-            /// Raise event
-            if (this._networkFailed) {
-                this._networkFailed.raise();
             }
             //            this.onNetworkFailed();
             /// Ensure loader is there
@@ -959,7 +1010,7 @@ var latte;
                 // Retry now?
                 if (Message._retryCountdown == 0) {
                     latte.LoadInfo.instance.loadingText = strings.reconnecting;
-                    Message._networkAvailable = true;
+                    Message.networkAvailable = true;
                     this.send();
                 }
                 else if (Message._retryCountdown < 0) {
@@ -1000,11 +1051,6 @@ var latte;
             var _this = this;
             if (success === void 0) { success = null; }
             if (failure === void 0) { failure = null; }
-            if (!Message.networkAvailable) {
-                // Add to pendent messages
-                Message._pendentMessages.add(this);
-                return this;
-            }
             if (success || failure) {
                 if (this.calls.length !== 1) {
                     throw new latte.Ex("Can't assign handlers when more than one call in message");
@@ -1022,7 +1068,10 @@ var latte;
             // Gather calls
             var calls = [];
             for (var i = 0; i < this.calls.length; i++) {
-                calls.push(this.calls[i].marshall());
+                var call = this.calls[i];
+                if (call) {
+                    calls.push(call.marshall());
+                }
             }
             //log(sprintf("Call: %s, %s", DateTime.now.toString(), JSON.stringify(calls)));
             latte.Ajax.post(Message.pathToRequest, {
@@ -1039,7 +1088,7 @@ var latte;
                 _this.dataArrived(data);
             }, function (error) {
                 _this._working = false;
-                latte.log("Message.send() [Error]: " + error);
+                //log("Message.send() [Error]: " + error);
                 _this.onNetworkFailed();
             });
             //$.ajax({
@@ -1159,19 +1208,16 @@ var latte;
         //region Static
         Message.log = [];
         /**
-         * Flag to indicate if network is
-         **/
-        Message._networkAvailable = true;
-        /**
-         * Pointer to messages
-         **/
-        Message._pendentMessages = null;
-        /**
          * Path where requests are made
          */
         Message.pathToRequest = "/latte/request.php";
+        //region Network Availability
+        /**
+         * Property field
+         */
+        Message._networkAvailable = true;
         return Message;
-    })();
+    }());
     latte.Message = Message;
 })(latte || (latte = {}));
 var latte;
@@ -1183,7 +1229,7 @@ var latte;
         //endregion
         /**
          * Creates the procedure with optional parameters
-         * @param module
+         * @param moduleName
          * @param className
          * @param method
          * @param params
@@ -1242,9 +1288,9 @@ var latte;
         /**
          * Raises the <c>failure</c> event
          */
-        RemoteCall.prototype.onFailure = function () {
+        RemoteCall.prototype.onFailure = function (errorDescription, errorCode) {
             if (this._failure instanceof latte.LatteEvent) {
-                this._failure.raise();
+                this._failure.raise(errorDescription, errorCode);
             }
         };
         /**
@@ -1492,9 +1538,6 @@ var latte;
                 if (value.success) {
                     this.onSuccess(value.data);
                 }
-                else {
-                    this.onFailure();
-                }
             },
             enumerable: true,
             configurable: true
@@ -1531,7 +1574,7 @@ var latte;
             configurable: true
         });
         return RemoteCall;
-    })();
+    }());
     latte.RemoteCall = RemoteCall;
 })(latte || (latte = {}));
 var latte;
@@ -1578,7 +1621,7 @@ var latte;
             else {
                 latte.log("Error on call: " + this.call.toString());
                 latte.log(latte.sprintf("(%s) - %s", this.errorCode, this.errorDescription));
-                this.call.onFailure();
+                this.call.onFailure(this.errorDescription, String(this.errorCode));
             }
         };
         Object.defineProperty(RemoteResponse.prototype, "call", {
@@ -1690,6 +1733,19 @@ var latte;
             configurable: true
         });
         return RemoteResponse;
-    })();
+    }());
     latte.RemoteResponse = RemoteResponse;
 })(latte || (latte = {}));
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/support/ts-include/datalatte.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/support/ts-include/latte.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/support/ts-include/latte.data.strings.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/support/ts-include/latte.strings.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/DataRecord.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/DataRecordCollection.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/Cache.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/DataSet.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/DataSetColumn.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/DataSetRow.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/Message.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/RemoteCall.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/RemoteResponse.ts" /> 

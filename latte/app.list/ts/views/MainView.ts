@@ -36,6 +36,7 @@ module latte {
             var p = new Person();
             var d = new DataRecordDialogView(p);
 
+            d.title = strings.newPerson;
             d.show();
 
             d.saved.add(() => { this.loadList() });

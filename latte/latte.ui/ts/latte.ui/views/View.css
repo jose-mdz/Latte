@@ -30,7 +30,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255,255,255, 0.7);
+    background: rgba(255,255,255, 0.85);
 }
 
 .latte-modal-view{
@@ -39,9 +39,9 @@
     left: 0;
     width: 500px;
     /*border: solid 1px silver;*/
-    box-shadow: 0 0 30px rgba(0,0,0,0.7);
+    box-shadow: 0 0 30px rgba(0,0,0,0.3);
     border-radius: 4px;
-    background: #f6f6f6;
+    background: #f6f6f6; /*#f9f9f9*/
 }
 
 .small-screen .latte-modal-view{

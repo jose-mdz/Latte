@@ -1,3 +1,8 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 /// jQuery Rectangle plugin
 (function ($) {
     $['fn'].rectangle = function (rect, relative) {
@@ -36,15 +41,11 @@
 /**
  * Adds a cleaner of Css float properties to the elements
  */
-$.fn.clear = function () {
-    return this.append($('<div>').css({ 'clear': 'both' }));
-};
+$.fn.clear = function () { return this.append($('<div>').css({ 'clear': 'both' })); };
 /**
  * Returns the latte instance object related with first element
  */
-$.fn.instance = function () {
-    return this.data('instance');
-};
+$.fn.instance = function () { return this.data('instance'); };
 var latte;
 (function (latte) {
     /**
@@ -173,20 +174,15 @@ var latte;
             this.contextItems = new latte.Collection();
             // Initialize static collection
             if (!UiElement._contextItemsCollect)
-                UiElement._contextItemsCollect = new latte.Collection();
+                UiElement._contextItemsCollect =
+                    new latte.Collection();
             // Create base element
             this.element = $('<div>');
             this.element.addClass('latte-uielement');
             this.element.data('instance', this);
-            this.element.mousedown(function (e) {
-                return _this._mouseDown(e);
-            });
-            this.element.click(function (e) {
-                return _this._click(e);
-            });
-            this.element.bind('contextmenu', function (e) {
-                return _this._contextMenu(e);
-            });
+            this.element.mousedown(function (e) { return _this._mouseDown(e); });
+            this.element.click(function (e) { return _this._click(e); });
+            this.element.bind('contextmenu', function (e) { return _this._contextMenu(e); });
             // Disable text selection
             //UiElement.disableTextSelection(this.element);
         }
@@ -197,7 +193,8 @@ var latte;
         UiElement.disableTextSelection = function (element) {
             if (!(element instanceof jQuery))
                 throw new latte.InvalidArgumentEx('element');
-            element.attr('unselectable', 'on').css({
+            element.attr('unselectable', 'on')
+                .css({
                 '-moz-user-select': 'none',
                 '-webkit-user-select': 'none',
                 '-ms-user-select': 'none',
@@ -212,7 +209,8 @@ var latte;
          * Enables the text selection feature of User Agent on the specified element.
          **/
         UiElement.enableTextSelection = function (element) {
-            element.attr('unselectable', 'off').css({
+            element.attr('unselectable', 'off')
+                .css({
                 '-moz-user-select': '',
                 '-webkit-user-select': '',
                 '-ms-user-select': '',
@@ -230,30 +228,27 @@ var latte;
          */
         UiElement.oppositeSide = function (side) {
             switch (side) {
-                case 32 /* TOP */:
-                    return 4 /* BOTTOM */;
-                case 4 /* BOTTOM */:
-                    return 32 /* TOP */;
-                case 8 /* LEFT */:
-                    return 16 /* RIGHT */;
-                case 16 /* RIGHT */:
-                    return 8 /* LEFT */;
-                default:
-                    return 4 /* BOTTOM */;
+                case latte.Side.TOP: return latte.Side.BOTTOM;
+                case latte.Side.BOTTOM: return latte.Side.TOP;
+                case latte.Side.LEFT: return latte.Side.RIGHT;
+                case latte.Side.RIGHT: return latte.Side.LEFT;
+                default: return latte.Side.BOTTOM;
             }
         };
         /**
          * Static initializator
          */
         UiElement.staticInit = function () {
-            $('body').mousemove(function (e) {
+            $('body')
+                .mousemove(function (e) {
                 if (UiElement.dragging) {
                     UiElement._dragElement.css({
                         top: e.pageY + 10,
                         left: e.pageX + 10
                     });
                 }
-            }).mouseup(function (e) {
+            })
+                .mouseup(function (e) {
                 UiElement._dragging = false;
                 if (UiElement._dragElement) {
                     UiElement._dragElement.remove();
@@ -473,7 +468,8 @@ var latte;
             // Add items of this item
             buffer.addCollection(this.contextItems);
             // If no parent elements and there's items to show
-            if (this.element.parents('.latte-uielement').length == 0 && buffer.count > 0) {
+            if (this.element.parents('.latte-uielement').length == 0
+                && buffer.count > 0) {
                 latte.MenuOverlay.closeAll();
                 // Create menu
                 var m = new latte.MenuOverlay();
@@ -628,7 +624,8 @@ var latte;
                 }
                 this._dragSource = value;
                 var hTimeout = 0;
-                this._dragSource.mousedown(function (e) {
+                this._dragSource
+                    .mousedown(function (e) {
                     if (e.which == 1) {
                         // Set up timeout to start dragging
                         hTimeout = setTimeout(function () {
@@ -641,7 +638,8 @@ var latte;
                         e.stopPropagation();
                         return false;
                     }
-                }).mouseup(function (e) {
+                })
+                    .mouseup(function (e) {
                     // Cancel timeout
                     if (hTimeout) {
                         clearTimeout(hTimeout);
@@ -886,15 +884,9 @@ var latte;
          */
         UiElement._dropTarget = null;
         return UiElement;
-    })();
+    }());
     latte.UiElement = UiElement;
 })(latte || (latte = {}));
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
 var latte;
 (function (latte) {
     /**
@@ -916,24 +908,29 @@ var latte;
          * Creates a Clickable element. This element will react to clicks and mouse movement.
          **/
         Item.clickable = function () {
-            return latte.UiElement.disableTextSelection($('<div>').addClass('clickable').mouseover(function () {
+            return latte.UiElement.disableTextSelection($('<div>')
+                .addClass('clickable')
+                .mouseover(function () {
                 var $this = $(this);
                 if ($this.hasClass('disabled'))
                     return;
                 if (!$this.hasClass('with-menu'))
                     $this.addClass('hover');
-            }).mouseout(function () {
+            })
+                .mouseout(function () {
                 var $this = $(this);
                 if ($this.hasClass('disabled'))
                     return;
                 $this.removeClass('hover');
                 $this.removeClass('pressed');
-            }).mousedown(function () {
+            })
+                .mousedown(function () {
                 var $this = $(this);
                 if ($this.hasClass('disabled'))
                     return;
                 $this.addClass('pressed');
-            }).mouseup(function () {
+            })
+                .mouseup(function () {
                 var $this = $(this);
                 // Remove Pressed
                 $this.removeClass('pressed');
@@ -952,7 +949,9 @@ var latte;
          * Creates a Selectable element. This element will react to clicks and mouse movement.
          **/
         Item.selectable = function () {
-            return latte.UiElement.disableTextSelection($('<div>').addClass('selectable').click(function () {
+            return latte.UiElement.disableTextSelection($('<div>')
+                .addClass('selectable')
+                .click(function () {
                 var $this = $(this);
                 if ($this.hasClass('selected')) {
                     $this.removeClass('selected');
@@ -961,10 +960,12 @@ var latte;
                     $this.addClass('selected');
                     $this.removeClass('hover');
                 }
-            }).mouseover(function () {
+            })
+                .mouseover(function () {
                 if (!$(this).hasClass('selected'))
                     $(this).addClass('hover');
-            }).mouseout(function () {
+            })
+                .mouseout(function () {
                 $(this).removeClass('hover pressed');
             }));
         };
@@ -1015,7 +1016,7 @@ var latte;
             configurable: true
         });
         return Item;
-    })(latte.UiElement);
+    }(latte.UiElement));
     latte.Item = Item;
 })(latte || (latte = {}));
 var latte;
@@ -1060,8 +1061,9 @@ var latte;
          **/
         View.initStatic = function () {
             View.smallScreenChanged = new latte.LatteEvent(this);
-            $(document).keydown(function (e) {
-                if (e.keyCode == 13 /* ENTER */) {
+            $(document)
+                .keydown(function (e) {
+                if (e.keyCode == latte.Key.ENTER) {
                     if (View.defaultButton instanceof latte.ButtonItem)
                         View.defaultButton.onClick();
                 }
@@ -1104,18 +1106,14 @@ var latte;
             // Hide previous modal
             if (this._modalView instanceof View && this._modalView !== view) {
                 if (this._layer) {
-                    this._layer.fadeOut(function () {
-                        $(this).remove();
-                    });
+                    this._layer.fadeOut(function () { $(this).remove(); });
                     this._layer = null;
                 }
                 if (this._modalView) {
                     var parentsParent = this._modalView.element.parent().parent();
                     parentsParent.animate({
                         top: $(window).height()
-                    }, 'fast', 'swing', function () {
-                        parentsParent.remove();
-                    });
+                    }, 'fast', 'swing', function () { parentsParent.remove(); });
                 }
             }
             if (view instanceof View) {
@@ -1150,9 +1148,7 @@ var latte;
                 view.onLayout();
                 // Show now
                 layer.css({ opacity: 0 }).animate({ opacity: 1 }, 'fast');
-                dialog.css(start).animate(end, 'fast', 'swing', function () {
-                    view.focusInput();
-                });
+                dialog.css(start).animate(end, 'fast', 'swing', function () { view.focusInput(); });
                 this._layer = layer;
             }
             this._modalView = view;
@@ -1334,16 +1330,13 @@ var latte;
                 if (this.unsavedChanges) {
                     var btnSave = new latte.ButtonItem();
                     btnSave.text = strings.yesSaveChanges;
-                    btnSave.click.add(function () {
-                        _this.saveChanges();
-                    });
+                    btnSave.click.add(function () { _this.saveChanges(); });
                     var btnIgnore = new latte.ButtonItem();
                     btnIgnore.text = strings.noIgnoreChanges;
-                    btnIgnore.click.add(function () {
-                        _this.unsavedChanges = false;
-                    });
+                    btnIgnore.click.add(function () { _this.unsavedChanges = false; });
                     // Ask if user wants to save changes
-                    latte.DialogView.ask(strings.askSaveChanges, strings.unsavedChanges, [btnSave, btnIgnore]);
+                    latte.DialogView
+                        .ask(strings.askSaveChanges, strings.unsavedChanges, [btnSave, btnIgnore]);
                 }
             }
             return response;
@@ -1378,7 +1371,7 @@ var latte;
                 return true;
             // Set default transition
             if (latte._undef(transition))
-                transition = 0 /* FADE */;
+                transition = latte.Transition.FADE;
             // Unload current view
             if (this._view instanceof View) {
                 if (this._view.onUnload() === false) {
@@ -1399,12 +1392,13 @@ var latte;
             }
             if (oldView)
                 oldView._parentView = null;
+            // Prepare states for animation
             switch (transition) {
-                case 0 /* FADE */:
+                case latte.Transition.FADE:
                     oldStart.opacity = newEnd.opacity = 1;
                     oldEnd.opacity = newStart.opacity = 0;
                     break;
-                case 1 /* SWIPE_FORWARD */:
+                case latte.Transition.SWIPE_FORWARD:
                     oldEnd.left = oldView ? -oldView.element.width() : 0;
                     newStart.left = newView ? newView.element.width() : 0;
                     newEnd.left = 0;
@@ -1578,11 +1572,9 @@ var latte;
         //region Static
         View._smallScreen = false;
         return View;
-    })(latte.UiElement);
+    }(latte.UiElement));
     latte.View = View;
-    $(function () {
-        View.initStatic();
-    });
+    $(function () { View.initStatic(); });
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -1657,7 +1649,7 @@ var latte;
             configurable: true
         });
         return ValueItem;
-    })(latte.Item);
+    }(latte.Item));
     latte.ValueItem = ValueItem;
 })(latte || (latte = {}));
 /**
@@ -1820,7 +1812,9 @@ var latte;
          * @returns {boolean}
          */
         DrawingRectangle.prototype.intersectsWidth = function (r) {
-            if (r.left >= this.right || this.left >= r.right || r.top >= this.bottom) {
+            if (r.left >= this.right
+                || this.left >= r.right
+                || r.top >= this.bottom) {
                 return false;
             }
             else {
@@ -1871,7 +1865,8 @@ var latte;
         DrawingRectangle.prototype.scaleToFit = function (size) {
             var outer = DrawingRectangle.fromLocationSize(this.location, size);
             var inner = this;
-            var resizeFactor = inner.aspectRatio >= outer.aspectRatio ? (outer.width / inner.width) : (outer.height / inner.height);
+            var resizeFactor = inner.aspectRatio >= outer.aspectRatio ?
+                (outer.width / inner.width) : (outer.height / inner.height);
             var newWidth = inner.width * resizeFactor;
             var newHeight = inner.height * resizeFactor;
             var newLeft = outer.left + (outer.width - newWidth) / 2;
@@ -2238,7 +2233,7 @@ var latte;
             configurable: true
         });
         return DrawingRectangle;
-    })();
+    }());
     latte.DrawingRectangle = DrawingRectangle;
 })(latte || (latte = {}));
 var latte;
@@ -2360,7 +2355,7 @@ var latte;
             configurable: true
         });
         return ItemStack;
-    })(latte.Item);
+    }(latte.Item));
     latte.ItemStack = ItemStack;
 })(latte || (latte = {}));
 var latte;
@@ -2394,19 +2389,18 @@ var latte;
         Overlay.prototype.showAtSide = function (side, uielement) {
             var r = uielement.element.rectangle();
             switch (side) {
-                case 32 /* TOP */:
+                case latte.Side.TOP:
                     this.top = r.top - this.height;
                     this.left = r.left;
                     this.width = r.width;
                     break;
-                case 4 /* BOTTOM */:
+                case latte.Side.BOTTOM:
                     this.top = r.bottom;
                     this.left = r.left;
                     this.width = r.width;
                     break;
                 default:
                     throw new latte.Ex();
-                    break;
             }
             //            this.appendTo('body');
         };
@@ -2471,7 +2465,7 @@ var latte;
             configurable: true
         });
         return Overlay;
-    })(latte.UiElement);
+    }(latte.UiElement));
     latte.Overlay = Overlay;
 })(latte || (latte = {}));
 /**
@@ -2561,7 +2555,7 @@ var latte;
             configurable: true
         });
         return DrawingElement;
-    })(latte.DrawingRectangle);
+    }(latte.DrawingRectangle));
     latte.DrawingElement = DrawingElement;
 })(latte || (latte = {}));
 var latte;
@@ -2576,25 +2570,16 @@ var latte;
          **/
         function SelectableItem() {
             var _this = this;
-            var item = this;
             // Init
             _super.call(this);
             this.element.addClass('selectable');
             // Init events
             this.selectedChanged = new latte.LatteEvent(this);
             // Init handlers
-            this.element.mouseover(function (e) {
-                _this._thisMouseOver(e);
-            });
-            this.element.mouseout(function (e) {
-                _this._thisMouseOut(e);
-            });
-            this.element.click(function (e) {
-                _this._thisClick(e);
-            });
-            this.element.mousedown(function (e) {
-                _this._thisMouseDown(e);
-            });
+            this.element.mouseover(function (e) { _this._thisMouseOver(e); });
+            this.element.mouseout(function (e) { _this._thisMouseOut(e); });
+            this.element.click(function (e) { _this._thisClick(e); });
+            this.element.mousedown(function (e) { _this._thisMouseDown(e); });
         }
         /**
          *
@@ -2677,7 +2662,7 @@ var latte;
             configurable: true
         });
         return SelectableItem;
-    })(latte.Item);
+    }(latte.Item));
     latte.SelectableItem = SelectableItem;
 })(latte || (latte = {}));
 var latte;
@@ -3223,7 +3208,7 @@ var latte;
             configurable: true
         });
         return AnchorView;
-    })(latte.View);
+    }(latte.View));
     latte.AnchorView = AnchorView;
 })(latte || (latte = {}));
 var latte;
@@ -3242,7 +3227,7 @@ var latte;
             /**
              *
              **/
-            this._draggingSplit = 2 /* NONE */;
+            this._draggingSplit = latte.Direction.NONE;
             /**
              *
              **/
@@ -3260,15 +3245,9 @@ var latte;
              */
             this._sideVisible = true;
             this.element.addClass('split');
-            this.element.mousemove(function (e) {
-                _this._onMouseMove(e);
-            });
-            this.element.mouseup(function (e) {
-                _this._onMouseUp(e);
-            });
-            this.element.mousedown(function (e) {
-                _this._onMouseDown(e);
-            });
+            this.element.mousemove(function (e) { _this._onMouseMove(e); });
+            this.element.mouseup(function (e) { _this._onMouseUp(e); });
+            this.element.mousedown(function (e) { _this._onMouseDown(e); });
             // Initialize side container
             this.sideWrap = new latte.View();
             this.sideWrap.addClass('side');
@@ -3276,7 +3255,7 @@ var latte;
             // Initialize splitter
             this.splitterElement = $('<div>').addClass('splitter').appendTo(this.element);
             // Initialize side
-            this._side = 1 /* AUTO */;
+            this._side = latte.Side.AUTO;
         }
         /**
          *
@@ -3284,18 +3263,18 @@ var latte;
         SplitView.prototype._onMouseDown = function (e) {
             var sensor = this.splitterElement.rectangle().inflate(this.sensitivity, this.sensitivity);
             if (sensor.contains(e.pageX, e.pageY)) {
-                if (this.side === 32 /* TOP */ || this.side === 4 /* BOTTOM */) {
-                    this._draggingSplit = 1 /* VERTICAL */;
+                if (this.side === latte.Side.TOP || this.side === latte.Side.BOTTOM) {
+                    this._draggingSplit = latte.Direction.VERTICAL;
                 }
                 else {
-                    this._draggingSplit = 0 /* HORIZONTAL */;
+                    this._draggingSplit = latte.Direction.HORIZONTAL;
                 }
                 latte.UiElement.disableTextSelection(this.element);
                 e.stopPropagation();
                 return false;
             }
             else {
-                this._draggingSplit = 2 /* NONE */;
+                this._draggingSplit = latte.Direction.NONE;
             }
             return true;
         };
@@ -3304,9 +3283,9 @@ var latte;
          **/
         SplitView.prototype._onMouseMove = function (e) {
             var sensor = this.splitterElement.rectangle().inflate(this.sensitivity, this.sensitivity);
-            if (this._draggingSplit === 2 /* NONE */) {
+            if (this._draggingSplit === latte.Direction.NONE) {
                 if (sensor.contains(e.pageX, e.pageY)) {
-                    if (this.side === 32 /* TOP */ || this.side === 4 /* BOTTOM */) {
+                    if (this.side === latte.Side.TOP || this.side === latte.Side.BOTTOM) {
                         this.element.css('cursor', 'ns-resize');
                     }
                     else {
@@ -3320,17 +3299,17 @@ var latte;
             else {
                 var rect = this.element.rectangle();
                 switch (this.side) {
-                    case 1 /* AUTO */:
-                    case 8 /* LEFT */:
+                    case latte.Side.AUTO:
+                    case latte.Side.LEFT:
                         this.sideSize = e.pageX - rect.left;
                         break;
-                    case 16 /* RIGHT */:
+                    case latte.Side.RIGHT:
                         this.sideSize = rect.right - e.pageX;
                         break;
-                    case 32 /* TOP */:
+                    case latte.Side.TOP:
                         this.sideSize = e.pageY - rect.top;
                         break;
-                    case 4 /* BOTTOM */:
+                    case latte.Side.BOTTOM:
                         this.sideSize = rect.bottom - e.pageY;
                         break;
                     default:
@@ -3342,10 +3321,10 @@ var latte;
          *
          **/
         SplitView.prototype._onMouseUp = function (e) {
-            if (this._draggingSplit !== 2 /* NONE */) {
+            if (this._draggingSplit !== latte.Direction.NONE) {
                 latte.UiElement.enableTextSelection(this.element);
             }
-            this._draggingSplit = 2 /* NONE */;
+            this._draggingSplit = latte.Direction.NONE;
         };
         /**
          * Updates the layout of View
@@ -3354,7 +3333,11 @@ var latte;
             _super.prototype.onLayout.call(this);
             var side = this.side;
             var sp = this.splitterSize;
-            var size = this.sideSize > 1 ? this.sideSize : (side === 32 /* TOP */ || side === 4 /* BOTTOM */ ? this.sideSize * this.element.height() : this.sideSize * this.element.width());
+            var size = this.sideSize > 1 ?
+                this.sideSize :
+                (side === latte.Side.TOP || side === latte.Side.BOTTOM ?
+                    this.sideSize * this.element.height() :
+                    this.sideSize * this.element.width());
             var start = {
                 left: '',
                 top: '',
@@ -3369,7 +3352,7 @@ var latte;
             var sideCss = $.extend({}, start);
             var splitterCss = $.extend({}, start);
             var containerCss = $.extend({}, start);
-            if (side === 32 /* TOP */ || side === 4 /* BOTTOM */) {
+            if (side === latte.Side.TOP || side === latte.Side.BOTTOM) {
                 sideCss.left = 0;
                 sideCss.right = 0;
                 sideCss.height = size;
@@ -3390,29 +3373,29 @@ var latte;
                 containerCss.bottom = 0;
             }
             switch (this.side) {
-                case 1 /* AUTO */:
-                case 8 /* LEFT */:
+                case latte.Side.AUTO:
+                case latte.Side.LEFT:
                     sideCss.left = 0;
                     sideCss.right = 'auto';
                     splitterCss.left = size;
                     containerCss.left = size - sp;
                     containerCss.right = 0;
                     break;
-                case 16 /* RIGHT */:
+                case latte.Side.RIGHT:
                     sideCss.right = 0;
                     sideCss.left = 'auto';
                     splitterCss.right = size;
                     containerCss.right = size + sp;
                     containerCss.top = 0;
                     break;
-                case 32 /* TOP */:
+                case latte.Side.TOP:
                     sideCss.top = 0;
                     sideCss.bottom = 'auto';
                     splitterCss.top = size;
                     containerCss.top = size - sp;
                     containerCss.bottom = 0;
                     break;
-                case 4 /* BOTTOM */:
+                case latte.Side.BOTTOM:
                     sideCss.bottom = 0;
                     sideCss.top = 'auto';
                     splitterCss.bottom = size;
@@ -3538,7 +3521,7 @@ var latte;
             configurable: true
         });
         return SplitView;
-    })(latte.View);
+    }(latte.View));
     latte.SplitView = SplitView;
 })(latte || (latte = {}));
 var latte;
@@ -3750,7 +3733,7 @@ var latte;
          **/
         IconItem.defaultUrl = '/latte/releases/latte.ui/support/imgs/std-icons.png';
         return IconItem;
-    })(latte.Item);
+    }(latte.Item));
     latte.IconItem = IconItem;
 })(latte || (latte = {}));
 var latte;
@@ -3790,7 +3773,8 @@ var latte;
             // Init this
             this.faceVisible = true;
             // Wire events
-            this.element.hover(function () {
+            this.element
+                .hover(function () {
                 if (_this.selectable && _this.enabled) {
                     _this.selected = true;
                 }
@@ -3799,16 +3783,19 @@ var latte;
                     _this.selected = false;
                 }
                 _this.pressed = false;
-            }).mousedown(function () {
+            })
+                .mousedown(function () {
                 if (_this.enabled) {
                     _this.pressed = true;
                 }
-            }).mouseup(function () {
+            })
+                .mouseup(function () {
                 if (_this.enabled) {
                     _this.pressed = false;
                     _this.selected = false;
                 }
-            }).click(function (e) {
+            })
+                .click(function (e) {
                 if (_this.enabled) {
                     _this.onClick();
                     if (!_this.clickPropagation) {
@@ -4068,13 +4055,13 @@ var latte;
                 this._flatSide = value;
                 // Remove other flat sides
                 this.element.removeClass('flat-bottom flat-right flat-left flat-top');
-                if ((value & 4 /* BOTTOM */) == 4 /* BOTTOM */)
+                if ((value & latte.Side.BOTTOM) == latte.Side.BOTTOM)
                     this.element.addClass('flat-bottom');
-                if ((value & 16 /* RIGHT */) == 16 /* RIGHT */)
+                if ((value & latte.Side.RIGHT) == latte.Side.RIGHT)
                     this.element.addClass('flat-right');
-                if ((value & 8 /* LEFT */) == 8 /* LEFT */)
+                if ((value & latte.Side.LEFT) == latte.Side.LEFT)
                     this.element.addClass('flat-left');
-                if ((value & 32 /* TOP */) == 32 /* TOP */)
+                if ((value & latte.Side.TOP) == latte.Side.TOP)
                     this.element.addClass('flat-top');
             },
             enumerable: true,
@@ -4098,13 +4085,13 @@ var latte;
                 this._openSide = value;
                 // Remove other flat sides
                 this.element.removeClass('open-at-bottom open-at-right open-at-left open-at-top');
-                if ((value & 4 /* BOTTOM */) == 4 /* BOTTOM */)
+                if ((value & latte.Side.BOTTOM) == latte.Side.BOTTOM)
                     this.element.addClass('open-at-bottom');
-                if ((value & 16 /* RIGHT */) == 16 /* RIGHT */)
+                if ((value & latte.Side.RIGHT) == latte.Side.RIGHT)
                     this.element.addClass('open-at-right');
-                if ((value & 8 /* LEFT */) == 8 /* LEFT */)
+                if ((value & latte.Side.LEFT) == latte.Side.LEFT)
                     this.element.addClass('open-at-left');
-                if ((value & 32 /* TOP */) == 32 /* TOP */)
+                if ((value & latte.Side.TOP) == latte.Side.TOP)
                     this.element.addClass('open-at-top');
             },
             enumerable: true,
@@ -4203,7 +4190,7 @@ var latte;
             configurable: true
         });
         return ClickableItem;
-    })(latte.Item);
+    }(latte.Item));
     latte.ClickableItem = ClickableItem;
 })(latte || (latte = {}));
 var latte;
@@ -4244,7 +4231,7 @@ var latte;
             this.descriptionElement = $('<div>').addClass('description').appendTo(this.contentElement);
             this.element.clear();
             // Init this item
-            this.direction = 0 /* HORIZONTAL */;
+            this.direction = latte.Direction.HORIZONTAL;
             this.element.click(function () {
                 if (_this.linkStyle) {
                     _this.onNavigate();
@@ -4266,7 +4253,7 @@ var latte;
             else {
                 this.element.removeClass('icon-and-text');
             }
-            if (this.element.hasClass('icon-and-text') && this.direction == 0 /* HORIZONTAL */ && this.icon) {
+            if (this.element.hasClass('icon-and-text') && this.direction == latte.Direction.HORIZONTAL && this.icon) {
                 this.contentElement.css({ marginLeft: this.icon.size + this.iconAndTextPadding });
             }
             else {
@@ -4344,9 +4331,9 @@ var latte;
              * Gets or sets the direction of the label
              **/
             set: function (value) {
-                if (value != 1 /* VERTICAL */ && value != 0 /* HORIZONTAL */)
+                if (value != latte.Direction.VERTICAL && value != latte.Direction.HORIZONTAL)
                     throw new latte.InvalidArgumentEx('value', value);
-                if (value == 1 /* VERTICAL */) {
+                if (value == latte.Direction.VERTICAL) {
                     this.element.removeClass('horizontal').addClass('vertical');
                 }
                 else {
@@ -4495,7 +4482,7 @@ var latte;
             configurable: true
         });
         return LabelItem;
-    })(latte.Item);
+    }(latte.Item));
     latte.LabelItem = LabelItem;
 })(latte || (latte = {}));
 /**
@@ -4557,7 +4544,7 @@ var latte;
             configurable: true
         });
         return Brush;
-    })();
+    }());
     latte.Brush = Brush;
 })(latte || (latte = {}));
 /**
@@ -4604,7 +4591,7 @@ var latte;
             configurable: true
         });
         return NodeAnimation;
-    })();
+    }());
     /**
      *
      */
@@ -4728,6 +4715,7 @@ var latte;
             this.beforeDraw(c);
             // Draw
             this.draw(c);
+            // Recursively draw children
             for (var i = 0; i < this.nodes.length; i++) {
                 var drawingNode = this.nodes[i];
                 if (!drawingNode.hidden) {
@@ -4917,11 +4905,7 @@ var latte;
             get: function () {
                 var _this = this;
                 if (!this._nodes) {
-                    this._nodes = new latte.Collection(function (node, index) {
-                        _this.onNodeAdded(node);
-                    }, function (node, index) {
-                        _this.onNodeRemoved(node);
-                    });
+                    this._nodes = new latte.Collection(function (node, index) { _this.onNodeAdded(node); }, function (node, index) { _this.onNodeRemoved(node); });
                 }
                 return this._nodes;
             },
@@ -4993,7 +4977,7 @@ var latte;
             configurable: true
         });
         return DrawingNode;
-    })(latte.DrawingElement);
+    }(latte.DrawingElement));
     latte.DrawingNode = DrawingNode;
 })(latte || (latte = {}));
 var latte;
@@ -5019,7 +5003,7 @@ var latte;
             this.element.addClass('button-group');
             this.checkedChanged = new latte.LatteEvent(this);
             this.buttons = new latte.Collection(this._onAddButton, this._onRemoveButton, this);
-            this._direction = 0 /* HORIZONTAL */;
+            this._direction = latte.Direction.HORIZONTAL;
             if (buttons) {
                 this.buttons.addArray(buttons);
             }
@@ -5048,9 +5032,7 @@ var latte;
             var __this = this;
             this.element.append(button.element);
             button.faceVisible = this.faceVisible;
-            button.checkedChanged.add(function () {
-                __this._checkCheck(this);
-            });
+            button.checkedChanged.add(function () { __this._checkCheck(this); });
             this._update();
         };
         /**
@@ -5076,7 +5058,7 @@ var latte;
                 'border-bottom-left-radius': 0
             });
             if (this.buttons.count > 0) {
-                if (this.direction == 0 /* HORIZONTAL */) {
+                if (this.direction == latte.Direction.HORIZONTAL) {
                     // Last button
                     this.buttons.last.element.css({
                         'border-top-right-radius': 4,
@@ -5193,9 +5175,7 @@ var latte;
                     throw new latte.InvalidArgumentEx('value');
                 this._faceVisible = value;
                 // Update buttons
-                this.buttons.each(function (b) {
-                    b.faceVisible = value;
-                });
+                this.buttons.each(function (b) { b.faceVisible = value; });
             },
             enumerable: true,
             configurable: true
@@ -5221,7 +5201,7 @@ var latte;
             configurable: true
         });
         return ButtonGroupItem;
-    })(latte.Item);
+    }(latte.Item));
     latte.ButtonGroupItem = ButtonGroupItem;
 })(latte || (latte = {}));
 var latte;
@@ -5256,9 +5236,9 @@ var latte;
             this.label = new latte.LabelItem();
             this.label.appendTo(this);
             this.element.clear();
-            this.itemsEdge = 1 /* AUTO */;
-            this.itemsSide = 1 /* AUTO */;
-            this.direction = 0 /* HORIZONTAL */;
+            this.itemsEdge = latte.Side.AUTO;
+            this.itemsSide = latte.Side.AUTO;
+            this.direction = latte.Direction.HORIZONTAL;
             this.split = false;
             // Patch for split case
             this.element.hover(function () {
@@ -5273,15 +5253,9 @@ var latte;
                     _this.dropdown.setSelected(false, true);
                 }
             });
-            this.label.descriptionChanged.add(function () {
-                _this._updateLabelFlag();
-            });
-            this.label.iconChanged.add(function () {
-                _this._updateLabelFlag();
-            });
-            this.label.textChanged.add(function () {
-                _this._updateLabelFlag();
-            });
+            this.label.descriptionChanged.add(function () { _this._updateLabelFlag(); });
+            this.label.iconChanged.add(function () { _this._updateLabelFlag(); });
+            this.label.textChanged.add(function () { _this._updateLabelFlag(); });
             this.text = text;
             this.icon = icon;
             if (click)
@@ -5348,7 +5322,8 @@ var latte;
          * Updates edges of dropdown clickable
          **/
         ButtonItem.prototype._updateDropdownProperties = function () {
-            var openSide = this.direction == 1 /* VERTICAL */ ? 32 /* TOP */ : 8 /* LEFT */;
+            var openSide = this.direction == latte.Direction.VERTICAL ?
+                latte.Side.TOP : latte.Side.LEFT;
             this.dropdown.flatSide = openSide;
             if (this.split) {
                 this.dropdown.openSide = null;
@@ -5376,15 +5351,9 @@ var latte;
             this._dropdown.visible = false;
             this._dropdown.clickPropagation = false;
             // Wire events
-            this._dropdown.selectedChanged.add(function () {
-                _this._dropdownSelectedChanged();
-            });
-            this._dropdown.pressedChanged.add(function () {
-                _this._dropdownPressedChanged();
-            });
-            this._dropdown.click.add(function () {
-                _this._dropdownClick();
-            });
+            this._dropdown.selectedChanged.add(function () { _this._dropdownSelectedChanged(); });
+            this._dropdown.pressedChanged.add(function () { _this._dropdownPressedChanged(); });
+            this._dropdown.click.add(function () { _this._dropdownClick(); });
         };
         /**
          *
@@ -5528,21 +5497,21 @@ var latte;
             // Add items
             menu.items.addCollection(this.items);
             // If side set to auto
-            if (side === 1 /* AUTO */) {
+            if (side === latte.Side.AUTO) {
                 // Can infere from glpyh?
                 if (this.glyph && !latte._undef(latte.Side[this.glyph.name.toUpperCase()])) {
                     side = latte.Side[this.glyph.name.toUpperCase()];
                 }
                 else {
-                    side = 4 /* BOTTOM */;
+                    side = latte.Side.BOTTOM;
                 }
             }
             if (this.split && !this.faceVisible) {
                 this.element.addClass('with-face');
             }
             // Check orientation fix
-            if (side == 1 /* AUTO */ && this.split) {
-                edge = 16 /* RIGHT */;
+            if (side == latte.Side.AUTO && this.split) {
+                edge = latte.Side.RIGHT;
             }
             // Show relative to the control
             menu.show(this, side, edge);
@@ -5589,7 +5558,7 @@ var latte;
              **/
             set: function (value) {
                 this.label.direction = value;
-                if (value == 1 /* VERTICAL */) {
+                if (value == latte.Direction.VERTICAL) {
                     this.element.removeClass('horizontal').addClass('vertical');
                 }
                 else {
@@ -5610,15 +5579,9 @@ var latte;
                     this._dropdown.visible = false;
                     //                this._dropdown.clickPropagation  = false;
                     // Wire events
-                    this._dropdown.selectedChanged.add(function () {
-                        _this._dropdownSelectedChanged();
-                    });
-                    this._dropdown.pressedChanged.add(function () {
-                        _this._dropdownPressedChanged();
-                    });
-                    this._dropdown.click.add(function () {
-                        _this._dropdownClick();
-                    });
+                    this._dropdown.selectedChanged.add(function () { _this._dropdownSelectedChanged(); });
+                    this._dropdown.pressedChanged.add(function () { _this._dropdownPressedChanged(); });
+                    this._dropdown.click.add(function () { _this._dropdownClick(); });
                 }
                 return this._dropdown;
             },
@@ -5804,7 +5767,7 @@ var latte;
          **/
         ButtonItem.defaultGlyph = 'down';
         return ButtonItem;
-    })(latte.ClickableItem);
+    }(latte.ClickableItem));
     latte.ButtonItem = ButtonItem;
 })(latte || (latte = {}));
 var latte;
@@ -5834,7 +5797,7 @@ var latte;
             // Initialize collection
             this.items = new latte.Collection(this._onAddItem, this._onRemoveItem, this);
             this.sideItems = new latte.Collection(this._onAddSideItem, this._onRemoveSideItem, this);
-            this.direction = 0 /* HORIZONTAL */;
+            this.direction = latte.Direction.HORIZONTAL;
             this.faceVisible = true;
         }
         /**
@@ -5903,7 +5866,7 @@ var latte;
                 var changed = value !== this._direction;
                 this._direction = value;
                 if (changed) {
-                    if (value === 0 /* HORIZONTAL */) {
+                    if (value === latte.Direction.HORIZONTAL) {
                         this.removeClass('vertical');
                         this.addClass('horizontal');
                     }
@@ -5991,7 +5954,7 @@ var latte;
             configurable: true
         });
         return Toolbar;
-    })(latte.Item);
+    }(latte.Item));
     latte.Toolbar = Toolbar;
 })(latte || (latte = {}));
 var latte;
@@ -6061,7 +6024,7 @@ var latte;
             configurable: true
         });
         return SelectableLabel;
-    })(latte.SelectableItem);
+    }(latte.SelectableItem));
     latte.SelectableLabel = SelectableLabel;
 })(latte || (latte = {}));
 var latte;
@@ -6173,9 +6136,7 @@ var latte;
                 var _this = this;
                 if (!this._hourCombo) {
                     this._hourCombo = new latte.ComboItem();
-                    this._hourCombo.valueChanged.add(function () {
-                        _this.onValueChanged();
-                    });
+                    this._hourCombo.valueChanged.add(function () { _this.onValueChanged(); });
                     this._hourCombo.button.loadItems.add(function () {
                         var hours = [];
                         for (var i = 0; i <= 23; i++) {
@@ -6201,9 +6162,7 @@ var latte;
                 var _this = this;
                 if (!this._minuteCombo) {
                     this._minuteCombo = new latte.ComboItem();
-                    this._minuteCombo.valueChanged.add(function () {
-                        _this.onValueChanged();
-                    });
+                    this._minuteCombo.valueChanged.add(function () { _this.onValueChanged(); });
                     this._minuteCombo.button.loadItems.add(function () {
                         var minutes = [];
                         for (var i = 0; i <= 59; i++) {
@@ -6399,7 +6358,7 @@ var latte;
             configurable: true
         });
         return DatePickerItem;
-    })(latte.ValueItem);
+    }(latte.ValueItem));
     latte.DatePickerItem = DatePickerItem;
 })(latte || (latte = {}));
 var latte;
@@ -6424,7 +6383,7 @@ var latte;
             configurable: true
         });
         return StackOverlay;
-    })(latte.Overlay);
+    }(latte.Overlay));
     latte.StackOverlay = StackOverlay;
 })(latte || (latte = {}));
 var latte;
@@ -6496,6 +6455,7 @@ var latte;
                     this.container.children().css('width', w + '%');
                 }
             }
+            // Pass event to items
             for (var i = 0; i < this.items.count; i++) {
                 this.items.item(i).onLayout();
             }
@@ -6546,6 +6506,7 @@ var latte;
                     throw new latte.InvalidArgumentEx('value', value);
                 this._columns = value;
                 var i = 0;
+                // Detach items
                 for (i = 0; i < this.items.count; i++)
                     this.items.item(i).element.detach();
                 // Clear space
@@ -6554,15 +6515,22 @@ var latte;
                     var w = Math.floor(100 / value);
                     for (i = 0; i < value; i++) {
                         // Create column
-                        var c = $('<div>').addClass('column').css('width', w + '%').appendTo(this.container);
+                        var c = $('<div>')
+                            .addClass('column')
+                            .css('width', w + '%')
+                            .appendTo(this.container);
                         // Create container
-                        $('<div>').addClass('column-content').appendTo(c);
+                        $('<div>')
+                            .addClass('column-content')
+                            .appendTo(c);
                     }
                     var buffer = [];
+                    // Buffer items
                     for (i = 0; i < this.items.count; i++)
                         buffer.push(this.items.item(i));
                     // Clear items
                     this.items.clear();
+                    // Reatach items
                     for (i = 0; i < buffer.length; i++)
                         this.items.add(buffer[i]);
                 }
@@ -6590,7 +6558,7 @@ var latte;
             configurable: true
         });
         return ColumnView;
-    })(latte.View);
+    }(latte.View));
     latte.ColumnView = ColumnView;
 })(latte || (latte = {}));
 var latte;
@@ -6612,7 +6580,7 @@ var latte;
             this.treeToolbar = this.sideView.toolbar;
         }
         return NavigationView;
-    })(latte.SplitView);
+    }(latte.SplitView));
     latte.NavigationView = NavigationView;
 })(latte || (latte = {}));
 var latte;
@@ -6700,11 +6668,9 @@ var latte;
          **/
         Navigation.path = [];
         return Navigation;
-    })();
+    }());
     latte.Navigation = Navigation;
-    $(function () {
-        Navigation.staticConstructor();
-    });
+    $(function () { Navigation.staticConstructor(); });
 })(latte || (latte = {}));
 /**
  * Created by josemanuel on 5/29/14.
@@ -6882,7 +6848,7 @@ var latte;
             configurable: true
         });
         return Animation;
-    })();
+    }());
     latte.Animation = Animation;
 })(latte || (latte = {}));
 /**
@@ -7195,7 +7161,7 @@ var latte;
             configurable: true
         });
         return DrawingClickable;
-    })(latte.DrawingNode);
+    }(latte.DrawingNode));
     latte.DrawingClickable = DrawingClickable;
 })(latte || (latte = {}));
 /**
@@ -7252,29 +7218,20 @@ var latte;
         //region Private Methods
         DrawingContext.prototype.textAlignToString = function (t) {
             switch (t) {
-                case 0 /* START */:
-                    return 'start';
-                case 1 /* END */:
-                    return 'end';
-                case 2 /* LEFT */:
-                    return 'left';
-                case 3 /* CENTER */:
-                    return 'center';
-                case 4 /* RIGHT */:
-                    return 'right';
+                case TextAlign.START: return 'start';
+                case TextAlign.END: return 'end';
+                case TextAlign.LEFT: return 'left';
+                case TextAlign.CENTER: return 'center';
+                case TextAlign.RIGHT: return 'right';
             }
             return '';
         };
         DrawingContext.prototype.baselineToString = function (b) {
             switch (b) {
-                case 0 /* TOP */:
-                    return 'top';
-                case 1 /* BOTTOM */:
-                    return 'bottom';
-                case 2 /* MIDDLE */:
-                    return 'middle';
-                case 3 /* ALPHABETIC */:
-                    return 'alphabetic';
+                case TextBaseline.TOP: return 'top';
+                case TextBaseline.BOTTOM: return 'bottom';
+                case TextBaseline.MIDDLE: return 'middle';
+                case TextBaseline.ALPHABETIC: return 'alphabetic';
             }
             return '';
         };
@@ -7487,8 +7444,8 @@ var latte;
          * @param baseline
          */
         DrawingContext.prototype.fillText = function (b, text, p, align, baseline, maxWidth) {
-            if (align === void 0) { align = 0 /* START */; }
-            if (baseline === void 0) { baseline = 0 /* TOP */; }
+            if (align === void 0) { align = TextAlign.START; }
+            if (baseline === void 0) { baseline = TextBaseline.TOP; }
             if (maxWidth === void 0) { maxWidth = null; }
             b.applyOn(this);
             this.context.textAlign = this.textAlignToString(align);
@@ -7669,7 +7626,7 @@ var latte;
             configurable: true
         });
         return DrawingContext;
-    })();
+    }());
     latte.DrawingContext = DrawingContext;
 })(latte || (latte = {}));
 /**
@@ -7716,7 +7673,7 @@ var latte;
             configurable: true
         });
         return DrawingImage;
-    })();
+    }());
     latte.DrawingImage = DrawingImage;
 })(latte || (latte = {}));
 /**
@@ -7820,47 +7777,47 @@ var latte;
                 var step = this.steps[i];
                 var a = step.args;
                 switch (step.type) {
-                    case 3 /* ARC_TO */:
+                    case DrawingPathStep.ARC_TO:
                         c.context.arcTo(a[0].x, a[0].y, a[1].x, a[1].y, a[2]);
                         break;
-                    case 4 /* BEZIER_CURVE_TO */:
+                    case DrawingPathStep.BEZIER_CURVE_TO:
                         c.context.bezierCurveTo(a[0].x, a[0].y, a[1].x, a[1].y, a[2].x, a[2].y);
                         break;
-                    case 5 /* CLOSE_PATH */:
+                    case DrawingPathStep.CLOSE_PATH:
                         c.context.closePath();
                         break;
-                    case 1 /* LINE_TO */:
+                    case DrawingPathStep.LINE_TO:
                         c.context.lineTo(a[0].x, a[0].y);
                         break;
-                    case 0 /* MOVE_TO */:
+                    case DrawingPathStep.MOVE_TO:
                         c.context.moveTo(a[0].x, a[0].y);
                         break;
-                    case 2 /* QUADRATIC_CURVE_TO */:
+                    case DrawingPathStep.QUADRATIC_CURVE_TO:
                         c.context.quadraticCurveTo(a[0].x, a[0].y, a[1].x, a[1].y);
                         break;
                 }
             }
         };
         DrawingPath.prototype.arcTo = function (begin, end, radius) {
-            this.steps.push({ type: 3 /* ARC_TO */, args: [begin, end, radius] });
+            this.steps.push({ type: DrawingPathStep.ARC_TO, args: [begin, end, radius] });
         };
         DrawingPath.prototype.bezierCurveTo = function (controlPointA, controlPointB, endPoint) {
-            this.steps.push({ type: 4 /* BEZIER_CURVE_TO */, args: [controlPointA, controlPointB, endPoint] });
+            this.steps.push({ type: DrawingPathStep.BEZIER_CURVE_TO, args: [controlPointA, controlPointB, endPoint] });
         };
         DrawingPath.prototype.closePath = function () {
-            this.steps.push({ type: 5 /* CLOSE_PATH */, args: [] });
+            this.steps.push({ type: DrawingPathStep.CLOSE_PATH, args: [] });
         };
         DrawingPath.prototype.moveTo = function (p) {
-            this.steps.push({ type: 0 /* MOVE_TO */, args: [p] });
+            this.steps.push({ type: DrawingPathStep.MOVE_TO, args: [p] });
         };
         DrawingPath.prototype.lineTo = function (p) {
-            this.steps.push({ type: 1 /* LINE_TO */, args: [p] });
+            this.steps.push({ type: DrawingPathStep.LINE_TO, args: [p] });
         };
         DrawingPath.prototype.quadraticCurveTo = function (controlPoint, endPoint) {
-            this.steps.push({ type: 2 /* QUADRATIC_CURVE_TO */, args: [controlPoint, endPoint] });
+            this.steps.push({ type: DrawingPathStep.QUADRATIC_CURVE_TO, args: [controlPoint, endPoint] });
         };
         return DrawingPath;
-    })();
+    }());
     latte.DrawingPath = DrawingPath;
 })(latte || (latte = {}));
 /**
@@ -8193,11 +8150,7 @@ var latte;
             get: function () {
                 var _this = this;
                 if (!this._nodes) {
-                    this._nodes = new latte.Collection(function (node, index) {
-                        _this.onNodeAdded(node);
-                    }, function (node, index) {
-                        _this.onNodeRemoved(node);
-                    });
+                    this._nodes = new latte.Collection(function (node, index) { _this.onNodeAdded(node); }, function (node, index) { _this.onNodeRemoved(node); });
                 }
                 return this._nodes;
             },
@@ -8205,7 +8158,7 @@ var latte;
             configurable: true
         });
         return DrawingScene;
-    })(latte.DrawingElement);
+    }(latte.DrawingElement));
     latte.DrawingScene = DrawingScene;
 })(latte || (latte = {}));
 /**
@@ -8311,7 +8264,7 @@ var latte;
             configurable: true
         });
         return LinearGradientBrush;
-    })(latte.Brush);
+    }(latte.Brush));
     latte.LinearGradientBrush = LinearGradientBrush;
 })(latte || (latte = {}));
 /**
@@ -8434,259 +8387,8 @@ var latte;
             configurable: true
         });
         return Pen;
-    })();
+    }());
     latte.Pen = Pen;
-})(latte || (latte = {}));
-/**
- * Created by josemanuel on 5/12/14.
- */
-var latte;
-(function (latte) {
-    /**
-     *
-     */
-    var Point = (function () {
-        //endregion
-        //region Fields
-        //endregion
-        /**
-         * Creates a new point, optionally
-         */
-        function Point(x, y) {
-            if (x === void 0) { x = null; }
-            if (y === void 0) { y = null; }
-            /**
-             * Property field
-             */
-            this._x = null;
-            /**
-             * Property field
-             */
-            this._y = null;
-            if (x !== null) {
-                this._x = x;
-            }
-            if (y !== null) {
-                this._y = y;
-            }
-        }
-        //region Static
-        /**
-         * Gets the distance between two points
-         * @param a
-         * @param b
-         */
-        Point.distance = function (a, b) {
-            return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
-        };
-        /**
-         * Returns an empty point
-         * @returns {latte.Point}
-         */
-        Point.empty = function () {
-            return new Point(null, null);
-        };
-        /**
-         * Returns a point situated on the origin
-         * @returns {latte.Point}
-         */
-        Point.origin = function () {
-            return new Point(0, 0);
-        };
-        //region Private Methods
-        //endregion
-        //region Methods
-        /**
-         * Returns the offset operation of the point
-         *
-         * @param x
-         * @param y
-         * @returns {latte.Point}
-         */
-        Point.prototype.offset = function (x, y) {
-            return new Point(this.x + x, this.y + y);
-        };
-        /**
-         * Gets string representation of the point
-         * @returns {string}
-         */
-        Point.prototype.toString = function () {
-            return latte.sprintf("Point(%s, %s)", this._x, this._y);
-        };
-        Object.defineProperty(Point.prototype, "isEmpty", {
-            //endregion
-            //region Events
-            //endregion
-            //region Properties
-            /**
-             * Gets a value indicating if the point is empty (No value has been set)
-             *
-             * @returns {boolean}
-             */
-            get: function () {
-                return this._x == null || this._y == null;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Point.prototype, "x", {
-            /**
-             * Gets or sets the X of the point
-             *
-             * @returns {number}
-             */
-            get: function () {
-                return this._x || 0;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Point.prototype, "y", {
-            /**
-             * Gets the Y coordinate of the point
-             *
-             * @returns {number}
-             */
-            get: function () {
-                return this._y || 0;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return Point;
-    })();
-    latte.Point = Point;
-})(latte || (latte = {}));
-/**
- * Created by josemanuel on 5/12/14.
- */
-var latte;
-(function (latte) {
-    /**
-     *
-     */
-    var Size = (function () {
-        //endregion
-        //region Fields
-        //endregion
-        /**
-         * Creates a new Size, optionally sets its Width and Height components
-         */
-        function Size(width, height) {
-            if (width === void 0) { width = null; }
-            if (height === void 0) { height = null; }
-            /**
-             * Property field
-             */
-            this._height = null;
-            /**
-             * Property field
-             */
-            this._width = null;
-            if (width !== null) {
-                this._width = width;
-            }
-            if (height !== null) {
-                this._height = height;
-            }
-        }
-        //region Static
-        /**
-         * Returns an empty size
-         * @returns {latte.Size}
-         */
-        Size.empty = function () {
-            return new Size(null, null);
-        };
-        /**
-         * Returns a size of zero width and zero height
-         * @returns {latte.Point}
-         */
-        Size.zero = function () {
-            return new Size(0, 0);
-        };
-        //region Private Methods
-        //endregion
-        //region Methods
-        /**
-         * Inflates the size on the specified width and height
-         *
-         * @param width
-         * @param height
-         * @returns {latte.Size}
-         */
-        Size.prototype.inflate = function (width, height) {
-            return new Size(this.width + width, this.height + height);
-        };
-        /**
-         * Inflates the size uniformly
-         * @param wide
-         */
-        Size.prototype.inflateUniform = function (wide) {
-            return new Size(this.width + wide, this.height + wide);
-        };
-        /**
-         * Gets string representation of the size
-         * @returns {string}
-         */
-        Size.prototype.toString = function () {
-            return latte.sprintf("Size(%s, %s)", this._width, this._height);
-        };
-        Object.defineProperty(Size.prototype, "area", {
-            //endregion
-            //region Events
-            //endregion
-            //region Properties
-            /**
-             * Gets the area represented by the size
-             *
-             * @returns {number}
-             */
-            get: function () {
-                return this.width * this.height;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Size.prototype, "isEmpty", {
-            /**
-             * Gets a value indicating if the size has no compnents assigned or initialized
-             *
-             * @returns {boolean}
-             */
-            get: function () {
-                return this._height == null && this._width == null;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Size.prototype, "height", {
-            /**
-             * Gets the Height component of the size
-             *
-             * @returns {number}
-             */
-            get: function () {
-                return this._height;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Size.prototype, "width", {
-            /**
-             * Gets the Width component of the size
-             *
-             * @returns {number}
-             */
-            get: function () {
-                return this._width;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return Size;
-    })();
-    latte.Size = Size;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -8794,9 +8496,7 @@ var latte;
             b.description = this.description;
             b.enabled = this.enabled;
             //b.checked = this.checked;
-            b.click.add(function () {
-                a.execute.raise();
-            });
+            b.click.add(function () { a.execute.raise(); });
             if (this.icon)
                 b.icon = this.icon.clone();
             return b;
@@ -8838,7 +8538,7 @@ var latte;
             configurable: true
         });
         return Action;
-    })();
+    }());
     latte.Action = Action;
 })(latte || (latte = {}));
 var latte;
@@ -8870,6 +8570,7 @@ var latte;
                 element = element.get(0);
             // Remove z-index
             $(element).css('zIndex', '');
+            // Create new array
             for (var i = 0; i < this.elements.length; i++)
                 if (this.elements[i] !== element)
                     arr.push(this.elements[i]);
@@ -8893,7 +8594,7 @@ var latte;
          **/
         ZIndex.elements = [];
         return ZIndex;
-    })();
+    }());
     latte.ZIndex = ZIndex;
 })(latte || (latte = {}));
 /**
@@ -8954,7 +8655,7 @@ var latte;
             configurable: true
         });
         return ColorIconItem;
-    })(latte.IconItem);
+    }(latte.IconItem));
     latte.ColorIconItem = ColorIconItem;
 })(latte || (latte = {}));
 var latte;
@@ -9200,7 +8901,7 @@ var latte;
          **/
         Glyph.defaultUrl = '/latte/releases/latte.ui/support/imgs/glyphs.png';
         return Glyph;
-    })(latte.IconItem);
+    }(latte.IconItem));
     latte.Glyph = Glyph;
 })(latte || (latte = {}));
 var latte;
@@ -9256,7 +8957,7 @@ var latte;
             configurable: true
         });
         return ImageItem;
-    })(latte.Item);
+    }(latte.Item));
     latte.ImageItem = ImageItem;
 })(latte || (latte = {}));
 var latte;
@@ -9303,7 +9004,7 @@ var latte;
             configurable: true
         });
         return SeparatorItem;
-    })(latte.Item);
+    }(latte.Item));
     latte.SeparatorItem = SeparatorItem;
 })(latte || (latte = {}));
 var latte;
@@ -9342,17 +9043,11 @@ var latte;
             this.btnNext.addClass('next');
             this.btnCurrent.items.add(this.btnOverlay);
             this.buttons.addArray([
-                this.btnPrevious,
-                this.btnCurrent,
-                this.btnNext
+                this.btnPrevious, this.btnCurrent, this.btnNext
             ]);
             // Wire events
-            this.btnNext.click.add(function () {
-                _this.nextPage();
-            });
-            this.btnPrevious.click.add(function () {
-                _this.previousPage();
-            });
+            this.btnNext.click.add(function () { _this.nextPage(); });
+            this.btnPrevious.click.add(function () { _this.previousPage(); });
             this.page = 1;
             this.pages = 1;
         }
@@ -9519,7 +9214,7 @@ var latte;
             configurable: true
         });
         return PaginationItem;
-    })(latte.ButtonGroupItem);
+    }(latte.ButtonGroupItem));
     latte.PaginationItem = PaginationItem;
 })(latte || (latte = {}));
 var latte;
@@ -9542,7 +9237,7 @@ var latte;
             this.element.addClass('tab');
             // Init me
             this.faceVisible = false;
-            this.flatSide = 4 /* BOTTOM */;
+            this.flatSide = latte.Side.BOTTOM;
         }
         TabItem.prototype._applyActiveProperties = function () {
             if (this.active) {
@@ -9607,7 +9302,7 @@ var latte;
             configurable: true
         });
         return TabItem;
-    })(latte.ButtonItem);
+    }(latte.ButtonItem));
     latte.TabItem = TabItem;
 })(latte || (latte = {}));
 /**
@@ -9844,12 +9539,8 @@ var latte;
                 var _this = this;
                 if (!this._canvas) {
                     this._canvas = jQuery('<canvas>');
-                    this._canvas.mousemove(function (e) {
-                        _this.canvasMouseMove(e.pageX, e.pageY);
-                    });
-                    this._canvas.mousedown(function (e) {
-                        _this.canvasMouseDown(e.pageX, e.pageY);
-                    });
+                    this._canvas.mousemove(function (e) { _this.canvasMouseMove(e.pageX, e.pageY); });
+                    this._canvas.mousedown(function (e) { _this.canvasMouseDown(e.pageX, e.pageY); });
                 }
                 return this._canvas;
             },
@@ -9968,7 +9659,7 @@ var latte;
             configurable: true
         });
         return ColorPicker;
-    })(latte.ItemStack);
+    }(latte.ItemStack));
     latte.ColorPicker = ColorPicker;
 })(latte || (latte = {}));
 var latte;
@@ -10170,7 +9861,7 @@ var latte;
             configurable: true
         });
         return ConversationItem;
-    })(latte.Item);
+    }(latte.Item));
     latte.ConversationItem = ConversationItem;
 })(latte || (latte = {}));
 var latte;
@@ -10240,7 +9931,10 @@ var latte;
             // Create day names
             tr = $('<tr>').addClass('day-names').appendTo(table);
             for (i = 0; i < 7; i++)
-                tr.append($('<td>').addClass('day-name').text(strings[(dayNames[i]) + 'Short']));
+                tr.append($('<td>')
+                    .addClass('day-name')
+                    .text(strings[(dayNames[i]) + 'Short']));
+            // Create days
             for (i = 0; i < 6; i++) {
                 tr = $('<tr>').appendTo(table);
                 for (j = 0; j < 7; j++) {
@@ -10250,15 +9944,9 @@ var latte;
                     sel.element.append($('<span>').text(cur.day.toString()));
                     sel.element.appendTo(cell);
                     sel.tag = cur;
-                    sel.element.mousedown(function (e) {
-                        __this._dayMouseDown(e, $(this).data('instance'));
-                    });
-                    sel.element.mousemove(function (e) {
-                        __this._dayMouseMove(e, $(this).data('instance'));
-                    });
-                    sel.element.mouseup(function (e) {
-                        __this._dayMouseUp(e, $(this).data('instance'));
-                    });
+                    sel.element.mousedown(function (e) { __this._dayMouseDown(e, $(this).data('instance')); });
+                    sel.element.mousemove(function (e) { __this._dayMouseMove(e, $(this).data('instance')); });
+                    sel.element.mouseup(function (e) { __this._dayMouseUp(e, $(this).data('instance')); });
                     cell.addClass('day date-' + cur.year + '-' + cur.month + '-' + cur.day);
                     cell.appendTo(tr);
                     if (cur.compareTo(today) === 0) {
@@ -10284,17 +9972,17 @@ var latte;
         DateItem.prototype._dayMouseDown = function (e, day) {
             var daytag = day.tag;
             switch (this._selectionMode) {
-                case 4 /* WORKWEEK */:
+                case latte.DateSelectionMode.WORKWEEK:
                     var monday = daytag.addDays(-daytag.dayOfWeek + 1);
                     var friday = monday.addDays(4);
                     this.setSelectionRange(monday, friday, false, false);
                     break;
-                case 3 /* WEEK */:
+                case latte.DateSelectionMode.WEEK:
                     var sunday = daytag.addDays(-daytag.dayOfWeek);
                     var saturday = monday.addDays(6);
                     this.setSelectionRange(monday, friday, false, false);
                     break;
-                case 2 /* MONTH */:
+                case latte.DateSelectionMode.MONTH:
                     var first = new latte.DateTime(daytag.year, daytag.month, 1);
                     var last = first.addDays(latte.DateTime.daysInMonth(first.year, first.month) - 1);
                     this.setSelectionRange(first, last, false, false);
@@ -10312,7 +10000,7 @@ var latte;
             if (this._draggingSelection !== null) {
                 this.setSelectionRange(this._draggingSelection, day.tag, false, false);
                 this.setSelectionRange(this._draggingSelection, day.tag, false, false);
-                this.selectionMode = 1 /* MANUAL */;
+                this.selectionMode = latte.DateSelectionMode.MANUAL;
             }
         };
         /**
@@ -10417,6 +10105,7 @@ var latte;
             }
             // Unselect all
             this.unselectAll();
+            // Select everything
             while (cur.compareTo(end) <= 0) {
                 this._selectDay(cur);
                 cur = cur.addDays(1);
@@ -10506,16 +10195,13 @@ var latte;
             months.find('table.month').first().find('td.previous').append(prev.element);
             months.find('tr').first().find('table.month').last().find('td.next').append(next.element);
             // Assign Handlers
-            prev.click.add(function () {
-                _this.viewPrevious();
-            });
-            next.click.add(function () {
-                _this.viewNext();
-            });
+            prev.click.add(function () { _this.viewPrevious(); });
+            next.click.add(function () { _this.viewNext(); });
             // Pointer to table
             this.table = months;
             // Re-select dates in range
             var days = start && end ? end.subtractDate(start).totalDays + 1 : 0;
+            // Select days
             for (i = 0; i < days; i++)
                 this._selectDay(start.addDays(i));
         };
@@ -10623,16 +10309,16 @@ var latte;
                 var sunday = start.addDays(-start.dayOfWeek);
                 var monday = sunday.addDays(1);
                 switch (value) {
-                    case 0 /* DAY */:
+                    case latte.DateSelectionMode.DAY:
                         this.setSelectionRange(start, start);
                         break;
-                    case 3 /* WEEK */:
+                    case latte.DateSelectionMode.WEEK:
                         this.setSelectionRange(sunday, sunday.addDays(6));
                         break;
-                    case 4 /* WORKWEEK */:
+                    case latte.DateSelectionMode.WORKWEEK:
                         this.setSelectionRange(monday, monday.addDays(4));
                         break;
-                    case 2 /* MONTH */:
+                    case latte.DateSelectionMode.MONTH:
                         this.setSelectionRange(first, first.addDays(latte.DateTime.daysInMonth(first.year, first.month) - 1));
                         break;
                 }
@@ -10679,7 +10365,7 @@ var latte;
             configurable: true
         });
         return DateItem;
-    })(latte.Item);
+    }(latte.Item));
     latte.DateItem = DateItem;
 })(latte || (latte = {}));
 var latte;
@@ -10873,7 +10559,7 @@ var latte;
             configurable: true
         });
         return FormItem;
-    })(latte.ItemStack);
+    }(latte.ItemStack));
     latte.FormItem = FormItem;
 })(latte || (latte = {}));
 /*
@@ -10967,7 +10653,7 @@ var latte;
          */
         HtmlEditorCommands.UNDERLINE = 'underline';
         return HtmlEditorCommands;
-    })();
+    }());
     latte.HtmlEditorCommands = HtmlEditorCommands;
 })(latte || (latte = {}));
 var latte;
@@ -11013,14 +10699,10 @@ var latte;
                 var b = new latte.ButtonItem();
                 b.icon = latte.IconItem.standard(u, v);
                 b.tooltip = tooltip;
-                b.click.add(function () {
-                    _this.execCommand(cmd);
-                });
+                b.click.add(function () { _this.execCommand(cmd); });
                 return b;
             };
-            var sep = function () {
-                return new latte.SeparatorItem();
-            };
+            var sep = function () { return new latte.SeparatorItem(); };
             this.toolbar.items.addArray([
                 btn(5, 2, strings.bold, latte.HtmlEditorCommands.BOLD),
                 btn(6, 2, strings.italics, latte.HtmlEditorCommands.ITALIC),
@@ -11049,13 +10731,18 @@ var latte;
             if (this._mustInit())
                 return;
             var __this = this;
-            this.body().find('img').unbind('.editor').bind('click.editor', function () {
+            this.body()
+                .find('img')
+                .unbind('.editor')
+                .bind('click.editor', function () {
                 // Image click selects image
                 __this.selectElement($(this));
                 __this.onImageSelected($(this));
-            }).bind('load.editor', function () {
+            })
+                .bind('load.editor', function () {
                 __this.onLayout();
-            }).each(function () {
+            })
+                .each(function () {
                 if (this.complete) {
                     __this.onLayout();
                 }
@@ -11073,7 +10760,8 @@ var latte;
          * Clears all formatting in editor
          **/
         HtmlEditorItem.prototype._clearFormatting = function () {
-            this.body().find('*').css({
+            this.body().find('*')
+                .css({
                 font: '',
                 fontSize: '',
                 fontFamily: '',
@@ -11165,23 +10853,17 @@ var latte;
                 this._assignElementHandlers();
                 this.onLayout();
             }
-            this.body().css({
+            this.body()
+                .css({
                 minHeight: 20,
                 overflow: 'hidden',
                 fontFamily: this.element.css('font-family'),
                 fontSize: 14 //this.element.css('font-size')
-            }).focus(function () {
-                __this.onFocus();
-            }).click(function () {
-                __this.onSelectionChanged();
-            }).keyup(function () {
-                __this._value = $(this).html();
-                __this.onSelectionChanged();
-                __this.onValueChanged();
-            }).change(function () {
-                __this._value = $(this).html();
-                __this.onValueChanged();
-            });
+            })
+                .focus(function () { __this.onFocus(); })
+                .click(function () { __this.onSelectionChanged(); })
+                .keyup(function () { __this._value = $(this).html(); __this.onSelectionChanged(); __this.onValueChanged(); })
+                .change(function () { __this._value = $(this).html(); __this.onValueChanged(); });
         };
         /**
          * Shows a dialog to insert HTML
@@ -11268,7 +10950,8 @@ var latte;
          **/
         HtmlEditorItem.prototype._mustInit = function () {
             try {
-                return (this.ready() && !this.body().hasClass('html-editor')) || !this.ready();
+                return (this.ready() && !this.body().hasClass('html-editor'))
+                    || !this.ready();
             }
             catch (e) {
                 return true;
@@ -11565,7 +11248,7 @@ var latte;
         //region Static
         HtmlEditorItem.rangyLoaded = false;
         return HtmlEditorItem;
-    })(latte.ValueItem);
+    }(latte.ValueItem));
     latte.HtmlEditorItem = HtmlEditorItem;
 })(latte || (latte = {}));
 var latte;
@@ -11612,9 +11295,7 @@ var latte;
             this.collapseButton.faceVisible = false;
             this.collapseButton.text = null;
             this.collapseButton.icon = latte.Glyph.collapseRibbon;
-            this.collapseButton.click.add(function () {
-                _this.collapsed = !_this.collapsed;
-            });
+            this.collapseButton.click.add(function () { _this.collapsed = !_this.collapsed; });
             this.collapseButton.addClass('collapse');
             // Wire events
             this.face.mouseleave(function () {
@@ -11661,7 +11342,9 @@ var latte;
                     this._cutLastWrapper();
                 }
                 /// Create wrapper
-                this._lastWrapper = $('<div>').addClass('ribbon-wrapper').appendTo(this.itemsContainer);
+                this._lastWrapper = $('<div>')
+                    .addClass('ribbon-wrapper')
+                    .appendTo(this.itemsContainer);
             }
             item.appendTo(this._lastWrapper);
         };
@@ -11704,7 +11387,7 @@ var latte;
                 return false;
             }
             else if (item instanceof latte.ButtonItem) {
-                return item.direction != 1 /* VERTICAL */;
+                return item.direction != latte.Direction.VERTICAL;
             }
             else {
                 return true;
@@ -11725,7 +11408,7 @@ var latte;
                 /// Remove description
                 b.description = null;
                 if (b.icon && b.icon.size == 32) {
-                    b.direction = 1 /* VERTICAL */;
+                    b.direction = latte.Direction.VERTICAL;
                 }
             }
             /// If item belongs to selected tab
@@ -11741,9 +11424,7 @@ var latte;
             //            var __this = this;
             var _this = this;
             tab.appendTo(this.tabsElement);
-            tab.click.add(function () {
-                _this.selectedTab = tab;
-            });
+            tab.click.add(function () { _this.selectedTab = tab; });
             this.onLayout();
         };
         /**
@@ -11851,18 +11532,13 @@ var latte;
                     return;
                 //            var __this = this;
                 if (value) {
-                    this.face.show().animate({ top: this.tabsElement.outerHeight(), opacity: 1 }, 100, 'swing', function () {
-                        _this.onLayout();
-                    });
+                    this.face.show().animate({ top: this.tabsElement.outerHeight(), opacity: 1 }, 100, 'swing', function () { _this.onLayout(); });
                     this.addClass('face-visible');
                     this.removeClass('face-hidden');
                 }
                 else {
                     this._clearTabsMarks();
-                    this.face.animate({ top: '-=50', opacity: 0 }, 100, 'swing', function () {
-                        _this.face.hide();
-                        _this.onLayout();
-                    });
+                    this.face.animate({ top: '-=50', opacity: 0 }, 100, 'swing', function () { _this.face.hide(); _this.onLayout(); });
                     this.removeClass('face-visible');
                     this.addClass('face-hidden');
                 }
@@ -11902,11 +11578,12 @@ var latte;
                 /// Remove marks from all tabs
                 this._clearTabsMarks();
                 /// Mark tab
-                tab.contextAt = 4 /* BOTTOM */;
+                tab.contextAt = latte.Side.BOTTOM;
                 /// Empties items container
                 this.itemsContainer.children().detach();
                 this.itemsContainer.empty();
                 var item;
+                /// Scan items
                 while ((item = this.items.next())) {
                     /// If item belongs to tab
                     if (this._getItemTab(item) === tab) {
@@ -11928,7 +11605,7 @@ var latte;
             configurable: true
         });
         return Ribbon;
-    })(latte.Item);
+    }(latte.Item));
     latte.Ribbon = Ribbon;
 })(latte || (latte = {}));
 var latte;
@@ -12016,7 +11693,7 @@ var latte;
             configurable: true
         });
         return SelectableStack;
-    })(latte.ItemStack);
+    }(latte.ItemStack));
     latte.SelectableStack = SelectableStack;
 })(latte || (latte = {}));
 var latte;
@@ -12121,17 +11798,18 @@ var latte;
                 this.tabToolbar.contentSide = value;
                 // Clear classes
                 this.element.removeClass('content-at-top content-at-bottom content-at-left content-at-right');
+                // Set class
                 switch (value) {
-                    case 32 /* TOP */:
+                    case latte.Side.TOP:
                         this.element.addClass('content-at-top');
                         break;
-                    case 4 /* BOTTOM */:
+                    case latte.Side.BOTTOM:
                         this.element.addClass('content-at-bottom');
                         break;
-                    case 8 /* LEFT */:
+                    case latte.Side.LEFT:
                         this.element.addClass('content-at-left');
                         break;
-                    case 16 /* RIGHT */:
+                    case latte.Side.RIGHT:
                         this.element.addClass('content-at-right');
                         break;
                 }
@@ -12142,13 +11820,13 @@ var latte;
                         _this.items.add(_this.content[i]);
                     }
                 };
-                if (value == 4 /* BOTTOM */) {
+                if (value == latte.Side.BOTTOM) {
                     // Toolbar first
                     this.items.add(this.tabToolbar);
                     // Add views
                     addViews();
                 }
-                else if (value == 32 /* TOP */) {
+                else if (value == latte.Side.TOP) {
                     // Views first
                     addViews();
                     // Toolbar last
@@ -12160,7 +11838,7 @@ var latte;
             configurable: true
         });
         return TabContainer;
-    })(latte.ItemStack);
+    }(latte.ItemStack));
     latte.TabContainer = TabContainer;
 })(latte || (latte = {}));
 var latte;
@@ -12183,7 +11861,7 @@ var latte;
             this.tabs = new latte.Collection(this.onTabAdded, this.onTabRemoved, this);
             // Init events
             this.selectedTabChanged = new latte.LatteEvent(this);
-            this.contentSide = 4 /* BOTTOM */;
+            this.contentSide = latte.Side.BOTTOM;
         }
         /**
          * Raises the <c>selectedTabChanged</c> event
@@ -12224,22 +11902,24 @@ var latte;
              */
             set: function (value) {
                 this._contentSide = value;
+                // Set side of all tabs
                 for (var i = 0; i < this.tabs.length; i++) {
                     this.tabs[i].contentSide = value;
                 }
                 // Clear classes
                 this.element.removeClass('content-at-top content-at-bottom content-at-left content-at-right');
+                // Set class
                 switch (value) {
-                    case 32 /* TOP */:
+                    case latte.Side.TOP:
                         this.element.addClass('content-at-top');
                         break;
-                    case 4 /* BOTTOM */:
+                    case latte.Side.BOTTOM:
                         this.element.addClass('content-at-bottom');
                         break;
-                    case 8 /* LEFT */:
+                    case latte.Side.LEFT:
                         this.element.addClass('content-at-left');
                         break;
-                    case 16 /* RIGHT */:
+                    case latte.Side.RIGHT:
                         this.element.addClass('content-at-right');
                         break;
                 }
@@ -12263,6 +11943,7 @@ var latte;
                 var changed = value !== this._selectedTab;
                 this._selectedTab = value;
                 if (changed) {
+                    // De-activate siblings
                     for (var i = 0; i < this.tabs.length; i++) {
                         var tab = this.tabs[i];
                         if (tab !== value) {
@@ -12278,7 +11959,7 @@ var latte;
             configurable: true
         });
         return TabToolbar;
-    })(latte.Toolbar);
+    }(latte.Toolbar));
     latte.TabToolbar = TabToolbar;
 })(latte || (latte = {}));
 var latte;
@@ -12365,8 +12046,51 @@ var latte;
             configurable: true
         });
         return ViewItem;
-    })(latte.Item);
+    }(latte.Item));
     latte.ViewItem = ViewItem;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
+     * Represents a column header
+     **/
+    var ColumnHeader = (function (_super) {
+        __extends(ColumnHeader, _super);
+        /**
+         * Creates the Column Header
+         **/
+        function ColumnHeader(text, width) {
+            if (text === void 0) { text = ''; }
+            if (width === void 0) { width = 150; }
+            _super.call(this);
+            /**
+             *
+             **/
+            this._width = 150;
+            this.element.addClass('column-header');
+            this.width = width;
+            this.text = text;
+        }
+        Object.defineProperty(ColumnHeader.prototype, "width", {
+            /**
+             * Gets or sets the width of the column
+             **/
+            get: function () {
+                return this._width;
+            },
+            /**
+             * Gets or sets the width of the column
+             **/
+            set: function (value) {
+                this._width = value;
+                this.element.width(value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return ColumnHeader;
+    }(latte.LabelItem));
+    latte.ColumnHeader = ColumnHeader;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -12430,25 +12154,13 @@ var latte;
             this.topToolbar.items.add(this.titleLabel);
             this.topToolbar.sideItems.addArray([this.closeButton, this.maximizeButton, this.minimizeButton]);
             // Default reacts
-            this.closeButton.click.add(function () {
-                _this.onClosed();
-            });
-            this.minimizeButton.click.add(function () {
-                _this.minimized = !_this.minimized;
-            });
-            this.maximizeButton.click.add(function () {
-                _this.onMaximized();
-            });
-            this.toolbar.itemsChanged.add(function () {
-                _this.onLayout();
-            });
-            this.toolbar.sideItemsChanged.add(function () {
-                _this.onLayout();
-            });
-            this.topToolbar.element.dblclick(function () {
-                if (_this.allowMaximize)
-                    _this.onMaximized();
-            });
+            this.closeButton.click.add(function () { _this.onClosed(); });
+            this.minimizeButton.click.add(function () { _this.minimized = !_this.minimized; });
+            this.maximizeButton.click.add(function () { _this.onMaximized(); });
+            this.toolbar.itemsChanged.add(function () { _this.onLayout(); });
+            this.toolbar.sideItemsChanged.add(function () { _this.onLayout(); });
+            this.topToolbar.element.dblclick(function () { if (_this.allowMaximize)
+                _this.onMaximized(); });
         }
         /**
          *
@@ -12608,51 +12320,8 @@ var latte;
             configurable: true
         });
         return WidgetItem;
-    })(latte.Item);
+    }(latte.Item));
     latte.WidgetItem = WidgetItem;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
-     * Represents a column header
-     **/
-    var ColumnHeader = (function (_super) {
-        __extends(ColumnHeader, _super);
-        /**
-         * Creates the Column Header
-         **/
-        function ColumnHeader(text, width) {
-            if (text === void 0) { text = ''; }
-            if (width === void 0) { width = 150; }
-            _super.call(this);
-            /**
-             *
-             **/
-            this._width = 150;
-            this.element.addClass('column-header');
-            this.width = width;
-            this.text = text;
-        }
-        Object.defineProperty(ColumnHeader.prototype, "width", {
-            /**
-             * Gets or sets the width of the column
-             **/
-            get: function () {
-                return this._width;
-            },
-            /**
-             * Gets or sets the width of the column
-             **/
-            set: function (value) {
-                this._width = value;
-                this.element.width(value);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return ColumnHeader;
-    })(latte.LabelItem);
-    latte.ColumnHeader = ColumnHeader;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -12686,15 +12355,9 @@ var latte;
             this.container.clear();
             this.element.clear();
             // Elements handlers
-            this.userElement.click(function () {
-                item.onUserDetail();
-            });
-            this.iconSideElement.click(function () {
-                item.onUserDetail();
-            });
-            this.dateElement.click(function () {
-                item.relativeDate = !item.relativeDate;
-            });
+            this.userElement.click(function () { item.onUserDetail(); });
+            this.iconSideElement.click(function () { item.onUserDetail(); });
+            this.dateElement.click(function () { item.relativeDate = !item.relativeDate; });
             this.icon = latte.IconItem.empty(32);
         }
         /**
@@ -12705,7 +12368,9 @@ var latte;
             if (latte._undef(milliseconds))
                 milliseconds = 3000;
             var __this = this;
-            this.blinkerElement.show().animate({ opacity: 0 }, milliseconds, 'swing', function () {
+            this.blinkerElement
+                .show()
+                .animate({ opacity: 0 }, milliseconds, 'swing', function () {
                 __this.blinkerElement.hide().css({ opacity: 1 });
             });
         };
@@ -12813,7 +12478,7 @@ var latte;
             configurable: true
         });
         return CommentItem;
-    })(latte.Item);
+    }(latte.Item));
     latte.CommentItem = CommentItem;
 })(latte || (latte = {}));
 var latte;
@@ -12899,7 +12564,7 @@ var latte;
             configurable: true
         });
         return DateTimeLabel;
-    })(latte.LabelItem);
+    }(latte.LabelItem));
     latte.DateTimeLabel = DateTimeLabel;
 })(latte || (latte = {}));
 var latte;
@@ -12953,7 +12618,7 @@ var latte;
             configurable: true
         });
         return UiText;
-    })(latte.UiElement);
+    }(latte.UiElement));
     latte.UiText = UiText;
 })(latte || (latte = {}));
 var latte;
@@ -13024,7 +12689,8 @@ var latte;
              All-day items are those who its time of day both start and end dates are zero minutes
              **/
             get: function () {
-                return this._dateStart.timeOfDay.totalMinutes == 0 && this._dateEnd.timeOfDay.totalMinutes == 0;
+                return this._dateStart.timeOfDay.totalMinutes == 0
+                    && this._dateEnd.timeOfDay.totalMinutes == 0;
             },
             enumerable: true,
             configurable: true
@@ -13082,7 +12748,7 @@ var latte;
             configurable: true
         });
         return CalendarItem;
-    })(latte.SelectableLabel);
+    }(latte.SelectableLabel));
     latte.CalendarItem = CalendarItem;
 })(latte || (latte = {}));
 var latte;
@@ -13332,7 +12998,7 @@ var latte;
             configurable: true
         });
         return ListViewItem;
-    })(latte.SelectableItem);
+    }(latte.SelectableItem));
     latte.ListViewItem = ListViewItem;
 })(latte || (latte = {}));
 var latte;
@@ -13363,9 +13029,7 @@ var latte;
             this.loadItems = new latte.LatteEvent(this);
             this.selectedChanged = new latte.LatteEvent(this);
             // Update glyph when loadItems handler is added
-            this.loadItems.handlerAdded.add(function () {
-                _this.glyph = latte.Glyph.expand;
-            });
+            this.loadItems.handlerAdded.add(function () { _this.glyph = latte.Glyph.expand; });
             this.element.addClass('tree-item');
             this.faceElement = latte.Item.selectable().appendTo(this.element);
             this.levelElement = $('<div>').addClass('level').appendTo(this.faceElement);
@@ -13375,11 +13039,13 @@ var latte;
             this.faceElement.clear();
             this.itemsElement = $('<div>').addClass('items-container').hide().appendTo(this.element);
             this.items = new latte.Collection(this._onAddItem, this._onRemoveItem, this);
-            this.glyphElement.click(function (evt) {
+            this.glyphElement
+                .click(function (evt) {
                 item.expanded = !item.expanded;
                 evt.stopPropagation();
             });
-            this.faceElement.click(function () {
+            this.faceElement
+                .click(function () {
                 _this.selected = true;
                 _this.onClick();
             });
@@ -13746,7 +13412,7 @@ var latte;
             configurable: true
         });
         return TreeItem;
-    })(latte.Item);
+    }(latte.Item));
     latte.TreeItem = TreeItem;
 })(latte || (latte = {}));
 var latte;
@@ -13825,7 +13491,7 @@ var latte;
             configurable: true
         });
         return CheckboxItem;
-    })(latte.ValueItem);
+    }(latte.ValueItem));
     latte.CheckboxItem = CheckboxItem;
 })(latte || (latte = {}));
 /**
@@ -13948,7 +13614,7 @@ var latte;
             configurable: true
         });
         return ColorValueItem;
-    })(latte.ValueItem);
+    }(latte.ValueItem));
     latte.ColorValueItem = ColorValueItem;
 })(latte || (latte = {}));
 var latte;
@@ -14038,7 +13704,7 @@ var latte;
             configurable: true
         });
         return ComboItem;
-    })(latte.ValueItem);
+    }(latte.ValueItem));
     latte.ComboItem = ComboItem;
 })(latte || (latte = {}));
 var latte;
@@ -14080,7 +13746,7 @@ var latte;
             // Ignore. Files cannot be set
         };
         return FileValueItem;
-    })(latte.ValueItem);
+    }(latte.ValueItem));
     latte.FileValueItem = FileValueItem;
 })(latte || (latte = {}));
 var latte;
@@ -14119,7 +13785,7 @@ var latte;
             this.readOnlyLabel.visible = (false);
             // Default props
             this.type = 'string';
-            this.direction = latte.View.smallScreen ? 1 /* VERTICAL */ : 0 /* HORIZONTAL */;
+            this.direction = latte.View.smallScreen ? latte.Direction.VERTICAL : latte.Direction.HORIZONTAL;
             if (text)
                 this.text = (text);
             if (type)
@@ -14160,7 +13826,6 @@ var latte;
                     if ((latte._isArray(options) || (typeof options === 'object')) && !latte._undef(options[value]))
                         return options[value];
                     return value;
-                    break;
                 default:
                     return value;
             }
@@ -14233,9 +13898,9 @@ var latte;
              * Gets or sets the direction of input.
              **/
             set: function (value) {
-                if (value !== 1 /* VERTICAL */ && value !== 0 /* HORIZONTAL */)
+                if (value !== latte.Direction.VERTICAL && value !== latte.Direction.HORIZONTAL)
                     throw new latte.InvalidArgumentEx('value', value);
-                if (value === 1 /* VERTICAL */) {
+                if (value === latte.Direction.VERTICAL) {
                     this.element.removeClass('horizontal').addClass('vertical');
                 }
                 else {
@@ -14564,15 +14229,13 @@ var latte;
                     this._valueItem.element.remove();
                 this._valueItem = value;
                 this.valueElement.append(value.element);
-                value.valueChanged.add(function () {
-                    _this.onValueChanged();
-                });
+                value.valueChanged.add(function () { _this.onValueChanged(); });
             },
             enumerable: true,
             configurable: true
         });
         return InputItem;
-    })(latte.ValueItem);
+    }(latte.ValueItem));
     latte.InputItem = InputItem;
 })(latte || (latte = {}));
 var latte;
@@ -14608,7 +14271,7 @@ var latte;
             configurable: true
         });
         return LabelValueItem;
-    })(latte.ValueItem);
+    }(latte.ValueItem));
     latte.LabelValueItem = LabelValueItem;
 })(latte || (latte = {}));
 var latte;
@@ -14739,7 +14402,7 @@ var latte;
             configurable: true
         });
         return ProgressItem;
-    })(latte.ValueItem);
+    }(latte.ValueItem));
     latte.ProgressItem = ProgressItem;
 })(latte || (latte = {}));
 var latte;
@@ -14815,9 +14478,7 @@ var latte;
                                 }
                             }
                         });
-                    }, function (radio) {
-                        _this.stack.items.remove(radio);
-                    }, this);
+                    }, function (radio) { _this.stack.items.remove(radio); }, this);
                 }
                 return this._radios;
             },
@@ -14865,7 +14526,7 @@ var latte;
             configurable: true
         });
         return RadioGroup;
-    })(latte.ValueItem);
+    }(latte.ValueItem));
     latte.RadioGroup = RadioGroup;
 })(latte || (latte = {}));
 /**
@@ -14947,8 +14608,38 @@ var latte;
             configurable: true
         });
         return RadioItem;
-    })(latte.ValueItem);
+    }(latte.ValueItem));
     latte.RadioItem = RadioItem;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
+     * Allows user to pick a time
+     **/
+    var TimePickerItem = (function (_super) {
+        __extends(TimePickerItem, _super);
+        /**
+         *
+         **/
+        function TimePickerItem() {
+            _super.call(this);
+            this.element.addClass('time-picker');
+            this.dateVisible = false;
+            this.timeVisible = true;
+        }
+        /**
+         * Gets or sets the value of the item
+         **/
+        TimePickerItem.prototype.getValue = function () {
+            return this.date.timeOfDay;
+        };
+        TimePickerItem.prototype.setValue = function (value) {
+            //var timeVal = TimeSpan.fromString(value);
+            _super.prototype.setValue.call(this, new latte.DateTime(1, 1, 1, value.hours, value.minutes, value.seconds));
+        };
+        return TimePickerItem;
+    }(latte.DatePickerItem));
+    latte.TimePickerItem = TimePickerItem;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -15034,7 +14725,7 @@ var latte;
                 return false;
             });
             this.input.keydown(function (evt) {
-                if (evt.keyCode === 13 /* ENTER */) {
+                if (evt.keyCode === latte.Key.ENTER) {
                     _this.onEnterPressed();
                 }
                 _this.setValue(_this.input.val(), true);
@@ -15083,9 +14774,7 @@ var latte;
             var _this = this;
             this.suggestionOverlay.items.add(item);
             if (item instanceof latte.ButtonItem) {
-                item.click.add(function () {
-                    _this.hideSuggestions();
-                });
+                item.click.add(function () { _this.hideSuggestions(); });
             }
         };
         /**
@@ -15126,24 +14815,24 @@ var latte;
         TextboxItem.prototype.onKeyDown = function (e) {
             this.keyDown.raise();
             if (this.suggestionsVisible) {
-                if (e.keyCode == 38 /* ARROW_UP */) {
+                if (e.keyCode == latte.Key.ARROW_UP) {
                     this.selectPreviousSuggestion();
                     e.stopImmediatePropagation();
                     return false;
                 }
-                else if (e.keyCode == 40 /* ARROW_DOWN */) {
+                else if (e.keyCode == latte.Key.ARROW_DOWN) {
                     this.selectNextSuggestion();
                     e.stopImmediatePropagation();
                     return false;
                 }
-                else if (e.keyCode == 13 /* ENTER */ || e.keyCode == 9 /* TAB */) {
+                else if (e.keyCode == latte.Key.ENTER || e.keyCode == latte.Key.TAB) {
                     if (this._selectedSuggestion instanceof latte.ButtonItem) {
                         this._selectedSuggestion.onClick();
                     }
                     e.stopImmediatePropagation();
                     return false;
                 }
-                else if (e.keyCode == 27 /* ESCAPE */) {
+                else if (e.keyCode == latte.Key.ESCAPE) {
                     this.hideSuggestions();
                     e.stopImmediatePropagation();
                     return false;
@@ -15157,13 +14846,12 @@ var latte;
         TextboxItem.prototype.onKeyUp = function (e) {
             var _this = this;
             this.keyUp.raise();
-            if (e.keyCode != 40 /* ARROW_DOWN */ && e.keyCode != 38 /* ARROW_UP */ && e.keyCode != 9 /* TAB */ && e.keyCode != 13 /* ENTER */ && e.keyCode != 27 /* ESCAPE */) {
+            if (e.keyCode != latte.Key.ARROW_DOWN && e.keyCode != latte.Key.ARROW_UP
+                && e.keyCode != latte.Key.TAB && e.keyCode != latte.Key.ENTER && e.keyCode != latte.Key.ESCAPE) {
                 if (!this._loadingSuggestions) {
                     if (this.value.length >= this.minLengthToActivateSuggestions) {
                         this._loadingSuggestions = true;
-                        setInterval(function () {
-                            _this._loadingSuggestions = false;
-                        }, 1000);
+                        setInterval(function () { _this._loadingSuggestions = false; }, 1000);
                         this.onFilterSuggestions();
                     }
                     else {
@@ -15179,7 +14867,9 @@ var latte;
             _super.prototype.onLayout.call(this);
             //this.width(this.element.width() - 12);
             if (this.multiline && this.autoGrow && this.input) {
-                this._invisible.width(this.input.width()).text(this.input.val() + '.');
+                this._invisible
+                    .width(this.input.width())
+                    .text(this.input.val() + '.');
                 this.input.height(Math.max(13, this._invisible.height()));
             }
         };
@@ -15268,9 +14958,7 @@ var latte;
             }
             this.sideLabel.tooltip = strings.clearText;
             this.sideLabel.css('cursor', 'pointer');
-            this.sideLabel.element.click(function () {
-                _this.value = '';
-            });
+            this.sideLabel.element.click(function () { _this.value = ''; });
             this.valueChanged.add(function () {
                 if (_this.value.length > 0) {
                     _this.sideLabel.icon = icon;
@@ -15499,7 +15187,7 @@ var latte;
                      */
                     this._suggestionOverlay.stack.items.addItem.add(function () {
                         if (_this._suggestionOverlay.stack.items.length > 0) {
-                            _this._suggestionOverlay.showAtSide(4 /* BOTTOM */, _this);
+                            _this._suggestionOverlay.showAtSide(latte.Side.BOTTOM, _this);
                         }
                         if (_this._suggestionOverlay.items.length == 1) {
                             _this.selectFirstSuggestion();
@@ -15594,38 +15282,8 @@ var latte;
             configurable: true
         });
         return TextboxItem;
-    })(latte.ValueItem);
+    }(latte.ValueItem));
     latte.TextboxItem = TextboxItem;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
-     * Allows user to pick a time
-     **/
-    var TimePickerItem = (function (_super) {
-        __extends(TimePickerItem, _super);
-        /**
-         *
-         **/
-        function TimePickerItem() {
-            _super.call(this);
-            this.element.addClass('time-picker');
-            this.dateVisible = false;
-            this.timeVisible = true;
-        }
-        /**
-         * Gets or sets the value of the item
-         **/
-        TimePickerItem.prototype.getValue = function () {
-            return this.date.timeOfDay;
-        };
-        TimePickerItem.prototype.setValue = function (value) {
-            //var timeVal = TimeSpan.fromString(value);
-            _super.prototype.setValue.call(this, new latte.DateTime(1, 1, 1, value.hours, value.minutes, value.seconds));
-        };
-        return TimePickerItem;
-    })(latte.DatePickerItem);
-    latte.TimePickerItem = TimePickerItem;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -15691,6 +15349,7 @@ var latte;
             var a = Loader._active;
             // New array
             var arr = [];
+            // Scan
             for (var i = 0; i < a.length; i++) {
                 if (a[i] != loader)
                     arr.push(a[i]);
@@ -15723,11 +15382,16 @@ var latte;
                 r.top = s;
             }
             curTop = r.top;
+            /// Animate each loader to its place
             for (var i = 0; i < loaders.length; i++) {
                 loader = loaders[i];
-                loader.element.css({
+                loader
+                    .element
+                    .css({
                     left: r.left
-                }).show().animate({
+                })
+                    .show()
+                    .animate({
                     opacity: 1,
                     //width: r.width(),
                     //left: r.left(),
@@ -15766,6 +15430,7 @@ var latte;
             get: function () {
                 var shouldBeVisible = false;
                 var a = Loader._active;
+                /// Scan all active loaders to check if layer should be visible
                 for (var i = 0; i < a.length; i++) {
                     if (a[i].modal === true) {
                         shouldBeVisible = true;
@@ -15791,12 +15456,13 @@ var latte;
             set: function (visible) {
                 var m = $('.latte-loader-modal');
                 if (m.length == 0) {
-                    m = $('<div>').addClass('latte-loader-modal').hide().appendTo('body').css({
+                    m = $('<div>')
+                        .addClass('latte-loader-modal')
+                        .hide()
+                        .appendTo('body')
+                        .css({
                         position: 'fixed',
-                        left: 0,
-                        top: 0,
-                        right: 0,
-                        bottom: 0,
+                        left: 0, top: 0, right: 0, bottom: 0,
                         background: 'rgba(0, 0, 0, 0.6)'
                     });
                 }
@@ -15818,9 +15484,7 @@ var latte;
                     if (m.is(':visible') && !m.hasClass('fading-out')) {
                         m.addClass('fading-out').css('opacity', 1).animate({
                             opacity: 0
-                        }, 'fast', 'swing', function () {
-                            $(this).removeClass('fading-out').hide();
-                        });
+                        }, 'fast', 'swing', function () { $(this).removeClass('fading-out').hide(); });
                     }
                 }
             },
@@ -15859,12 +15523,11 @@ var latte;
             /// Remove from active loaders
             Loader.remove(this);
             /// Disappear element
-            this.element.animate({
+            this.element
+                .animate({
                 opacity: 0,
                 top: -(this.element.height())
-            }, 'fast', 'swing', function () {
-                inst.element.remove();
-            });
+            }, 'fast', 'swing', function () { inst.element.remove(); });
             /// Update Layout
             Loader.update();
         };
@@ -15942,7 +15605,7 @@ var latte;
          **/
         Loader.separation = 5;
         return Loader;
-    })(latte.Overlay);
+    }(latte.Overlay));
     latte.Loader = Loader;
 })(latte || (latte = {}));
 var latte;
@@ -15960,16 +15623,15 @@ var latte;
             this.closed = new latte.LatteEvent(this);
             this.willShowAtX = new latte.LatteEvent(this);
             this.willShowAtY = new latte.LatteEvent(this);
-            this._side = 1 /* AUTO */;
-            this._edge = 1 /* AUTO */;
+            this._side = latte.Side.AUTO;
+            this._edge = latte.Side.AUTO;
             this.element.addClass('menu');
             this.element.addClass('menu-face');
             // Add to DOM
             //            this.element.appendTo('body');
             // Temporary
             this.element.css({
-                minWidth: 100,
-                minHeight: 20
+                minWidth: 100, minHeight: 20
             });
             this.items = new latte.Collection(this._onAddItem, this._onRemoveItem, this);
         }
@@ -15982,10 +15644,12 @@ var latte;
                 return;
             }
             MenuOverlay.closingAll = new latte.LatteEvent(this);
-            $(document).click(function () {
+            $(document)
+                .click(function () {
                 MenuOverlay.closeAll();
-            }).keydown(function (evt) {
-                if (evt.keyCode == 27 /* ESCAPE */) {
+            })
+                .keydown(function (evt) {
+                if (evt.keyCode == latte.Key.ESCAPE) {
                     MenuOverlay.closeAll();
                 }
             });
@@ -16009,20 +15673,21 @@ var latte;
             if (side === void 0) { side = null; }
             if (!(elem instanceof jQuery))
                 throw new latte.InvalidArgumentEx('elem', elem);
-            elem.removeClass('with-menu with-menu-at-top with-menu-at-bottom ' + 'with-menu-at-right with-menu-at-left hover pressed');
+            elem.removeClass('with-menu with-menu-at-top with-menu-at-bottom ' +
+                'with-menu-at-right with-menu-at-left hover pressed');
             if (side) {
                 var str = '';
                 switch (side) {
-                    case 4 /* BOTTOM */:
+                    case latte.Side.BOTTOM:
                         str = 'bottom';
                         break;
-                    case 8 /* LEFT */:
+                    case latte.Side.LEFT:
                         str = 'left';
                         break;
-                    case 16 /* RIGHT */:
+                    case latte.Side.RIGHT:
                         str = 'right';
                         break;
-                    case 32 /* TOP */:
+                    case latte.Side.TOP:
                         str = 'top';
                         break;
                 }
@@ -16049,9 +15714,7 @@ var latte;
                 else
                     b.glyph = null;
                 // Dismisser
-                b.click.add(function () {
-                    MenuOverlay.closeAll();
-                });
+                b.click.add(function () { MenuOverlay.closeAll(); });
             }
             this.element.append(item.element);
         };
@@ -16143,9 +15806,9 @@ var latte;
             this._item = item;
             this._domElement = $element;
             if (latte._undef(side) || !side)
-                side = 4 /* BOTTOM */;
+                side = s.BOTTOM;
             if (latte._undef(edge) || !edge)
-                edge = 1 /* AUTO */;
+                edge = s.AUTO;
             // Hide?
             this.element.hide();
             while (iterations++ < 2) {
@@ -16157,33 +15820,33 @@ var latte;
                     item.contextAt = side;
                 }
                 switch (side) {
-                    case 32 /* TOP */:
+                    case s.TOP:
                         y = e.top - r.height + offset;
                         break;
-                    case 4 /* BOTTOM */:
+                    case s.BOTTOM:
                         y = e.bottom - offset;
                         break;
-                    case 8 /* LEFT */:
+                    case s.LEFT:
                         x = e.left - r.width + offset;
                         break;
-                    case 16 /* RIGHT */:
+                    case s.RIGHT:
                         x = e.right - offset;
                         break;
                 }
-                if (side == 32 /* TOP */ || side == 4 /* BOTTOM */) {
+                if (side == s.TOP || side == s.BOTTOM) {
                     var minWidth = Math.round(e.width * 1.3);
                     this.element.css('min-width', minWidth);
                     r = this.element.rectangle();
-                    if (edge == 16 /* RIGHT */)
+                    if (edge == s.RIGHT)
                         x = e.right - r.width;
                     else
                         x = e.left;
                 }
-                if (side == 8 /* LEFT */ || side == 16 /* RIGHT */) {
+                if (side == s.LEFT || side == s.RIGHT) {
                     var minHeight = Math.round(e.height * 1.3);
                     this.element.css('min-height', minHeight);
                     r = this.element.rectangle();
-                    if (edge == 4 /* BOTTOM */)
+                    if (edge == s.BOTTOM)
                         y = e.bottom - r.height;
                     else
                         y = e.top;
@@ -16193,19 +15856,22 @@ var latte;
                 // Position correction or recalculation
                 if (iterations <= 1 && !viewport.containsRectangle(rect)) {
                     // Check if necessary to invert
-                    if (side == 16 /* RIGHT */ && rect.right > viewport.right || side == 8 /* LEFT */ && rect.left < viewport.left || side == 4 /* BOTTOM */ && rect.bottom > viewport.bottom || side == 32 /* TOP */ && rect.top < viewport.top) {
+                    if (side == s.RIGHT && rect.right > viewport.right
+                        || side == s.LEFT && rect.left < viewport.left
+                        || side == s.BOTTOM && rect.bottom > viewport.bottom
+                        || side == s.TOP && rect.top < viewport.top) {
                         switch (side) {
-                            case 32 /* TOP */:
-                                side = 4 /* BOTTOM */;
+                            case s.TOP:
+                                side = s.BOTTOM;
                                 break;
-                            case 4 /* BOTTOM */:
-                                side = 32 /* TOP */;
+                            case s.BOTTOM:
+                                side = s.TOP;
                                 break;
-                            case 16 /* RIGHT */:
-                                side = 8 /* LEFT */;
+                            case s.RIGHT:
+                                side = s.LEFT;
                                 break;
-                            case 8 /* LEFT */:
-                                side = 16 /* RIGHT */;
+                            case s.LEFT:
+                                side = s.RIGHT;
                                 break;
                         }
                         if ((item instanceof latte.ButtonItem) && item.split) {
@@ -16284,19 +15950,19 @@ var latte;
                 // Program animations
                 if (side) {
                     switch (side) {
-                        case 16 /* RIGHT */:
+                        case latte.Side.RIGHT:
                             animStart.left = '-=' + offset;
                             animEnd.left = '+=' + offset;
                             break;
-                        case 8 /* LEFT */:
+                        case latte.Side.LEFT:
                             animStart.left = '+=' + offset;
                             animEnd.left = '-=' + offset;
                             break;
-                        case 4 /* BOTTOM */:
+                        case latte.Side.BOTTOM:
                             animStart.top = '-=' + offset;
                             animEnd.top = '+=' + offset;
                             break;
-                        case 32 /* TOP */:
+                        case latte.Side.TOP:
                             animStart.top = '+=' + offset;
                             animEnd.top = '-=' + offset;
                             break;
@@ -16307,9 +15973,10 @@ var latte;
                 this.element.show();
             }
             else {
-                this.element.show().css(animStart).animate(animEnd, time, 'swing', function () {
-                    _this.onLayout();
-                });
+                this.element
+                    .show()
+                    .css(animStart)
+                    .animate(animEnd, time, 'swing', function () { _this.onLayout(); });
             }
         };
         Object.defineProperty(MenuOverlay.prototype, "domElement", {
@@ -16353,11 +16020,9 @@ var latte;
             configurable: true
         });
         return MenuOverlay;
-    })(latte.Overlay);
+    }(latte.Overlay));
     latte.MenuOverlay = MenuOverlay;
-    $(function () {
-        MenuOverlay._initialize();
-    });
+    $(function () { MenuOverlay._initialize(); });
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -16374,7 +16039,7 @@ var latte;
             });
         }
         return SuggestionOverlay;
-    })(latte.StackOverlay);
+    }(latte.StackOverlay));
     latte.SuggestionOverlay = SuggestionOverlay;
 })(latte || (latte = {}));
 var latte;
@@ -16411,7 +16076,7 @@ var latte;
             this.container.css('top', this.ribbon.element.height());
         };
         return RibbonView;
-    })(latte.AnchorView);
+    }(latte.AnchorView));
     latte.RibbonView = RibbonView;
 })(latte || (latte = {}));
 var latte;
@@ -16433,7 +16098,7 @@ var latte;
             /**
              * Property field
              */
-            this._tabsSide = 1 /* AUTO */;
+            this._tabsSide = latte.Side.AUTO;
             this.element.addClass('tab');
             this.tabToolbar = new latte.TabToolbar();
             this.anchorTop = this.tabToolbar;
@@ -16476,28 +16141,28 @@ var latte;
          */
         TabView.prototype.onAnchorTopChanged = function () {
             _super.prototype.onAnchorTopChanged.call(this);
-            this.tabToolbar.contentSide = 4 /* BOTTOM */;
+            this.tabToolbar.contentSide = latte.Side.BOTTOM;
         };
         /**
          * Override
          */
         TabView.prototype.onAnchorRightChanged = function () {
             _super.prototype.onAnchorRightChanged.call(this);
-            this.tabToolbar.contentSide = 8 /* LEFT */;
+            this.tabToolbar.contentSide = latte.Side.LEFT;
         };
         /**
          * Override
          */
         TabView.prototype.onAnchorBottomChanged = function () {
             _super.prototype.onAnchorBottomChanged.call(this);
-            this.tabToolbar.contentSide = 32 /* TOP */;
+            this.tabToolbar.contentSide = latte.Side.TOP;
         };
         /**
          * Override
          */
         TabView.prototype.onAnchorLeftChanged = function () {
             _super.prototype.onAnchorLeftChanged.call(this);
-            this.tabToolbar.contentSide = 8 /* LEFT */;
+            this.tabToolbar.contentSide = latte.Side.LEFT;
         };
         Object.defineProperty(TabView.prototype, "selectedTab", {
             /**
@@ -16533,17 +16198,17 @@ var latte;
             set: function (value) {
                 this._tabsSide = value;
                 switch (value) {
-                    case 1 /* AUTO */:
-                    case 32 /* TOP */:
+                    case latte.Side.AUTO:
+                    case latte.Side.TOP:
                         this.anchorTop = this.tabToolbar;
                         break;
-                    case 16 /* RIGHT */:
+                    case latte.Side.RIGHT:
                         this.anchorRight = this.tabToolbar;
                         break;
-                    case 4 /* BOTTOM */:
+                    case latte.Side.BOTTOM:
                         this.anchorBottom = this.tabToolbar;
                         break;
-                    case 8 /* LEFT */:
+                    case latte.Side.LEFT:
                         this.anchorLeft = this.tabToolbar;
                         break;
                 }
@@ -16552,7 +16217,7 @@ var latte;
             configurable: true
         });
         return TabView;
-    })(latte.AnchorView);
+    }(latte.AnchorView));
     latte.TabView = TabView;
 })(latte || (latte = {}));
 var latte;
@@ -16568,7 +16233,9 @@ var latte;
         function ToolbarView() {
             var _this = this;
             // Init
-            _super.call(this, this.toolbar = new latte.Toolbar());
+            _super.call(this);
+            this.toolbar = new latte.Toolbar();
+            this.anchorTop = this.toolbar;
             this.element.addClass('toolbar');
             // Init elements
             this.toolbar.itemsChanged.add(function () {
@@ -16576,31 +16243,31 @@ var latte;
             });
         }
         ToolbarView.prototype.onAnchorTopChanged = function () {
-            this.toolbar.direction = 0 /* HORIZONTAL */;
+            this.toolbar.direction = latte.Direction.HORIZONTAL;
             this.removeClass('top left bottom right');
             this.addClass('top');
             _super.prototype.onAnchorTopChanged.call(this);
         };
         ToolbarView.prototype.onAnchorRightChanged = function () {
-            this.toolbar.direction = 1 /* VERTICAL */;
+            this.toolbar.direction = latte.Direction.VERTICAL;
             this.removeClass('top left bottom right');
             this.addClass('right');
             _super.prototype.onAnchorRightChanged.call(this);
         };
         ToolbarView.prototype.onAnchorBottomChanged = function () {
-            this.toolbar.direction = 0 /* HORIZONTAL */;
+            this.toolbar.direction = latte.Direction.HORIZONTAL;
             this.removeClass('top left bottom right');
             this.addClass('bottom');
             _super.prototype.onAnchorBottomChanged.call(this);
         };
         ToolbarView.prototype.onAnchorLeftChanged = function () {
-            this.toolbar.direction = 1 /* VERTICAL */;
+            this.toolbar.direction = latte.Direction.VERTICAL;
             this.removeClass('top left bottom right');
             this.addClass('left');
             _super.prototype.onAnchorLeftChanged.call(this);
         };
         return ToolbarView;
-    })(latte.AnchorView);
+    }(latte.AnchorView));
     latte.ToolbarView = ToolbarView;
 })(latte || (latte = {}));
 var latte;
@@ -16652,27 +16319,15 @@ var latte;
             this._workDayEnd = new latte.TimeSpan(0, 17);
             this._scrollStart = new latte.TimeSpan(0, 7);
             // Handlers
-            this.element.keydown(function (e) {
-                _this._keyDown(e);
-            });
-            this._columnsGrid.mousedown(function (e) {
-                _this._columnsMouseDown(e);
-            }).mousemove(function (e) {
-                _this._columnsMouseMove(e);
-            }).mouseup(function (e) {
-                _this._columnsMouseUp(e);
-            }).mouseleave(function (e) {
-                _this._columnsMouseLeave(e);
-            });
-            this._daysGrid.mousedown(function (e) {
-                _this._daysGridMouseDown(e);
-            }).mouseup(function (e) {
-                _this._daysGridMouseUp(e);
-            }).mousemove(function (e) {
-                _this._daysGridMouseMove(e);
-            }).mouseleave(function (e) {
-                _this._daysGridMouseUp(e);
-            });
+            this.element.keydown(function (e) { _this._keyDown(e); });
+            this._columnsGrid.mousedown(function (e) { _this._columnsMouseDown(e); })
+                .mousemove(function (e) { _this._columnsMouseMove(e); })
+                .mouseup(function (e) { _this._columnsMouseUp(e); })
+                .mouseleave(function (e) { _this._columnsMouseLeave(e); });
+            this._daysGrid.mousedown(function (e) { _this._daysGridMouseDown(e); })
+                .mouseup(function (e) { _this._daysGridMouseUp(e); })
+                .mousemove(function (e) { _this._daysGridMouseMove(e); })
+                .mouseleave(function (e) { _this._daysGridMouseUp(e); });
             // Init on this week
             this.setViewRange(latte.DateTime.today.addDays(-latte.DateTime.today.dayOfWeek + 1), latte.DateTime.today.addDays(-latte.DateTime.today.dayOfWeek + 1).addDays(4));
         }
@@ -16776,9 +16431,11 @@ var latte;
             var dayDepth = function (day) {
                 return m.length > 0 ? m[0][day].length : 0;
             };
+            // Initialize empty matrix
             for (i = 0; i < spans.length; i++)
                 for (j = (m[i] = []).length; j < columns.length; j++)
                     m[i].push([]);
+            // Iterate items
             for (i = 0; i < this.items.count; i++) {
                 item = this.items.item(i);
                 if (item.allDay)
@@ -16786,6 +16443,7 @@ var latte;
                 start = item.dateStart;
                 end = item.dateEnd;
                 itemDays = Math.ceil(end.date.subtractDate(start.date).totalDays) + 1;
+                // for each day item touches
                 for (j = 0; j < itemDays; j++) {
                     date = start.date.addDays(j);
                     dayIndex = this._dayColumn(date).index();
@@ -16795,6 +16453,7 @@ var latte;
                     if (dayIndex >= 0) {
                         // Check if space available
                         var depth = 0;
+                        // Find depth
                         while (!isAvailable(dayIndex, depth, startspan, endspan))
                             depth++;
                         // Place index where it fits
@@ -16812,15 +16471,18 @@ var latte;
                     }
                 }
             }
+            // Expand to the right items with space
             for (j = 0; j < m[0].length; j++) {
                 // Get max amount of depth
                 col = 0;
                 for (i = 0; i < m.length; i++)
                     col = Math.max(col, m[i][j].length);
+                // Make all equally deep
                 for (i = 0; i < m.length; i++)
                     for (k = m[i][j].length; k < col; k++)
                         m[i][j].push(empty);
             }
+            // Expand where possible
             for (i = 0; i < this.items.count; i++) {
                 item = this.items.item(i);
                 if (item.allDay)
@@ -16874,9 +16536,7 @@ var latte;
                     m[i][depth] = index;
             };
             // Initialize matrix
-            this._columns.children().each(function () {
-                m.push([]);
-            });
+            this._columns.children().each(function () { m.push([]); });
             for (i = 0; i < this.items.count; i++) {
                 item = this.items.item(i);
                 if (!item.allDay)
@@ -16888,6 +16548,7 @@ var latte;
                 start = startColumn.index();
                 end = endColumn.index();
                 depth = 0;
+                // Run for index
                 while (!isAvailable(depth, start, end))
                     depth++;
                 // Place index
@@ -16895,6 +16556,7 @@ var latte;
                 // Save depth
                 item._matrixDepth = depth;
             }
+            //printm();
             for (i = 0; i < m.length; i++)
                 maxdepth = Math.max(maxdepth, m[i].length);
             return maxdepth;
@@ -16944,7 +16606,8 @@ var latte;
                     else {
                         end = end.addMinutes(this._minuteSpan);
                     }
-                    var changed = this._selectionStart.compareTo(start) != 0 || this._selectionEnd.compareTo(end) != 0;
+                    var changed = this._selectionStart.compareTo(start) != 0
+                        || this._selectionEnd.compareTo(end) != 0;
                     if (changed) {
                         this.setSelectionRange(start, end);
                     }
@@ -16963,7 +16626,7 @@ var latte;
          *
          **/
         CalendarDayView.prototype._keyDown = function (e) {
-            if (e.keyCode === 13 /* ENTER */) {
+            if (e.keyCode === latte.Key.ENTER) {
                 this.createItemAtSelection();
             }
         };
@@ -17028,6 +16691,7 @@ var latte;
                 var fullbottom = lastspan.position().top + lastspan.height() + this._daysGrid.scrollTop();
                 var starttop = this._heightOf(start.timeOfDay);
                 var endbottom = this._heightOf(end.timeOfDay);
+                // One rectangle by day
                 for (var i = 0; i < days; i++) {
                     rect = new latte.Rectangle();
                     var date = start.date.addDays(i);
@@ -17092,13 +16756,17 @@ var latte;
             var firstSpan = true;
             this._columns.empty();
             this._timeSpans.empty();
+            // Create columns
             for (i = 0; i < dayCount; i++) {
                 var date = this._viewStart.addDays(i);
                 var name = strings[dayNames[date.dayOfWeek]];
                 // Create column
-                var c = $('<div>').addClass('column').appendTo(this._columns).addClass('day-' + date.year + '-' + date.month + '-' + date.day).data('date', date);
+                var c = $('<div>').addClass('column').appendTo(this._columns)
+                    .addClass('day-' + date.year + '-' + date.month + '-' + date.day)
+                    .data('date', date);
                 // Create date
-                var d = $('<div>').addClass('date').appendTo(c).text(date.day + ' ' + name);
+                var d = $('<div>').addClass('date').appendTo(c)
+                    .text(date.day + ' ' + name);
                 // Check if today
                 if (date.compareTo(today) == 0) {
                     d.text(date.day + ' ' + name + ' - ' + strings.today);
@@ -17107,9 +16775,12 @@ var latte;
                         c.addClass('only-day');
                 }
             }
+            // Create rows
             for (var time = new latte.TimeSpan(); time.totalMinutes < 24 * 60; time = time.add(new latte.TimeSpan(0, 0, this._minuteSpan))) {
                 // Create span
-                var span = $('<div>').addClass('time-span').appendTo(this._timeSpans).addClass('time-' + time.hours + '-' + time.minutes).data('time', time);
+                var span = $('<div>').addClass('time-span').appendTo(this._timeSpans)
+                    .addClass('time-' + time.hours + '-' + time.minutes)
+                    .data('time', time);
                 // Mark as hour
                 if (time.minutes == 0)
                     span.addClass('hour');
@@ -17213,6 +16884,7 @@ var latte;
             var colw = 0;
             var alldaystart = this._allDayOffset;
             var alldayh = this.element.find('.time-span').first().height();
+            // Clear all rectangles
             for (i = 0; i < this.items.count; i++) {
                 this.items.item(i).rectangles.clear();
                 this.items.item(i).matrixAttributes = [];
@@ -17220,9 +16892,11 @@ var latte;
             // Create items matrix
             this._createTopMatrix();
             this._createMatrix();
+            // Scan items
             for (i = 0; i < this.items.count; i++) {
                 var item = this.items.item(i);
                 var rects = this._rectanglesFor(item.dateStart, item.dateEnd);
+                // Add items rectangles
                 for (j = 0; j < rects.length; j++) {
                     var r = rects[j];
                     var att = item.matrixAttributes[j];
@@ -17264,7 +16938,10 @@ var latte;
          * Returns a value indicating if the selection is on header
          **/
         CalendarDayView.prototype.selectionOnHeader = function () {
-            return this._selectionStart instanceof latte.DateTime && this._selectionEnd instanceof latte.DateTime && this._selectionStart.timeOfDay.totalMinutes == 0 && this._selectionEnd.timeOfDay.totalMinutes == 0;
+            return this._selectionStart instanceof latte.DateTime &&
+                this._selectionEnd instanceof latte.DateTime &&
+                this._selectionStart.timeOfDay.totalMinutes == 0 &&
+                this._selectionEnd.timeOfDay.totalMinutes == 0;
         };
         /**
          * Sets the current selection range
@@ -17287,6 +16964,7 @@ var latte;
             this.clearSelection();
             // Obtain selection rectangles
             var rects = this._rectanglesFor(start, end);
+            // Add selection rectangles
             for (var i = 0; i < rects.length; i++) {
                 var selection = $('<div>').addClass('selection');
                 selection.rectangle(rects[i]);
@@ -17380,7 +17058,7 @@ var latte;
             configurable: true
         });
         return CalendarDayView;
-    })(latte.View);
+    }(latte.View));
     latte.CalendarDayView = CalendarDayView;
 })(latte || (latte = {}));
 var latte;
@@ -17422,16 +17100,11 @@ var latte;
             this._createBoard();
             //this._contentItems = $('<div>').addClass('content-items').appendTo(this._content);
             // Wire handlers
-            this.element.keydown(function (e) {
-                this._keyDown(e);
-            });
-            this._content.find('.day').mousedown(function (e) {
-                __this._dayMouseDown(e, $(this));
-            }).mouseup(function (e) {
-                __this._dayMouseUp(e, $(this));
-            }).mousemove(function (e) {
-                __this._dayMouseMove(e, $(this));
-            });
+            this.element.keydown(function (e) { this._keyDown(e); });
+            this._content.find('.day')
+                .mousedown(function (e) { __this._dayMouseDown(e, $(this)); })
+                .mouseup(function (e) { __this._dayMouseUp(e, $(this)); })
+                .mousemove(function (e) { __this._dayMouseMove(e, $(this)); });
             // Init me
             this.setViewRange(latte.DateTime.today);
         }
@@ -17477,9 +17150,7 @@ var latte;
                     m[i][depth] = index;
             };
             // Initialize matrix
-            this.element.find('.day').each(function () {
-                m.push([]);
-            });
+            this.element.find('.day').each(function () { m.push([]); });
             for (i = 0; i < this.items.count; i++) {
                 item = this.items.item(i);
                 // Get start and end columns
@@ -17489,6 +17160,7 @@ var latte;
                 start = startColumn.index();
                 end = endColumn.index();
                 depth = 0;
+                // Run for index
                 while (!isAvailable(depth, start, end))
                     depth++;
                 // Place index
@@ -17496,6 +17168,7 @@ var latte;
                 // Save depth
                 item._matrixDepth = depth;
             }
+            //printm();
             for (i = 0; i < m.length; i++)
                 maxdepth = Math.max(maxdepth, m[i].length);
             return maxdepth;
@@ -17535,7 +17208,7 @@ var latte;
          *
          **/
         CalendarMonthView.prototype._keyDown = function (e) {
-            if (e.keyCode === 13 /* ENTER */) {
+            if (e.keyCode === latte.Key.ENTER) {
                 this.createItemAtSelection();
             }
         };
@@ -17634,9 +17307,12 @@ var latte;
             // Width and height of items
             var w = Math.floor(this._content.width() / 7);
             var h = Math.max(Math.floor(this._content.height() / 7), depth * this._itemItemHeight + this._itemItemTopStart);
+            // Position calendar squares
             for (var row = 0; row < 7; row++)
                 for (var col = 0; col < 7; col++)
-                    this.element.find(latte.sprintf('.day-%s-%s', row, col)).css({ left: w * col, top: h * row }).width(w).height(h);
+                    this.element.find(latte.sprintf('.day-%s-%s', row, col))
+                        .css({ left: w * col, top: h * row })
+                        .width(w).height(h);
             // Update selection
             if (this._selectionStart && this._selectionEnd)
                 this.setSelectionRange(this._selectionStart, this._selectionEnd);
@@ -17652,15 +17328,18 @@ var latte;
             var padding = this._itemPadding;
             var topstart = this._itemItemTopStart;
             var itemh = this._itemItemHeight;
+            // Clear all rectangles
             for (i = 0; i < this.items.count; i++) {
                 this.items.item(i).rectangles.clear();
                 this.items.item(i).matrixAttributes = [];
             }
             // Create items matrix
             this._createMatrix();
+            // Scan items
             for (i = 0; i < this.items.count; i++) {
                 var item = this.items.item(i);
                 var rects = this._rectanglesFor(item.dateStart, item.dateEnd);
+                // Add items rectangles
                 for (j = 0; j < rects.length; j++) {
                     var r = rects[j];
                     var att = item.matrixAttributes[j];
@@ -17710,6 +17389,7 @@ var latte;
             this.clearSelection();
             // Obtain selection rectangles
             var rects = this._rectanglesFor(start, end);
+            // Add selection rectangles
             for (var i = 0; i < rects.length; i++) {
                 var selection = $('<div>').addClass('selection');
                 selection.rectangle(rects[i]);
@@ -17802,7 +17482,7 @@ var latte;
             configurable: true
         });
         return CalendarMonthView;
-    })(latte.View);
+    }(latte.View));
     latte.CalendarMonthView = CalendarMonthView;
 })(latte || (latte = {}));
 var latte;
@@ -17846,43 +17526,23 @@ var latte;
             this.buttonGroup.buttons.addArray([this.buttonPrevious, this.buttonToday, this.buttonNext]);
             this.buttonGroup.appendTo(this._controls);
             // Wire handlers
-            this.dateView.dateItem.selectionChanged.add(function () {
-                _this.onSelectionChanged();
-            });
-            this.dayView.userAddItem.add(function (i) {
-                _this.onUserAddItem(i);
-            });
-            this.dayView.userRemoveItem.add(function (i) {
-                _this.onUserRemoveItem(i);
-            });
-            this.dayView.viewRangeChanged.add(function () {
-                _this.onViewRangeChanged();
-            });
-            this.monthView.userAddItem.add(function (i) {
-                _this.onUserAddItem(i);
-            });
-            this.monthView.userRemoveItem.add(function (i) {
-                _this.onUserRemoveItem(i);
-            });
-            this.monthView.viewRangeChanged.add(function () {
-                _this.onViewRangeChanged();
-            });
-            this.buttonToday.click.add(function () {
-                _this.goToday();
-            });
-            this.buttonPrevious.click.add(function () {
-                _this.goPrevious();
-            });
-            this.buttonNext.click.add(function () {
-                _this.goNext();
-            });
+            this.dateView.dateItem.selectionChanged.add(function () { _this.onSelectionChanged(); });
+            this.dayView.userAddItem.add(function (i) { _this.onUserAddItem(i); });
+            this.dayView.userRemoveItem.add(function (i) { _this.onUserRemoveItem(i); });
+            this.dayView.viewRangeChanged.add(function () { _this.onViewRangeChanged(); });
+            this.monthView.userAddItem.add(function (i) { _this.onUserAddItem(i); });
+            this.monthView.userRemoveItem.add(function (i) { _this.onUserRemoveItem(i); });
+            this.monthView.viewRangeChanged.add(function () { _this.onViewRangeChanged(); });
+            this.buttonToday.click.add(function () { _this.goToday(); });
+            this.buttonPrevious.click.add(function () { _this.goPrevious(); });
+            this.buttonNext.click.add(function () { _this.goNext(); });
             // Init me
-            this.side = 16 /* RIGHT */;
+            this.side = latte.Side.RIGHT;
             this.sideSize = 250;
             this.view = this.dayView;
             this.sideView = this.dateView;
             this.dateView.dateItem.setSelectionRange(latte.DateTime.today, latte.DateTime.today);
-            this.dateView.dateItem.selectionMode = 4 /* WORKWEEK */;
+            this.dateView.dateItem.selectionMode = latte.DateSelectionMode.WORKWEEK;
         }
         /**
          * Navigates to the next range of dates, based on the current range
@@ -17896,7 +17556,7 @@ var latte;
             else {
                 var start = this.dayView.viewStart, end = this.dayView.viewEnd;
                 var days = Math.floor(end.subtractDate(start).totalDays) + 1;
-                if (this.dateView.dateItem.selectionMode === 4 /* WORKWEEK */) {
+                if (this.dateView.dateItem.selectionMode === latte.DateSelectionMode.WORKWEEK) {
                     start = start.addDays(7);
                     var monday = start.addDays(-start.dayOfWeek + 1);
                     this.dateView.dateItem.setSelectionRange(monday, monday.addDays(4));
@@ -17918,7 +17578,7 @@ var latte;
             else {
                 var start = this.dayView.viewStart, end = this.dayView.viewEnd;
                 var days = Math.floor(end.subtractDate(start).totalDays) + 1;
-                if (this.dateView.dateItem.selectionMode === 4 /* WORKWEEK */) {
+                if (this.dateView.dateItem.selectionMode === latte.DateSelectionMode.WORKWEEK) {
                     start = start.addDays(-7);
                     var monday = start.addDays(-start.dayOfWeek + 1);
                     this.dateView.dateItem.setSelectionRange(monday, monday.addDays(4));
@@ -17932,7 +17592,7 @@ var latte;
          * Navigates to the today day.
          **/
         CalendarView.prototype.goToday = function () {
-            this.dateView.dateItem.selectionMode = 0 /* DAY */;
+            this.dateView.dateItem.selectionMode = latte.DateSelectionMode.DAY;
             this.dateView.dateItem.setSelectionRange(latte.DateTime.today, latte.DateTime.today);
         };
         /**
@@ -17975,7 +17635,8 @@ var latte;
                     this.titleItem.text = start.day + ' ' + strings[months[smonth - 1]] + ' ' + syear;
                 }
                 else {
-                    this.titleItem.text = start.day + (smonth !== emonth ? ' ' + strings[months[smonth - 1]] : '') + (syear != eyear ? ' ' + syear : '') + ' - ' + end.day + ' ' + strings[months[emonth - 1]] + ' ' + eyear;
+                    this.titleItem.text = start.day + (smonth !== emonth ? ' ' + strings[months[smonth - 1]] : '') + (syear != eyear ? ' ' + syear : '') + ' - ' +
+                        end.day + ' ' + strings[months[emonth - 1]] + ' ' + eyear;
                 }
             }
             // Set range of view
@@ -18294,7 +17955,7 @@ var latte;
             configurable: true
         });
         return CalendarView;
-    })(latte.SplitView);
+    }(latte.SplitView));
     latte.CalendarView = CalendarView;
 })(latte || (latte = {}));
 /**
@@ -18685,7 +18346,7 @@ var latte;
             configurable: true
         });
         return CanvasView;
-    })(latte.View);
+    }(latte.View));
     latte.CanvasView = CanvasView;
 })(latte || (latte = {}));
 var latte;
@@ -18733,33 +18394,15 @@ var latte;
             this.workWeekButton.appendTo(this.element);
             this.monthButton.appendTo(this.element);
             // Wire handlers
-            this.dateItem.selectionModeChanged.add(function () {
-                _this.updateSelectionMode();
-            });
-            this.dayButton.click.add(function () {
-                _this.dateItem.selectionMode = 0 /* DAY */;
-            });
-            this.weekButton.click.add(function () {
-                _this.dateItem.selectionMode = 3 /* WEEK */;
-            });
-            this.workWeekButton.click.add(function () {
-                _this.dateItem.selectionMode = 4 /* WORKWEEK */;
-            });
-            this.monthButton.click.add(function () {
-                _this.dateItem.selectionMode = 2 /* MONTH */;
-            });
-            this.dayButton.visibleChanged.add(function () {
-                _this.onLayout();
-            });
-            this.weekButton.visibleChanged.add(function () {
-                _this.onLayout();
-            });
-            this.workWeekButton.visibleChanged.add(function () {
-                _this.onLayout();
-            });
-            this.monthButton.visibleChanged.add(function () {
-                _this.onLayout();
-            });
+            this.dateItem.selectionModeChanged.add(function () { _this.updateSelectionMode(); });
+            this.dayButton.click.add(function () { _this.dateItem.selectionMode = latte.DateSelectionMode.DAY; });
+            this.weekButton.click.add(function () { _this.dateItem.selectionMode = latte.DateSelectionMode.WEEK; });
+            this.workWeekButton.click.add(function () { _this.dateItem.selectionMode = latte.DateSelectionMode.WORKWEEK; });
+            this.monthButton.click.add(function () { _this.dateItem.selectionMode = latte.DateSelectionMode.MONTH; });
+            this.dayButton.visibleChanged.add(function () { _this.onLayout(); });
+            this.weekButton.visibleChanged.add(function () { _this.onLayout(); });
+            this.workWeekButton.visibleChanged.add(function () { _this.onLayout(); });
+            this.monthButton.visibleChanged.add(function () { _this.onLayout(); });
         }
         /**
          * Hides the selection mode buttons
@@ -18822,13 +18465,13 @@ var latte;
          * Updates the selection mode indicators
          **/
         DateView.prototype.updateSelectionMode = function () {
-            this.dayButton.checked = (this.dateItem.selectionMode == 0 /* DAY */);
-            this.workWeekButton.checked = (this.dateItem.selectionMode == 4 /* WORKWEEK */);
-            this.weekButton.checked = (this.dateItem.selectionMode == 3 /* WEEK */);
-            this.monthButton.checked = (this.dateItem.selectionMode == 2 /* MONTH */);
+            this.dayButton.checked = (this.dateItem.selectionMode == latte.DateSelectionMode.DAY);
+            this.workWeekButton.checked = (this.dateItem.selectionMode == latte.DateSelectionMode.WORKWEEK);
+            this.weekButton.checked = (this.dateItem.selectionMode == latte.DateSelectionMode.WEEK);
+            this.monthButton.checked = (this.dateItem.selectionMode == latte.DateSelectionMode.MONTH);
         };
         return DateView;
-    })(latte.View);
+    }(latte.View));
     latte.DateView = DateView;
 })(latte || (latte = {}));
 var latte;
@@ -18989,7 +18632,7 @@ var latte;
             configurable: true
         });
         return FormView;
-    })(latte.ColumnView);
+    }(latte.ColumnView));
     latte.FormView = FormView;
 })(latte || (latte = {}));
 var latte;
@@ -19037,7 +18680,7 @@ var latte;
             configurable: true
         });
         return HtmlView;
-    })(latte.View);
+    }(latte.View));
     latte.HtmlView = HtmlView;
 })(latte || (latte = {}));
 var latte;
@@ -19083,8 +18726,43 @@ var latte;
             configurable: true
         });
         return ItemView;
-    })(latte.View);
+    }(latte.View));
     latte.ItemView = ItemView;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
+     * A view with an editable text box
+     **/
+    var TextView = (function (_super) {
+        __extends(TextView, _super);
+        /**
+         * Creates the TextView
+         **/
+        function TextView() {
+            _super.call(this);
+            this.element.addClass('text');
+            this.textElement = $('<textarea>').appendTo(this.container);
+        }
+        Object.defineProperty(TextView.prototype, "text", {
+            /**
+             * Gets or sets the text of the view
+             **/
+            get: function () {
+                return this.textElement.val();
+            },
+            /**
+             * Gets or sets the text of the view
+             **/
+            set: function (value) {
+                this.textElement.val(value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return TextView;
+    }(latte.View));
+    latte.TextView = TextView;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -19193,43 +18871,8 @@ var latte;
             configurable: true
         });
         return MessageView;
-    })(latte.View);
+    }(latte.View));
     latte.MessageView = MessageView;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
-     * A view with an editable text box
-     **/
-    var TextView = (function (_super) {
-        __extends(TextView, _super);
-        /**
-         * Creates the TextView
-         **/
-        function TextView() {
-            _super.call(this);
-            this.element.addClass('text');
-            this.textElement = $('<textarea>').appendTo(this.container);
-        }
-        Object.defineProperty(TextView.prototype, "text", {
-            /**
-             * Gets or sets the text of the view
-             **/
-            get: function () {
-                return this.textElement.val();
-            },
-            /**
-             * Gets or sets the text of the view
-             **/
-            set: function (value) {
-                this.textElement.val(value);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return TextView;
-    })(latte.View);
-    latte.TextView = TextView;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -19245,7 +18888,6 @@ var latte;
             var _this = this;
             if (view === void 0) { view = null; }
             if (items === void 0) { items = null; }
-            var d = this;
             _super.call(this);
             DialogView._initialize();
             this.element.addClass('dialog');
@@ -19287,14 +18929,15 @@ var latte;
                 return;
             // Flag as initialized
             f.initialized = true;
-            $(document).keydown(function (e) {
+            $(document)
+                .keydown(function (e) {
                 var modal = latte.View.modalView;
                 modal = modal instanceof DialogView ? modal : null;
-                if (e.keyCode == 27 /* ESCAPE */) {
+                if (e.keyCode == latte.Key.ESCAPE) {
                     if (modal && modal.closeable)
                         modal.close();
                 }
-                else if (e.keyCode == 13 /* ENTER */) {
+                else if (e.keyCode == latte.Key.ENTER) {
                     if (modal && latte.View.defaultButton)
                         latte.View.defaultButton.onClick();
                 }
@@ -19345,9 +18988,7 @@ var latte;
          */
         DialogView.confirmDelete = function (objectName, callback) {
             DialogView.ask(latte.sprintf(strings.confirmDeleteS, objectName), strings.cantBeUndone, [
-                new latte.ButtonItem(latte.sprintf(strings.yesDeleteS, objectName), null, function () {
-                    callback();
-                }),
+                new latte.ButtonItem(latte.sprintf(strings.yesDeleteS, objectName), null, function () { callback(); }),
                 new latte.ButtonItem(strings.cancel)
             ]);
         };
@@ -19428,8 +19069,7 @@ var latte;
             if (handler === void 0) { handler = null; }
             var b = new latte.ButtonItem();
             b.text = text;
-            b.click.add(latte._isFunction(handler) ? handler : function () {
-            });
+            b.click.add(latte._isFunction(handler) ? handler : function () { });
             this.items.add(b);
             return this;
         };
@@ -19609,7 +19249,7 @@ var latte;
             configurable: true
         });
         return DialogView;
-    })(latte.View);
+    }(latte.View));
     latte.DialogView = DialogView;
 })(latte || (latte = {}));
 var latte;
@@ -19635,15 +19275,9 @@ var latte;
             this.columnHeadersElement.append($('<div>').addClass('spacer'));
             // Test
             var lipsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ac urna ac est ultrices adipiscing. Nulla eros justo, tristique venenatis ultricies et, congue ut orci. Donec vitae augue eros, nec pretium velit. Cras id nisl a sapien elementum mollis. Aenean augue turpis, sodales accumsan porttitor ut, sagittis quis massa. Etiam consequat, lectus ut tempor dapibus, dui lorem pharetra tellus, a luctus nunc tortor non nibh. Aliquam eros nisl, porta et consequat eleifend, rhoncus vel justo. Aliquam vel diam sit amet arcu suscipit aliquet. Morbi sed metus ut lectus condimentum interdum. Duis eu orci vel mauris luctus interdum. Proin sem lacus, dictum eget vehicula in, tempus ac felis. Mauris vitae purus nibh, et malesuada urna. Sed sit amet nunc leo, et vehicula dui.".split(' ');
-            var word = function () {
-                return lipsum[Math.round(Math.random() * (lipsum.length - 1))];
-            };
-            var words = function () {
-                var r = '';
-                for (var i = 0; i < Math.random() * 8; i++)
-                    r += word() + ' ';
-                return r;
-            };
+            var word = function () { return lipsum[Math.round(Math.random() * (lipsum.length - 1))]; };
+            var words = function () { var r = ''; for (var i = 0; i < Math.random() * 8; i++)
+                r += word() + ' '; return r; };
         }
         /**
          *
@@ -19673,6 +19307,7 @@ var latte;
         ListView.prototype._onAddColumn = function (column) {
             var __this = this;
             this.columnHeadersElement.append(column.element);
+            // Add column to existing items
             for (var i = 0; i < this.items.count; i++) {
                 this.items.item(i).addColumn(column.width);
             }
@@ -19684,10 +19319,9 @@ var latte;
         ListView.prototype._onAddItem = function (item) {
             var __this = this;
             this.container.append(item.element);
-            item.selectedChanged.add(function () {
-                if (this.selected)
-                    __this._itemSelected(this);
-            });
+            item.selectedChanged.add(function () { if (this.selected)
+                __this._itemSelected(this); });
+            // Add existing columns
             for (var i = 0; i < this.columnHeaders.count; i++) {
                 item.addColumn(this.columnHeaders.item(i).width);
             }
@@ -19807,7 +19441,7 @@ var latte;
             }
         };
         return ListView;
-    })(latte.View);
+    }(latte.View));
     latte.ListView = ListView;
 })(latte || (latte = {}));
 var latte;
@@ -19832,7 +19466,7 @@ var latte;
             this.view.view = this.list = new latte.ListView();
         }
         return NavigationListView;
-    })(latte.NavigationView);
+    }(latte.NavigationView));
     latte.NavigationListView = NavigationListView;
 })(latte || (latte = {}));
 var latte;
@@ -19875,6 +19509,7 @@ var latte;
                 return;
             }
             this._navigatingCurrent = index;
+            // Find node in items
             for (var i = 0; i < items.count; i++) {
                 // Item found
                 if (items[i].text == this._navigatingPath[index]) {
@@ -20076,6 +19711,107 @@ var latte;
             configurable: true
         });
         return TreeView;
-    })(latte.View);
+    }(latte.View));
     latte.TreeView = TreeView;
 })(latte || (latte = {}));
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/support/ts-include/datalatte.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/support/ts-include/jquery.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/support/ts-include/latte.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/support/ts-include/latte.strings.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/support/ts-include/latte.ui.strings.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/jQuery.functions.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/DateSelectionMode.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/Direction.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/Side.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/Transition.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/UiElement.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/base/Item.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/View.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/ValueItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.drawing/DrawingRectangle.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/ItemStack.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/overlays/Overlay.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.drawing/DrawingElement.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/selectables/SelectableItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/anchor/AnchorView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/layout/SplitView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/base/IconItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/clickables/ClickableItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/labels/LabelItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.drawing/Brush.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.drawing/DrawingNode.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/clickables/ButtonGroupItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/clickables/ButtonItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/Toolbar.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/selectables/SelectableLabel.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/DatePickerItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/overlays/StackOverlay.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/layout/ColumnView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/navigation/NavigationView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/Navigation.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.drawing/Animation.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.drawing/DrawingClickable.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.drawing/DrawingContext.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.drawing/DrawingImage.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.drawing/DrawingPath.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.drawing/DrawingScene.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.drawing/LinearGradientBrush.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.drawing/Pen.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/Action.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/ZIndex.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/base/ColorIconItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/base/Glyph.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/base/ImageItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/base/SeparatorItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/clickables/PaginationItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/clickables/TabItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/ColorPicker.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/ConversationItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/DateItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/FormItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/HtmlEditorCommands.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/HtmlEditorItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/Ribbon.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/SelectableStack.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/TabContainer.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/TabToolbar.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/ViewItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/labels/ColumnHeader.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/WidgetItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/labels/CommentItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/labels/DateTimeLabel.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/labels/UiText.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/selectables/CalendarItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/selectables/ListViewItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/selectables/TreeItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/CheckboxItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/ColorValueItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/ComboItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/FileValueItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/InputItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/LabelValueItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/ProgressItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/RadioGroup.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/RadioItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/TimePickerItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/TextboxItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/overlays/Loader.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/overlays/MenuOverlay.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/overlays/SuggestionOverlay.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/anchor/RibbonView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/anchor/TabView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/anchor/ToolbarView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/content/CalendarDayView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/content/CalendarMonthView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/content/CalendarView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/content/CanvasView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/content/DateView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/content/FormView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/content/HtmlView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/content/ItemView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/content/TextView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/content/MessageView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/layout/DialogView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/navigation/ListView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/navigation/NavigationListView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/navigation/TreeView.ts" /> 

@@ -131,7 +131,7 @@ declare module latte {
          * @param handler
          * @param capture
          */
-        addEventListener(event: string, handler: (any: any) => any, capture?: boolean): void;
+        addEventListener(event: string, handler: (any) => any, capture?: boolean): void;
         /**
          * Animates the element specified properties, by establishing the initial values for the properties to animate.
          *
@@ -583,93 +583,6 @@ declare module latte {
     }
 }
 /**
- * Created by josemanuel on 5/28/15.
- */
-declare module latte {
-    /**
-     *
-     */
-    class ElementCollection extends Collection<Element<HTMLElement>> {
-        /**
-         * Creates the collection from the specified NodeList
-         * @param list
-         * @returns {latte.ElementCollection}
-         */
-        static fromNodeList(list: NodeList): ElementCollection;
-        /**
-         * Creates an array of elements of the specified base class, binds them to the specified array of records
-         * and returns them as a ElementCollection
-         *
-         * @param array
-         * @param baseClass
-         * @returns {latte.ElementCollection}
-         */
-        static fromBindArray(array: any[], baseClass: Function): ElementCollection;
-        /**
-         *
-         */
-        constructor();
-        /**
-         * Adds an event listener to the elements in the collection
-         * @param event
-         * @param handler
-         * @param capture
-         */
-        addEventListener(event: string, handler: (item: Element<HTMLElement>) => any, capture?: boolean): void;
-        /**
-         * Adds the specified class to the class list of the elements in the collection
-         * @param className
-         */
-        addClass(className: string): void;
-        /**
-         * Clears all the children of the elements in the collection
-         */
-        clear(): void;
-        /**
-         * Fades in the elements in the collection
-         * @param duration
-         * @param callback
-         */
-        fadeIn(duration?: number, callback?: () => any): void;
-        /**
-         * Fades out the elements in the collection
-         * @param duration
-         * @param callback
-         */
-        fadeOut(duration?: number, callback?: () => any): void;
-        /**
-         * Adds an event handler to the elements in the collection
-         * @param context
-         * @param event
-         * @param f
-         */
-        handle(context: any, event: string, f: Function): void;
-        /**
-         * Removes the specified class to the class list of elements in the collection
-         *
-         * @param className
-         */
-        removeClass(className: string): void;
-        /**
-         * Sets the attribute of the elements
-         * @param property
-         * @param value
-         */
-        setAttribute(att: string, value: any): void;
-        /**
-         * Sets the property of the elements
-         * @param property
-         * @param value
-         */
-        setProperty(property: string, value: any): void;
-        /**
-         * Sets the visibility of the elements in the collection
-         * @param visible
-         */
-        setVisible(visible: boolean): void;
-    }
-}
-/**
  * Created by josemanuel on 4/20/15.
  */
 declare module latte {
@@ -833,17 +746,90 @@ declare module latte {
     }
 }
 /**
- * Created by josemanuel on 5/29/15.
+ * Created by josemanuel on 5/28/15.
  */
 declare module latte {
     /**
      *
      */
-    class CollectionDataBind {
+    class ElementCollection extends Collection<Element<HTMLElement>> {
         /**
-         * Creates and automatically sets up the binding
+         * Creates the collection from the specified NodeList
+         * @param list
+         * @returns {latte.ElementCollection}
          */
-        constructor(element: Element<HTMLElement>, elementProperty: string, collection: Collection<any>, type?: DataBindType);
+        static fromNodeList(list: NodeList): ElementCollection;
+        /**
+         * Creates an array of elements of the specified base class, binds them to the specified array of records
+         * and returns them as a ElementCollection
+         *
+         * @param array
+         * @param baseClass
+         * @returns {latte.ElementCollection}
+         */
+        static fromBindArray(array: any[], baseClass: Function): ElementCollection;
+        /**
+         *
+         */
+        constructor();
+        /**
+         * Adds an event listener to the elements in the collection
+         * @param event
+         * @param handler
+         * @param capture
+         */
+        addEventListener(event: string, handler: (item: Element<HTMLElement>, e?: any) => any, capture?: boolean): void;
+        /**
+         * Adds the specified class to the class list of the elements in the collection
+         * @param className
+         */
+        addClass(className: string): void;
+        /**
+         * Clears all the children of the elements in the collection
+         */
+        clear(): void;
+        /**
+         * Fades in the elements in the collection
+         * @param duration
+         * @param callback
+         */
+        fadeIn(duration?: number, callback?: () => any): void;
+        /**
+         * Fades out the elements in the collection
+         * @param duration
+         * @param callback
+         */
+        fadeOut(duration?: number, callback?: () => any): void;
+        /**
+         * Adds an event handler to the elements in the collection
+         * @param context
+         * @param event
+         * @param f
+         */
+        handle(context: any, event: string, f: Function): void;
+        /**
+         * Removes the specified class to the class list of elements in the collection
+         *
+         * @param className
+         */
+        removeClass(className: string): void;
+        /**
+         * Sets the attribute of the elements
+         * @param property
+         * @param value
+         */
+        setAttribute(att: string, value: any): void;
+        /**
+         * Sets the property of the elements
+         * @param property
+         * @param value
+         */
+        setProperty(property: string, value: any): void;
+        /**
+         * Sets the visibility of the elements in the collection
+         * @param visible
+         */
+        setVisible(visible: boolean): void;
     }
 }
 /**
@@ -967,104 +953,17 @@ declare module latte {
     }
 }
 /**
- * Created by josemanuel on 12/9/15.
+ * Created by josemanuel on 5/29/15.
  */
 declare module latte {
     /**
      *
      */
-    class ElementGeneric extends Element<HTMLElement> {
+    class CollectionDataBind {
         /**
-         *
+         * Creates and automatically sets up the binding
          */
-        constructor(e: HTMLElement);
-    }
-}
-/**
- * Created by josemanuel on 5/28/15.
- */
-declare module latte {
-    /**
-     * Represents a very simple data adapter that passes the data along as strings.
-     */
-    class DefaultDataAdapter implements DataAdapter<string, string> {
-        /**
-         * Creates the adapter
-         */
-        constructor();
-        /**
-         * Transforms the value of the record into a proper value for the element
-         *
-         * @param value
-         */
-        adaptForElement(value: string): string;
-        /**
-         * Transforms the value of the element into a proper value for the record
-         * @param value
-         */
-        adaptForRecord(value: string): string;
-    }
-}
-/**
- * Created by josemanuel on 5/28/15.
- */
-declare module latte {
-    /**
-     *
-     */
-    class EventBind {
-        /**
-         *
-         */
-        constructor(element: Element<HTMLElement>, elementEvent: string, record: any, recordMethod: string);
-        /**
-         * Sets up the bind
-         * @param element
-         * @param elementEvethis.bindedElements.push(e);nt
-         * @param record
-         * @param recordMethod
-         */
-        setup(element: Element<HTMLElement>, elementEvent: string, record: any, recordMethod: string): void;
-        /**
-         * Property field
-         */
-        private _element;
-        /**
-         * Gets the element to bind
-         *
-         * @returns {Element<HTMLElement>}
-         */
-        element: Element<HTMLElement>;
-        /**
-         * Property field
-         */
-        private _elementEvent;
-        /**
-         * Gets the element event
-         *
-         * @returns {string}
-         */
-        elementEvent: string;
-        /**
-         * Property field
-         */
-        private _record;
-        /**
-         * Gets the record to bind
-         *
-         * @returns {any}
-         */
-        record: any;
-        /**
-         * Property field
-         */
-        private _recordMethod;
-        /**
-         * Gets the method to execute on the record
-         *
-         * @returns {string}
-         */
-        recordMethod: string;
+        constructor(element: Element<HTMLElement>, elementProperty: string, collection: Collection<any>, type?: DataBindType);
     }
 }
 /**
@@ -1238,5 +1137,92 @@ declare module latte {
          * @returns {DataBindType}
          */
         type: DataBindType;
+    }
+}
+/**
+ * Created by josemanuel on 5/28/15.
+ */
+declare module latte {
+    /**
+     * Represents a very simple data adapter that passes the data along as strings.
+     */
+    class DefaultDataAdapter implements DataAdapter<string, string> {
+        /**
+         * Creates the adapter
+         */
+        constructor();
+        /**
+         * Transforms the value of the record into a proper value for the element
+         *
+         * @param value
+         */
+        adaptForElement(value: string): string;
+        /**
+         * Transforms the value of the element into a proper value for the record
+         * @param value
+         */
+        adaptForRecord(value: string): string;
+    }
+}
+/**
+ * Created by josemanuel on 5/28/15.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class EventBind {
+        /**
+         *
+         */
+        constructor(element: Element<HTMLElement>, elementEvent: string, record: any, recordMethod: string);
+        /**
+         * Sets up the bind
+         * @param element
+         * @param elementEvethis.bindedElements.push(e);nt
+         * @param record
+         * @param recordMethod
+         */
+        setup(element: Element<HTMLElement>, elementEvent: string, record: any, recordMethod: string): void;
+        /**
+         * Property field
+         */
+        private _element;
+        /**
+         * Gets the element to bind
+         *
+         * @returns {Element<HTMLElement>}
+         */
+        element: Element<HTMLElement>;
+        /**
+         * Property field
+         */
+        private _elementEvent;
+        /**
+         * Gets the element event
+         *
+         * @returns {string}
+         */
+        elementEvent: string;
+        /**
+         * Property field
+         */
+        private _record;
+        /**
+         * Gets the record to bind
+         *
+         * @returns {any}
+         */
+        record: any;
+        /**
+         * Property field
+         */
+        private _recordMethod;
+        /**
+         * Gets the method to execute on the record
+         *
+         * @returns {string}
+         */
+        recordMethod: string;
     }
 }

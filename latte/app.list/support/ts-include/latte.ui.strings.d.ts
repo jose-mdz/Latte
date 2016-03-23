@@ -102,14 +102,6 @@ declare module latte{ interface Strings{
 	error: string;
 	name: string;
 	working: string;
-	mondayShort: string;
-	tuesdayShort: string;
-	wednesdayShort: string;
-	thursdayShort: string;
-	fridayShort: string;
-	saturdayShort: string;
-	sundayShort: string;
-	today: string;
 	day: string;
 	week: string;
 	workWeek: string;

@@ -1,3 +1,8 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 /**
  * Created by josemanuel on 3/25/15.
  */
@@ -8,12 +13,13 @@ var latte;
      */
     var Element = (function () {
         //endregion
-        //region Fields
-        //endregion
         /**
          * Creates an element
          */
         function Element(element) {
+            //endregion
+            //region Fields
+            this.dataElements = [];
             /**
              * Property field
              */
@@ -36,6 +42,21 @@ var latte;
             this._element['latte-element-instance'] = this;
         }
         //region Static
+        /**
+         * Creates a new element in memory from the specified tag name
+         * @param tagName
+         * @returns {latte.Element<HTMLElement>}
+         */
+        Element.create = function (tagName) {
+            if (tagName === void 0) { tagName = 'div'; }
+            var parts = tagName.split('.');
+            var tagName = parts[0];
+            var element = new Element(document.createElement(tagName));
+            for (var i = 1; i < parts.length; i++) {
+                element.addClass(parts[i]);
+            }
+            return element;
+        };
         /**
          * Creates an element from the latte.globalViewBank object.
          *
@@ -141,11 +162,17 @@ var latte;
             }
         };
         //region Private Methods
-        Element.prototype.addBindedElement = function (e) {
+        Element.prototype.addBindedElement = function (e, ebind, dbind) {
             for (var i = 0; i < this.bindedElements.length; i++) {
                 if (this.bindedElements[i] === e) {
                     return;
                 }
+            }
+            if (ebind) {
+                this.onEventBindAdded(ebind);
+            }
+            if (dbind) {
+                this.onDataBindAdded(dbind);
             }
             this.bindedElements.push(e);
         };
@@ -229,6 +256,7 @@ var latte;
                 var leader = animations[0];
                 // Handle update
                 leader.update.add(function () {
+                    // Update all values
                     for (var i = 0; i < animations.length; i++) {
                         var a = animations[i];
                         setValue(a.tag, leader.running ? a.currentValue : a.endValue);
@@ -306,6 +334,7 @@ var latte;
         /**
          * Binds the element to the specified object
          * @param object
+         * @param hide
          */
         Element.prototype.bind = function (object, hide) {
             var _this = this;
@@ -317,12 +346,25 @@ var latte;
                         return;
                     var e = new Element(node);
                     var prop = e.element.getAttribute('data-bind');
-                    // TODO: Criteria for elementProperty, elementEvent, type, DataAdapter
-                    var bind = new latte.DataBind(e, 'text', object, prop, 1 /* AUTO */, null, 'input', latte.sprintf('%sChanged', prop));
-                    if (!hide) {
-                        _this.dataBinds.push(bind);
+                    var dataBinds = prop.split(";");
+                    for (var j = 0; j < dataBinds.length; j++) {
+                        var parts = dataBinds[j].split(":");
+                        var elementProperty = parts.length == 2 ? parts[0] : 'text';
+                        var recordProperty = parts.length == 2 ? parts[1] : parts[0];
+                        var bind = new latte.DataBind(e, elementProperty, object, recordProperty, latte.DataBindType.AUTO, null, 'input', latte.sprintf('%sChanged', prop));
+                        if (!hide) {
+                            _this.dataBinds.push(bind);
+                        }
+                        _this.addBindedElement(e, null, bind);
                     }
-                    _this.addBindedElement(e);
+                    //// TODO: Criteria for elementProperty, elementEvent, type, DataAdapter
+                    //var bind = new DataBind(e, 'text', object, prop, DataBindType.AUTO, null, 'input', sprintf('%sChanged', prop));
+                    //
+                    //if(!hide){
+                    //    this.dataBinds.push(bind);
+                    //}
+                    //
+                    //this.addBindedElement(e);
                 })(list[i]);
             }
             var elist = this.element.querySelectorAll('[data-event]');
@@ -336,7 +378,7 @@ var latte;
                         if (parts.length == 2) {
                             var bind = new latte.EventBind(e, parts[0].trim(), object, parts[1].trim());
                             e.eventBinds.push(bind);
-                            _this.addBindedElement(e);
+                            _this.addBindedElement(e, bind, null);
                         }
                         else {
                             latte.log("[data-event] Bad Syntax: " + binds[j]);
@@ -363,27 +405,20 @@ var latte;
                 this.visible = true;
             }
             var show = function (callback) {
-                _this.animate({ opacity: 1 }, time, function () {
-                    visible = true;
-                    callback();
-                });
+                _this.animate({ opacity: 1 }, time, function () { visible = true; callback(); });
                 //me.animate({
                 //    opacity: 1
                 //}, time, 'swing', () => { visible = true; callback(); })
             };
             var hide = function (callback) {
-                _this.animate({ opacity: 0 }, time, function () {
-                    visible = false;
-                    callback();
-                });
+                _this.animate({ opacity: 0 }, time, function () { visible = false; callback(); });
                 //me.animate({
                 //    opacity: 0
                 //}, time, 'swing', () => { visible = false; callback(); })
             };
             var go = function () {
                 if (++current == total) {
-                    show(function () {
-                    });
+                    show(function () { });
                     if (latte._isFunction(callback)) {
                         callback();
                     }
@@ -404,6 +439,48 @@ var latte;
         Element.prototype.clear = function () {
             while (this.element.firstChild) {
                 this.element.removeChild(this.element.firstChild);
+            }
+        };
+        /**
+         * Called when the data of the element has loaded successfully
+         */
+        Element.prototype.dataDidLoad = function () {
+            for (var i = 0; i < this.dataElements.length; i++) {
+                this.dataElements[i].dataDidLoad();
+            }
+        };
+        /**
+         * Called when the data load failed
+         */
+        Element.prototype.dataLoadFailed = function (errorDescription) {
+            for (var i = 0; i < this.dataElements.length; i++) {
+                this.dataElements[i].dataLoadFailed(errorDescription);
+            }
+        };
+        /**
+         * Called when data load is about to start
+         */
+        Element.prototype.dataWillLoad = function () {
+            for (var i = 0; i < this.dataElements.length; i++) {
+                this.dataElements[i].dataWillLoad();
+            }
+        };
+        /**
+         * Called when the element has been assigned as only child of another element, using the setContent method
+         */
+        Element.prototype.didLoad = function () {
+        };
+        /**
+         * If conditional is true, ensures element has class, if not, ensures it doesn't
+         * @param className
+         * @param condition
+         */
+        Element.prototype.ensureClass = function (className, condition) {
+            if (condition) {
+                this.addClass(className);
+            }
+            else {
+                this.removeClass(className);
             }
         };
         /**
@@ -464,6 +541,12 @@ var latte;
             return latte.ElementCollection.fromNodeList(this.querySelectorAll(query));
         };
         /**
+         * Gets the children of the element as an ElementCollection
+         */
+        Element.prototype.getCollection = function () {
+            return latte.ElementCollection.fromNodeList(this.element.childNodes);
+        };
+        /**
          * Gets the size of the element
          */
         Element.prototype.getSize = function () {
@@ -507,6 +590,34 @@ var latte;
             return this.element.classList.contains(className);
         };
         /**
+         * Loads the data of the data calls
+         */
+        Element.prototype.loadData = function () {
+            var _this = this;
+            var calls = this.loadDataCalls();
+            if (calls.length > 0) {
+                // Data will load
+                this.dataWillLoad();
+                // Create message
+                var m = latte.Message.sendCalls(calls);
+                // Handle fail
+                m.failed.add(function (errorDesc) {
+                    _this.dataLoadFailed(errorDesc);
+                });
+                // Handle arrival
+                m.responseArrived.add(function () {
+                    _this.dataDidLoad();
+                });
+            }
+        };
+        /**
+         * Override this method to indicate the element loads data
+         * @returns {null}
+         */
+        Element.prototype.loadDataCalls = function () {
+            return [];
+        };
+        /**
          * Raises the <c>contentEditable</c> event
          */
         Element.prototype.onContentEditableChanged = function () {
@@ -514,10 +625,10 @@ var latte;
                 this._contentEditableChanged.raise();
             }
             if (this.contentEditable) {
-                this.element.contentEditable = 'true';
+                this.element['contentEditable'] = 'true';
             }
             else {
-                this.element.contentEditable = 'false';
+                this.element['contentEditable'] = 'false';
             }
         };
         /**
@@ -582,9 +693,14 @@ var latte;
          * Sets the content of the element, deleting all existing children.
          * @param e
          */
-        Element.prototype.setContent = function (e) {
+        Element.prototype.setContent = function (e, silent) {
+            if (silent === void 0) { silent = false; }
             this.clear();
             this.add(e);
+            if (!silent) {
+                e.visible = true;
+                e.didLoad();
+            }
         };
         /**
          * Sets the children of the element, deleting all existing children
@@ -597,12 +713,33 @@ var latte;
             }
         };
         /**
+         * Sets the children of the element as the elements of the collection
+         * @param c
+         */
+        Element.prototype.setCollection = function (c) {
+            this.clear();
+            this.addCollection(c);
+            return c;
+        };
+        /**
          * Replaces the element
          * @param e
          */
         Element.prototype.setElement = function (e) {
             this._element = null;
             this._element = e;
+        };
+        /**
+         * Alternates the class, adds it if no present and removes it if present.
+         * @param className
+         */
+        Element.prototype.swapClass = function (className) {
+            if (this.hasClass(className)) {
+                this.removeClass(className);
+            }
+            else {
+                this.addClass(className);
+            }
         };
         Element.prototype.toString = function () {
             return latte.sprintf("%s.%s", this.element.tagName, this.element.classList.toString());
@@ -622,6 +759,52 @@ var latte;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(Element.prototype, "dataBindAdded", {
+            /**
+             * Gets an event raised when a data bind is added
+             *
+             * @returns {LatteEvent}
+             */
+            get: function () {
+                if (!this._dataBindAdded) {
+                    this._dataBindAdded = new latte.LatteEvent(this);
+                }
+                return this._dataBindAdded;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Raises the <c>dataBindAdded</c> event
+         */
+        Element.prototype.onDataBindAdded = function (b) {
+            if (this._dataBindAdded) {
+                this._dataBindAdded.raise(b);
+            }
+        };
+        Object.defineProperty(Element.prototype, "eventBindAdded", {
+            /**
+             * Gets an event raised when an event bind is added
+             *
+             * @returns {LatteEvent}
+             */
+            get: function () {
+                if (!this._eventBindAdded) {
+                    this._eventBindAdded = new latte.LatteEvent(this);
+                }
+                return this._eventBindAdded;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Raises the <c>eventBindAdded</c> event
+         */
+        Element.prototype.onEventBindAdded = function (b) {
+            if (this._eventBindAdded) {
+                this._eventBindAdded.raise(b);
+            }
+        };
         Object.defineProperty(Element.prototype, "tagChanged", {
             /**
              * Gets an event raised when the value of the tag property changes
@@ -648,6 +831,46 @@ var latte;
                     this._visibleChanged = new latte.LatteEvent(this);
                 }
                 return this._visibleChanged;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Element.prototype, "backgroundColor", {
+            //endregion
+            //region Properties
+            /**
+             * Gets or sets the background color of the element
+             * @returns {string}
+             */
+            get: function () {
+                return this.style.backgroundColor;
+            },
+            /**
+             * Gets or sets the background color of the element
+             * @param value
+             */
+            set: function (value) {
+                this.style.backgroundColor = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Element.prototype, "backgroundImageUrl", {
+            /**
+             * Gets or sets the background image url
+             *
+             * @returns {string}
+             */
+            get: function () {
+                return this.element.style.backgroundImage;
+            },
+            /**
+             * Gets or sets the background image url
+             *
+             * @param {string} value
+             */
+            set: function (value) {
+                this.element.style.backgroundImage = latte.sprintf("url(%s)", value);
             },
             enumerable: true,
             configurable: true
@@ -790,8 +1013,14 @@ var latte;
              * @param {number} value
              */
             set: function (value) {
-                if (value == null) {
-                    this.style.height = '';
+                if (isNaN(value)) {
+                    this.element.style.height = 'auto';
+                }
+                else if (value == null) {
+                    this.element.style.height = '';
+                }
+                else if (value < 1) {
+                    this.element.style.height = (value * 100) + 'px';
                 }
                 else {
                     this.element.style.height = value + 'px';
@@ -858,7 +1087,14 @@ var latte;
              * @returns {string}
              */
             get: function () {
-                return this.element.innerHTML;
+                var tagName = this.element.tagName.toLowerCase();
+                //log("was " +tagName)
+                if (tagName == 'input' || tagName == 'textarea') {
+                    return this.element['value'];
+                }
+                else {
+                    return this.element.innerHTML;
+                }
             },
             /**
              * Gets or sets the inner text of the element
@@ -866,7 +1102,13 @@ var latte;
              * @param {string} value
              */
             set: function (value) {
-                this.element.innerHTML = value;
+                var tagName = this.element.tagName.toLowerCase();
+                if (tagName == 'input' || tagName == 'textarea' && !latte._undef(value)) {
+                    this.element['value'] = value;
+                }
+                else {
+                    this.element['innerHTML'] = value;
+                }
             },
             enumerable: true,
             configurable: true
@@ -963,8 +1205,28 @@ var latte;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(Element.prototype, "tooltip", {
+            /**
+             * Gets or sets the tooltip of the elent
+             *
+             * @returns {string}
+             */
+            get: function () {
+                return this.element.title;
+            },
+            /**
+             * Gets or sets the tooltip of the elent
+             *
+             * @param {string} value
+             */
+            set: function (value) {
+                this.element['title'] = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return Element;
-    })();
+    }());
     latte.Element = Element;
 })(latte || (latte = {}));
 /**
@@ -1019,9 +1281,7 @@ var latte;
                         /* Technique by Erik Moller. MIT license: https://gist.github.com/paulirish/1579671. */
                         timeDelta = Math.max(0, 16 - (timeCurrent - timeLast));
                         timeLast = timeCurrent + timeDelta;
-                        return setTimeout(function () {
-                            callback(timeCurrent + timeDelta);
-                        }, timeDelta);
+                        return setTimeout(function () { callback(timeCurrent + timeDelta); }, timeDelta);
                     };
                 })();
             },
@@ -1043,7 +1303,7 @@ var latte;
                     continue;
                 var value = a.currentValue;
                 //log("Updating: %s-%s -> %s", a.startValue, a.endValue, a.currentValue)
-                if (now.compareTo(a.endTime) > 0) {
+                if (now.compareTo(a.endTime) > 0 || value >= a.endValue) {
                     a._running = false;
                     a.onUpdate(a.endValue);
                     a.onEnded();
@@ -1281,15 +1541,9 @@ var latte;
         Animation.stack = [];
         Animation.loopActive = false;
         return Animation;
-    })();
+    }());
     latte.Animation = Animation;
 })(latte || (latte = {}));
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
 /**
  * Created by josemanuel on 5/28/15.
  */
@@ -1356,14 +1610,13 @@ var latte;
          * @param capture
          */
         ElementCollection.prototype.addEventListener = function (event, handler, capture) {
-            var _this = this;
             if (capture === void 0) { capture = false; }
             this.each(function (e) {
-                e.addEventListener(event, function () {
-                    var args = [e];
+                e.addEventListener(event, function (evt) {
+                    var args = [e, evt];
                     for (var i = 0; i < arguments.length; i++)
                         args.push(arguments[i]);
-                    handler.apply(_this, args);
+                    handler.apply(e, args);
                 }, capture);
             });
         };
@@ -1410,6 +1663,7 @@ var latte;
         };
         /**
          * Adds an event handler to the elements in the collection
+         * @param context
          * @param event
          * @param f
          */
@@ -1458,7 +1712,7 @@ var latte;
             });
         };
         return ElementCollection;
-    })(latte.Collection);
+    }(latte.Collection));
     latte.ElementCollection = ElementCollection;
 })(latte || (latte = {}));
 /**
@@ -1478,7 +1732,6 @@ var latte;
         function Textbox(element) {
             var _this = this;
             _super.call(this, element);
-            //region Static
             //endregion
             //region Fields
             this.lastValueOnKeyUp = null;
@@ -1494,6 +1747,16 @@ var latte;
                 _this.lastValueOnKeyUp = _this.value;
             });
         }
+        //region Static
+        /**
+         * Checks if email is valid
+         * @param email
+         * @returns {boolean}
+         */
+        Textbox.validEmail = function (email) {
+            var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+            return re.test(email);
+        };
         //region Private Methods
         //endregion
         //region Methods
@@ -1502,10 +1765,10 @@ var latte;
          * in the validChars string.
          * @param validChars
          */
-        Textbox.prototype.charCheck = function (validChars) {
+        Textbox.charCheck = function (text, validChars) {
             validChars = String(validChars);
-            for (var i = 0; i < this.value.length; i++) {
-                if (validChars.indexOf(this.value.charAt(i)) < 0) {
+            for (var i = 0; i < text.length; i++) {
+                if (validChars.indexOf(text.charAt(i)) < 0) {
                     return false;
                 }
             }
@@ -1546,7 +1809,7 @@ var latte;
              * @returns {boolean}
              */
             get: function () {
-                return this.charCheck('1234567890qwertyuiopasdfghjklzxcvbnm');
+                return Textbox.charCheck(this.value, '1234567890qwertyuiopasdfghjklzxcvbnm');
             },
             enumerable: true,
             configurable: true
@@ -1570,7 +1833,7 @@ var latte;
              * @returns {boolean}
              */
             get: function () {
-                return this.charCheck('1234567890');
+                return Textbox.charCheck(this.value, '1234567890');
             },
             enumerable: true,
             configurable: true
@@ -1581,7 +1844,7 @@ var latte;
              * @returns {boolean}
              */
             get: function () {
-                return this.charCheck('123456789.');
+                return Textbox.charCheck(this.value, '123456789.');
             },
             enumerable: true,
             configurable: true
@@ -1693,7 +1956,7 @@ var latte;
             configurable: true
         });
         return Textbox;
-    })(latte.Element);
+    }(latte.Element));
     latte.Textbox = Textbox;
 })(latte || (latte = {}));
 /**
@@ -1713,12 +1976,12 @@ var latte;
          * Creates and automatically sets up the binding
          */
         function CollectionDataBind(element, elementProperty, collection, type) {
-            if (type === void 0) { type = 1 /* AUTO */; }
+            if (type === void 0) { type = latte.DataBindType.AUTO; }
             collection.each(function (object) {
             });
         }
         return CollectionDataBind;
-    })();
+    }());
     latte.CollectionDataBind = CollectionDataBind;
 })(latte || (latte = {}));
 /**
@@ -1760,7 +2023,7 @@ var latte;
          * Creates and automatically sets up the binding
          */
         function DataBind(element, elementProperty, record, recordProperty, type, dataAdapter, elementEvent, recordEvent) {
-            if (type === void 0) { type = 1 /* AUTO */; }
+            if (type === void 0) { type = DataBindType.AUTO; }
             if (dataAdapter === void 0) { dataAdapter = null; }
             if (elementEvent === void 0) { elementEvent = null; }
             if (recordEvent === void 0) { recordEvent = null; }
@@ -1805,7 +2068,7 @@ var latte;
          */
         DataBind.prototype.setup = function (element, elementProperty, record, recordProperty, type, elementEvent, recordEvent) {
             var _this = this;
-            if (type === void 0) { type = 4 /* MANUAL */; }
+            if (type === void 0) { type = DataBindType.MANUAL; }
             if (elementEvent === void 0) { elementEvent = null; }
             if (recordEvent === void 0) { recordEvent = null; }
             this._element = element;
@@ -1816,13 +2079,11 @@ var latte;
             this._recordEvent = recordEvent;
             this._type = type;
             this.uninstall();
-            if (this.type == 1 /* AUTO */ || this.type == 3 /* AUTO_COMMIT */) {
+            if (this.type == DataBindType.AUTO || this.type == DataBindType.AUTO_COMMIT) {
                 if (this.element instanceof latte.Element && latte._isString(this.elementEvent)) {
                     this.lastElement = this.element;
                     this.lastElementEvent = this.elementEvent;
-                    this.lastElementListener = function () {
-                        _this.commit();
-                    };
+                    this.lastElementListener = function () { _this.commit(); };
                     // Obtain when element changes
                     this.element.addEventListener(this.elementEvent, this.lastElementListener);
                 }
@@ -1830,19 +2091,16 @@ var latte;
                     latte.log(latte.sprintf("Warning: Binding -> commit not possible (Element: %s; %s; elementProperty: %s; recordProperty: %s).", String(this.element), String(this.record), String(this.elementProperty), String(this.recordProperty)));
                 }
             }
-            if (this.type == 1 /* AUTO */ || this.type == 2 /* AUTO_APPLY */) {
+            if (this.type == DataBindType.AUTO || this.type == DataBindType.AUTO_APPLY) {
                 if (this.record && latte._isString(this.recordEvent) && this.record[this.recordEvent]) {
                     this.lastRecord = this.record;
                     this.lastRecordEvent = this.recordEvent;
-                    this.lastRecordListener = function () {
-                        _this.apply();
-                    };
+                    this.lastRecordListener = function () { _this.apply(); };
                     // Apply when data on record changes
                     this.record[this.recordEvent].add(this.lastRecordListener);
                 }
                 else {
                     if (!latte._undef(this.record[this.recordProperty])) {
-                        latte.log(latte.sprintf("Warning: Binding -> apply not possible (Element: %s; Record: %s; elementProperty: %s; recordProperty: %s).", String(this.element), String(this.record), String(this.elementProperty), String(this.recordProperty)));
                     }
                 }
             }
@@ -1865,7 +2123,11 @@ var latte;
          * Applies the data of the record to the elements property
          */
         DataBind.prototype.apply = function () {
-            this.element[this.elementProperty] = this.dataAdapter.adaptForElement(this.record[this.recordProperty]);
+            var value = this.record[this.recordProperty];
+            //Is this all right? value will be only applied when value is not undefined
+            if (!latte._undef(value)) {
+                this.element[this.elementProperty] = this.dataAdapter.adaptForElement(value);
+            }
             this.onApplied();
         };
         /**
@@ -2029,7 +2291,7 @@ var latte;
             configurable: true
         });
         return DataBind;
-    })();
+    }());
     latte.DataBind = DataBind;
 })(latte || (latte = {}));
 /**
@@ -2069,7 +2331,7 @@ var latte;
             return value;
         };
         return DefaultDataAdapter;
-    })();
+    }());
     latte.DefaultDataAdapter = DefaultDataAdapter;
 })(latte || (latte = {}));
 /**
@@ -2102,19 +2364,19 @@ var latte;
          * @param recordMethod
          */
         EventBind.prototype.setup = function (element, elementEvent, record, recordMethod) {
-            var _this = this;
             this._element = element;
             this._elementEvent = elementEvent;
             this._record = record;
             this._recordMethod = recordMethod;
+            var __this = this;
             if (this.element[this.elementEvent] instanceof latte.LatteEvent) {
                 this.element[this.elementEvent].add(function () {
                     var args = [];
                     for (var i = 0; i < arguments.length; i++) {
                         args.push(arguments[i]);
                     }
-                    if (latte._isFunction(_this.record[_this.recordMethod])) {
-                        _this.record[_this.recordMethod].apply(_this.record, args);
+                    if (latte._isFunction(__this.record[__this.recordMethod])) {
+                        __this.record[__this.recordMethod].apply(__this.record, args);
                     }
                     else {
                     }
@@ -2126,8 +2388,8 @@ var latte;
                     for (var i = 0; i < arguments.length; i++) {
                         args.push(arguments[i]);
                     }
-                    if (latte._isFunction(_this.record[_this.recordMethod])) {
-                        _this.record[_this.recordMethod].apply(_this.record, args);
+                    if (latte._isFunction(__this.record[__this.recordMethod])) {
+                        __this.record[__this.recordMethod].apply(__this.record, args);
                     }
                     else {
                     }
@@ -2183,6 +2445,20 @@ var latte;
             configurable: true
         });
         return EventBind;
-    })();
+    }());
     latte.EventBind = EventBind;
 })(latte || (latte = {}));
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/support/ts-include/datalatte.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/support/ts-include/latte.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/support/ts-include/latte.data.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/support/ts-include/latte.data.strings.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/support/ts-include/latte.strings.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/ts/data-bind/DataAdapter.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/ts/Element.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/ts/Animation.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/ts/ElementCollection.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/ts/Textbox.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/ts/data-bind/CollectionDataBind.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/ts/data-bind/DataBind.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/ts/data-bind/DefaultDataAdapter.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/ts/data-bind/EventBind.ts" /> 

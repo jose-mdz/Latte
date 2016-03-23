@@ -247,7 +247,7 @@ declare module latte {
         /**
          * Adds classes to the element
          **/
-        addClass(classString: string): UiElement;
+        addClass(classString: string): this;
         /**
          * Appends the view to the specified element.
          **/
@@ -291,7 +291,7 @@ declare module latte {
         /**
          * Removes classes to the element
          **/
-        removeClass(classString: string): UiElement;
+        removeClass(classString: string): this;
         /**
          * Shows a menu with the <c>contextItems</c> at the specified position.
          **/
@@ -559,7 +559,7 @@ declare module latte {
          * SPECIAL SETTER
          Gets or sets the modalView of the User Agent Viewport
          **/
-        static setModalView(view?: View, itemsArray?: Item[]): void;
+        static setModalView(view?: View, itemsArray?: Array<Item>): void;
         /**
          * Sets the mainView of the User Agent Viewport
          **/
@@ -1158,7 +1158,7 @@ declare module latte {
         /**
          * Creates the stack of items
          **/
-        constructor(items?: Item[]);
+        constructor(items?: Array<Item>);
         /**
          *
          **/
@@ -2478,7 +2478,7 @@ declare module latte {
         /**
          * Creates the Button Group. Optionally adds the buttons to the group
          **/
-        constructor(buttons?: ButtonItem[]);
+        constructor(buttons?: Array<ButtonItem>);
         /**
          *
          **/
@@ -3116,7 +3116,7 @@ declare module latte {
          * Gets or sets the weights of columns for computing their width.
          Weights must be numbers between 0 and 100.
          **/
-        columnWeights: number[];
+        columnWeights: Array<number>;
         /**
          * Gets or sets the number of columns in the view.
          **/
@@ -3171,7 +3171,7 @@ declare module latte {
         /**
          * Hash represented as a path. It is updated every time the value of <c>hash</c> changes.
          **/
-        static path: string[];
+        static path: Array<string>;
         /**
          * Raised when the navigation hash changed
          **/
@@ -4028,149 +4028,6 @@ declare module latte {
         width: number;
     }
 }
-/**
- * Created by josemanuel on 5/12/14.
- */
-declare module latte {
-    /**
-     *
-     */
-    class Point {
-        /**
-         * Gets the distance between two points
-         * @param a
-         * @param b
-         */
-        static distance(a: Point, b: Point): number;
-        /**
-         * Returns an empty point
-         * @returns {latte.Point}
-         */
-        static empty(): Point;
-        /**
-         * Returns a point situated on the origin
-         * @returns {latte.Point}
-         */
-        static origin(): Point;
-        /**
-         * Creates a new point, optionally
-         */
-        constructor(x?: number, y?: number);
-        /**
-         * Returns the offset operation of the point
-         *
-         * @param x
-         * @param y
-         * @returns {latte.Point}
-         */
-        offset(x: number, y: number): Point;
-        /**
-         * Gets string representation of the point
-         * @returns {string}
-         */
-        toString(): string;
-        /**
-         * Gets a value indicating if the point is empty (No value has been set)
-         *
-         * @returns {boolean}
-         */
-        isEmpty: boolean;
-        /**
-         * Property field
-         */
-        private _x;
-        /**
-         * Gets or sets the X of the point
-         *
-         * @returns {number}
-         */
-        x: number;
-        /**
-         * Property field
-         */
-        private _y;
-        /**
-         * Gets the Y coordinate of the point
-         *
-         * @returns {number}
-         */
-        y: number;
-    }
-}
-/**
- * Created by josemanuel on 5/12/14.
- */
-declare module latte {
-    /**
-     *
-     */
-    class Size {
-        /**
-         * Returns an empty size
-         * @returns {latte.Size}
-         */
-        static empty(): Size;
-        /**
-         * Returns a size of zero width and zero height
-         * @returns {latte.Point}
-         */
-        static zero(): Size;
-        /**
-         * Creates a new Size, optionally sets its Width and Height components
-         */
-        constructor(width?: number, height?: number);
-        /**
-         * Inflates the size on the specified width and height
-         *
-         * @param width
-         * @param height
-         * @returns {latte.Size}
-         */
-        inflate(width: number, height: number): Size;
-        /**
-         * Inflates the size uniformly
-         * @param wide
-         */
-        inflateUniform(wide: number): Size;
-        /**
-         * Gets string representation of the size
-         * @returns {string}
-         */
-        toString(): string;
-        /**
-         * Gets the area represented by the size
-         *
-         * @returns {number}
-         */
-        area: number;
-        /**
-         * Gets a value indicating if the size has no compnents assigned or initialized
-         *
-         * @returns {boolean}
-         */
-        isEmpty: boolean;
-        /**
-         * Property field
-         */
-        private _height;
-        /**
-         * Gets the Height component of the size
-         *
-         * @returns {number}
-         */
-        height: number;
-        /**
-         * Property field
-         */
-        private _width;
-        /**
-         * Gets the Width component of the size
-         *
-         * @returns {number}
-         */
-        width: number;
-    }
-}
 declare module latte {
     /**
      * represents an action
@@ -4262,7 +4119,7 @@ declare module latte {
         /**
          * Array of elements that are being handled by class
          **/
-        static elements: JQuery[];
+        static elements: Array<JQuery>;
         /**
          * Brings the specified element to the top
          **/
@@ -5775,6 +5632,28 @@ declare module latte {
 }
 declare module latte {
     /**
+     * Represents a column header
+     **/
+    class ColumnHeader extends LabelItem {
+        /**
+         *
+         **/
+        private _width;
+        /**
+         * Creates the Column Header
+         **/
+        constructor(text?: string, width?: number);
+        /**
+         * Gets or sets the width of the column
+         **/
+        /**
+         * Gets or sets the width of the column
+         **/
+        width: number;
+    }
+}
+declare module latte {
+    /**
      * Represents a widget.
 
      Widgets are like small windows who can be maximized, minimized and dragged around.
@@ -5919,28 +5798,6 @@ declare module latte {
          * Gets or sets the title of the widget
          **/
         title: string;
-    }
-}
-declare module latte {
-    /**
-     * Represents a column header
-     **/
-    class ColumnHeader extends LabelItem {
-        /**
-         *
-         **/
-        private _width;
-        /**
-         * Creates the Column Header
-         **/
-        constructor(text?: string, width?: number);
-        /**
-         * Gets or sets the width of the column
-         **/
-        /**
-         * Gets or sets the width of the column
-         **/
-        width: number;
     }
 }
 declare module latte {
@@ -6307,7 +6164,7 @@ declare module latte {
          *
          * @returns {Array<JQuery>}
          */
-        columns: JQuery[];
+        columns: Array<JQuery>;
         /**
          * Gets or sets the icon of the item.
          **/
@@ -6669,7 +6526,7 @@ declare module latte {
          *
          * @returns {Array<File>}
          */
-        getValue(): File[];
+        getValue(): Array<File>;
         /**
          * Resets the input field
          */
@@ -6679,7 +6536,7 @@ declare module latte {
          *
          * @param value
          */
-        setValue(value: File[]): void;
+        setValue(value: Array<File>): void;
     }
 }
 declare module latte {
@@ -7037,6 +6894,22 @@ declare module latte {
 }
 declare module latte {
     /**
+     * Allows user to pick a time
+     **/
+    class TimePickerItem extends DatePickerItem {
+        /**
+         *
+         **/
+        constructor();
+        /**
+         * Gets or sets the value of the item
+         **/
+        getValue(): TimeSpan;
+        setValue(value: TimeSpan): void;
+    }
+}
+declare module latte {
+    /**
      *
      **/
     class TextboxItem extends ValueItem {
@@ -7352,22 +7225,6 @@ declare module latte {
 }
 declare module latte {
     /**
-     * Allows user to pick a time
-     **/
-    class TimePickerItem extends DatePickerItem {
-        /**
-         *
-         **/
-        constructor();
-        /**
-         * Gets or sets the value of the item
-         **/
-        getValue(): TimeSpan;
-        setValue(value: TimeSpan): void;
-    }
-}
-declare module latte {
-    /**
      * Shows a graphical indicator of activity.
      <example><code><span style="color: #000000">
      <span style="color: #0000BB"><br /><br />&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Show&nbsp;loader<br />&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">loader&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Loader</span><span style="color: #007700">(</span><span style="color: #DD0000">"Doing&nbsp;some&nbsp;stuff"</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;...<br />&nbsp;&nbsp;//&nbsp;Load&nbsp;some&nbsp;heavy&nbsp;stuff..<br />&nbsp;&nbsp;//&nbsp;...<br /><br />&nbsp;&nbsp;//&nbsp;Hide&nbsp;loader<br />&nbsp;&nbsp;</span><span style="color: #0000BB">loader</span><span style="color: #007700">.</span><span style="color: #0000BB">stop</span><span style="color: #007700">();<br />&nbsp;<br /></span><span style="color: #0000BB"></span>
@@ -7576,11 +7433,11 @@ declare module latte {
         /**
          * Closes the menu and removes its elements from the DOM
          **/
-        close(): MenuOverlay;
+        close(): this;
         /**
          * Closes the menus open by any of this Menu's children
          **/
-        closeChildrenMenus(): MenuOverlay;
+        closeChildrenMenus(): this;
         /**
          * Raises the <c>closed</c> event
          **/
@@ -8627,7 +8484,7 @@ declare module latte {
          * Creates a new form, using the specified fields
          and commands
          **/
-        constructor(inputs?: InputItem[]);
+        constructor(inputs?: Array<InputItem>);
         /**
          * Checks every input in <c>inputs</c> to be valid
          **/
@@ -8758,6 +8615,28 @@ declare module latte {
 }
 declare module latte {
     /**
+     * A view with an editable text box
+     **/
+    class TextView extends View {
+        /**
+         * Points to the TEXTAREA of the view.
+         **/
+        textElement: JQuery;
+        /**
+         * Creates the TextView
+         **/
+        constructor();
+        /**
+         * Gets or sets the text of the view
+         **/
+        /**
+         * Gets or sets the text of the view
+         **/
+        text: string;
+    }
+}
+declare module latte {
+    /**
      * Shows a message with eye sugar to improve usability and design.
      **/
     class MessageView extends View {
@@ -8819,28 +8698,6 @@ declare module latte {
 }
 declare module latte {
     /**
-     * A view with an editable text box
-     **/
-    class TextView extends View {
-        /**
-         * Points to the TEXTAREA of the view.
-         **/
-        textElement: JQuery;
-        /**
-         * Creates the TextView
-         **/
-        constructor();
-        /**
-         * Gets or sets the text of the view
-         **/
-        /**
-         * Gets or sets the text of the view
-         **/
-        text: string;
-    }
-}
-declare module latte {
-    /**
      * Shows a resizable dialog
      **/
     class DialogView extends View {
@@ -8852,11 +8709,11 @@ declare module latte {
         /**
          * Shows an alert <c>MessageView</c> on a <c>DialogView</c> with the specified <c>message</c> and <c>description</c>
          **/
-        static alert(message: string, description?: string, items?: Item[]): DialogView;
+        static alert(message: string, description?: string, items?: Array<Item>): DialogView;
         /**
          * Shows a question <c>MessageView</c> on a <c>DialogView</c> with the specified <c>message</c> and <c>description</c>
          **/
-        static ask(message: string, description?: string, items?: Item[]): DialogView;
+        static ask(message: string, description?: string, items?: Array<Item>): DialogView;
         /**
          * Shows a question MessageView asking form deletion confirmation of the specified object
          * @param objectName
@@ -8866,15 +8723,15 @@ declare module latte {
         /**
          * Shows an error <c>MessageView</c> on a <c>DialogView</c> with the specified <c>message</c> and <c>description</c>
          **/
-        static error(message: string, description?: string, items?: Item[]): DialogView;
+        static error(message: string, description?: string, items?: Array<Item>): DialogView;
         /**
          * Shows an information <c>MessageView</c> on a <c>DialogView</c> with the specified <c>message</c> and <c>description</c>
          **/
-        static inform(message: string, description?: string, items?: Item[]): DialogView;
+        static inform(message: string, description?: string, items?: Array<Item>): DialogView;
         /**
          * Shows the specified <c>message</c> within a DialogView. Optionally specifies <c>items</c> for the dialog.
          **/
-        static showMessage(message: MessageView, items?: Item[]): DialogView;
+        static showMessage(message: MessageView, items?: Array<Item>): DialogView;
         /**
          *
          **/
@@ -8918,7 +8775,7 @@ declare module latte {
         /**
          * Creates the Dialog
          **/
-        constructor(view?: View, items?: Item[]);
+        constructor(view?: View, items?: Array<Item>);
         /**
          *
          **/
@@ -9197,7 +9054,7 @@ declare module latte {
          * Goes to the specified path. Path is an array with names of nodes to visit.
          The path is in the format of the path found in <c>latte.Navigation.path</c>
          **/
-        navigateToPath(path: string[]): void;
+        navigateToPath(path: Array<string>): void;
         /**
          * Raises the <c>itemItemsLoaded</c> event
          **/

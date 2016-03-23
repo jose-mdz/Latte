@@ -319,20 +319,7 @@ declare module latte {
         * Override. Gets data about the fields of the record.
         **/
         onGetFields(): any;
-    }
-}
-/**
- * Created by josemanuel on 6/11/14.
- */
-declare module latte {
-    /**
-     *
-     */
-    class Main {
-        /**
-         *
-         */
-        constructor();
+        static search(term?: string, page?: number, pageSize?: number): RemoteCall<PageResult<Person>>;
     }
 }
 /**
@@ -382,6 +369,20 @@ declare module latte {
          * @returns {ListView}
          */
         listView: ListView;
+    }
+}
+/**
+ * Created by josemanuel on 6/11/14.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class Main {
+        /**
+         *
+         */
+        constructor();
     }
 }
 /**

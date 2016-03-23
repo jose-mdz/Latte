@@ -49,7 +49,7 @@ module latte{
             }else{
                 log("Error on call: " + this.call.toString());
                 log(sprintf("(%s) - %s", this.errorCode, this.errorDescription));
-                this.call.onFailure();
+                this.call.onFailure(this.errorDescription, String(this.errorCode));
             }
 
 

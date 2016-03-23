@@ -14,7 +14,7 @@ module latte{
          * Creates the selectable
          **/
         constructor(){
-            var item = this;
+
 
             // Init
             super();

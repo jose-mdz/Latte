@@ -90,4 +90,5 @@ declare module latte{ interface Strings{
 	oneWeekShort: string;
 	SweeksShort: string;
 	tomorrow: string;
+	today: string;
 }}

@@ -101,13 +101,6 @@ uploadingSSPercent Subiendo %s %s
 error Error
 name Nombre
 working Trabajando
-mondayShort L
-tuesdayShort M
-wednesdayShort M
-thursdayShort J
-fridayShort V
-saturdayShort S
-sundayShort D
 today Hoy
 day Día
 week Semana

@@ -96,7 +96,6 @@ close Close
 secret Secret
 writeComment Write Comment
 showMoreCommentsS Show more comments (%s)
-justNow Just Now
 uploadingS Uploading %s
 uploadingSSPercent Uploading %s %s
 error Error

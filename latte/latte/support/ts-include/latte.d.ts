@@ -786,7 +786,7 @@ declare module latte {
          * @param success
          * @param error
          */
-        static get(url: string, success?: (string: any) => void, error?: (string: any) => void): void;
+        static get(url: string, success?: (string) => void, error?: (string) => void): void;
         /**
          * Loads an URL
          *
@@ -795,7 +795,7 @@ declare module latte {
          * @param success
          * @param error
          */
-        static post(url: string, data: any, success?: (string: any) => void, error?: (string: any) => void): void;
+        static post(url: string, data: any, success?: (string) => void, error?: (string) => void): void;
     }
 }
 declare module latte {
@@ -807,7 +807,7 @@ declare module latte {
         /**
          *
          */
-        constructor(addCallback?: (T: any, number: any) => void, removeCallback?: (T: any, number: any) => any, context?: any);
+        constructor(addCallback?: (T, number) => void, removeCallback?: (T, number) => any, context?: any);
         /**
          * Adds an element to the collection
          *
@@ -821,7 +821,7 @@ declare module latte {
          * @param elements
          * @param raiseEvent
          */
-        addArray(elements: T[], raiseEvent?: boolean): void;
+        addArray(elements: Array<T>, raiseEvent?: boolean): void;
         /**
          * Adds a collection of elements to the collection
          *
@@ -869,7 +869,7 @@ declare module latte {
          * @param item
          * @param raiseEvent
          */
-        remove(item: T, raiseEvent?: boolean): Collection<T>;
+        remove(item: T, raiseEvent?: boolean): this;
         /**
          * Removes the item ath the specified index
          * @param index
@@ -952,7 +952,7 @@ declare module latte {
          * Creates a color from the hexadecimal value.
          * It may contain the <c>#</c> symbol at the beginning of the string.
          **/
-        static fromHex(hexColor: string): Color;
+        static fromHex(hexColor: string): latte.Color;
         /**
          * Field for black property.
          */
@@ -1093,116 +1093,124 @@ declare module latte {
         r: number;
     }
 }
-declare module latte {
-    class EventHandler {
-        handler: Function;
-        context: any;
-        constructor(handler: Function, context: any);
-    }
-    /**
-     * Manages events and event handlers
-     */
-    class LatteEvent {
-        context: any;
-        handlers: EventHandler[];
-        /**
-         * Raised when a handler is added to the event
-         */
-        _handlerAdded: LatteEvent;
-        /**
-         *
-         * @param context Context where
-         */
-        constructor(context: any);
-        /**
-         * Gets the event for handler adding
-         *
-         * @returns {LatteEvent}
-         */
-        handlerAdded: LatteEvent;
-        /**
-         * Adds a handler to the event
-         * @param handler
-         */
-        add(handler: Function, context?: any): void;
-        /**
-         * Raises the <c>handlerAdded</c> event
-         * @param handler
-         */
-        onHandlerAdded(handler: Function): void;
-        /**
-         * Raises the actual event handlers.
-         * @param parameter
-         * @returns {*}
-         */
-        raise(...parameter: any[]): any;
-    }
-}
+/**
+ * Created by josemanuel on 2/6/14.
+ */
 declare module latte {
     /**
-     * Exception thrown when an argument of the function was invalid.
      *
-     * Usage:
-     * <example>
-     *
-     * function pow(a){
-     *
-     *      if(typeof a != 'number')
-     *          // Inform user that the parameter was invalid
-     *          throw new InvalidArgumentEx('a');
-     *
-     *      return a * a;
-     *
-     * }
-     *
-     * </example>
      */
-    class InvalidArgumentEx extends Ex {
-        argument: string;
-        value: any;
+    class Culture {
         /**
-         * Creates the exception
-         *
-         * @param argument
-         * @param value
+         * Property field
          */
-        constructor(argument?: string, value?: any);
+        private static _current;
         /**
-         * Returns a string explaining the exception
+         * Gets or sets the current culture of the system
          *
+         * @returns {Culture}
+         */
+        /**
+         * Gets or sets the current culture of the system
+         *
+         * @param {Culture} value
+         */
+        static current: Culture;
+        /**
+         * Field for esMX property
+         */
+        private static _esMx;
+        /**
+         * Gets the Español-Mexico Culture
+         *
+         * @returns {Culture}
+         */
+        static esMx: Culture;
+        /**
+         * Field for enUs property
+         */
+        private static _enUs;
+        /**
+         * Gets the English-USA Culture
+         *
+         * @returns {Culture}
+         */
+        static enUs: Culture;
+        /**
+         * Formats currency using the current culture
+         * @param n
          * @returns {string}
          */
-        toString(): string;
-    }
-}
-declare module latte {
-    /**
-     * Exception thrown when an argument of the function was invalid.
-     *
-     * Usage:
-     * <example>
-     *
-     * function pow(a){
-     *
-     *      throw new latte.InvalidCallEx('pow')
-     *
-     * }
-     *
-     * </example>
-     */
-    class InvalidCallEx extends Ex {
-        method: string;
+        static formatCurrency(n: number): string;
         /**
-         * Creates the Exception
-         * @param method
+         * Returns the date as a short format
+         * @param d
          */
-        constructor(method?: string);
+        static formatShortDate(d: DateTime): string;
         /**
-         * Returns a string explaining the exception
-         *
+         * Returns the date as a short format
+         * @param d
+         */
+        static formatLongDate(d: DateTime): string;
+        /**
+         * Formats a number using the current Culture
+         * @param n
+         * @param decimals
+         * @param symbol
          * @returns {string}
          */
-        toString(): string;
+        static formatNumber(n: number, decimals?: number, symbol?: string): string;
+        /**
+         * Short date format
+         */
+        shortDateFormat: string;
+        /**
+         * Long date format
+         */
+        longDateFormat: string;
+        /**
+         * Amount of decimals to show in currency format
+         */
+        currencyDecimals: number;
+        /**
+         * Separator of decimals for currency
+         */
+        numberDecimalsSeparator: string;
+        /**
+         * Thousands separator for currency
+         */
+        numberThousandsSeparator: string;
+        /**
+         * Symbol to use in currency
+         */
+        currencySymbol: string;
+        /**
+         *
+         */
+        constructor();
+        /**
+         * Returns the specified number as a currency
+         * @param n
+         */
+        onFormatCurrency(n: number): string;
+        /**
+         * Formats the specified number
+         * @param n
+         * @param decimals
+         * @param symbol
+         * @returns {string}
+         */
+        onFormatNumber(n: number, decimals?: number, symbol?: string): string;
+        /**
+         * Returns the date as a long format
+         * @param d
+         */
+        onFormatLongDate(d: DateTime): string;
+        /**
+         * Returns the date as a short format
+         * @param d
+         */
+        onFormatShortDate(d: DateTime): string;
     }
 }
 declare module latte {
@@ -1213,11 +1221,11 @@ declare module latte {
         /**
          * Amount of days in months of a non-leap year
          **/
-        static monthDays: number[];
+        static monthDays: Array<number>;
         /**
          * Amount of days in months of leap year
          **/
-        static monthDaysLeapYear: number[];
+        static monthDaysLeapYear: Array<number>;
         /**
          * Returns the absolute number of days on the specified day-month-year
          **/
@@ -1420,6 +1428,118 @@ declare module latte {
         year: number;
     }
 }
+declare module latte {
+    class EventHandler {
+        handler: Function;
+        context: any;
+        constructor(handler: Function, context: any);
+    }
+    /**
+     * Manages events and event handlers
+     */
+    class LatteEvent {
+        context: any;
+        handlers: Array<EventHandler>;
+        /**
+         * Raised when a handler is added to the event
+         */
+        _handlerAdded: LatteEvent;
+        /**
+         *
+         * @param context Context where
+         */
+        constructor(context: any);
+        /**
+         * Gets the event for handler adding
+         *
+         * @returns {LatteEvent}
+         */
+        handlerAdded: LatteEvent;
+        /**
+         * Adds a handler to the event
+         * @param handler
+         */
+        add(handler: Function, context?: any): void;
+        /**
+         * Raises the <c>handlerAdded</c> event
+         * @param handler
+         */
+        onHandlerAdded(handler: Function): void;
+        /**
+         * Raises the actual event handlers.
+         * @param parameter
+         * @returns {*}
+         */
+        raise(...parameter: any[]): any;
+    }
+}
+declare module latte {
+    /**
+     * Exception thrown when an argument of the function was invalid.
+     *
+     * Usage:
+     * <example>
+     *
+     * function pow(a){
+     *
+     *      if(typeof a != 'number')
+     *          // Inform user that the parameter was invalid
+     *          throw new InvalidArgumentEx('a');
+     *
+     *      return a * a;
+     *
+     * }
+     *
+     * </example>
+     */
+    class InvalidArgumentEx extends Ex {
+        argument: string;
+        value: any;
+        /**
+         * Creates the exception
+         *
+         * @param argument
+         * @param value
+         */
+        constructor(argument?: string, value?: any);
+        /**
+         * Returns a string explaining the exception
+         *
+         * @returns {string}
+         */
+        toString(): string;
+    }
+}
+declare module latte {
+    /**
+     * Exception thrown when an argument of the function was invalid.
+     *
+     * Usage:
+     * <example>
+     *
+     * function pow(a){
+     *
+     *      throw new latte.InvalidCallEx('pow')
+     *
+     * }
+     *
+     * </example>
+     */
+    class InvalidCallEx extends Ex {
+        method: string;
+        /**
+         * Creates the Exception
+         * @param method
+         */
+        constructor(method?: string);
+        /**
+         * Returns a string explaining the exception
+         *
+         * @returns {string}
+         */
+        toString(): string;
+    }
+}
 /**
  * Created by josemanuel on 5/26/15.
  */
@@ -1579,124 +1699,188 @@ declare module latte {
         y: number;
     }
 }
+declare module latte {
+    /**
+     * Reprsents a Rectangle
+     **/
+    class Rectangle {
+        /**
+         * Creates a rectangle with the specified left, right, top and bottom.
+         **/
+        static fromLRTB(left: number, right: number, top: number, bottom: number): Rectangle;
+        /**
+         * Height of rectangle
+         **/
+        private _height;
+        /**
+         * Left of rectangle
+         **/
+        private _left;
+        /**
+         * Top of rectangle
+         **/
+        private _top;
+        /**
+         * Width of rectangle
+         **/
+        private _width;
+        /**
+         *
+         */
+        private _tag;
+        /**
+         * Creates a rectangle with the specified left, top, width and height.
+         **/
+        constructor(left?: number, top?: number, width?: number, height?: number);
+        /**
+         * Returns the result of centering this into the specified container
+         **/
+        center(container: Rectangle): Rectangle;
+        /**
+         * Gets a value indicating if the specified point is contained
+         **/
+        contains(x: number, y: number): boolean;
+        /**
+         * Gets a value indicating if the rectangle is contained inside this rectangle
+         **/
+        containsRectangle(rectangle: Rectangle): boolean;
+        /**
+         * Returns the result of inflating the rectangle vertically and horizontally on each edge.
+         **/
+        inflate(horizontal: number, vertical: number): Rectangle;
+        /**
+         * Returns the rectangle result of intersecting this with passed rectangle
+         **/
+        intersection(rectangle: Rectangle): Rectangle;
+        /**
+         * Gets a value indicating if the rectangle intersects specified rectangle
+         **/
+        intersects(rectangle: Rectangle): boolean;
+        /**
+         * Returns a string describing the rectangle
+         **/
+        toString(): string;
+        /**
+         * Gets a rectangle representing the union of this rectangle and the passed one
+         **/
+        union(rectangle: Rectangle): Rectangle;
+        /**
+         * Gets or sets the right side of the rectangle
+         **/
+        /**
+         * Gets or sets the right side of the rectangle
+         **/
+        bottom: number;
+        /**
+         * Gets or sets the height of the rectangle
+         **/
+        /**
+         * Gets or sets the height of the rectangle
+         **/
+        height: number;
+        /**
+         * Gets or sets the left of the rectangle
+         **/
+        /**
+         * Gets or sets the left of the rectangle
+         **/
+        left: number;
+        /**
+         * Gets or sets the right side of the rectangle
+         **/
+        /**
+         * Gets or sets the right side of the rectangle
+         **/
+        right: number;
+        tag: any;
+        /**
+         * Gets or sets the top of the rectangle
+         **/
+        /**
+         * Gets or sets the top of the rectangle
+         **/
+        top: number;
+        /**
+         * Gets or sets the width of the rectangle
+         **/
+        /**
+         * Gets or sets the width of the rectangle
+         **/
+        width: number;
+    }
+}
 /**
- * Created by josemanuel on 2/6/14.
+ * Created by josemanuel on 5/12/14.
  */
 declare module latte {
     /**
      *
      */
-    class Culture {
+    class Size {
+        /**
+         * Returns an empty size
+         * @returns {latte.Size}
+         */
+        static empty(): Size;
+        /**
+         * Returns a size of zero width and zero height
+         * @returns {latte.Point}
+         */
+        static zero(): Size;
+        /**
+         * Creates a new Size, optionally sets its Width and Height components
+         */
+        constructor(width?: number, height?: number);
+        /**
+         * Inflates the size on the specified width and height
+         *
+         * @param width
+         * @param height
+         * @returns {latte.Size}
+         */
+        inflate(width: number, height: number): Size;
+        /**
+         * Inflates the size uniformly
+         * @param wide
+         */
+        inflateUniform(wide: number): Size;
+        /**
+         * Gets string representation of the size
+         * @returns {string}
+         */
+        toString(): string;
+        /**
+         * Gets the area represented by the size
+         *
+         * @returns {number}
+         */
+        area: number;
+        /**
+         * Gets a value indicating if the size has no compnents assigned or initialized
+         *
+         * @returns {boolean}
+         */
+        isEmpty: boolean;
         /**
          * Property field
          */
-        private static _current;
+        private _height;
         /**
-         * Gets or sets the current culture of the system
+         * Gets the Height component of the size
          *
-         * @returns {Culture}
+         * @returns {number}
          */
+        height: number;
         /**
-         * Gets or sets the current culture of the system
+         * Property field
+         */
+        private _width;
+        /**
+         * Gets the Width component of the size
          *
-         * @param {Culture} value
+         * @returns {number}
          */
-        static current: Culture;
-        /**
-         * Field for esMX property
-         */
-        private static _esMx;
-        /**
-         * Gets the Español-Mexico Culture
-         *
-         * @returns {Culture}
-         */
-        static esMx: Culture;
-        /**
-         * Field for enUs property
-         */
-        private static _enUs;
-        /**
-         * Gets the English-USA Culture
-         *
-         * @returns {Culture}
-         */
-        static enUs: Culture;
-        /**
-         * Formats currency using the current culture
-         * @param n
-         * @returns {string}
-         */
-        static formatCurrency(n: number): string;
-        /**
-         * Returns the date as a short format
-         * @param d
-         */
-        static formatShortDate(d: DateTime): string;
-        /**
-         * Returns the date as a short format
-         * @param d
-         */
-        static formatLongDate(d: DateTime): string;
-        /**
-         * Formats a number using the current Culture
-         * @param n
-         * @param decimals
-         * @param symbol
-         * @returns {string}
-         */
-        static formatNumber(n: number, decimals?: number, symbol?: string): string;
-        /**
-         * Short date format
-         */
-        shortDateFormat: string;
-        /**
-         * Long date format
-         */
-        longDateFormat: string;
-        /**
-         * Amount of decimals to show in currency format
-         */
-        currencyDecimals: number;
-        /**
-         * Separator of decimals for currency
-         */
-        numberDecimalsSeparator: string;
-        /**
-         * Thousands separator for currency
-         */
-        numberThousandsSeparator: string;
-        /**
-         * Symbol to use in currency
-         */
-        currencySymbol: string;
-        /**
-         *
-         */
-        constructor();
-        /**
-         * Returns the specified number as a currency
-         * @param n
-         */
-        onFormatCurrency(n: number): string;
-        /**
-         * Formats the specified number
-         * @param n
-         * @param decimals
-         * @param symbol
-         * @returns {string}
-         */
-        onFormatNumber(n: number, decimals?: number, symbol?: string): string;
-        /**
-         * Returns the date as a long format
-         * @param d
-         */
-        onFormatLongDate(d: DateTime): string;
-        /**
-         * Returns the date as a short format
-         * @param d
-         */
-        onFormatShortDate(d: DateTime): string;
+        width: number;
     }
 }
 declare module latte {
@@ -1840,116 +2024,6 @@ declare module latte {
 }
 declare module latte {
     /**
-     * Reprsents a Rectangle
-     **/
-    class Rectangle {
-        /**
-         * Creates a rectangle with the specified left, right, top and bottom.
-         **/
-        static fromLRTB(left: number, right: number, top: number, bottom: number): Rectangle;
-        /**
-         * Height of rectangle
-         **/
-        private _height;
-        /**
-         * Left of rectangle
-         **/
-        private _left;
-        /**
-         * Top of rectangle
-         **/
-        private _top;
-        /**
-         * Width of rectangle
-         **/
-        private _width;
-        /**
-         *
-         */
-        private _tag;
-        /**
-         * Creates a rectangle with the specified left, top, width and height.
-         **/
-        constructor(left?: number, top?: number, width?: number, height?: number);
-        /**
-         * Returns the result of centering this into the specified container
-         **/
-        center(container: Rectangle): Rectangle;
-        /**
-         * Gets a value indicating if the specified point is contained
-         **/
-        contains(x: number, y: number): boolean;
-        /**
-         * Gets a value indicating if the rectangle is contained inside this rectangle
-         **/
-        containsRectangle(rectangle: Rectangle): boolean;
-        /**
-         * Returns the result of inflating the rectangle vertically and horizontally on each edge.
-         **/
-        inflate(horizontal: number, vertical: number): Rectangle;
-        /**
-         * Returns the rectangle result of intersecting this with passed rectangle
-         **/
-        intersection(rectangle: Rectangle): Rectangle;
-        /**
-         * Gets a value indicating if the rectangle intersects specified rectangle
-         **/
-        intersects(rectangle: Rectangle): boolean;
-        /**
-         * Returns a string describing the rectangle
-         **/
-        toString(): string;
-        /**
-         * Gets a rectangle representing the union of this rectangle and the passed one
-         **/
-        union(rectangle: Rectangle): Rectangle;
-        /**
-         * Gets or sets the right side of the rectangle
-         **/
-        /**
-         * Gets or sets the right side of the rectangle
-         **/
-        bottom: number;
-        /**
-         * Gets or sets the height of the rectangle
-         **/
-        /**
-         * Gets or sets the height of the rectangle
-         **/
-        height: number;
-        /**
-         * Gets or sets the left of the rectangle
-         **/
-        /**
-         * Gets or sets the left of the rectangle
-         **/
-        left: number;
-        /**
-         * Gets or sets the right side of the rectangle
-         **/
-        /**
-         * Gets or sets the right side of the rectangle
-         **/
-        right: number;
-        tag: any;
-        /**
-         * Gets or sets the top of the rectangle
-         **/
-        /**
-         * Gets or sets the top of the rectangle
-         **/
-        top: number;
-        /**
-         * Gets or sets the width of the rectangle
-         **/
-        /**
-         * Gets or sets the width of the rectangle
-         **/
-        width: number;
-    }
-}
-declare module latte {
-    /**
      * Executes an action every specified amount of milliseconds
      **/
     class Timer {
@@ -2011,79 +2085,5 @@ declare module latte {
 }
 declare module latte {
     class HEvent<T> {
-    }
-}
-/**
- * Created by josemanuel on 5/12/14.
- */
-declare module latte {
-    /**
-     *
-     */
-    class Size {
-        /**
-         * Returns an empty size
-         * @returns {latte.Size}
-         */
-        static empty(): Size;
-        /**
-         * Returns a size of zero width and zero height
-         * @returns {latte.Point}
-         */
-        static zero(): Size;
-        /**
-         * Creates a new Size, optionally sets its Width and Height components
-         */
-        constructor(width?: number, height?: number);
-        /**
-         * Inflates the size on the specified width and height
-         *
-         * @param width
-         * @param height
-         * @returns {latte.Size}
-         */
-        inflate(width: number, height: number): Size;
-        /**
-         * Inflates the size uniformly
-         * @param wide
-         */
-        inflateUniform(wide: number): Size;
-        /**
-         * Gets string representation of the size
-         * @returns {string}
-         */
-        toString(): string;
-        /**
-         * Gets the area represented by the size
-         *
-         * @returns {number}
-         */
-        area: number;
-        /**
-         * Gets a value indicating if the size has no compnents assigned or initialized
-         *
-         * @returns {boolean}
-         */
-        isEmpty: boolean;
-        /**
-         * Property field
-         */
-        private _height;
-        /**
-         * Gets the Height component of the size
-         *
-         * @returns {number}
-         */
-        height: number;
-        /**
-         * Property field
-         */
-        private _width;
-        /**
-         * Gets the Width component of the size
-         *
-         * @returns {number}
-         */
-        width: number;
     }
 }

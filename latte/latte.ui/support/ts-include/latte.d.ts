@@ -726,6 +726,13 @@ declare module latte {
      */
     function log(...any: any[]): void;
     /**
+     * Merges the two objects
+     * @param a
+     * @param b
+     * @private
+     */
+    function _merge(a: any, b: any): any;
+    /**
      * sprintf for only %s strings
      */
     function sprintf(...any: any[]): string;
@@ -779,7 +786,7 @@ declare module latte {
          * @param success
          * @param error
          */
-        static get(url: string, success?: (string: any) => void, error?: (string: any) => void): void;
+        static get(url: string, success?: (string) => void, error?: (string) => void): void;
         /**
          * Loads an URL
          *
@@ -788,7 +795,7 @@ declare module latte {
          * @param success
          * @param error
          */
-        static post(url: string, data: any, success?: (string: any) => void, error?: (string: any) => void): void;
+        static post(url: string, data: any, success?: (string) => void, error?: (string) => void): void;
     }
 }
 declare module latte {
@@ -800,7 +807,7 @@ declare module latte {
         /**
          *
          */
-        constructor(addCallback?: (T: any, number: any) => void, removeCallback?: (T: any, number: any) => any, context?: any);
+        constructor(addCallback?: (T, number) => void, removeCallback?: (T, number) => any, context?: any);
         /**
          * Adds an element to the collection
          *
@@ -814,7 +821,7 @@ declare module latte {
          * @param elements
          * @param raiseEvent
          */
-        addArray(elements: T[], raiseEvent?: boolean): void;
+        addArray(elements: Array<T>, raiseEvent?: boolean): void;
         /**
          * Adds a collection of elements to the collection
          *
@@ -862,7 +869,7 @@ declare module latte {
          * @param item
          * @param raiseEvent
          */
-        remove(item: T, raiseEvent?: boolean): Collection<T>;
+        remove(item: T, raiseEvent?: boolean): this;
         /**
          * Removes the item ath the specified index
          * @param index
@@ -945,7 +952,7 @@ declare module latte {
          * Creates a color from the hexadecimal value.
          * It may contain the <c>#</c> symbol at the beginning of the string.
          **/
-        static fromHex(hexColor: string): Color;
+        static fromHex(hexColor: string): latte.Color;
         /**
          * Field for black property.
          */
@@ -1086,6 +1093,126 @@ declare module latte {
         r: number;
     }
 }
+/**
+ * Created by josemanuel on 2/6/14.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class Culture {
+        /**
+         * Property field
+         */
+        private static _current;
+        /**
+         * Gets or sets the current culture of the system
+         *
+         * @returns {Culture}
+         */
+        /**
+         * Gets or sets the current culture of the system
+         *
+         * @param {Culture} value
+         */
+        static current: Culture;
+        /**
+         * Field for esMX property
+         */
+        private static _esMx;
+        /**
+         * Gets the Español-Mexico Culture
+         *
+         * @returns {Culture}
+         */
+        static esMx: Culture;
+        /**
+         * Field for enUs property
+         */
+        private static _enUs;
+        /**
+         * Gets the English-USA Culture
+         *
+         * @returns {Culture}
+         */
+        static enUs: Culture;
+        /**
+         * Formats currency using the current culture
+         * @param n
+         * @returns {string}
+         */
+        static formatCurrency(n: number): string;
+        /**
+         * Returns the date as a short format
+         * @param d
+         */
+        static formatShortDate(d: DateTime): string;
+        /**
+         * Returns the date as a short format
+         * @param d
+         */
+        static formatLongDate(d: DateTime): string;
+        /**
+         * Formats a number using the current Culture
+         * @param n
+         * @param decimals
+         * @param symbol
+         * @returns {string}
+         */
+        static formatNumber(n: number, decimals?: number, symbol?: string): string;
+        /**
+         * Short date format
+         */
+        shortDateFormat: string;
+        /**
+         * Long date format
+         */
+        longDateFormat: string;
+        /**
+         * Amount of decimals to show in currency format
+         */
+        currencyDecimals: number;
+        /**
+         * Separator of decimals for currency
+         */
+        numberDecimalsSeparator: string;
+        /**
+         * Thousands separator for currency
+         */
+        numberThousandsSeparator: string;
+        /**
+         * Symbol to use in currency
+         */
+        currencySymbol: string;
+        /**
+         *
+         */
+        constructor();
+        /**
+         * Returns the specified number as a currency
+         * @param n
+         */
+        onFormatCurrency(n: number): string;
+        /**
+         * Formats the specified number
+         * @param n
+         * @param decimals
+         * @param symbol
+         * @returns {string}
+         */
+        onFormatNumber(n: number, decimals?: number, symbol?: string): string;
+        /**
+         * Returns the date as a long format
+         * @param d
+         */
+        onFormatLongDate(d: DateTime): string;
+        /**
+         * Returns the date as a short format
+         * @param d
+         */
+        onFormatShortDate(d: DateTime): string;
+    }
+}
 declare module latte {
     /**
      * Represents a specific date and time
@@ -1094,11 +1221,11 @@ declare module latte {
         /**
          * Amount of days in months of a non-leap year
          **/
-        static monthDays: number[];
+        static monthDays: Array<number>;
         /**
          * Amount of days in months of leap year
          **/
-        static monthDaysLeapYear: number[];
+        static monthDaysLeapYear: Array<number>;
         /**
          * Returns the absolute number of days on the specified day-month-year
          **/
@@ -1191,6 +1318,12 @@ declare module latte {
          **/
         compareTo(datetime: DateTime): number;
         /**
+         * Gets the comparer value of the date
+         *
+         * @returns {number}
+         */
+        comparer: number;
+        /**
          * Returns just the date component of this datetime
          **/
         date: DateTime;
@@ -1228,6 +1361,16 @@ declare module latte {
          */
         dayOfWeekString: string;
         /**
+         * Gets the name of the day of the week
+         * @returns {*}
+         */
+        dayOfWeekStringShort: string;
+        /**
+         * Gets the name of the day of the week
+         * @returns {*}
+         */
+        dayOfWeekStringInitial: string;
+        /**
          * Gets the day of year datetime
          **/
         dayOfYear: number;
@@ -1252,6 +1395,14 @@ declare module latte {
          **/
         monthString: string;
         /**
+         * Gets the name of the month of the date
+         **/
+        monthStringShort: string;
+        /**
+         * Gets the name of the month of the date
+         **/
+        monthStringInitial: string;
+        /**
          * Gets the second of the date
          **/
         second: number;
@@ -1262,11 +1413,11 @@ declare module latte {
         /**
          * Returns a formatted string
          **/
-        toFormattedString(): string;
+        toFormattedString(format?: string): string;
         /**
          * Gets the DateTime as a string
          **/
-        toString(): string;
+        toString(includeTime?: boolean): string;
         /**
          * Gets the week number of date. First week of year is 1
          **/
@@ -1288,7 +1439,7 @@ declare module latte {
      */
     class LatteEvent {
         context: any;
-        handlers: EventHandler[];
+        handlers: Array<EventHandler>;
         /**
          * Raised when a handler is added to the event
          */
@@ -1390,106 +1541,6 @@ declare module latte {
     }
 }
 /**
- * Created by josemanuel on 2/6/14.
- */
-declare module latte {
-    /**
-     *
-     */
-    class Culture {
-        /**
-         * Property field
-         */
-        private static _current;
-        /**
-         * Gets or sets the current culture of the system
-         *
-         * @returns {Culture}
-         */
-        /**
-         * Gets or sets the current culture of the system
-         *
-         * @param {Culture} value
-         */
-        static current: Culture;
-        /**
-         * Field for esMX property
-         */
-        private static _esMx;
-        /**
-         * Gets the Español-Mexico Culture
-         *
-         * @returns {Culture}
-         */
-        static esMx: Culture;
-        /**
-         * Field for enUs property
-         */
-        private static _enUs;
-        /**
-         * Gets the English-USA Culture
-         *
-         * @returns {Culture}
-         */
-        static enUs: Culture;
-        /**
-         * Formats currency using the current culture
-         * @param n
-         * @returns {string}
-         */
-        static formatCurrency(n: number): string;
-        /**
-         * Formats a number using the current Culture
-         * @param n
-         * @param decimals
-         * @param symbol
-         * @returns {string}
-         */
-        static formatNumber(n: number, decimals?: number, symbol?: string): string;
-        /**
-         * Short date format
-         */
-        shortDateFormat: string;
-        /**
-         * Long date format
-         */
-        longDateFormat: string;
-        /**
-         * Amount of decimals to show in currency format
-         */
-        currencyDecimals: number;
-        /**
-         * Separator of decimals for currency
-         */
-        numberDecimalsSeparator: string;
-        /**
-         * Thousands separator for currency
-         */
-        numberThousandsSeparator: string;
-        /**
-         * Symbol to use in currency
-         */
-        currencySymbol: string;
-        /**
-         *
-         */
-        constructor();
-        /**
-         * Returns the specified number as a currency
-         * @param n
-         */
-        onFormatCurrency(n: number): string;
-        /**
-         * Formats the specified number
-         * @param n
-         * @param decimals
-         * @param symbol
-         * @returns {string}
-         */
-        onFormatNumber(n: number, decimals?: number, symbol?: string): string;
-    }
-}
-/**
  * Created by josemanuel on 5/26/15.
  */
 declare module latte {
@@ -1577,6 +1628,75 @@ declare module latte {
          * @param {string} value
          */
         loadingText: string;
+    }
+}
+/**
+ * Created by josemanuel on 5/12/14.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class Point {
+        /**
+         * Gets the distance between two points
+         * @param a
+         * @param b
+         */
+        static distance(a: Point, b: Point): number;
+        /**
+         * Returns an empty point
+         * @returns {latte.Point}
+         */
+        static empty(): Point;
+        /**
+         * Returns a point situated on the origin
+         * @returns {latte.Point}
+         */
+        static origin(): Point;
+        /**
+         * Creates a new point, optionally
+         */
+        constructor(x?: number, y?: number);
+        /**
+         * Returns the offset operation of the point
+         *
+         * @param x
+         * @param y
+         * @returns {latte.Point}
+         */
+        offset(x: number, y: number): Point;
+        /**
+         * Gets string representation of the point
+         * @returns {string}
+         */
+        toString(): string;
+        /**
+         * Gets a value indicating if the point is empty (No value has been set)
+         *
+         * @returns {boolean}
+         */
+        isEmpty: boolean;
+        /**
+         * Property field
+         */
+        private _x;
+        /**
+         * Gets or sets the X of the point
+         *
+         * @returns {number}
+         */
+        x: number;
+        /**
+         * Property field
+         */
+        private _y;
+        /**
+         * Gets the Y coordinate of the point
+         *
+         * @returns {number}
+         */
+        y: number;
     }
 }
 declare module latte {
@@ -1689,65 +1809,78 @@ declare module latte {
         width: number;
     }
 }
+/**
+ * Created by josemanuel on 5/12/14.
+ */
 declare module latte {
     /**
-     * Executes an action every specified amount of milliseconds
-     **/
-    class Timer {
+     *
+     */
+    class Size {
         /**
+         * Returns an empty size
+         * @returns {latte.Size}
+         */
+        static empty(): Size;
+        /**
+         * Returns a size of zero width and zero height
+         * @returns {latte.Point}
+         */
+        static zero(): Size;
+        /**
+         * Creates a new Size, optionally sets its Width and Height components
+         */
+        constructor(width?: number, height?: number);
+        /**
+         * Inflates the size on the specified width and height
          *
-         **/
-        private _callback;
+         * @param width
+         * @param height
+         * @returns {latte.Size}
+         */
+        inflate(width: number, height: number): Size;
         /**
+         * Inflates the size uniformly
+         * @param wide
+         */
+        inflateUniform(wide: number): Size;
+        /**
+         * Gets string representation of the size
+         * @returns {string}
+         */
+        toString(): string;
+        /**
+         * Gets the area represented by the size
          *
-         **/
-        private _context;
+         * @returns {number}
+         */
+        area: number;
         /**
+         * Gets a value indicating if the size has no compnents assigned or initialized
          *
-         **/
-        private _milliseconds;
+         * @returns {boolean}
+         */
+        isEmpty: boolean;
         /**
+         * Property field
+         */
+        private _height;
+        /**
+         * Gets the Height component of the size
          *
-         **/
-        private _paused;
+         * @returns {number}
+         */
+        height: number;
         /**
-         * Creates a timer that will call <c>callback</c> every specified amount of
-         <c>milliseconds</c> on the specified <c>context</c>.
-         **/
-        constructor(callback: Function, milliseconds: number, context: any);
+         * Property field
+         */
+        private _width;
         /**
-         * Gets or sets the function who will be called every tick
-         **/
-        /**
-         * Gets or sets the function who will be called every tick
-         **/
-        callback: Function;
-        /**
-         * Gets or sets the context in which the function is executed
-         **/
-        /**
-         * Gets or sets the context in which the function is executed
-         **/
-        context: any;
-        /**
-         * Gets or sets the milliseconds to sleep between calls
-         **/
-        /**
-         * Gets or sets the milliseconds to sleep between calls
-         **/
-        milliseconds: number;
-        /**
-         * Pauses the timer
-         **/
-        pause(): void;
-        /**
-         * Starts ticking
-         **/
-        start(): void;
-        /**
-         * Ticks the timer. Executes the callback and programs next tick.
-         **/
-        tick(): void;
+         * Gets the Width component of the size
+         *
+         * @returns {number}
+         */
+        width: number;
     }
 }
 declare module latte {
@@ -1837,7 +1970,12 @@ declare module latte {
         /**
          * Returns this timespan as a string
          **/
-        toString(): string;
+        toString(includeMilliseconds?: boolean): string;
+        /**
+         * Returns the timespan as a shor string, e.g. 5 minutes or 5m
+         * @param shortNames
+         */
+        toShortString(shortNames?: boolean): string;
         /**
          * Gets the days component of the time interval represented by this object
          **/
@@ -1882,6 +2020,67 @@ declare module latte {
          * Gets the value of this timespan expressed in whole and fractional seconds
          **/
         totalSeconds: number;
+    }
+}
+declare module latte {
+    /**
+     * Executes an action every specified amount of milliseconds
+     **/
+    class Timer {
+        /**
+         *
+         **/
+        private _callback;
+        /**
+         *
+         **/
+        private _context;
+        /**
+         *
+         **/
+        private _milliseconds;
+        /**
+         *
+         **/
+        private _paused;
+        /**
+         * Creates a timer that will call <c>callback</c> every specified amount of
+         <c>milliseconds</c> on the specified <c>context</c>.
+         **/
+        constructor(callback: Function, milliseconds: number, context: any);
+        /**
+         * Gets or sets the function who will be called every tick
+         **/
+        /**
+         * Gets or sets the function who will be called every tick
+         **/
+        callback: Function;
+        /**
+         * Gets or sets the context in which the function is executed
+         **/
+        /**
+         * Gets or sets the context in which the function is executed
+         **/
+        context: any;
+        /**
+         * Gets or sets the milliseconds to sleep between calls
+         **/
+        /**
+         * Gets or sets the milliseconds to sleep between calls
+         **/
+        milliseconds: number;
+        /**
+         * Pauses the timer
+         **/
+        pause(): void;
+        /**
+         * Starts ticking
+         **/
+        start(): void;
+        /**
+         * Ticks the timer. Executes the callback and programs next tick.
+         **/
+        tick(): void;
     }
 }
 declare module latte {

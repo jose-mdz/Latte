@@ -15,7 +15,11 @@ module latte{
         constructor(){
 
             // Init
-            super(this.toolbar = new Toolbar());
+            super();
+
+            this.toolbar = new Toolbar();
+            this.anchorTop = this.toolbar;
+
             this.element.addClass('toolbar');
 
             // Init elements
@@ -45,7 +49,6 @@ module latte{
 
         }
 
-
         onAnchorBottomChanged(){
 
             this.toolbar.direction = Direction.HORIZONTAL;
@@ -55,7 +58,6 @@ module latte{
             super.onAnchorBottomChanged();
 
         }
-
 
         onAnchorLeftChanged(){
 

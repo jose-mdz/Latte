@@ -12,7 +12,7 @@
 
 .latte-item.form.with-face{
     background: white;
-    border: solid 1px silver;
+    border: solid 1px #dedede;
     border-radius: 5px;
 }
 

@@ -33,7 +33,6 @@ module latte{
                     if((_isArray(options) ||  (typeof options === 'object'))&& !_undef(options[value]))
                         return options[value];
                     return value;
-                    break;
                 default:
                     return value;
             }

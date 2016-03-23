@@ -1,3 +1,8 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var latte;
 (function (latte) {
     /**
@@ -709,7 +714,8 @@ var latte;
                         }
                         break;
                     case 'function':
-                        if (typeof (b[p]) == 'undefined' || (p != 'equals' && a[p].toString() != b[p].toString()))
+                        if (typeof (b[p]) == 'undefined' ||
+                            (p != 'equals' && a[p].toString() != b[p].toString()))
                             return false;
                         break;
                     default:
@@ -737,9 +743,7 @@ var latte;
      *
      * @returns {boolean}
      */
-    function _isNumber(param) {
-        return typeof param == 'number';
-    }
+    function _isNumber(param) { return typeof param == 'number'; }
     latte._isNumber = _isNumber;
     ;
     /**
@@ -747,9 +751,7 @@ var latte;
      *
      * @returns {boolean}
      */
-    function _isBoolean(param) {
-        return typeof param == 'boolean';
-    }
+    function _isBoolean(param) { return typeof param == 'boolean'; }
     latte._isBoolean = _isBoolean;
     ;
     /**
@@ -757,9 +759,7 @@ var latte;
      *
      * @returns {boolean}
      */
-    function _isString(param) {
-        return typeof param == 'string';
-    }
+    function _isString(param) { return typeof param == 'string'; }
     latte._isString = _isString;
     ;
     /**
@@ -767,9 +767,7 @@ var latte;
      *
      * @returns {boolean}
      */
-    function _isArray(param) {
-        return param instanceof Array;
-    }
+    function _isArray(param) { return param instanceof Array; }
     latte._isArray = _isArray;
     ;
     /**
@@ -777,9 +775,7 @@ var latte;
      *
      * @returns {boolean}
      */
-    function _isFunction(param) {
-        return typeof param == 'function';
-    }
+    function _isFunction(param) { return typeof param == 'function'; }
     latte._isFunction = _isFunction;
     ;
     /**
@@ -787,9 +783,7 @@ var latte;
      *
      * @returns {boolean}
      */
-    function _isObject(param) {
-        return typeof param == 'object';
-    }
+    function _isObject(param) { return typeof param == 'object'; }
     latte._isObject = _isObject;
     ;
     /**
@@ -818,9 +812,7 @@ var latte;
      *
      * @returns {boolean}
      */
-    function _undef(param) {
-        return typeof param == 'undefined';
-    }
+    function _undef(param) { return typeof param == 'undefined'; }
     latte._undef = _undef;
     ;
     /**
@@ -842,6 +834,19 @@ var latte;
     }
     latte.log = log;
     ;
+    /**
+     * Merges the two objects
+     * @param a
+     * @param b
+     * @private
+     */
+    function _merge(a, b) {
+        for (var i in a) {
+            b[i] = a[i];
+        }
+        return b;
+    }
+    latte._merge = _merge;
     /**
      * sprintf for only %s strings
      */
@@ -912,7 +917,7 @@ var latte;
             return this.description ? this.description : "Uncaught exception";
         };
         return Ex;
-    })();
+    }());
     latte.Ex = Ex;
 })(latte || (latte = {}));
 /**
@@ -995,18 +1000,18 @@ var latte;
                 }
             };
             var fdata = new FormData();
+            //Prepare params
             for (var i in data) {
                 fdata.append(i, data[i]);
             }
             req.open("POST", url);
-            req.send(fdata);
-            //setTimeout(() => {
-            //    req.open("POST", url);
-            //    req.send(fdata);
-            //}, 1000);
+            try {
+                req.send(fdata);
+            }
+            catch (e) { }
         };
         return Ajax;
-    })();
+    }());
     latte.Ajax = Ajax;
 })(latte || (latte = {}));
 var latte;
@@ -1162,6 +1167,7 @@ var latte;
             if (raiseEvent === void 0) { raiseEvent = true; }
             var buffer = [];
             var index = -1;
+            //region Clear this
             for (var i = 0; i < this.length; i++) {
                 var t = this[i];
                 delete this[i];
@@ -1172,6 +1178,8 @@ var latte;
                     buffer.push(t);
                 }
             }
+            //endregion
+            //region Apply buffer
             for (var i = 0; i < buffer.length; i++) {
                 this[i] = buffer[i];
             }
@@ -1298,7 +1306,7 @@ var latte;
             configurable: true
         });
         return Collection;
-    })();
+    }());
     latte.Collection = Collection;
 })(latte || (latte = {}));
 var latte;
@@ -1357,9 +1365,7 @@ var latte;
             if (!(hexColor.length == 3 || hexColor.length == 6 || hexColor.length == 9))
                 throw new latte.InvalidArgumentEx('hexColor', hexColor);
             var c = new latte.Color();
-            var toDecimal = function (hex) {
-                return parseInt(hex, 16);
-            };
+            var toDecimal = function (hex) { return parseInt(hex, 16); };
             // If three digits
             if (hexColor.length == 3) {
                 c.r = (toDecimal(hexColor.charAt(0) + hexColor.charAt(0)));
@@ -1458,11 +1464,8 @@ var latte;
          * Returns the color as a hex string
          **/
         Color.prototype.toHexString = function () {
-            var d = function (s) {
-                if (s.length == 1)
-                    return '0' + s;
-                return s;
-            };
+            var d = function (s) { if (s.length == 1)
+                return '0' + s; return s; };
             if (this.a != 255) {
                 return '#' + d(this.r.toString(16)) + d(this.g.toString(16)) + d(this.b.toString(16)) + d(this.a.toString(16));
             }
@@ -1621,8 +1624,221 @@ var latte;
             configurable: true
         });
         return Color;
-    })();
+    }());
     latte.Color = Color;
+})(latte || (latte = {}));
+/**
+ * Created by josemanuel on 2/6/14.
+ */
+var latte;
+(function (latte) {
+    /**
+     *
+     */
+    var Culture = (function () {
+        //endregion
+        /**
+         *
+         */
+        function Culture() {
+            //endregion
+            //region Fields
+            /**
+             * Short date format
+             */
+            this.shortDateFormat = 'dd/MM/yyyy';
+            /**
+             * Long date format
+             */
+            this.longDateFormat = 'dddd, d de MMMM de YYYY';
+            /**
+             * Amount of decimals to show in currency format
+             */
+            this.currencyDecimals = 2;
+            /**
+             * Separator of decimals for currency
+             */
+            this.numberDecimalsSeparator = '.';
+            /**
+             * Thousands separator for currency
+             */
+            this.numberThousandsSeparator = ',';
+            /**
+             * Symbol to use in currency
+             */
+            this.currencySymbol = '$';
+        }
+        Object.defineProperty(Culture, "current", {
+            /**
+             * Gets or sets the current culture of the system
+             *
+             * @returns {Culture}
+             */
+            get: function () {
+                if (!Culture._current) {
+                    Culture._current = Culture.enUs;
+                }
+                return this._current;
+            },
+            /**
+             * Gets or sets the current culture of the system
+             *
+             * @param {Culture} value
+             */
+            set: function (value) {
+                this._current = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Culture, "esMx", {
+            /**
+             * Gets the Español-Mexico Culture
+             *
+             * @returns {Culture}
+             */
+            get: function () {
+                if (!Culture._esMx) {
+                    var _zeroPad = function (n) { return n <= 9 ? '0' + n.toString() : n.toString(); };
+                    Culture._esMx = new Culture();
+                    Culture._esMx.currencyDecimals = 2;
+                    Culture._esMx.numberDecimalsSeparator = '.';
+                    Culture._esMx.numberThousandsSeparator = ',';
+                    Culture._esMx.currencySymbol = '$';
+                    Culture._esMx.shortDateFormat = 'dd/MMM/yyyy';
+                    Culture._esMx.longDateFormat = 'dddd, d de MMMM de yyyy';
+                    Culture._esMx.onFormatShortDate = function (d) {
+                        return latte.sprintf("%s/%s/%s", _zeroPad(d.day), d.monthStringShort, d.year);
+                    };
+                    Culture._esMx.onFormatLongDate = function (d) {
+                        return latte.sprintf("%s, %s de %s de %s", d.dayOfWeekString, d.day, d.monthString, d.year);
+                    };
+                }
+                return Culture._esMx;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Culture, "enUs", {
+            /**
+             * Gets the English-USA Culture
+             *
+             * @returns {Culture}
+             */
+            get: function () {
+                if (!Culture._enUs) {
+                    var _zeroPad = function (n) { return n <= 9 ? '0' + n.toString() : n.toString(); };
+                    Culture._enUs = new Culture();
+                    Culture._enUs.currencyDecimals = 2;
+                    Culture._enUs.numberDecimalsSeparator = '.';
+                    Culture._enUs.numberThousandsSeparator = ',';
+                    Culture._enUs.currencySymbol = '$';
+                    Culture._enUs.shortDateFormat = 'MMM/dd/yyyy';
+                    Culture._enUs.longDateFormat = 'dddd, MMMM d yyyy';
+                    Culture._enUs.onFormatShortDate = function (d) {
+                        return latte.sprintf("%s/%s/%s", d.monthStringShort, _zeroPad(d.day), d.year);
+                    };
+                    Culture._enUs.onFormatLongDate = function (d) {
+                        return latte.sprintf("%s, %s %s %s", d.dayOfWeekString, d.monthString, d.day, d.year);
+                    };
+                }
+                return Culture._enUs;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Formats currency using the current culture
+         * @param n
+         * @returns {string}
+         */
+        Culture.formatCurrency = function (n) {
+            return Culture.current.onFormatCurrency(n);
+        };
+        /**
+         * Returns the date as a short format
+         * @param d
+         */
+        Culture.formatShortDate = function (d) {
+            return Culture.current.onFormatShortDate(d);
+        };
+        /**
+         * Returns the date as a short format
+         * @param d
+         */
+        Culture.formatLongDate = function (d) {
+            return Culture.current.onFormatLongDate(d);
+        };
+        /**
+         * Formats a number using the current Culture
+         * @param n
+         * @param decimals
+         * @param symbol
+         * @returns {string}
+         */
+        Culture.formatNumber = function (n, decimals, symbol) {
+            if (decimals === void 0) { decimals = 0; }
+            if (symbol === void 0) { symbol = ''; }
+            return Culture.current.onFormatNumber(n, decimals, symbol);
+        };
+        //region Private Methods
+        //endregion
+        //region Methods
+        /**
+         * Returns the specified number as a currency
+         * @param n
+         */
+        Culture.prototype.onFormatCurrency = function (n) {
+            return this.onFormatNumber(n, this.currencyDecimals, this.currencySymbol);
+        };
+        /**
+         * Formats the specified number
+         * @param n
+         * @param decimals
+         * @param symbol
+         * @returns {string}
+         */
+        Culture.prototype.onFormatNumber = function (n, decimals, symbol) {
+            if (decimals === void 0) { decimals = 0; }
+            if (symbol === void 0) { symbol = ''; }
+            var point = this.numberDecimalsSeparator; //if no decimal separator is passed we use the dot as default decimal separator (we MUST use a decimal separator)
+            //if you don't want to use a thousands separator you can pass empty string as thousands_sep value
+            var separator = this.numberThousandsSeparator;
+            var sign = (n < 0) ? '-' : '';
+            //extracting the absolute value of the integer part of the number and converting to string
+            var round = parseInt(Math.abs(n).toFixed(decimals)) + '';
+            var length = round.length;
+            var offset = ((length) > 3) ? length % 3 : 0;
+            var a = sign;
+            var b = symbol;
+            var c = (offset ? round.substr(0, offset) + separator : '');
+            var d = round.substr(offset).replace(/(\d{3})(?=\d)/g, "$1" + separator);
+            //[Hack]
+            var e = (decimals ? point + (Math.abs(n) - parseInt(round)).toFixed(decimals).slice(2) : '');
+            return a + b + c + d + e;
+        };
+        /**
+         * Returns the date as a long format
+         * @param d
+         */
+        Culture.prototype.onFormatLongDate = function (d) {
+            return "NotImplemented";
+        };
+        /**
+         * Returns the date as a short format
+         * @param d
+         */
+        Culture.prototype.onFormatShortDate = function (d) {
+            return "NotImplemented";
+        };
+        //region Static
+        /**
+         * Property field
+         */
+        Culture._current = null;
+        return Culture;
+    }());
+    latte.Culture = Culture;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -1650,10 +1866,10 @@ var latte;
          * Returns the absolute number of days on the specified day-month-year
          **/
         DateTime.absoluteDays = function (year, month, day) {
-            var div = function (a, b) {
-                return Math.floor(a / b);
-            };
-            var arr = DateTime.isLeapYear(year) ? [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366] : [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
+            var div = function (a, b) { return Math.floor(a / b); };
+            var arr = DateTime.isLeapYear(year) ?
+                [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366] :
+                [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
             var num = year - 1;
             var num2 = ((((((num * 365) + div(num, 4)) - div(num, 100)) + div(num, 400)) + arr[month - 1]) + day) - 1;
             return num2;
@@ -1782,9 +1998,7 @@ var latte;
          Possible values for <c>what</c> are: <c>year</c> | <c>month</c> | <c>dayyear</c> | <c>day</c>
          **/
         DateTime.prototype.fromTimeSpan = function (what) {
-            var div = function (a, b) {
-                return Math.floor(a / b);
-            };
+            var div = function (a, b) { return Math.floor(a / b); };
             var num2 = this._span.days;
             var num3 = div(num2, 146097);
             num2 -= num3 * 146097;
@@ -1806,7 +2020,9 @@ var latte;
             if (what == "dayyear") {
                 return (num2 + 1);
             }
-            var arr = ((num6 == 3) && ((num5 != 24) || (num4 == 3))) ? [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366] : [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
+            var arr = ((num6 == 3) && ((num5 != 24) || (num4 == 3))) ?
+                [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366] :
+                [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
             var index = num2 >> 6;
             while (num2 >= arr[index]) {
                 index++;
@@ -1890,6 +2106,18 @@ var latte;
         DateTime.prototype.compareTo = function (datetime) {
             return this._span.compareTo(datetime._span);
         };
+        Object.defineProperty(DateTime.prototype, "comparer", {
+            /**
+             * Gets the comparer value of the date
+             *
+             * @returns {number}
+             */
+            get: function () {
+                return this._span.totalMilliseconds;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(DateTime.prototype, "date", {
             /**
              * Returns just the date component of this datetime
@@ -1935,6 +2163,7 @@ var latte;
             var now = DateTime.now;
             var today = DateTime.today;
             var yesterday = DateTime.yesterday;
+            var tomorrow = DateTime.tomorrow;
             var timePart = this._zeroPad(this.hour) + ':' + this._zeroPad(this.minute);
             var datePart = "";
             var d = this.date;
@@ -1959,6 +2188,9 @@ var latte;
                 else {
                     return latte.sprintf(strings.SHoursAgo, hours);
                 }
+            }
+            else if (d.equals(tomorrow)) {
+                datePart = strings.tomorrow;
             }
             else if (d.equals(yesterday)) {
                 datePart = strings.yesterday;
@@ -1988,7 +2220,10 @@ var latte;
             else {
                 return this.toString();
             }
-            return datePart + ' ' + timePart;
+            if (this.minute == 0 && this.hour == 0) {
+                timePart = '';
+            }
+            return timePart ? datePart + ' ' + timePart : datePart;
         };
         Object.defineProperty(DateTime.prototype, "day", {
             /**
@@ -2018,6 +2253,30 @@ var latte;
             get: function () {
                 var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
                 return strings[days[this.dayOfWeek]];
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DateTime.prototype, "dayOfWeekStringShort", {
+            /**
+             * Gets the name of the day of the week
+             * @returns {*}
+             */
+            get: function () {
+                var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+                return strings[days[this.dayOfWeek] + 'Short'];
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DateTime.prototype, "dayOfWeekStringInitial", {
+            /**
+             * Gets the name of the day of the week
+             * @returns {*}
+             */
+            get: function () {
+                var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+                return strings[days[this.dayOfWeek] + 'Initial'];
             },
             enumerable: true,
             configurable: true
@@ -2082,6 +2341,26 @@ var latte;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(DateTime.prototype, "monthStringShort", {
+            /**
+             * Gets the name of the month of the date
+             **/
+            get: function () {
+                return strings["january february march april may june july august september october november december".split(" ")[(this.month - 1)] + 'Short'];
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DateTime.prototype, "monthStringInitial", {
+            /**
+             * Gets the name of the month of the date
+             **/
+            get: function () {
+                return strings["january february march april may june july august september october november december".split(" ")[(this.month - 1)] + 'Initial'];
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(DateTime.prototype, "second", {
             /**
              * Gets the second of the date
@@ -2105,26 +2384,22 @@ var latte;
         /**
          * Returns a formatted string
          **/
-        DateTime.prototype.toFormattedString = function () {
-            var datepart = latte.sprintf('%s/%s/%s', this.day, this.monthString, this.year);
-            var timepart = this._zeroPad(this.hour) + ':' + this._zeroPad(this.minute);
-            if (this.timeOfDay.totalSeconds > 0) {
-                return latte.sprintf('%s %s', datepart, timepart);
-            }
-            else {
-                return datepart;
-            }
+        DateTime.prototype.toFormattedString = function (format) {
+            if (format === void 0) { format = null; }
+            return latte.Culture.formatShortDate(this);
         };
         /**
          * Gets the DateTime as a string
          **/
-        DateTime.prototype.toString = function () {
+        DateTime.prototype.toString = function (includeTime) {
+            if (includeTime === void 0) { includeTime = true; }
             if (isNaN(this.year))
                 return '';
             var t = this.timeOfDay;
             var r = this.year + '-' + this._zeroPad(this.month) + '-' + this._zeroPad(this.day);
-            if (!t.isEmpty) {
-                r += ' ' + this._zeroPad(t.hours) + ":" + this._zeroPad(t.minutes) + ':' + this._zeroPad(t.seconds);
+            if (includeTime) {
+                r += ' ' + this._zeroPad(t.hours) + ":" + this._zeroPad(t.minutes) + ':'
+                    + this._zeroPad(t.seconds);
             }
             return r;
         };
@@ -2158,7 +2433,7 @@ var latte;
          **/
         DateTime.monthDaysLeapYear = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         return DateTime;
-    })();
+    }());
     latte.DateTime = DateTime;
 })(latte || (latte = {}));
 var latte;
@@ -2169,7 +2444,7 @@ var latte;
             this.context = context;
         }
         return EventHandler;
-    })();
+    }());
     latte.EventHandler = EventHandler;
     /**
      * Manages events and event handlers
@@ -2226,6 +2501,7 @@ var latte;
                 parameter[_i - 0] = arguments[_i];
             }
             var args = arguments;
+            // Call each handler
             for (var i = 0; i < this.handlers.length; i++) {
                 var evh = this.handlers[i];
                 var result = evh.handler.apply(evh.context || this.context, args);
@@ -2235,15 +2511,9 @@ var latte;
             }
         };
         return LatteEvent;
-    })();
+    }());
     latte.LatteEvent = LatteEvent;
 })(latte || (latte = {}));
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
 var latte;
 (function (latte) {
     /**
@@ -2285,10 +2555,12 @@ var latte;
          * @returns {string}
          */
         InvalidArgumentEx.prototype.toString = function () {
-            return "Invalid argument: " + (this.argument ? this.argument : '<no argument specified>') + (!this.value ? " ( " + this.value + ")" : '');
+            return "Invalid argument: " +
+                (this.argument ? this.argument : '<no argument specified>') +
+                (!this.value ? " ( " + this.value + ")" : '');
         };
         return InvalidArgumentEx;
-    })(latte.Ex);
+    }(latte.Ex));
     latte.InvalidArgumentEx = InvalidArgumentEx;
 })(latte || (latte = {}));
 var latte;
@@ -2324,182 +2596,12 @@ var latte;
          * @returns {string}
          */
         InvalidCallEx.prototype.toString = function () {
-            return "Invalid call: " + (this.method ? this.method : '<no method specified>');
+            return "Invalid call: " +
+                (this.method ? this.method : '<no method specified>');
         };
         return InvalidCallEx;
-    })(latte.Ex);
+    }(latte.Ex));
     latte.InvalidCallEx = InvalidCallEx;
-})(latte || (latte = {}));
-/**
- * Created by josemanuel on 2/6/14.
- */
-var latte;
-(function (latte) {
-    /**
-     *
-     */
-    var Culture = (function () {
-        //endregion
-        /**
-         *
-         */
-        function Culture() {
-            //endregion
-            //region Fields
-            /**
-             * Short date format
-             */
-            this.shortDateFormat = 'dd/MM/yyyy';
-            /**
-             * Long date format
-             */
-            this.longDateFormat = 'dddd, d de MMMM de YYYY';
-            /**
-             * Amount of decimals to show in currency format
-             */
-            this.currencyDecimals = 2;
-            /**
-             * Separator of decimals for currency
-             */
-            this.numberDecimalsSeparator = '.';
-            /**
-             * Thousands separator for currency
-             */
-            this.numberThousandsSeparator = ',';
-            /**
-             * Symbol to use in currency
-             */
-            this.currencySymbol = '$';
-        }
-        Object.defineProperty(Culture, "current", {
-            /**
-             * Gets or sets the current culture of the system
-             *
-             * @returns {Culture}
-             */
-            get: function () {
-                if (!Culture._current) {
-                    Culture._current = Culture.esMx;
-                }
-                return this._current;
-            },
-            /**
-             * Gets or sets the current culture of the system
-             *
-             * @param {Culture} value
-             */
-            set: function (value) {
-                this._current = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Culture, "esMx", {
-            /**
-             * Gets the Español-Mexico Culture
-             *
-             * @returns {Culture}
-             */
-            get: function () {
-                if (!Culture._esMx) {
-                    Culture._esMx = new Culture();
-                    Culture._esMx.currencyDecimals = 2;
-                    Culture._esMx.numberDecimalsSeparator = '.';
-                    Culture._esMx.numberThousandsSeparator = ',';
-                    Culture._esMx.currencySymbol = '$';
-                    Culture._esMx.shortDateFormat = 'dd/MMM/yyyy';
-                    Culture._esMx.longDateFormat = 'dddd, d de MMMM de YYYY';
-                }
-                return Culture._esMx;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Culture, "enUs", {
-            /**
-             * Gets the English-USA Culture
-             *
-             * @returns {Culture}
-             */
-            get: function () {
-                if (!Culture._enUs) {
-                    Culture._enUs = new Culture();
-                    Culture._enUs.currencyDecimals = 2;
-                    Culture._enUs.numberDecimalsSeparator = '.';
-                    Culture._enUs.numberThousandsSeparator = ',';
-                    Culture._enUs.currencySymbol = '$';
-                    Culture._enUs.shortDateFormat = 'MMM/dd/yyyy';
-                    Culture._enUs.longDateFormat = 'dddd, MMMM d YYYY';
-                }
-                return Culture._enUs;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * Formats currency using the current culture
-         * @param n
-         * @returns {string}
-         */
-        Culture.formatCurrency = function (n) {
-            return Culture.current.onFormatCurrency(n);
-        };
-        /**
-         * Formats a number using the current Culture
-         * @param n
-         * @param decimals
-         * @param symbol
-         * @returns {string}
-         */
-        Culture.formatNumber = function (n, decimals, symbol) {
-            if (decimals === void 0) { decimals = 0; }
-            if (symbol === void 0) { symbol = ''; }
-            return Culture.current.onFormatNumber(n, decimals, symbol);
-        };
-        //region Private Methods
-        //endregion
-        //region Methods
-        /**
-         * Returns the specified number as a currency
-         * @param n
-         */
-        Culture.prototype.onFormatCurrency = function (n) {
-            return this.onFormatNumber(n, this.currencyDecimals, this.currencySymbol);
-        };
-        /**
-         * Formats the specified number
-         * @param n
-         * @param decimals
-         * @param symbol
-         * @returns {string}
-         */
-        Culture.prototype.onFormatNumber = function (n, decimals, symbol) {
-            if (decimals === void 0) { decimals = 0; }
-            if (symbol === void 0) { symbol = ''; }
-            var point = this.numberDecimalsSeparator; //if no decimal separator is passed we use the dot as default decimal separator (we MUST use a decimal separator)
-            //if you don't want to use a thousands separator you can pass empty string as thousands_sep value
-            var separator = this.numberThousandsSeparator;
-            var sign = (n < 0) ? '-' : '';
-            //extracting the absolute value of the integer part of the number and converting to string
-            var round = parseInt(Math.abs(n).toFixed(decimals)) + '';
-            var length = round.length;
-            var offset = ((length) > 3) ? length % 3 : 0;
-            var a = sign;
-            var b = symbol;
-            var c = (offset ? round.substr(0, offset) + separator : '');
-            var d = round.substr(offset).replace(/(\d{3})(?=\d)/g, "$1" + separator);
-            //[Hack]
-            var e = (decimals ? point + (Math.abs(n) - parseInt(round)).toFixed(decimals).slice(2) : '');
-            return a + b + c + d + e;
-        };
-        //region Static
-        /**
-         * Property field
-         */
-        Culture._current = null;
-        return Culture;
-    })();
-    latte.Culture = Culture;
 })(latte || (latte = {}));
 /**
  * Created by josemanuel on 5/26/15.
@@ -2659,8 +2761,128 @@ var latte;
             configurable: true
         });
         return LoadInfo;
-    })();
+    }());
     latte.LoadInfo = LoadInfo;
+})(latte || (latte = {}));
+/**
+ * Created by josemanuel on 5/12/14.
+ */
+var latte;
+(function (latte) {
+    /**
+     *
+     */
+    var Point = (function () {
+        //endregion
+        //region Fields
+        //endregion
+        /**
+         * Creates a new point, optionally
+         */
+        function Point(x, y) {
+            if (x === void 0) { x = null; }
+            if (y === void 0) { y = null; }
+            /**
+             * Property field
+             */
+            this._x = null;
+            /**
+             * Property field
+             */
+            this._y = null;
+            if (x !== null) {
+                this._x = x;
+            }
+            if (y !== null) {
+                this._y = y;
+            }
+        }
+        //region Static
+        /**
+         * Gets the distance between two points
+         * @param a
+         * @param b
+         */
+        Point.distance = function (a, b) {
+            return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+        };
+        /**
+         * Returns an empty point
+         * @returns {latte.Point}
+         */
+        Point.empty = function () {
+            return new Point(null, null);
+        };
+        /**
+         * Returns a point situated on the origin
+         * @returns {latte.Point}
+         */
+        Point.origin = function () {
+            return new Point(0, 0);
+        };
+        //region Private Methods
+        //endregion
+        //region Methods
+        /**
+         * Returns the offset operation of the point
+         *
+         * @param x
+         * @param y
+         * @returns {latte.Point}
+         */
+        Point.prototype.offset = function (x, y) {
+            return new Point(this.x + x, this.y + y);
+        };
+        /**
+         * Gets string representation of the point
+         * @returns {string}
+         */
+        Point.prototype.toString = function () {
+            return latte.sprintf("Point(%s, %s)", this._x, this._y);
+        };
+        Object.defineProperty(Point.prototype, "isEmpty", {
+            //endregion
+            //region Events
+            //endregion
+            //region Properties
+            /**
+             * Gets a value indicating if the point is empty (No value has been set)
+             *
+             * @returns {boolean}
+             */
+            get: function () {
+                return this._x == null || this._y == null;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Point.prototype, "x", {
+            /**
+             * Gets or sets the X of the point
+             *
+             * @returns {number}
+             */
+            get: function () {
+                return this._x || 0;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Point.prototype, "y", {
+            /**
+             * Gets the Y coordinate of the point
+             *
+             * @returns {number}
+             */
+            get: function () {
+                return this._y || 0;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return Point;
+    }());
+    latte.Point = Point;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -2701,13 +2923,15 @@ var latte;
          * Gets a value indicating if the specified point is contained
          **/
         Rectangle.prototype.contains = function (x, y) {
-            return this._left <= x && this.right >= x && this._top <= y && this.bottom >= y;
+            return this._left <= x && this.right >= x
+                && this._top <= y && this.bottom >= y;
         };
         /**
          * Gets a value indicating if the rectangle is contained inside this rectangle
          **/
         Rectangle.prototype.containsRectangle = function (rectangle) {
-            return this.contains(rectangle.left, rectangle.top) && this.contains(rectangle.right, rectangle.bottom);
+            return this.contains(rectangle.left, rectangle.top)
+                && this.contains(rectangle.right, rectangle.bottom);
         };
         /**
          * Returns the result of inflating the rectangle vertically and horizontally on each edge.
@@ -2730,7 +2954,10 @@ var latte;
          * Gets a value indicating if the rectangle intersects specified rectangle
          **/
         Rectangle.prototype.intersects = function (rectangle) {
-            return this.contains(rectangle.left, rectangle.top) || this.contains(rectangle.right, rectangle.top) || this.contains(rectangle.right, rectangle.bottom) || this.contains(rectangle.left, rectangle.bottom);
+            return this.contains(rectangle.left, rectangle.top)
+                || this.contains(rectangle.right, rectangle.top)
+                || this.contains(rectangle.right, rectangle.bottom)
+                || this.contains(rectangle.left, rectangle.bottom);
         };
         /**
          * Returns a string describing the rectangle
@@ -2851,108 +3078,139 @@ var latte;
             configurable: true
         });
         return Rectangle;
-    })();
+    }());
     latte.Rectangle = Rectangle;
 })(latte || (latte = {}));
+/**
+ * Created by josemanuel on 5/12/14.
+ */
 var latte;
 (function (latte) {
     /**
-     * Executes an action every specified amount of milliseconds
-     **/
-    var Timer = (function () {
+     *
+     */
+    var Size = (function () {
+        //endregion
+        //region Fields
+        //endregion
         /**
-         * Creates a timer that will call <c>callback</c> every specified amount of
-         <c>milliseconds</c> on the specified <c>context</c>.
-         **/
-        function Timer(callback, milliseconds, context) {
-            this.callback = callback;
-            this.milliseconds = milliseconds;
-            this.context = context;
+         * Creates a new Size, optionally sets its Width and Height components
+         */
+        function Size(width, height) {
+            if (width === void 0) { width = null; }
+            if (height === void 0) { height = null; }
+            /**
+             * Property field
+             */
+            this._height = null;
+            /**
+             * Property field
+             */
+            this._width = null;
+            if (width !== null) {
+                this._width = width;
+            }
+            if (height !== null) {
+                this._height = height;
+            }
         }
-        Object.defineProperty(Timer.prototype, "callback", {
+        //region Static
+        /**
+         * Returns an empty size
+         * @returns {latte.Size}
+         */
+        Size.empty = function () {
+            return new Size(null, null);
+        };
+        /**
+         * Returns a size of zero width and zero height
+         * @returns {latte.Point}
+         */
+        Size.zero = function () {
+            return new Size(0, 0);
+        };
+        //region Private Methods
+        //endregion
+        //region Methods
+        /**
+         * Inflates the size on the specified width and height
+         *
+         * @param width
+         * @param height
+         * @returns {latte.Size}
+         */
+        Size.prototype.inflate = function (width, height) {
+            return new Size(this.width + width, this.height + height);
+        };
+        /**
+         * Inflates the size uniformly
+         * @param wide
+         */
+        Size.prototype.inflateUniform = function (wide) {
+            return new Size(this.width + wide, this.height + wide);
+        };
+        /**
+         * Gets string representation of the size
+         * @returns {string}
+         */
+        Size.prototype.toString = function () {
+            return latte.sprintf("Size(%s, %s)", this._width, this._height);
+        };
+        Object.defineProperty(Size.prototype, "area", {
+            //endregion
+            //region Events
+            //endregion
+            //region Properties
             /**
-             * Gets or sets the function who will be called every tick
-             **/
+             * Gets the area represented by the size
+             *
+             * @returns {number}
+             */
             get: function () {
-                return this._callback;
-            },
-            /**
-             * Gets or sets the function who will be called every tick
-             **/
-            set: function (value) {
-                this._callback = value;
+                return this.width * this.height;
             },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Timer.prototype, "context", {
+        Object.defineProperty(Size.prototype, "isEmpty", {
             /**
-             * Gets or sets the context in which the function is executed
-             **/
+             * Gets a value indicating if the size has no compnents assigned or initialized
+             *
+             * @returns {boolean}
+             */
             get: function () {
-                return this._context;
-            },
-            /**
-             * Gets or sets the context in which the function is executed
-             **/
-            set: function (value) {
-                this._context = value;
+                return this._height == null && this._width == null;
             },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Timer.prototype, "milliseconds", {
+        Object.defineProperty(Size.prototype, "height", {
             /**
-             * Gets or sets the milliseconds to sleep between calls
-             **/
+             * Gets the Height component of the size
+             *
+             * @returns {number}
+             */
             get: function () {
-                return this._milliseconds;
-            },
-            /**
-             * Gets or sets the milliseconds to sleep between calls
-             **/
-            set: function (value) {
-                this._milliseconds = value;
+                return this._height;
             },
             enumerable: true,
             configurable: true
         });
-        /**
-         * Pauses the timer
-         **/
-        Timer.prototype.pause = function () {
-            this._paused = true;
-        };
-        /**
-         * Starts ticking
-         **/
-        Timer.prototype.start = function () {
-            var _this = this;
-            if (this._paused === false)
-                return;
-            this._paused = false;
-            setTimeout(function () {
-                _this.tick();
-            }, this.milliseconds);
-        };
-        /**
-         * Ticks the timer. Executes the callback and programs next tick.
-         **/
-        Timer.prototype.tick = function () {
-            var _this = this;
-            // If paused, bye bye!
-            if (this._paused === true)
-                return;
-            // Call callback
-            this.callback.apply(this.context);
-            // Program next tick
-            setTimeout(function () {
-                _this.tick();
-            }, this.milliseconds);
-        };
-        return Timer;
-    })();
-    latte.Timer = Timer;
+        Object.defineProperty(Size.prototype, "width", {
+            /**
+             * Gets the Width component of the size
+             *
+             * @returns {number}
+             */
+            get: function () {
+                return this._width;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return Size;
+    }());
+    latte.Size = Size;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -3034,7 +3292,7 @@ var latte;
          * Prepends a zero to the number if lower than 10
          **/
         TimeSpan.prototype._zeroPad = function (n) {
-            return n <= 9 ? '0' + n.toString : n.toString();
+            return n <= 9 ? '0' + n.toString() : n.toString();
         };
         /**
          * Returns the result of adding the specified timespan to this timespan
@@ -3107,8 +3365,37 @@ var latte;
         /**
          * Returns this timespan as a string
          **/
-        TimeSpan.prototype.toString = function () {
-            return (this.millis < 0 ? '-' : '') + (this.days ? this.days + ' ' : '') + this._zeroPad(this.hours) + ":" + this._zeroPad(this.minutes) + (this.seconds ? ':' + this._zeroPad(this.seconds) : '') + (this.milliseconds ? '.' + Math.abs(this.milliseconds) : '');
+        TimeSpan.prototype.toString = function (includeMilliseconds) {
+            if (includeMilliseconds === void 0) { includeMilliseconds = false; }
+            return (this.millis < 0 ? '-' : '') +
+                (this.days ? this.days + ' ' : '') +
+                this._zeroPad(this.hours) + ":" +
+                this._zeroPad(this.minutes) +
+                (this.seconds ? ':' + this._zeroPad(this.seconds) : '') +
+                (includeMilliseconds ? '.' + Math.abs(this.milliseconds) : '');
+        };
+        /**
+         * Returns the timespan as a shor string, e.g. 5 minutes or 5m
+         * @param shortNames
+         */
+        TimeSpan.prototype.toShortString = function (shortNames) {
+            if (shortNames === void 0) { shortNames = false; }
+            var suf = shortNames ? 'Short' : '';
+            if (this.totalSeconds < 1) {
+                return latte.sprintf(strings['Smillis' + suf], this.totalMilliseconds);
+            }
+            else if (this.totalMinutes < 1) {
+                var seconds = Math.round(this.totalSeconds);
+                return latte.sprintf(strings[(seconds == 1 ? 'oneSecond' : 'Sseconds') + suf], seconds);
+            }
+            else if (this.totalHours < 1) {
+                var minutes = Math.round(this.totalMinutes);
+                return latte.sprintf(strings[(minutes == 1 ? 'oneMinute' : 'Sminutes') + suf], minutes);
+            }
+            else {
+                var hours = Math.round(this.totalHours);
+                return latte.sprintf(strings[(hours == 1 ? 'oneHour' : 'Shours') + suf], latte.Culture.formatNumber(hours));
+            }
         };
         Object.defineProperty(TimeSpan.prototype, "days", {
             /**
@@ -3222,8 +3509,104 @@ var latte;
             configurable: true
         });
         return TimeSpan;
-    })();
+    }());
     latte.TimeSpan = TimeSpan;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
+     * Executes an action every specified amount of milliseconds
+     **/
+    var Timer = (function () {
+        /**
+         * Creates a timer that will call <c>callback</c> every specified amount of
+         <c>milliseconds</c> on the specified <c>context</c>.
+         **/
+        function Timer(callback, milliseconds, context) {
+            this.callback = callback;
+            this.milliseconds = milliseconds;
+            this.context = context;
+        }
+        Object.defineProperty(Timer.prototype, "callback", {
+            /**
+             * Gets or sets the function who will be called every tick
+             **/
+            get: function () {
+                return this._callback;
+            },
+            /**
+             * Gets or sets the function who will be called every tick
+             **/
+            set: function (value) {
+                this._callback = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Timer.prototype, "context", {
+            /**
+             * Gets or sets the context in which the function is executed
+             **/
+            get: function () {
+                return this._context;
+            },
+            /**
+             * Gets or sets the context in which the function is executed
+             **/
+            set: function (value) {
+                this._context = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Timer.prototype, "milliseconds", {
+            /**
+             * Gets or sets the milliseconds to sleep between calls
+             **/
+            get: function () {
+                return this._milliseconds;
+            },
+            /**
+             * Gets or sets the milliseconds to sleep between calls
+             **/
+            set: function (value) {
+                this._milliseconds = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Pauses the timer
+         **/
+        Timer.prototype.pause = function () {
+            this._paused = true;
+        };
+        /**
+         * Starts ticking
+         **/
+        Timer.prototype.start = function () {
+            var _this = this;
+            if (this._paused === false)
+                return;
+            this._paused = false;
+            setTimeout(function () { _this.tick(); }, this.milliseconds);
+        };
+        /**
+         * Ticks the timer. Executes the callback and programs next tick.
+         **/
+        Timer.prototype.tick = function () {
+            var _this = this;
+            // If paused, bye bye!
+            if (this._paused === true)
+                return;
+            // Call callback
+            this.callback.apply(this.context);
+            // Program next tick
+            setTimeout(function () { _this.tick(); }, this.milliseconds);
+        };
+        return Timer;
+    }());
+    latte.Timer = Timer;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -3231,6 +3614,28 @@ var latte;
         function HEvent() {
         }
         return HEvent;
-    })();
+    }());
     latte.HEvent = HEvent;
 })(latte || (latte = {}));
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/support/ts-include/datalatte.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/support/ts-include/latte.strings.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Key.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/TriBool.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/WeekDay.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/latte.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Ex.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Ajax.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Collection.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Color.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Culture.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/DateTime.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Event.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/InvaldArgumentEx.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/InvalidCallEx.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/LoadInfo.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Point.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Rectangle.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Size.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/TimeSpan.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Timer.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/TypeEvent.ts" /> 

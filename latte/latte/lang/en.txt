@@ -89,3 +89,4 @@ SdaysShort %sd
 oneWeekShort 1w
 SweeksShort %sw
 tomorrow Tomorrow
+today Today
