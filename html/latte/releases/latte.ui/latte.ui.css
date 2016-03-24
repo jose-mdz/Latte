@@ -1970,10 +1970,13 @@ body.html-editor td{
 
 .latte-view.list{
     background: #fff;
+    overflow-x: auto;
 }
 .latte-view.list > .container{
     /*padding: 5px;*/
     padding-bottom: 100px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .latte-view.list > .column-headers > .spacer{

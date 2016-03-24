@@ -644,6 +644,29 @@ var latte;
     /**
      *
      */
+    var Main = (function () {
+        //region Static
+        //endregion
+        //region Fields
+        //endregion
+        /**
+         *
+         */
+        function Main() {
+            latte.View.mainView = new latte.MainView();
+        }
+        return Main;
+    }());
+    latte.Main = Main;
+})(latte || (latte = {}));
+/**
+ * Created by josemanuel on 6/11/14.
+ */
+var latte;
+(function (latte) {
+    /**
+     *
+     */
     var MainView = (function (_super) {
         __extends(MainView, _super);
         //region Static
@@ -691,6 +714,7 @@ var latte;
                     item.setText(1, person.lastname);
                     item.setText(2, person.sex == 1 ? 'F' : 'M');
                     item.setText(3, person.birth);
+                    item.setText(4, person.phone);
                 }
             });
         };
@@ -740,7 +764,8 @@ var latte;
                         new latte.ColumnHeader(strings.lastName),
                         new latte.ColumnHeader(strings.name),
                         new latte.ColumnHeader(strings.sex),
-                        new latte.ColumnHeader(strings.birth)
+                        new latte.ColumnHeader(strings.birth),
+                        new latte.ColumnHeader(strings.phone)
                     ]);
                 }
                 return this._listView;
@@ -751,29 +776,6 @@ var latte;
         return MainView;
     }(latte.ToolbarView));
     latte.MainView = MainView;
-})(latte || (latte = {}));
-/**
- * Created by josemanuel on 6/11/14.
- */
-var latte;
-(function (latte) {
-    /**
-     *
-     */
-    var Main = (function () {
-        //region Static
-        //endregion
-        //region Fields
-        //endregion
-        /**
-         *
-         */
-        function Main() {
-            latte.View.mainView = new latte.MainView();
-        }
-        return Main;
-    }());
-    latte.Main = Main;
 })(latte || (latte = {}));
 /**
  * Created by josemanuel on 6/11/14.
@@ -834,6 +836,6 @@ var latte;
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/app.list/support/ts-include/latte.ui.d.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/app.list/support/ts-include/latte.ui.strings.d.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/app.list/support/ts-include/records.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/app.list/ts/views/MainView.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/app.list/ts/Main.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/app.list/ts/views/MainView.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/app.list/ts/views/Person.ts" /> 

@@ -329,6 +329,20 @@ declare module latte {
     /**
      *
      */
+    class Main {
+        /**
+         *
+         */
+        constructor();
+    }
+}
+/**
+ * Created by josemanuel on 6/11/14.
+ */
+declare module latte {
+    /**
+     *
+     */
     class MainView extends ToolbarView {
         /**
          * Creates the Agenda View
@@ -369,20 +383,6 @@ declare module latte {
          * @returns {ListView}
          */
         listView: ListView;
-    }
-}
-/**
- * Created by josemanuel on 6/11/14.
- */
-declare module latte {
-    /**
-     *
-     */
-    class Main {
-        /**
-         *
-         */
-        constructor();
     }
 }
 /**

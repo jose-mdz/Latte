@@ -97,7 +97,6 @@ strings.close = "Close";
 strings.secret = "Secret";
 strings.writeComment = "Write Comment";
 strings.showMoreCommentsS = "Show more comments (%s)";
-strings.justNow = "Just Now";
 strings.uploadingS = "Uploading %s";
 strings.uploadingSSPercent = "Uploading %s %s";
 strings.error = "Error";

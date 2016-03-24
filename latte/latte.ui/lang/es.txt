@@ -101,7 +101,6 @@ uploadingSSPercent Subiendo %s %s
 error Error
 name Nombre
 working Trabajando
-today Hoy
 day Día
 week Semana
 workWeek Semana laboral

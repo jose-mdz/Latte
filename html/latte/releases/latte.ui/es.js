@@ -102,7 +102,6 @@ strings.uploadingSSPercent = "Subiendo %s %s";
 strings.error = "Error";
 strings.name = "Nombre";
 strings.working = "Trabajando";
-strings.today = "Hoy";
 strings.day = "Día";
 strings.week = "Semana";
 strings.workWeek = "Semana laboral";

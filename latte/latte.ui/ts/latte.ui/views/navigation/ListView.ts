@@ -30,7 +30,7 @@ module latte{
         constructor(){
 
 
-            // Initm
+            // Init
             super();
             this.element.addClass('list');
 
@@ -79,15 +79,12 @@ module latte{
                 }
             }
 
-
         }
 
         /**
          *
          **/
         private _onAddColumn(column: ColumnHeader){
-
-            var __this = this;
 
             this.columnHeadersElement.append(column.element);
 
@@ -157,16 +154,24 @@ module latte{
 
             var i = 0;
 
+
             if(this.columnHeadersVisible){
+
                 if(this.columnHeaders.count > 0){
                     var maxHeight = 23;
+                    var widthSum: number = 36; /*HACK: Extracted from CSS*/
 
                     for(i = 0; i < this.columnHeaders.count; i++){
                         maxHeight = Math.max(maxHeight, this.columnHeaders.item(i).element.outerHeight());
+                        widthSum += this.columnHeaders.item(i).width;
                     }
 
                     this.columnHeadersElement.height(maxHeight);
+                    this.columnHeadersElement.css('min-width', widthSum);
                     this.container.css('top', maxHeight);
+                    this.container.css('min-width', widthSum);
+
+                    this._columnHeadersWidth = widthSum;
                 }
             }else{
                 this.container.css('top', 0);
@@ -205,11 +210,26 @@ module latte{
         }
 
         /**
+         * Property field
+         */
+        private _columnHeadersWidth:number;
+
+        /**
+         * Gets the width of column headers zone
+         *
+         * @returns {number}
+         */
+        get columnHeadersWidth():number {
+            return this._columnHeadersWidth;
+        }
+
+
+        /**
          * Gets or sets the selected item of the list
          *
          * @returns {ListViewItem}
          */
-        public get selectedItem(): ListViewItem{
+        get selectedItem(): ListViewItem{
             return this._selectedItem;
         }
 
@@ -218,7 +238,7 @@ module latte{
          *
          * @param {ListViewItem} value
          */
-        public set selectedItem(value: ListViewItem){
+        set selectedItem(value: ListViewItem){
 
             // Check if value changed
             var changed: boolean = value !== this._selectedItem;
@@ -235,14 +255,14 @@ module latte{
         /**
          * Back field for event
          */
-         private _selectedItemChanged: LatteEvent
+        private _selectedItemChanged: LatteEvent
 
         /**
          * Gets an event raised when the value of the selectedItem property changes
          *
          * @returns {LatteEvent}
          */
-        public get selectedItemChanged(): LatteEvent{
+        get selectedItemChanged(): LatteEvent{
             if(!this._selectedItemChanged){
                 this._selectedItemChanged = new LatteEvent(this);
             }
@@ -252,7 +272,7 @@ module latte{
         /**
          * Raises the <c>selectedItem</c> event
          */
-        public onSelectedItemChanged(){
+        onSelectedItemChanged(){
             if(this._selectedItemChanged){
                 this._selectedItemChanged.raise();
             }

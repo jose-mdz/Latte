@@ -4,4 +4,6 @@ declare module latte{ interface Strings{
 	lastName: string;
 	sex: string;
 	birth: string;
+	phone: string;
+	foo: string;
 }}

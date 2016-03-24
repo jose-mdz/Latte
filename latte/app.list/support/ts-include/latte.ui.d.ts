@@ -5444,6 +5444,43 @@ declare module latte {
     }
 }
 declare module latte {
+    /**
+     * Stack of items. It unselects siblings when a selectable within is selected
+     */
+    class SelectableStack extends ItemStack {
+        private _selectedItem;
+        private _selectedItemChanged;
+        /**
+         * Creates the item
+         */
+        constructor();
+        /**
+         * Clears the current selection
+         */
+        clearSelection(): void;
+        /**
+         * Adds selection handlers
+         * @param item
+         */
+        onAddItem(item: Item): void;
+        /**
+         * Raises the <c>selectedItemChanged</c> event
+         */
+        onSelectedItemChanged(): void;
+        /**
+         * Gets the selected item of the stack
+         *
+         * @returns {SelectableItem}
+         */
+        selectedItem: SelectableItem;
+        /**
+         * Gets an event raised when
+         * @returns {LatteEvent}
+         */
+        selectedItemChanged: LatteEvent;
+    }
+}
+declare module latte {
     class TabContainer extends ItemStack {
         tabToolbar: TabToolbar;
         tabs: Collection<TabItem>;
@@ -5489,43 +5526,6 @@ declare module latte {
          * @param value
          */
         contentSide: Side;
-    }
-}
-declare module latte {
-    /**
-     * Stack of items. It unselects siblings when a selectable within is selected
-     */
-    class SelectableStack extends ItemStack {
-        private _selectedItem;
-        private _selectedItemChanged;
-        /**
-         * Creates the item
-         */
-        constructor();
-        /**
-         * Clears the current selection
-         */
-        clearSelection(): void;
-        /**
-         * Adds selection handlers
-         * @param item
-         */
-        onAddItem(item: Item): void;
-        /**
-         * Raises the <c>selectedItemChanged</c> event
-         */
-        onSelectedItemChanged(): void;
-        /**
-         * Gets the selected item of the stack
-         *
-         * @returns {SelectableItem}
-         */
-        selectedItem: SelectableItem;
-        /**
-         * Gets an event raised when
-         * @returns {LatteEvent}
-         */
-        selectedItemChanged: LatteEvent;
     }
 }
 declare module latte {
@@ -5628,6 +5628,28 @@ declare module latte {
          * Gets or sets the View inside this item
          **/
         view: View;
+    }
+}
+declare module latte {
+    /**
+     * Represents a column header
+     **/
+    class ColumnHeader extends LabelItem {
+        /**
+         *
+         **/
+        private _width;
+        /**
+         * Creates the Column Header
+         **/
+        constructor(text?: string, width?: number);
+        /**
+         * Gets or sets the width of the column
+         **/
+        /**
+         * Gets or sets the width of the column
+         **/
+        width: number;
     }
 }
 declare module latte {
@@ -5776,28 +5798,6 @@ declare module latte {
          * Gets or sets the title of the widget
          **/
         title: string;
-    }
-}
-declare module latte {
-    /**
-     * Represents a column header
-     **/
-    class ColumnHeader extends LabelItem {
-        /**
-         *
-         **/
-        private _width;
-        /**
-         * Creates the Column Header
-         **/
-        constructor(text?: string, width?: number);
-        /**
-         * Gets or sets the width of the column
-         **/
-        /**
-         * Gets or sets the width of the column
-         **/
-        width: number;
     }
 }
 declare module latte {
@@ -6894,6 +6894,22 @@ declare module latte {
 }
 declare module latte {
     /**
+     * Allows user to pick a time
+     **/
+    class TimePickerItem extends DatePickerItem {
+        /**
+         *
+         **/
+        constructor();
+        /**
+         * Gets or sets the value of the item
+         **/
+        getValue(): TimeSpan;
+        setValue(value: TimeSpan): void;
+    }
+}
+declare module latte {
+    /**
      *
      **/
     class TextboxItem extends ValueItem {
@@ -7205,22 +7221,6 @@ declare module latte {
          * Gets or sets the width of the textbox.
          **/
         width: number;
-    }
-}
-declare module latte {
-    /**
-     * Allows user to pick a time
-     **/
-    class TimePickerItem extends DatePickerItem {
-        /**
-         *
-         **/
-        constructor();
-        /**
-         * Gets or sets the value of the item
-         **/
-        getValue(): TimeSpan;
-        setValue(value: TimeSpan): void;
     }
 }
 declare module latte {

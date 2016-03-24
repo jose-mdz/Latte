@@ -70,7 +70,6 @@ module latte{
             // Add empty icon
             this.icon = IconItem.empty(16);
 
-
             // Check if list passed
             if(listView){
                 this._listView = listView;
@@ -170,7 +169,8 @@ module latte{
 
             this.columnsElement.width(w);
             this.iconElement.css('margin-right', this._iconPadding);
-            this.element.css('min-width', w + this._iconPadding * 2);
+            // this.element.css('min-width', w + this._iconPadding * 2);
+            this.element.css('min-width', this.listView.columnHeadersWidth);
 
         }
 

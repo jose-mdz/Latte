@@ -68,6 +68,7 @@ module latte {
                     item.setText(1, person.lastname);
                     item.setText(2, person.sex == 1 ? 'F' : 'M');
                     item.setText(3, person.birth);
+                    item.setText(4, person.phone);
                 }
             });
         }
@@ -132,7 +133,8 @@ module latte {
                     new ColumnHeader(strings.lastName),
                     new ColumnHeader(strings.name),
                     new ColumnHeader(strings.sex),
-                    new ColumnHeader(strings.birth)
+                    new ColumnHeader(strings.birth),
+                    new ColumnHeader(strings.phone)
                 ]);
             }
             return this._listView;
