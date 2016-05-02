@@ -215,7 +215,7 @@ module latte{
          */
         public get lblPages():LabelItem {
             if (!this._lblPages) {
-                this._lblPages = new LabelItem("Ir a página");
+                this._lblPages = new LabelItem(strings.goToPage);
                 this._lblPages.element.css({float: 'left', paddingTop: 5, paddingRight: 5, color: 'black'});
             }
 

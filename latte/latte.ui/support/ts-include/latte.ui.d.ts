@@ -812,6 +812,69 @@ declare module latte {
     }
 }
 declare module latte {
+    class Overlay extends UiElement {
+        /**
+         *
+         */
+        private _top;
+        /**
+         *
+         */
+        private _left;
+        /**
+         *
+         */
+        private _parent;
+        /**
+         * Creates the overlay
+         */
+        constructor();
+        close(): void;
+        /**
+         * Sets the parent of the overlay, and the overlay is inserted as first node of the parent
+         * @param parent
+         */
+        setFirstInParent(parent: UiElement): void;
+        /**
+         * Shows at the specified position of the specified element
+         *
+         * @param side
+         * @param element
+         */
+        showAtSide(side: Side, uielement: UiElement): void;
+        /**
+         * Gets the left coordinate of the overlay
+         * @returns {number}
+         */
+        /**
+         * Sets the top coordinate of the overlay
+         *
+         * @param value
+         */
+        left: number;
+        /**
+         * Gets or sets the parent element of the overlay (To inherit style and such)
+         * @returns {UiElement}
+         */
+        /**
+         * Gets or sets the parent element of the overlay (To inherit style and such)
+         * @param value
+         */
+        parent: UiElement;
+        /**
+         * Gets the top coordinate of the overlay
+         *
+         * @returns {number}
+         */
+        /**
+         * Sets the top coordinate of the overlay
+         *
+         * @param value
+         */
+        top: number;
+    }
+}
+declare module latte {
     /**
      * Shows items in a stack
      **/
@@ -879,118 +942,6 @@ declare module latte {
          Default is null.
          **/
         padding: number;
-    }
-}
-declare module latte {
-    class Overlay extends UiElement {
-        /**
-         *
-         */
-        private _top;
-        /**
-         *
-         */
-        private _left;
-        /**
-         *
-         */
-        private _parent;
-        /**
-         * Creates the overlay
-         */
-        constructor();
-        close(): void;
-        /**
-         * Sets the parent of the overlay, and the overlay is inserted as first node of the parent
-         * @param parent
-         */
-        setFirstInParent(parent: UiElement): void;
-        /**
-         * Shows at the specified position of the specified element
-         *
-         * @param side
-         * @param element
-         */
-        showAtSide(side: Side, uielement: UiElement): void;
-        /**
-         * Gets the left coordinate of the overlay
-         * @returns {number}
-         */
-        /**
-         * Sets the top coordinate of the overlay
-         *
-         * @param value
-         */
-        left: number;
-        /**
-         * Gets or sets the parent element of the overlay (To inherit style and such)
-         * @returns {UiElement}
-         */
-        /**
-         * Gets or sets the parent element of the overlay (To inherit style and such)
-         * @param value
-         */
-        parent: UiElement;
-        /**
-         * Gets the top coordinate of the overlay
-         *
-         * @returns {number}
-         */
-        /**
-         * Sets the top coordinate of the overlay
-         *
-         * @param value
-         */
-        top: number;
-    }
-}
-declare module latte {
-    /**
-     * Represents an item that is selectable
-     **/
-    class SelectableItem extends Item {
-        /**
-         * Raised when the <c>selected</c> property value changes
-         **/
-        selectedChanged: LatteEvent;
-        /**
-         * Creates the selectable
-         **/
-        constructor();
-        /**
-         *
-         **/
-        private _thisClick(e);
-        /**
-         *
-         **/
-        private _thisMouseDown(e);
-        /**
-         *
-         **/
-        private _thisMouseOut(e);
-        /**
-         *
-         **/
-        private _thisMouseOver(e);
-        /**
-         * Raises the <c>selectedChanged</c> event
-         **/
-        onSelectedChanged(): void;
-        /**
-         * Sets a value indicaing if the item is currently selected.
-         Optionally specifies if <c>selectedChanged</c> event should be raised, if not specified, event will be raised.
-         **/
-        setSelected(value?: boolean, raiseEvent?: boolean): void;
-        /**
-         * Gets or sets a value indicaing if the item is currently selected.
-         Optionally specifies if <c>selectedChanged</c> event should be raised, if not specified, event will be raised.
-         **/
-        /**
-         * Gets or sets a value indicaing if the item is currently selected.
-         Optionally specifies if <c>selectedChanged</c> event should be raised, if not specified, event will be raised.
-         **/
-        selected: boolean;
     }
 }
 declare module latte {
@@ -1340,6 +1291,55 @@ declare module latte {
          * Gets or sets the wide of the splitterElement
          **/
         splitterSize: number;
+    }
+}
+declare module latte {
+    /**
+     * Represents an item that is selectable
+     **/
+    class SelectableItem extends Item {
+        /**
+         * Raised when the <c>selected</c> property value changes
+         **/
+        selectedChanged: LatteEvent;
+        /**
+         * Creates the selectable
+         **/
+        constructor();
+        /**
+         *
+         **/
+        private _thisClick(e);
+        /**
+         *
+         **/
+        private _thisMouseDown(e);
+        /**
+         *
+         **/
+        private _thisMouseOut(e);
+        /**
+         *
+         **/
+        private _thisMouseOver(e);
+        /**
+         * Raises the <c>selectedChanged</c> event
+         **/
+        onSelectedChanged(): void;
+        /**
+         * Sets a value indicaing if the item is currently selected.
+         Optionally specifies if <c>selectedChanged</c> event should be raised, if not specified, event will be raised.
+         **/
+        setSelected(value?: boolean, raiseEvent?: boolean): void;
+        /**
+         * Gets or sets a value indicaing if the item is currently selected.
+         Optionally specifies if <c>selectedChanged</c> event should be raised, if not specified, event will be raised.
+         **/
+        /**
+         * Gets or sets a value indicaing if the item is currently selected.
+         Optionally specifies if <c>selectedChanged</c> event should be raised, if not specified, event will be raised.
+         **/
+        selected: boolean;
     }
 }
 declare module latte {
@@ -2905,6 +2905,106 @@ declare module latte {
 }
 declare module latte {
     /**
+     * ButtonGroup with pagination information
+     **/
+    class PaginationItem extends ButtonGroupItem {
+        /**
+         *
+         **/
+        private _page;
+        /**
+         *
+         **/
+        private _pages;
+        /**
+         *
+         **/
+        btnCurrent: ButtonItem;
+        /**
+         *
+         **/
+        btnNext: ButtonItem;
+        /**
+         *
+         **/
+        btnPrevious: ButtonItem;
+        /**
+         * Raised when page changes
+         **/
+        pageChanged: LatteEvent;
+        /**
+         *
+         **/
+        constructor();
+        /**
+         * Navigates to next page, if possible.
+         **/
+        nextPage(): void;
+        /**
+         * Raises the <c>pageChanged</c> event
+         **/
+        onPageChanged(): void;
+        /**
+         * Navigates to the previous page, if possible.
+         **/
+        previousPage(): void;
+        txtPage_enterPressed(): void;
+        /**
+         * Gets or sets the current page
+         **/
+        /**
+         * Gets or sets the current page
+         **/
+        page: number;
+        /**
+         * Gets the current page.
+         * @returns {number}
+         */
+        getPage(): number;
+        /**
+         * Sets the current page.
+         * Optionally omits the <c>pageChanged</c> event trigger.
+         * @param value
+         * @param silent
+         */
+        setPage(value: number, silent?: boolean): void;
+        /**
+         * Gets or sets the amount of pages for navigation
+         **/
+        /**
+         * Gets or sets the amount of pages for navigation
+         **/
+        pages: number;
+        private _txtPage;
+        txtPage: TextboxItem;
+        /**
+         * Fields for lblPages property.
+         */
+        private _lblPages;
+        /**
+         * Gets a value indicating
+         */
+        lblPages: LabelItem;
+        /**
+         * Fields for btnGo property.
+         */
+        private _btnGo;
+        /**
+         * Gets a value indicating
+         */
+        btnGo: ButtonItem;
+        /**
+         * Fields for btnOverlay property.
+         */
+        private _btnOverlay;
+        /**
+         * Gets a value indicating
+         */
+        btnOverlay: ButtonItem;
+    }
+}
+declare module latte {
+    /**
      * Represents a selectable tab
      **/
     class TabItem extends ButtonItem {
@@ -3093,106 +3193,6 @@ declare module latte {
 }
 declare module latte {
     /**
-     * ButtonGroup with pagination information
-     **/
-    class PaginationItem extends ButtonGroupItem {
-        /**
-         *
-         **/
-        private _page;
-        /**
-         *
-         **/
-        private _pages;
-        /**
-         *
-         **/
-        btnCurrent: ButtonItem;
-        /**
-         *
-         **/
-        btnNext: ButtonItem;
-        /**
-         *
-         **/
-        btnPrevious: ButtonItem;
-        /**
-         * Raised when page changes
-         **/
-        pageChanged: LatteEvent;
-        /**
-         *
-         **/
-        constructor();
-        /**
-         * Navigates to next page, if possible.
-         **/
-        nextPage(): void;
-        /**
-         * Raises the <c>pageChanged</c> event
-         **/
-        onPageChanged(): void;
-        /**
-         * Navigates to the previous page, if possible.
-         **/
-        previousPage(): void;
-        txtPage_enterPressed(): void;
-        /**
-         * Gets or sets the current page
-         **/
-        /**
-         * Gets or sets the current page
-         **/
-        page: number;
-        /**
-         * Gets the current page.
-         * @returns {number}
-         */
-        getPage(): number;
-        /**
-         * Sets the current page.
-         * Optionally omits the <c>pageChanged</c> event trigger.
-         * @param value
-         * @param silent
-         */
-        setPage(value: number, silent?: boolean): void;
-        /**
-         * Gets or sets the amount of pages for navigation
-         **/
-        /**
-         * Gets or sets the amount of pages for navigation
-         **/
-        pages: number;
-        private _txtPage;
-        txtPage: TextboxItem;
-        /**
-         * Fields for lblPages property.
-         */
-        private _lblPages;
-        /**
-         * Gets a value indicating
-         */
-        lblPages: LabelItem;
-        /**
-         * Fields for btnGo property.
-         */
-        private _btnGo;
-        /**
-         * Gets a value indicating
-         */
-        btnGo: ButtonItem;
-        /**
-         * Fields for btnOverlay property.
-         */
-        private _btnOverlay;
-        /**
-         * Gets a value indicating
-         */
-        btnOverlay: ButtonItem;
-    }
-}
-declare module latte {
-    /**
      * Renders a conversation made of <c>CommentItem</c>s, allowing the user to add comments.
      **/
     class ConversationItem extends Item {
@@ -3314,6 +3314,90 @@ declare module latte {
          * Gets or sets the number of hidden comments in conversation
          **/
         pendentPages: number;
+    }
+}
+declare module latte {
+    class HtmlEditorCommands {
+        /**
+         * Swaps selection boldness
+         */
+        static BOLD: string;
+        /**
+         * Wraps seletion into CODE tag
+         */
+        static CODE: string;
+        /**
+         * Clears all formatting on fonts and colors
+         */
+        static CLEAR_FORMAT: string;
+        /**
+         * Formats the block as something
+         */
+        static FORMAT_BLOCK: string;
+        /**
+         * Swaps selection italics
+         */
+        static ITALIC: string;
+        /**
+         * Makes selectikon super-script
+         */
+        static SUPER_SCRIPT: string;
+        /**
+         * Makes selection sub-script
+         */
+        static SUB_SCRIPT: string;
+        /**
+         * Aligns text to left
+         */
+        static JUSTIFY_LEFT: string;
+        /**
+         * Centers text
+         */
+        static JUSTIFY_CENTER: string;
+        /**
+         * Aligns text to right
+         */
+        static JUSTIFY_RIGHT: string;
+        /**
+         * Justifies text
+         */
+        static JUSTIFY_FULL: string;
+        /**
+         * Decreases indent
+         */
+        static OUTDENT: string;
+        /**
+         * Increases indent
+         */
+        static INDENT: string;
+        /**
+         * Shows a dialog to insert HTML
+         */
+        static INSERT_HTML: string;
+        /**
+         * Inserts an image
+         */
+        static INSERT_IMAGE: string;
+        /**
+         * Inserts a link
+         */
+        static INSERT_LINK: string;
+        /**
+         * Inserts an ordered list
+         */
+        static INSERT_ORDERED_LIST: string;
+        /**
+         * Inserts an unordered list
+         */
+        static INSERT_UNORDERED_LIST: string;
+        /**
+         * Shows a dialog to insert a YouTube video
+         */
+        static INSERT_YOUTUBE: string;
+        /**
+         * Unerlines selection
+         */
+        static UNDERLINE: string;
     }
 }
 declare module latte {
@@ -3601,90 +3685,6 @@ declare module latte {
          * Gets a value of checking every input in <c>inputs</c> to be valid
          **/
         valid: boolean;
-    }
-}
-declare module latte {
-    class HtmlEditorCommands {
-        /**
-         * Swaps selection boldness
-         */
-        static BOLD: string;
-        /**
-         * Wraps seletion into CODE tag
-         */
-        static CODE: string;
-        /**
-         * Clears all formatting on fonts and colors
-         */
-        static CLEAR_FORMAT: string;
-        /**
-         * Formats the block as something
-         */
-        static FORMAT_BLOCK: string;
-        /**
-         * Swaps selection italics
-         */
-        static ITALIC: string;
-        /**
-         * Makes selectikon super-script
-         */
-        static SUPER_SCRIPT: string;
-        /**
-         * Makes selection sub-script
-         */
-        static SUB_SCRIPT: string;
-        /**
-         * Aligns text to left
-         */
-        static JUSTIFY_LEFT: string;
-        /**
-         * Centers text
-         */
-        static JUSTIFY_CENTER: string;
-        /**
-         * Aligns text to right
-         */
-        static JUSTIFY_RIGHT: string;
-        /**
-         * Justifies text
-         */
-        static JUSTIFY_FULL: string;
-        /**
-         * Decreases indent
-         */
-        static OUTDENT: string;
-        /**
-         * Increases indent
-         */
-        static INDENT: string;
-        /**
-         * Shows a dialog to insert HTML
-         */
-        static INSERT_HTML: string;
-        /**
-         * Inserts an image
-         */
-        static INSERT_IMAGE: string;
-        /**
-         * Inserts a link
-         */
-        static INSERT_LINK: string;
-        /**
-         * Inserts an ordered list
-         */
-        static INSERT_ORDERED_LIST: string;
-        /**
-         * Inserts an unordered list
-         */
-        static INSERT_UNORDERED_LIST: string;
-        /**
-         * Shows a dialog to insert a YouTube video
-         */
-        static INSERT_YOUTUBE: string;
-        /**
-         * Unerlines selection
-         */
-        static UNDERLINE: string;
     }
 }
 declare module latte {
@@ -4211,6 +4211,28 @@ declare module latte {
 }
 declare module latte {
     /**
+     * Represents a column header
+     **/
+    class ColumnHeader extends LabelItem {
+        /**
+         *
+         **/
+        private _width;
+        /**
+         * Creates the Column Header
+         **/
+        constructor(text?: string, width?: number);
+        /**
+         * Gets or sets the width of the column
+         **/
+        /**
+         * Gets or sets the width of the column
+         **/
+        width: number;
+    }
+}
+declare module latte {
+    /**
      * Represents a widget.
 
      Widgets are like small windows who can be maximized, minimized and dragged around.
@@ -4355,28 +4377,6 @@ declare module latte {
          * Gets or sets the title of the widget
          **/
         title: string;
-    }
-}
-declare module latte {
-    /**
-     * Represents a column header
-     **/
-    class ColumnHeader extends LabelItem {
-        /**
-         *
-         **/
-        private _width;
-        /**
-         * Creates the Column Header
-         **/
-        constructor(text?: string, width?: number);
-        /**
-         * Gets or sets the width of the column
-         **/
-        /**
-         * Gets or sets the width of the column
-         **/
-        width: number;
     }
 }
 declare module latte {
@@ -4759,6 +4759,39 @@ declare module latte {
 }
 declare module latte {
     /**
+     *
+     **/
+    class CheckboxItem extends ValueItem {
+        /**
+         *
+         **/
+        private _value;
+        /**
+         * Label for checkbox
+         **/
+        label: LabelItem;
+        /**
+         *
+         **/
+        constructor();
+        /**
+         * Gets or sets the text of the checkbox
+         **/
+        /**
+         * Gets or sets the text of the checkbox
+         **/
+        text: string;
+        /**
+         * Gets or sets the checked state of checkbox
+         **/
+        /**
+         * Gets or sets the checked state of checkbox
+         **/
+        value: boolean;
+    }
+}
+declare module latte {
+    /**
      * Renders an Item that may contains more <c>TreeItem</c>s and shows them as a tree.
      **/
     class TreeItem extends Item {
@@ -4957,35 +4990,70 @@ declare module latte {
 }
 declare module latte {
     /**
-     *
+     * Presents a method for choosing options from a combobox.
+     Combo options are presented as the button's items.
+     The button's items tag value is assumed to be the value of the combobox.
      **/
-    class CheckboxItem extends ValueItem {
+    class ComboItem extends ValueItem {
+        /**
+         *
+         **/
+        private _options;
         /**
          *
          **/
         private _value;
         /**
-         * Label for checkbox
+         * Button who hosts the combo
          **/
-        label: LabelItem;
+        button: ButtonItem;
         /**
          *
          **/
         constructor();
         /**
-         * Gets or sets the text of the checkbox
+         * Gets or sets the options of the combo
          **/
         /**
-         * Gets or sets the text of the checkbox
+         * Gets or sets the options of the combo
          **/
-        text: string;
+        options: any;
         /**
-         * Gets or sets the checked state of checkbox
+         * Gets or sets the selected value of the combo
          **/
         /**
-         * Gets or sets the checked state of checkbox
+         * Gets or sets the selected value of the combo
          **/
-        value: boolean;
+        value: any;
+        /**
+         * Gets the value as a string for human reading
+         **/
+        valueString: any;
+    }
+}
+declare module latte {
+    /**
+     * Value item for files. Value of item is an array of system File objects.
+     */
+    class FileValueItem extends ValueItem {
+        fileInput: JQuery;
+        constructor();
+        /**
+         * Gets an array of selected files
+         *
+         * @returns {Array<File>}
+         */
+        getValue(): Array<File>;
+        /**
+         * Resets the input field
+         */
+        resetInput(): void;
+        /**
+         * Sets the value. This is ignored since UA won't allow it.
+         *
+         * @param value
+         */
+        setValue(value: Array<File>): void;
     }
 }
 /**
@@ -5052,45 +5120,85 @@ declare module latte {
 }
 declare module latte {
     /**
-     * Presents a method for choosing options from a combobox.
-     Combo options are presented as the button's items.
-     The button's items tag value is assumed to be the value of the combobox.
+     * Label with value property
      **/
-    class ComboItem extends ValueItem {
+    class LabelValueItem extends ValueItem {
         /**
-         *
+         * Label for text displaying
          **/
-        private _options;
-        /**
-         *
-         **/
-        private _value;
-        /**
-         * Button who hosts the combo
-         **/
-        button: ButtonItem;
+        label: LabelItem;
         /**
          *
          **/
         constructor();
         /**
-         * Gets or sets the options of the combo
+         * Gets or sets the value
          **/
         /**
-         * Gets or sets the options of the combo
-         **/
-        options: any;
-        /**
-         * Gets or sets the selected value of the combo
-         **/
-        /**
-         * Gets or sets the selected value of the combo
+         * Gets or sets the value
          **/
         value: any;
+    }
+}
+declare module latte {
+    /**
+     * Represents a progress bar
+     **/
+    class ProgressItem extends ValueItem {
         /**
-         * Gets the value as a string for human reading
+         *
          **/
-        valueString: any;
+        private _maxValue;
+        /**
+         *
+         **/
+        private _minValue;
+        /**
+         *
+         **/
+        private _value;
+        /**
+         * Points to the DOM element of bar
+         **/
+        bar: JQuery;
+        /**
+         * Points to the DOM element where progress bar is contained
+         **/
+        container: JQuery;
+        /**
+         * Creates the progress item
+         **/
+        constructor();
+        /**
+         * Gets the percentage represented by min, max and value values.
+         Value ranges from 0 to 100
+         **/
+        getPercentage(): number;
+        /**
+         * Raises the layout event
+         **/
+        onLayout(animate?: boolean): void;
+        /**
+         * Gets or sets the maximum value of the progress bar
+         **/
+        /**
+         * Gets or sets the maximum value of the progress bar
+         **/
+        maxValue: number;
+        /**
+         * Gets or sets the minimum value of the progress bar
+         **/
+        /**
+         * Gets or sets the minimum value of the progress bar
+         **/
+        minValue: number;
+        /**
+         * Gets or sets the current value of the progress bar
+         **/
+        /**
+         * Gets or sets the current value of the progress bar
+         **/
+        value: number;
     }
 }
 declare module latte {
@@ -5282,114 +5390,6 @@ declare module latte {
 }
 declare module latte {
     /**
-     * Value item for files. Value of item is an array of system File objects.
-     */
-    class FileValueItem extends ValueItem {
-        fileInput: JQuery;
-        constructor();
-        /**
-         * Gets an array of selected files
-         *
-         * @returns {Array<File>}
-         */
-        getValue(): Array<File>;
-        /**
-         * Resets the input field
-         */
-        resetInput(): void;
-        /**
-         * Sets the value. This is ignored since UA won't allow it.
-         *
-         * @param value
-         */
-        setValue(value: Array<File>): void;
-    }
-}
-declare module latte {
-    /**
-     * Label with value property
-     **/
-    class LabelValueItem extends ValueItem {
-        /**
-         * Label for text displaying
-         **/
-        label: LabelItem;
-        /**
-         *
-         **/
-        constructor();
-        /**
-         * Gets or sets the value
-         **/
-        /**
-         * Gets or sets the value
-         **/
-        value: any;
-    }
-}
-declare module latte {
-    /**
-     * Represents a progress bar
-     **/
-    class ProgressItem extends ValueItem {
-        /**
-         *
-         **/
-        private _maxValue;
-        /**
-         *
-         **/
-        private _minValue;
-        /**
-         *
-         **/
-        private _value;
-        /**
-         * Points to the DOM element of bar
-         **/
-        bar: JQuery;
-        /**
-         * Points to the DOM element where progress bar is contained
-         **/
-        container: JQuery;
-        /**
-         * Creates the progress item
-         **/
-        constructor();
-        /**
-         * Gets the percentage represented by min, max and value values.
-         Value ranges from 0 to 100
-         **/
-        getPercentage(): number;
-        /**
-         * Raises the layout event
-         **/
-        onLayout(animate?: boolean): void;
-        /**
-         * Gets or sets the maximum value of the progress bar
-         **/
-        /**
-         * Gets or sets the maximum value of the progress bar
-         **/
-        maxValue: number;
-        /**
-         * Gets or sets the minimum value of the progress bar
-         **/
-        /**
-         * Gets or sets the minimum value of the progress bar
-         **/
-        minValue: number;
-        /**
-         * Gets or sets the current value of the progress bar
-         **/
-        /**
-         * Gets or sets the current value of the progress bar
-         **/
-        value: number;
-    }
-}
-declare module latte {
-    /**
      * Presents a method for choosing options from a combobox.
      Combo options are presented as the button's items.
      The button's items tag value is assumed to be the value of the combobox.
@@ -5469,6 +5469,22 @@ declare module latte {
          * Gets or sets the checked state of checkbox
          **/
         value: boolean;
+    }
+}
+declare module latte {
+    /**
+     * Allows user to pick a time
+     **/
+    class TimePickerItem extends DatePickerItem {
+        /**
+         *
+         **/
+        constructor();
+        /**
+         * Gets or sets the value of the item
+         **/
+        getValue(): TimeSpan;
+        setValue(value: TimeSpan): void;
     }
 }
 declare module latte {
@@ -5786,20 +5802,47 @@ declare module latte {
         width: number;
     }
 }
+/**
+ * Created by josemanuel on 3/22/15.
+ */
 declare module latte {
     /**
-     * Allows user to pick a time
-     **/
-    class TimePickerItem extends DatePickerItem {
+     *
+     */
+    class ItemOverlay extends Overlay {
         /**
+         * Creates the overlay
+         */
+        constructor(item: Item);
+        /**
+         * Property field
+         */
+        private _item;
+        /**
+         * Gets or sets the item of the overlay
          *
-         **/
-        constructor();
+         * @returns {Item}
+         */
         /**
-         * Gets or sets the value of the item
-         **/
-        getValue(): TimeSpan;
-        setValue(value: TimeSpan): void;
+         * Gets or sets the item of the overlay
+         *
+         * @param {Item} value
+         */
+        item: Item;
+        /**
+         * Back field for event
+         */
+        private _itemChanged;
+        /**
+         * Gets an event raised when the value of the item property changes
+         *
+         * @returns {LatteEvent}
+         */
+        itemChanged: LatteEvent;
+        /**
+         * Raises the <c>item</c> event
+         */
+        onItemChanged(): void;
     }
 }
 declare module latte {
@@ -5926,11 +5969,6 @@ declare module latte {
          * Gets or sets the text of the loader
          **/
         text: string;
-    }
-}
-declare module latte {
-    class SuggestionOverlay extends StackOverlay {
-        constructor();
     }
 }
 declare module latte {
@@ -6063,6 +6101,11 @@ declare module latte {
          * Gets the orientation of the menu, relative to element provided by <c>domElement</c>
          **/
         side: Side;
+    }
+}
+declare module latte {
+    class SuggestionOverlay extends StackOverlay {
+        constructor();
     }
 }
 declare module latte {

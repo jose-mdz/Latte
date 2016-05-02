@@ -126,6 +126,22 @@ module latte{
         }
 
         /**
+         * Returns a scaled rectangle
+         * @param width
+         */
+        scaleToHeight(height: number): Rectangle{
+            return new Rectangle(this.left, this.top, height * this.width / this.height, height);
+        }
+
+        /**
+         * Returns a scaled rectangle
+         * @param width
+         */
+        scaleToWidth(width: number): Rectangle{
+            return new Rectangle(this.left, this.top, width, width * this.height / this.width);
+        }
+
+        /**
          * Returns a string describing the rectangle
          **/
         toString(): string{
@@ -218,6 +234,16 @@ module latte{
 
 
         }
+
+        /**
+         * Gets the size of the rectangle
+         *
+         * @returns {Size}
+         */
+        get size():Size {
+            return new Size(this.width, this.height);
+        }
+
 
         get tag(): any{
             return this._tag;

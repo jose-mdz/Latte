@@ -276,6 +276,35 @@
 .latte-item.conversation > .new-comment > .latte-item.textbox {
     float: none;
 }/* 
+    Document   : FormItem
+    Created on : Feb 3, 2013, 8:52:46 AM
+    Author     : menendezpoo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.latte-item.form {
+    padding: 20px;
+
+}
+
+.latte-item.form.with-face{
+    background: white;
+    border: solid 1px #dedede;
+    border-radius: 5px;
+}
+
+.latte-item.form > .container > .latte-item{
+    margin-bottom: 15px;
+}
+
+.latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox{
+    float: none;
+}
+
+.latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox input,
+.latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox textarea{
+    width: 100%;
+}/* 
     Document   : DateItem
     Created on : Oct 4, 2012, 8:09:10 PM
     Author     : menendezpoo
@@ -330,35 +359,6 @@
     border-color: #2782F3;
     background-color: #EAEFF8;
     background-color: rgba(87, 141, 217, 0.1);
-}/* 
-    Document   : FormItem
-    Created on : Feb 3, 2013, 8:52:46 AM
-    Author     : menendezpoo
-    Description:
-        Purpose of the stylesheet follows.
-*/
-.latte-item.form {
-    padding: 20px;
-
-}
-
-.latte-item.form.with-face{
-    background: white;
-    border: solid 1px #dedede;
-    border-radius: 5px;
-}
-
-.latte-item.form > .container > .latte-item{
-    margin-bottom: 15px;
-}
-
-.latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox{
-    float: none;
-}
-
-.latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox input,
-.latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox textarea{
-    width: 100%;
 }/* 
     Document   : HtmlEditorItem
     Created on : Feb 6, 2013, 3:34:32 PM
@@ -595,6 +595,22 @@ body.html-editor td{
 .latte-item.toolbar.tab.content-at-bottom   { border-bottom:    solid 1px #ccc; }
 .latte-item.toolbar.tab.content-at-left     { border-left:      solid 1px #ccc; }
 .latte-item.toolbar.tab.content-at-right    { border-right:     solid 1px #ccc; }/* 
+    Document   : ViewItem
+    Created on : Jan 24, 2013, 9:28:40 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.view{
+    float: none;
+    position: relative;
+    min-height: 10px;
+}
+
+.latte-item.view > .latte-view{
+    
+}/* 
     Document   : Toolbar
     Created on : Sep 10, 2012, 11:01:15 AM
     Author     : josemanuel
@@ -697,22 +713,6 @@ body.html-editor td{
     background: linear-gradient(top,  #ffffff 0%,#f9fafb 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f9fafb', GradientType=0 );
 }/* 
-    Document   : ViewItem
-    Created on : Jan 24, 2013, 9:28:40 AM
-    Author     : josemanuel
-    Description:
-        Purpose of the stylesheet follows.
-*/
-
-.latte-item.view{
-    float: none;
-    position: relative;
-    min-height: 10px;
-}
-
-.latte-item.view > .latte-view{
-    
-}/* 
     Document   : WidgetItem
     Created on : Sep 24, 2012, 10:20:50 AM
     Author     : josemanuel
@@ -808,76 +808,6 @@ body.html-editor td{
     background: -ms-linear-gradient(top,  #E8F3FF 0%,#C5DFF8 100%); /* IE10+ */
     background: linear-gradient(top,  #E8F3FF 0%,#C5DFF8 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#E8F3FF', endColorstr='#C5DFF8',GradientType=0 ); /* IE6-9 */
-}/* 
-    Document   : CommentItem
-    Created on : Sep 14, 2012, 10:27:16 AM
-    Author     : josemanuel
-    Description:
-        Purpose of the stylesheet follows.
-*/
-
-.latte-item.comment{
-    /*padding-top: 7px;
-    padding-bottom: 5px;*/
-    position: relative;
-    margin-bottom: 2px;
-    overflow: hidden;
-}
-
-.latte-item.comment > .blinker{
-    background: #FFFAD7;
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-}
-
-.latte-item.comment > .comment-content{
-    position: relative;
-    top: 0;
-    left: 0;
-}
-
-.latte-item.comment > .comment-content > .icon-side {
-    margin: 5px;
-    margin-top: 0;
-    width: 32px;
-    float: left;
-}
-
-.latte-item.comment > .comment-content > .comment-side {
-    margin-left: 45px;
-    margin-right: 5px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-
-.latte-item.comment > .comment-content > .comment-side > .user{
-    display: inline;
-}
-
-.latte-item.comment > .comment-content > .comment-side > .user,
-.latte-item.comment > .comment-content > .comment-side  a
-{
-    color: #15C;
-    margin-right: 3px;
-    text-decoration: none;
-}
-
-.latte-item.comment > .comment-content > .comment-side > .user:hover,
-.latte-item.comment > .comment-content > .comment-side  a:hover
-{
-    text-decoration: underline;
-}
-
-.latte-item.comment > .comment-content > .comment-side > .date {
-    color: #bbb;
-}
-
-.latte-item.comment > .comment-content > .comment-side > .text {
-    white-space: pre-wrap;
 }/* 
     Document   : LabelItem
     Created on : Sep 24, 2012, 10:33:29 AM
@@ -989,6 +919,76 @@ body.html-editor td{
 .latte-item.selectable.calendar.selected{
     /*box-shadow: 0 0 0 2px black;*/
 }/* 
+    Document   : CommentItem
+    Created on : Sep 14, 2012, 10:27:16 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.comment{
+    /*padding-top: 7px;
+    padding-bottom: 5px;*/
+    position: relative;
+    margin-bottom: 2px;
+    overflow: hidden;
+}
+
+.latte-item.comment > .blinker{
+    background: #FFFAD7;
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.latte-item.comment > .comment-content{
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+.latte-item.comment > .comment-content > .icon-side {
+    margin: 5px;
+    margin-top: 0;
+    width: 32px;
+    float: left;
+}
+
+.latte-item.comment > .comment-content > .comment-side {
+    margin-left: 45px;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.latte-item.comment > .comment-content > .comment-side > .user{
+    display: inline;
+}
+
+.latte-item.comment > .comment-content > .comment-side > .user,
+.latte-item.comment > .comment-content > .comment-side  a
+{
+    color: #15C;
+    margin-right: 3px;
+    text-decoration: none;
+}
+
+.latte-item.comment > .comment-content > .comment-side > .user:hover,
+.latte-item.comment > .comment-content > .comment-side  a:hover
+{
+    text-decoration: underline;
+}
+
+.latte-item.comment > .comment-content > .comment-side > .date {
+    color: #bbb;
+}
+
+.latte-item.comment > .comment-content > .comment-side > .text {
+    white-space: pre-wrap;
+}/* 
     Document   : ListViewItem
     Created on : Oct 3, 2012, 11:24:42 AM
     Author     : josemanuel
@@ -1016,32 +1016,6 @@ body.html-editor td{
 
 .latte-item.list > .columns > div .label-content{
     margin-top: 0px;
-}/* 
-    Document   : x
-    Created on : Sep 27, 2012, 8:53:49 PM
-    Author     : josemanuel
-    Description:
-        Purpose of the stylesheet follows.
-*/
-
-.latte-item.list.selectable,
-.latte-item.tree-item  > .selectable{
-    border: solid 1px transparent;
-    float: none;
-    padding: 10px;
-    cursor: pointer;
-}
-
-.latte-item.selectable.hover,
-.latte-item.tree-item > .selectable.hover, .selectable.hover{
-    border-color: #D1D1D1;
-    background: #EFEFEF;
-}
-
-.latte-item.selectable.selected,
-.latte-item.tree-item > .selectable.selected, .selectable.selected{
-    border-color: #93A0B3;
-    background: #E8F3FF;
 }.latte-item.selectable.with-label{
     padding: 10px;
 }/* 
@@ -1085,6 +1059,32 @@ body.html-editor td{
 .latte-item.tree-item .selectable .text{
     position: static;
     white-space: pre;
+}/* 
+    Document   : x
+    Created on : Sep 27, 2012, 8:53:49 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.list.selectable,
+.latte-item.tree-item  > .selectable{
+    border: solid 1px transparent;
+    float: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.latte-item.selectable.hover,
+.latte-item.tree-item > .selectable.hover, .selectable.hover{
+    border-color: #D1D1D1;
+    background: #EFEFEF;
+}
+
+.latte-item.selectable.selected,
+.latte-item.tree-item > .selectable.selected, .selectable.selected{
+    border-color: #93A0B3;
+    background: #E8F3FF;
 }/* 
     Document   : CheckboxItem
     Created on : Feb 1, 2013, 2:16:38 PM
@@ -1334,6 +1334,16 @@ body.html-editor td{
 .latte-overlay.menu > .latte-item{
     display: block;
     float: none;
+}.latte-overlay.suggestion{
+    font-family: "Lucida Grande", sans-serif;
+    font-size: 11px;
+    border: solid 1px #ccc;
+    background: white;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+    overflow: auto;
+}
+.latte-overlay.suggestion .latte-item.separator{
+    border-top: solid 1px silver;
 }/**
  * Overlay
  */
@@ -1345,16 +1355,6 @@ body.html-editor td{
     position: fixed;
     left: 100px; /* Default position. Should be altered by JS */
     top: 100px; /* Default position. Should be altered by JS */
-}.latte-overlay.suggestion{
-    font-family: "Lucida Grande", sans-serif;
-    font-size: 11px;
-    border: solid 1px #ccc;
-    background: white;
-    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
-    overflow: auto;
-}
-.latte-overlay.suggestion .latte-item.separator{
-    border-top: solid 1px silver;
 }
 .latte-view {
     position: absolute;

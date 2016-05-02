@@ -15,6 +15,8 @@ class DataLatteRequest {
      */
     public function __construct() {
 
+        DataLatteModule::loadAutoLoads();
+
         if(isset($_POST['calls'])){
             self::processAjaxMessage($_POST['calls']);
         }else if(isset($_GET['calls'])){

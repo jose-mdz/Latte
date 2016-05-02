@@ -105,6 +105,21 @@ class DataLatteModule {
     }
 
     /**
+     * Loads the modules marked as Auto-Load, by using $this->addToAutoload
+     */
+    public static function loadAutoLoads(){
+        $autoloads = array();
+
+        if(isset($_SESSION['latte-module-autoload'])){
+            $autoloads = explode('|', $_SESSION['latte-module-autoload']);
+        }
+
+        foreach ($autoloads as $module){
+            DataLatteModule::memoryLoad($module)->loadConnection();
+        }
+    }
+
+    /**
      * Loads the module and returns its tags for including in Document
      *
      * @param $moduleName
@@ -226,7 +241,7 @@ class DataLatteModule {
     }
     //endregion
 
-    //region Private Methods
+    //region  Methods
 
     /**
      * Returns an array with all strings of all languages
@@ -264,6 +279,23 @@ class DataLatteModule {
         }
         
         return $response;
+    }
+
+    /**
+     * Adds the module to the autoload list of user
+     */
+    public function addToAutoload(){
+        $autoloads = array();
+
+        if(isset($_SESSION['latte-module-autoload'])){
+            $autoloads = explode('|', $_SESSION['latte-module-autoload']);
+        }
+
+        if(!in_array($this->name, $autoloads)){
+            $autoloads[] = $this->name;
+        }
+
+        $_SESSION['latte-module-autoload'] = implode('|', $autoloads);
     }
     
     /**
@@ -397,7 +429,6 @@ class DataLatteModule {
         return $tags;
 
     }
-
 
     /**
      * Loads the module into memory, using the specified language

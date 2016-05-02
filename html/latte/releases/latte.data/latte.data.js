@@ -6,6 +6,51 @@ var __extends = (this && this.__extends) || function (d, b) {
 var latte;
 (function (latte) {
     /**
+     * Saves full lists of records in Memory
+     *
+     * <example>
+     * // Load cache of users
+     * Cache.load('User', 'users');
+     *
+     * // After load, now we can use the users cache
+     * // Cache.users is a DataRecordCollection object
+     * for(var i = 0; i < Cache.users.count; i++)
+     *  console.log(Cache.users.item(i));
+     * </example>
+     *
+     */
+    var Cache = (function () {
+        function Cache() {
+        }
+        /**
+         * Loads a cache of the specified name into cache itself.
+         * @param recordType
+         * @param name
+         * @param callback
+         * @returns {null}
+         */
+        Cache.prototype.load = function (recordType, name, callback) {
+            /*
+            DataRecord.fromListing(recordType, '/', {}, function(stages){
+
+                // Add users to cache
+                latte.Cache[name] = new latte.DataRecordCollection();
+                latte.Cache[name].add(stages);
+
+                // Call callback
+                if(_isFunction(callback))
+                    callback.call(this);
+            });*/
+            if (callback === void 0) { callback = null; }
+            return null;
+        };
+        return Cache;
+    }());
+    latte.Cache = Cache;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
      * Represents a DataRecord on App
      **/
     var DataRecord = (function () {
@@ -428,51 +473,6 @@ var latte;
         return DataRecordCollection;
     }(latte.Collection));
     latte.DataRecordCollection = DataRecordCollection;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
-     * Saves full lists of records in Memory
-     *
-     * <example>
-     * // Load cache of users
-     * Cache.load('User', 'users');
-     *
-     * // After load, now we can use the users cache
-     * // Cache.users is a DataRecordCollection object
-     * for(var i = 0; i < Cache.users.count; i++)
-     *  console.log(Cache.users.item(i));
-     * </example>
-     *
-     */
-    var Cache = (function () {
-        function Cache() {
-        }
-        /**
-         * Loads a cache of the specified name into cache itself.
-         * @param recordType
-         * @param name
-         * @param callback
-         * @returns {null}
-         */
-        Cache.prototype.load = function (recordType, name, callback) {
-            /*
-            DataRecord.fromListing(recordType, '/', {}, function(stages){
-
-                // Add users to cache
-                latte.Cache[name] = new latte.DataRecordCollection();
-                latte.Cache[name].add(stages);
-
-                // Call callback
-                if(_isFunction(callback))
-                    callback.call(this);
-            });*/
-            if (callback === void 0) { callback = null; }
-            return null;
-        };
-        return Cache;
-    }());
-    latte.Cache = Cache;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -1740,9 +1740,9 @@ var latte;
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/support/ts-include/latte.d.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/support/ts-include/latte.data.strings.d.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/support/ts-include/latte.strings.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/Cache.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/DataRecord.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/DataRecordCollection.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/Cache.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/DataSet.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/DataSetColumn.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/DataSetRow.ts" />

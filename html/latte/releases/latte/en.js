@@ -90,3 +90,4 @@ strings.SdaysShort = "%sd";
 strings.oneWeekShort = "1w";
 strings.SweeksShort = "%sw";
 strings.tomorrow = "Tomorrow";
+strings.today = "Today";

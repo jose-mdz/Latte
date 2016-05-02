@@ -1014,6 +1014,219 @@ var latte;
     }());
     latte.Ajax = Ajax;
 })(latte || (latte = {}));
+/**
+ * Created by josemanuel on 2/6/14.
+ */
+var latte;
+(function (latte) {
+    /**
+     *
+     */
+    var Culture = (function () {
+        //endregion
+        /**
+         *
+         */
+        function Culture() {
+            //endregion
+            //region Fields
+            /**
+             * Short date format
+             */
+            this.shortDateFormat = 'dd/MM/yyyy';
+            /**
+             * Long date format
+             */
+            this.longDateFormat = 'dddd, d de MMMM de YYYY';
+            /**
+             * Amount of decimals to show in currency format
+             */
+            this.currencyDecimals = 2;
+            /**
+             * Separator of decimals for currency
+             */
+            this.numberDecimalsSeparator = '.';
+            /**
+             * Thousands separator for currency
+             */
+            this.numberThousandsSeparator = ',';
+            /**
+             * Symbol to use in currency
+             */
+            this.currencySymbol = '$';
+        }
+        Object.defineProperty(Culture, "current", {
+            /**
+             * Gets or sets the current culture of the system
+             *
+             * @returns {Culture}
+             */
+            get: function () {
+                if (!Culture._current) {
+                    Culture._current = Culture.enUs;
+                }
+                return this._current;
+            },
+            /**
+             * Gets or sets the current culture of the system
+             *
+             * @param {Culture} value
+             */
+            set: function (value) {
+                this._current = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Culture, "esMx", {
+            /**
+             * Gets the Español-Mexico Culture
+             *
+             * @returns {Culture}
+             */
+            get: function () {
+                if (!Culture._esMx) {
+                    var _zeroPad = function (n) { return n <= 9 ? '0' + n.toString() : n.toString(); };
+                    Culture._esMx = new Culture();
+                    Culture._esMx.currencyDecimals = 2;
+                    Culture._esMx.numberDecimalsSeparator = '.';
+                    Culture._esMx.numberThousandsSeparator = ',';
+                    Culture._esMx.currencySymbol = '$';
+                    Culture._esMx.shortDateFormat = 'dd/MMM/yyyy';
+                    Culture._esMx.longDateFormat = 'dddd, d de MMMM de yyyy';
+                    Culture._esMx.onFormatShortDate = function (d) {
+                        return latte.sprintf("%s/%s/%s", _zeroPad(d.day), d.monthStringShort, d.year);
+                    };
+                    Culture._esMx.onFormatLongDate = function (d) {
+                        return latte.sprintf("%s, %s de %s de %s", d.dayOfWeekString, d.day, d.monthString, d.year);
+                    };
+                }
+                return Culture._esMx;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Culture, "enUs", {
+            /**
+             * Gets the English-USA Culture
+             *
+             * @returns {Culture}
+             */
+            get: function () {
+                if (!Culture._enUs) {
+                    var _zeroPad = function (n) { return n <= 9 ? '0' + n.toString() : n.toString(); };
+                    Culture._enUs = new Culture();
+                    Culture._enUs.currencyDecimals = 2;
+                    Culture._enUs.numberDecimalsSeparator = '.';
+                    Culture._enUs.numberThousandsSeparator = ',';
+                    Culture._enUs.currencySymbol = '$';
+                    Culture._enUs.shortDateFormat = 'MMM/dd/yyyy';
+                    Culture._enUs.longDateFormat = 'dddd, MMMM d yyyy';
+                    Culture._enUs.onFormatShortDate = function (d) {
+                        return latte.sprintf("%s/%s/%s", d.monthStringShort, _zeroPad(d.day), d.year);
+                    };
+                    Culture._enUs.onFormatLongDate = function (d) {
+                        return latte.sprintf("%s, %s %s %s", d.dayOfWeekString, d.monthString, d.day, d.year);
+                    };
+                }
+                return Culture._enUs;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Formats currency using the current culture
+         * @param n
+         * @returns {string}
+         */
+        Culture.formatCurrency = function (n) {
+            return Culture.current.onFormatCurrency(n);
+        };
+        /**
+         * Returns the date as a short format
+         * @param d
+         */
+        Culture.formatShortDate = function (d) {
+            return Culture.current.onFormatShortDate(d);
+        };
+        /**
+         * Returns the date as a short format
+         * @param d
+         */
+        Culture.formatLongDate = function (d) {
+            return Culture.current.onFormatLongDate(d);
+        };
+        /**
+         * Formats a number using the current Culture
+         * @param n
+         * @param decimals
+         * @param symbol
+         * @returns {string}
+         */
+        Culture.formatNumber = function (n, decimals, symbol) {
+            if (decimals === void 0) { decimals = 0; }
+            if (symbol === void 0) { symbol = ''; }
+            return Culture.current.onFormatNumber(n, decimals, symbol);
+        };
+        //region Private Methods
+        //endregion
+        //region Methods
+        /**
+         * Returns the specified number as a currency
+         * @param n
+         */
+        Culture.prototype.onFormatCurrency = function (n) {
+            return this.onFormatNumber(n, this.currencyDecimals, this.currencySymbol);
+        };
+        /**
+         * Formats the specified number
+         * @param n
+         * @param decimals
+         * @param symbol
+         * @returns {string}
+         */
+        Culture.prototype.onFormatNumber = function (n, decimals, symbol) {
+            if (decimals === void 0) { decimals = 0; }
+            if (symbol === void 0) { symbol = ''; }
+            var point = this.numberDecimalsSeparator; //if no decimal separator is passed we use the dot as default decimal separator (we MUST use a decimal separator)
+            //if you don't want to use a thousands separator you can pass empty string as thousands_sep value
+            var separator = this.numberThousandsSeparator;
+            var sign = (n < 0) ? '-' : '';
+            //extracting the absolute value of the integer part of the number and converting to string
+            var round = parseInt(Math.abs(n).toFixed(decimals)) + '';
+            var length = round.length;
+            var offset = ((length) > 3) ? length % 3 : 0;
+            var a = sign;
+            var b = symbol;
+            var c = (offset ? round.substr(0, offset) + separator : '');
+            var d = round.substr(offset).replace(/(\d{3})(?=\d)/g, "$1" + separator);
+            //[Hack]
+            var e = (decimals ? point + (Math.abs(n) - parseInt(round)).toFixed(decimals).slice(2) : '');
+            return a + b + c + d + e;
+        };
+        /**
+         * Returns the date as a long format
+         * @param d
+         */
+        Culture.prototype.onFormatLongDate = function (d) {
+            return "NotImplemented";
+        };
+        /**
+         * Returns the date as a short format
+         * @param d
+         */
+        Culture.prototype.onFormatShortDate = function (d) {
+            return "NotImplemented";
+        };
+        //region Static
+        /**
+         * Property field
+         */
+        Culture._current = null;
+        return Culture;
+    }());
+    latte.Culture = Culture;
+})(latte || (latte = {}));
 var latte;
 (function (latte) {
     /**
@@ -1627,218 +1840,83 @@ var latte;
     }());
     latte.Color = Color;
 })(latte || (latte = {}));
-/**
- * Created by josemanuel on 2/6/14.
- */
 var latte;
 (function (latte) {
+    var EventHandler = (function () {
+        function EventHandler(handler, context) {
+            this.handler = handler;
+            this.context = context;
+        }
+        return EventHandler;
+    }());
+    latte.EventHandler = EventHandler;
     /**
-     *
+     * Manages events and event handlers
      */
-    var Culture = (function () {
-        //endregion
+    var LatteEvent = (function () {
         /**
          *
+         * @param context Context where
          */
-        function Culture() {
-            //endregion
-            //region Fields
-            /**
-             * Short date format
-             */
-            this.shortDateFormat = 'dd/MM/yyyy';
-            /**
-             * Long date format
-             */
-            this.longDateFormat = 'dddd, d de MMMM de YYYY';
-            /**
-             * Amount of decimals to show in currency format
-             */
-            this.currencyDecimals = 2;
-            /**
-             * Separator of decimals for currency
-             */
-            this.numberDecimalsSeparator = '.';
-            /**
-             * Thousands separator for currency
-             */
-            this.numberThousandsSeparator = ',';
-            /**
-             * Symbol to use in currency
-             */
-            this.currencySymbol = '$';
+        function LatteEvent(context) {
+            this.context = context;
+            this.handlers = [];
         }
-        Object.defineProperty(Culture, "current", {
+        Object.defineProperty(LatteEvent.prototype, "handlerAdded", {
             /**
-             * Gets or sets the current culture of the system
+             * Gets the event for handler adding
              *
-             * @returns {Culture}
+             * @returns {LatteEvent}
              */
             get: function () {
-                if (!Culture._current) {
-                    Culture._current = Culture.enUs;
+                if (!this._handlerAdded) {
+                    this._handlerAdded = new latte.LatteEvent(this);
                 }
-                return this._current;
-            },
-            /**
-             * Gets or sets the current culture of the system
-             *
-             * @param {Culture} value
-             */
-            set: function (value) {
-                this._current = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Culture, "esMx", {
-            /**
-             * Gets the Español-Mexico Culture
-             *
-             * @returns {Culture}
-             */
-            get: function () {
-                if (!Culture._esMx) {
-                    var _zeroPad = function (n) { return n <= 9 ? '0' + n.toString() : n.toString(); };
-                    Culture._esMx = new Culture();
-                    Culture._esMx.currencyDecimals = 2;
-                    Culture._esMx.numberDecimalsSeparator = '.';
-                    Culture._esMx.numberThousandsSeparator = ',';
-                    Culture._esMx.currencySymbol = '$';
-                    Culture._esMx.shortDateFormat = 'dd/MMM/yyyy';
-                    Culture._esMx.longDateFormat = 'dddd, d de MMMM de yyyy';
-                    Culture._esMx.onFormatShortDate = function (d) {
-                        return latte.sprintf("%s/%s/%s", _zeroPad(d.day), d.monthStringShort, d.year);
-                    };
-                    Culture._esMx.onFormatLongDate = function (d) {
-                        return latte.sprintf("%s, %s de %s de %s", d.dayOfWeekString, d.day, d.monthString, d.year);
-                    };
-                }
-                return Culture._esMx;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Culture, "enUs", {
-            /**
-             * Gets the English-USA Culture
-             *
-             * @returns {Culture}
-             */
-            get: function () {
-                if (!Culture._enUs) {
-                    var _zeroPad = function (n) { return n <= 9 ? '0' + n.toString() : n.toString(); };
-                    Culture._enUs = new Culture();
-                    Culture._enUs.currencyDecimals = 2;
-                    Culture._enUs.numberDecimalsSeparator = '.';
-                    Culture._enUs.numberThousandsSeparator = ',';
-                    Culture._enUs.currencySymbol = '$';
-                    Culture._enUs.shortDateFormat = 'MMM/dd/yyyy';
-                    Culture._enUs.longDateFormat = 'dddd, MMMM d yyyy';
-                    Culture._enUs.onFormatShortDate = function (d) {
-                        return latte.sprintf("%s/%s/%s", d.monthStringShort, _zeroPad(d.day), d.year);
-                    };
-                    Culture._enUs.onFormatLongDate = function (d) {
-                        return latte.sprintf("%s, %s %s %s", d.dayOfWeekString, d.monthString, d.day, d.year);
-                    };
-                }
-                return Culture._enUs;
+                return this._handlerAdded;
             },
             enumerable: true,
             configurable: true
         });
         /**
-         * Formats currency using the current culture
-         * @param n
-         * @returns {string}
+         * Adds a handler to the event
+         * @param handler
          */
-        Culture.formatCurrency = function (n) {
-            return Culture.current.onFormatCurrency(n);
+        LatteEvent.prototype.add = function (handler, context) {
+            //            var c = context === null ? this.context : context;
+            if (context === void 0) { context = null; }
+            this.handlers.push(new EventHandler(handler, context));
+            this.onHandlerAdded(handler);
         };
         /**
-         * Returns the date as a short format
-         * @param d
+         * Raises the <c>handlerAdded</c> event
+         * @param handler
          */
-        Culture.formatShortDate = function (d) {
-            return Culture.current.onFormatShortDate(d);
+        LatteEvent.prototype.onHandlerAdded = function (handler) {
+            this.handlerAdded.raise(handler);
         };
         /**
-         * Returns the date as a short format
-         * @param d
+         * Raises the actual event handlers.
+         * @param parameter
+         * @returns {*}
          */
-        Culture.formatLongDate = function (d) {
-            return Culture.current.onFormatLongDate(d);
+        LatteEvent.prototype.raise = function () {
+            var parameter = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                parameter[_i - 0] = arguments[_i];
+            }
+            var args = arguments;
+            // Call each handler
+            for (var i = 0; i < this.handlers.length; i++) {
+                var evh = this.handlers[i];
+                var result = evh.handler.apply(evh.context || this.context, args);
+                if (typeof result !== 'undefined') {
+                    return result;
+                }
+            }
         };
-        /**
-         * Formats a number using the current Culture
-         * @param n
-         * @param decimals
-         * @param symbol
-         * @returns {string}
-         */
-        Culture.formatNumber = function (n, decimals, symbol) {
-            if (decimals === void 0) { decimals = 0; }
-            if (symbol === void 0) { symbol = ''; }
-            return Culture.current.onFormatNumber(n, decimals, symbol);
-        };
-        //region Private Methods
-        //endregion
-        //region Methods
-        /**
-         * Returns the specified number as a currency
-         * @param n
-         */
-        Culture.prototype.onFormatCurrency = function (n) {
-            return this.onFormatNumber(n, this.currencyDecimals, this.currencySymbol);
-        };
-        /**
-         * Formats the specified number
-         * @param n
-         * @param decimals
-         * @param symbol
-         * @returns {string}
-         */
-        Culture.prototype.onFormatNumber = function (n, decimals, symbol) {
-            if (decimals === void 0) { decimals = 0; }
-            if (symbol === void 0) { symbol = ''; }
-            var point = this.numberDecimalsSeparator; //if no decimal separator is passed we use the dot as default decimal separator (we MUST use a decimal separator)
-            //if you don't want to use a thousands separator you can pass empty string as thousands_sep value
-            var separator = this.numberThousandsSeparator;
-            var sign = (n < 0) ? '-' : '';
-            //extracting the absolute value of the integer part of the number and converting to string
-            var round = parseInt(Math.abs(n).toFixed(decimals)) + '';
-            var length = round.length;
-            var offset = ((length) > 3) ? length % 3 : 0;
-            var a = sign;
-            var b = symbol;
-            var c = (offset ? round.substr(0, offset) + separator : '');
-            var d = round.substr(offset).replace(/(\d{3})(?=\d)/g, "$1" + separator);
-            //[Hack]
-            var e = (decimals ? point + (Math.abs(n) - parseInt(round)).toFixed(decimals).slice(2) : '');
-            return a + b + c + d + e;
-        };
-        /**
-         * Returns the date as a long format
-         * @param d
-         */
-        Culture.prototype.onFormatLongDate = function (d) {
-            return "NotImplemented";
-        };
-        /**
-         * Returns the date as a short format
-         * @param d
-         */
-        Culture.prototype.onFormatShortDate = function (d) {
-            return "NotImplemented";
-        };
-        //region Static
-        /**
-         * Property field
-         */
-        Culture._current = null;
-        return Culture;
+        return LatteEvent;
     }());
-    latte.Culture = Culture;
+    latte.LatteEvent = LatteEvent;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -2438,84 +2516,6 @@ var latte;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
-    var EventHandler = (function () {
-        function EventHandler(handler, context) {
-            this.handler = handler;
-            this.context = context;
-        }
-        return EventHandler;
-    }());
-    latte.EventHandler = EventHandler;
-    /**
-     * Manages events and event handlers
-     */
-    var LatteEvent = (function () {
-        /**
-         *
-         * @param context Context where
-         */
-        function LatteEvent(context) {
-            this.context = context;
-            this.handlers = [];
-        }
-        Object.defineProperty(LatteEvent.prototype, "handlerAdded", {
-            /**
-             * Gets the event for handler adding
-             *
-             * @returns {LatteEvent}
-             */
-            get: function () {
-                if (!this._handlerAdded) {
-                    this._handlerAdded = new latte.LatteEvent(this);
-                }
-                return this._handlerAdded;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * Adds a handler to the event
-         * @param handler
-         */
-        LatteEvent.prototype.add = function (handler, context) {
-            //            var c = context === null ? this.context : context;
-            if (context === void 0) { context = null; }
-            this.handlers.push(new EventHandler(handler, context));
-            this.onHandlerAdded(handler);
-        };
-        /**
-         * Raises the <c>handlerAdded</c> event
-         * @param handler
-         */
-        LatteEvent.prototype.onHandlerAdded = function (handler) {
-            this.handlerAdded.raise(handler);
-        };
-        /**
-         * Raises the actual event handlers.
-         * @param parameter
-         * @returns {*}
-         */
-        LatteEvent.prototype.raise = function () {
-            var parameter = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                parameter[_i - 0] = arguments[_i];
-            }
-            var args = arguments;
-            // Call each handler
-            for (var i = 0; i < this.handlers.length; i++) {
-                var evh = this.handlers[i];
-                var result = evh.handler.apply(evh.context || this.context, args);
-                if (typeof result !== 'undefined') {
-                    return result;
-                }
-            }
-        };
-        return LatteEvent;
-    }());
-    latte.LatteEvent = LatteEvent;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
     /**
      * Exception thrown when an argument of the function was invalid.
      *
@@ -2562,46 +2562,6 @@ var latte;
         return InvalidArgumentEx;
     }(latte.Ex));
     latte.InvalidArgumentEx = InvalidArgumentEx;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
-     * Exception thrown when an argument of the function was invalid.
-     *
-     * Usage:
-     * <example>
-     *
-     * function pow(a){
-     *
-     *      throw new latte.InvalidCallEx('pow')
-     *
-     * }
-     *
-     * </example>
-     */
-    var InvalidCallEx = (function (_super) {
-        __extends(InvalidCallEx, _super);
-        /**
-         * Creates the Exception
-         * @param method
-         */
-        function InvalidCallEx(method) {
-            if (method === void 0) { method = null; }
-            _super.call(this);
-            this.method = method;
-        }
-        /**
-         * Returns a string explaining the exception
-         *
-         * @returns {string}
-         */
-        InvalidCallEx.prototype.toString = function () {
-            return "Invalid call: " +
-                (this.method ? this.method : '<no method specified>');
-        };
-        return InvalidCallEx;
-    }(latte.Ex));
-    latte.InvalidCallEx = InvalidCallEx;
 })(latte || (latte = {}));
 /**
  * Created by josemanuel on 5/26/15.
@@ -2764,6 +2724,269 @@ var latte;
     }());
     latte.LoadInfo = LoadInfo;
 })(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
+     * Exception thrown when an argument of the function was invalid.
+     *
+     * Usage:
+     * <example>
+     *
+     * function pow(a){
+     *
+     *      throw new latte.InvalidCallEx('pow')
+     *
+     * }
+     *
+     * </example>
+     */
+    var InvalidCallEx = (function (_super) {
+        __extends(InvalidCallEx, _super);
+        /**
+         * Creates the Exception
+         * @param method
+         */
+        function InvalidCallEx(method) {
+            if (method === void 0) { method = null; }
+            _super.call(this);
+            this.method = method;
+        }
+        /**
+         * Returns a string explaining the exception
+         *
+         * @returns {string}
+         */
+        InvalidCallEx.prototype.toString = function () {
+            return "Invalid call: " +
+                (this.method ? this.method : '<no method specified>');
+        };
+        return InvalidCallEx;
+    }(latte.Ex));
+    latte.InvalidCallEx = InvalidCallEx;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
+     * Reprsents a Rectangle
+     **/
+    var Rectangle = (function () {
+        /**
+         * Creates a rectangle with the specified left, top, width and height.
+         **/
+        function Rectangle(left, top, width, height) {
+            if (left === void 0) { left = 0; }
+            if (top === void 0) { top = 0; }
+            if (width === void 0) { width = 0; }
+            if (height === void 0) { height = 0; }
+            this.top = top;
+            this.left = left;
+            this.width = width;
+            this.height = height;
+        }
+        /**
+         * Creates a rectangle with the specified left, right, top and bottom.
+         **/
+        Rectangle.fromLRTB = function (left, right, top, bottom) {
+            var r = new Rectangle(left, top);
+            r.right = right;
+            r.bottom = bottom;
+            return r;
+        };
+        /**
+         * Returns the result of centering this into the specified container
+         **/
+        Rectangle.prototype.center = function (container) {
+            var c = new Rectangle(container.left + (container.width - this.width) / 2, container.top + (container.height - this.height) / 2, this.width, this.height);
+            return c;
+        };
+        /**
+         * Gets a value indicating if the specified point is contained
+         **/
+        Rectangle.prototype.contains = function (x, y) {
+            return this._left <= x && this.right >= x
+                && this._top <= y && this.bottom >= y;
+        };
+        /**
+         * Gets a value indicating if the rectangle is contained inside this rectangle
+         **/
+        Rectangle.prototype.containsRectangle = function (rectangle) {
+            return this.contains(rectangle.left, rectangle.top)
+                && this.contains(rectangle.right, rectangle.bottom);
+        };
+        /**
+         * Returns the result of inflating the rectangle vertically and horizontally on each edge.
+         **/
+        Rectangle.prototype.inflate = function (horizontal, vertical) {
+            // Check arguments
+            if (!latte._isNumber(horizontal))
+                throw new latte.InvalidArgumentEx('horizontal', horizontal);
+            if (!latte._isNumber(vertical))
+                throw new latte.InvalidArgumentEx('vertical', vertical);
+            return Rectangle.fromLRTB(this.left - horizontal, this.right + horizontal, this.top - vertical, this.bottom + vertical);
+        };
+        /**
+         * Returns the rectangle result of intersecting this with passed rectangle
+         **/
+        Rectangle.prototype.intersection = function (rectangle) {
+            return Rectangle.fromLRTB(Math.max(this.left, rectangle.left), Math.min(this.right, rectangle.right), Math.max(this.top, rectangle.top), Math.min(this.bottom, rectangle.bottom));
+        };
+        /**
+         * Gets a value indicating if the rectangle intersects specified rectangle
+         **/
+        Rectangle.prototype.intersects = function (rectangle) {
+            return this.contains(rectangle.left, rectangle.top)
+                || this.contains(rectangle.right, rectangle.top)
+                || this.contains(rectangle.right, rectangle.bottom)
+                || this.contains(rectangle.left, rectangle.bottom);
+        };
+        /**
+         * Returns a scaled rectangle
+         * @param width
+         */
+        Rectangle.prototype.scaleToHeight = function (height) {
+            return new Rectangle(this.left, this.top, height * this.width / this.height, height);
+        };
+        /**
+         * Returns a scaled rectangle
+         * @param width
+         */
+        Rectangle.prototype.scaleToWidth = function (width) {
+            return new Rectangle(this.left, this.top, width, width * this.height / this.width);
+        };
+        /**
+         * Returns a string describing the rectangle
+         **/
+        Rectangle.prototype.toString = function () {
+            return "Rectangle: " + [this._left, this._top, this._width, this._height].join(', ');
+        };
+        /**
+         * Gets a rectangle representing the union of this rectangle and the passed one
+         **/
+        Rectangle.prototype.union = function (rectangle) {
+            return Rectangle.fromLRTB(Math.min(this.left, rectangle.left), Math.max(this.right, rectangle.right), Math.min(this.top, rectangle.top), Math.max(this.bottom, rectangle.bottom));
+        };
+        Object.defineProperty(Rectangle.prototype, "bottom", {
+            /**
+             * Gets or sets the right side of the rectangle
+             **/
+            get: function () {
+                return this._top + this._height;
+            },
+            /**
+             * Gets or sets the right side of the rectangle
+             **/
+            set: function (value) {
+                this._height = value - this._top;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Rectangle.prototype, "height", {
+            /**
+             * Gets or sets the height of the rectangle
+             **/
+            get: function () {
+                return this._height;
+            },
+            /**
+             * Gets or sets the height of the rectangle
+             **/
+            set: function (value) {
+                this._height = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Rectangle.prototype, "left", {
+            /**
+             * Gets or sets the left of the rectangle
+             **/
+            get: function () {
+                return this._left;
+            },
+            /**
+             * Gets or sets the left of the rectangle
+             **/
+            set: function (value) {
+                this._left = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Rectangle.prototype, "right", {
+            /**
+             * Gets or sets the right side of the rectangle
+             **/
+            get: function () {
+                return this._left + this._width;
+            },
+            /**
+             * Gets or sets the right side of the rectangle
+             **/
+            set: function (value) {
+                this._width = value - this._left;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Rectangle.prototype, "size", {
+            /**
+             * Gets the size of the rectangle
+             *
+             * @returns {Size}
+             */
+            get: function () {
+                return new latte.Size(this.width, this.height);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Rectangle.prototype, "tag", {
+            get: function () {
+                return this._tag;
+            },
+            set: function (value) {
+                this._tag = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Rectangle.prototype, "top", {
+            /**
+             * Gets or sets the top of the rectangle
+             **/
+            get: function () {
+                return this._top;
+            },
+            /**
+             * Gets or sets the top of the rectangle
+             **/
+            set: function (value) {
+                this._top = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Rectangle.prototype, "width", {
+            /**
+             * Gets or sets the width of the rectangle
+             **/
+            get: function () {
+                return this._width;
+            },
+            /**
+             * Gets or sets the width of the rectangle
+             **/
+            set: function (value) {
+                this._width = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return Rectangle;
+    }());
+    latte.Rectangle = Rectangle;
+})(latte || (latte = {}));
 /**
  * Created by josemanuel on 5/12/14.
  */
@@ -2883,203 +3106,6 @@ var latte;
         return Point;
     }());
     latte.Point = Point;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
-     * Reprsents a Rectangle
-     **/
-    var Rectangle = (function () {
-        /**
-         * Creates a rectangle with the specified left, top, width and height.
-         **/
-        function Rectangle(left, top, width, height) {
-            if (left === void 0) { left = 0; }
-            if (top === void 0) { top = 0; }
-            if (width === void 0) { width = 0; }
-            if (height === void 0) { height = 0; }
-            this.top = top;
-            this.left = left;
-            this.width = width;
-            this.height = height;
-        }
-        /**
-         * Creates a rectangle with the specified left, right, top and bottom.
-         **/
-        Rectangle.fromLRTB = function (left, right, top, bottom) {
-            var r = new Rectangle(left, top);
-            r.right = right;
-            r.bottom = bottom;
-            return r;
-        };
-        /**
-         * Returns the result of centering this into the specified container
-         **/
-        Rectangle.prototype.center = function (container) {
-            var c = new Rectangle(container.left + (container.width - this.width) / 2, container.top + (container.height - this.height) / 2, this.width, this.height);
-            return c;
-        };
-        /**
-         * Gets a value indicating if the specified point is contained
-         **/
-        Rectangle.prototype.contains = function (x, y) {
-            return this._left <= x && this.right >= x
-                && this._top <= y && this.bottom >= y;
-        };
-        /**
-         * Gets a value indicating if the rectangle is contained inside this rectangle
-         **/
-        Rectangle.prototype.containsRectangle = function (rectangle) {
-            return this.contains(rectangle.left, rectangle.top)
-                && this.contains(rectangle.right, rectangle.bottom);
-        };
-        /**
-         * Returns the result of inflating the rectangle vertically and horizontally on each edge.
-         **/
-        Rectangle.prototype.inflate = function (horizontal, vertical) {
-            // Check arguments
-            if (!latte._isNumber(horizontal))
-                throw new latte.InvalidArgumentEx('horizontal', horizontal);
-            if (!latte._isNumber(vertical))
-                throw new latte.InvalidArgumentEx('vertical', vertical);
-            return Rectangle.fromLRTB(this.left - horizontal, this.right + horizontal, this.top - vertical, this.bottom + vertical);
-        };
-        /**
-         * Returns the rectangle result of intersecting this with passed rectangle
-         **/
-        Rectangle.prototype.intersection = function (rectangle) {
-            return Rectangle.fromLRTB(Math.max(this.left, rectangle.left), Math.min(this.right, rectangle.right), Math.max(this.top, rectangle.top), Math.min(this.bottom, rectangle.bottom));
-        };
-        /**
-         * Gets a value indicating if the rectangle intersects specified rectangle
-         **/
-        Rectangle.prototype.intersects = function (rectangle) {
-            return this.contains(rectangle.left, rectangle.top)
-                || this.contains(rectangle.right, rectangle.top)
-                || this.contains(rectangle.right, rectangle.bottom)
-                || this.contains(rectangle.left, rectangle.bottom);
-        };
-        /**
-         * Returns a string describing the rectangle
-         **/
-        Rectangle.prototype.toString = function () {
-            return "Rectangle: " + [this._left, this._top, this._width, this._height].join(', ');
-        };
-        /**
-         * Gets a rectangle representing the union of this rectangle and the passed one
-         **/
-        Rectangle.prototype.union = function (rectangle) {
-            return Rectangle.fromLRTB(Math.min(this.left, rectangle.left), Math.max(this.right, rectangle.right), Math.min(this.top, rectangle.top), Math.max(this.bottom, rectangle.bottom));
-        };
-        Object.defineProperty(Rectangle.prototype, "bottom", {
-            /**
-             * Gets or sets the right side of the rectangle
-             **/
-            get: function () {
-                return this._top + this._height;
-            },
-            /**
-             * Gets or sets the right side of the rectangle
-             **/
-            set: function (value) {
-                this._height = value - this._top;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Rectangle.prototype, "height", {
-            /**
-             * Gets or sets the height of the rectangle
-             **/
-            get: function () {
-                return this._height;
-            },
-            /**
-             * Gets or sets the height of the rectangle
-             **/
-            set: function (value) {
-                this._height = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Rectangle.prototype, "left", {
-            /**
-             * Gets or sets the left of the rectangle
-             **/
-            get: function () {
-                return this._left;
-            },
-            /**
-             * Gets or sets the left of the rectangle
-             **/
-            set: function (value) {
-                this._left = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Rectangle.prototype, "right", {
-            /**
-             * Gets or sets the right side of the rectangle
-             **/
-            get: function () {
-                return this._left + this._width;
-            },
-            /**
-             * Gets or sets the right side of the rectangle
-             **/
-            set: function (value) {
-                this._width = value - this._left;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Rectangle.prototype, "tag", {
-            get: function () {
-                return this._tag;
-            },
-            set: function (value) {
-                this._tag = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Rectangle.prototype, "top", {
-            /**
-             * Gets or sets the top of the rectangle
-             **/
-            get: function () {
-                return this._top;
-            },
-            /**
-             * Gets or sets the top of the rectangle
-             **/
-            set: function (value) {
-                this._top = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Rectangle.prototype, "width", {
-            /**
-             * Gets or sets the width of the rectangle
-             **/
-            get: function () {
-                return this._width;
-            },
-            /**
-             * Gets or sets the width of the rectangle
-             **/
-            set: function (value) {
-                this._width = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return Rectangle;
-    }());
-    latte.Rectangle = Rectangle;
 })(latte || (latte = {}));
 /**
  * Created by josemanuel on 5/12/14.
@@ -3625,16 +3651,16 @@ var latte;
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/latte.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Ex.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Ajax.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Culture.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Collection.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Color.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Culture.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/DateTime.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Event.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/DateTime.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/InvaldArgumentEx.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/InvalidCallEx.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/LoadInfo.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Point.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/InvalidCallEx.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Rectangle.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Point.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Size.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/TimeSpan.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Timer.ts" />

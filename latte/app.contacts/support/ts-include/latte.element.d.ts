@@ -33,6 +33,12 @@ declare module latte {
      */
     class Element<T extends HTMLElement> {
         /**
+         * Creates a new element in memory from the specified tag name
+         * @param tagName
+         * @returns {latte.Element<HTMLElement>}
+         */
+        static create(tagName?: string): Element<HTMLElement>;
+        /**
          * Creates an element from the latte.globalViewBank object.
          *
          * @param key
@@ -92,11 +98,12 @@ declare module latte {
          * @param value
          */
         private setCssNumericValue(property, value);
+        private dataElements;
         /**
          * Creates an element
          */
         constructor(element: HTMLElement);
-        private addBindedElement(e);
+        private addBindedElement(e, ebind, dbind);
         /**
          * Adds an element
          * @param element
@@ -124,7 +131,7 @@ declare module latte {
          * @param handler
          * @param capture
          */
-        addEventListener(event: string, handler: (any: any) => any, capture?: boolean): void;
+        addEventListener(event: string, handler: (any) => any, capture?: boolean): void;
         /**
          * Animates the element specified properties, by establishing the initial values for the properties to animate.
          *
@@ -158,6 +165,7 @@ declare module latte {
         /**
          * Binds the element to the specified object
          * @param object
+         * @param hide
          */
         bind(object: any, hide?: boolean): void;
         /**
@@ -170,6 +178,28 @@ declare module latte {
          * Clears all the children of the element
          */
         clear(): void;
+        /**
+         * Called when the data of the element has loaded successfully
+         */
+        dataDidLoad(): void;
+        /**
+         * Called when the data load failed
+         */
+        dataLoadFailed(errorDescription: string): void;
+        /**
+         * Called when data load is about to start
+         */
+        dataWillLoad(): void;
+        /**
+         * Called when the element has been assigned as only child of another element, using the setContent method
+         */
+        didLoad(): void;
+        /**
+         * If conditional is true, ensures element has class, if not, ensures it doesn't
+         * @param className
+         * @param condition
+         */
+        ensureClass(className: string, condition: boolean): void;
         /**
          * Fades the element in
          * @param duration
@@ -195,6 +225,10 @@ declare module latte {
          */
         findAll(query: string): ElementCollection;
         /**
+         * Gets the children of the element as an ElementCollection
+         */
+        getCollection(): ElementCollection;
+        /**
          * Gets the size of the element
          */
         getSize(): {
@@ -213,6 +247,15 @@ declare module latte {
          * @param className
          */
         hasClass(className: string): boolean;
+        /**
+         * Loads the data of the data calls
+         */
+        loadData(): void;
+        /**
+         * Override this method to indicate the element loads data
+         * @returns {null}
+         */
+        loadDataCalls(): RemoteCall<any>[];
         /**
          * Raises the <c>contentEditable</c> event
          */
@@ -256,17 +299,27 @@ declare module latte {
          * Sets the content of the element, deleting all existing children.
          * @param e
          */
-        setContent(e: Element<HTMLElement>): void;
+        setContent(e: Element<HTMLElement>, silent?: boolean): void;
         /**
          * Sets the children of the element, deleting all existing children
          * @param e
          */
         setChildren(e: Element<HTMLElement>[]): void;
         /**
+         * Sets the children of the element as the elements of the collection
+         * @param c
+         */
+        setCollection(c: ElementCollection): ElementCollection;
+        /**
          * Replaces the element
          * @param e
          */
         setElement(e: T): void;
+        /**
+         * Alternates the class, adds it if no present and removes it if present.
+         * @param className
+         */
+        swapClass(className: string): void;
         toString(): string;
         /**
          * Back field for event
@@ -278,6 +331,34 @@ declare module latte {
          * @returns {LatteEvent}
          */
         contentEditableChanged: LatteEvent;
+        /**
+         * Back field for event
+         */
+        private _dataBindAdded;
+        /**
+         * Gets an event raised when a data bind is added
+         *
+         * @returns {LatteEvent}
+         */
+        dataBindAdded: LatteEvent;
+        /**
+         * Raises the <c>dataBindAdded</c> event
+         */
+        onDataBindAdded(b: DataBind): void;
+        /**
+         * Back field for event
+         */
+        private _eventBindAdded;
+        /**
+         * Gets an event raised when an event bind is added
+         *
+         * @returns {LatteEvent}
+         */
+        eventBindAdded: LatteEvent;
+        /**
+         * Raises the <c>eventBindAdded</c> event
+         */
+        onEventBindAdded(b: EventBind): void;
         /**
          * Back field for event
          */
@@ -298,6 +379,26 @@ declare module latte {
          * @returns {LatteEvent}
          */
         visibleChanged: LatteEvent;
+        /**
+         * Gets or sets the background color of the element
+         * @returns {string}
+         */
+        /**
+         * Gets or sets the background color of the element
+         * @param value
+         */
+        backgroundColor: string;
+        /**
+         * Gets or sets the background image url
+         *
+         * @returns {string}
+         */
+        /**
+         * Gets or sets the background image url
+         *
+         * @param {string} value
+         */
+        backgroundImageUrl: string;
         /**
          * Field for bindedElements property
          */
@@ -468,6 +569,17 @@ declare module latte {
          * @param {number} value
          */
         width: number;
+        /**
+         * Gets or sets the tooltip of the elent
+         *
+         * @returns {string}
+         */
+        /**
+         * Gets or sets the tooltip of the elent
+         *
+         * @param {string} value
+         */
+        tooltip: string;
     }
 }
 /**
@@ -666,7 +778,7 @@ declare module latte {
          * @param handler
          * @param capture
          */
-        addEventListener(event: string, handler: (item: Element<HTMLElement>) => any, capture?: boolean): void;
+        addEventListener(event: string, handler: (item: Element<HTMLElement>, e?: any) => any, capture?: boolean): void;
         /**
          * Adds the specified class to the class list of the elements in the collection
          * @param className
@@ -690,6 +802,7 @@ declare module latte {
         fadeOut(duration?: number, callback?: () => any): void;
         /**
          * Adds an event handler to the elements in the collection
+         * @param context
          * @param event
          * @param f
          */
@@ -727,6 +840,12 @@ declare module latte {
      *
      */
     class Textbox extends Element<HTMLInputElement> {
+        /**
+         * Checks if email is valid
+         * @param email
+         * @returns {boolean}
+         */
+        static validEmail(email: string): boolean;
         private lastValueOnKeyUp;
         /**
          * Creates the textbox
@@ -737,7 +856,7 @@ declare module latte {
          * in the validChars string.
          * @param validChars
          */
-        charCheck(validChars: string): boolean;
+        static charCheck(text: string, validChars: string): boolean;
         /**
          * Focuses on the Input
          */
@@ -834,6 +953,20 @@ declare module latte {
     }
 }
 /**
+ * Created by josemanuel on 5/29/15.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class CollectionDataBind {
+        /**
+         * Creates and automatically sets up the binding
+         */
+        constructor(element: Element<HTMLElement>, elementProperty: string, collection: Collection<any>, type?: DataBindType);
+    }
+}
+/**
  * Created by josemanuel on 5/28/15.
  */
 declare module latte {
@@ -879,6 +1012,10 @@ declare module latte {
          * Sets up the listeners, removes previous listeners and applies the binding for the first time.
          */
         setup(element: Element<HTMLElement>, elementProperty: string, record: any, recordProperty: string, type?: DataBindType, elementEvent?: string, recordEvent?: string): void;
+        /**
+         * Uninstalls the last assigned listeners
+         */
+        uninstall(): void;
         /**
          * Applies the data of the record to the elements property
          */

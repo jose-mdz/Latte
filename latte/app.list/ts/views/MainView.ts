@@ -97,6 +97,7 @@ module latte {
             return this._btnNew;
         }
 
+
         /**
          * Field for paginator property
          */

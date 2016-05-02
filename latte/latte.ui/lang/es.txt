@@ -139,3 +139,4 @@ developedBy Desarrollado por Goplek.com
 confirmDeleteS ¿Desea eliminar "%s"?
 cantBeUndone Esta acción no se puede deshacer
 yesDeleteS Sí, eliminar %s
+goToPage Ir a página

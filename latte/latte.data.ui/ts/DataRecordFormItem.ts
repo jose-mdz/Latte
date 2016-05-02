@@ -54,8 +54,10 @@ module latte{
             if (record) {
 
                 // Call form creating
-                //TODO: onFormCreating is deprecated, a way around must be done
-                //record.onFormCreating(this);
+                //TODO: onFormCreating should com from an interface or something
+                if(record['onFormCreating']){
+                    record['onFormCreating'](this);
+                }
 
                 // Extract metadata
                 var metadata = record.getMetadata();
@@ -118,8 +120,10 @@ module latte{
                     }
                 }
 
-                //TODO: onFormCreated was deprecated on module separation
-                //record.onFormCreated(this);
+                //TODO: onFormCreated should come from an interface or something
+                if(record['onFormCreated']){
+                    record['onFormCreated'](this);
+                }
 
                 /**
                  * Send calls if any

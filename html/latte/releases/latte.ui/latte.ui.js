@@ -1654,6 +1654,116 @@ var latte;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
+    var Overlay = (function (_super) {
+        __extends(Overlay, _super);
+        /**
+         * Creates the overlay
+         */
+        function Overlay() {
+            _super.call(this);
+            this.element.addClass('latte-overlay');
+        }
+        Overlay.prototype.close = function () {
+            this.element.remove();
+        };
+        /**
+         * Sets the parent of the overlay, and the overlay is inserted as first node of the parent
+         * @param parent
+         */
+        Overlay.prototype.setFirstInParent = function (parent) {
+            this._parent = parent;
+            parent.element.prepend(this.element);
+        };
+        /**
+         * Shows at the specified position of the specified element
+         *
+         * @param side
+         * @param element
+         */
+        Overlay.prototype.showAtSide = function (side, uielement) {
+            var r = uielement.element.rectangle();
+            switch (side) {
+                case latte.Side.TOP:
+                    this.top = r.top - this.height;
+                    this.left = r.left;
+                    this.width = r.width;
+                    break;
+                case latte.Side.BOTTOM:
+                    this.top = r.bottom;
+                    this.left = r.left;
+                    this.width = r.width;
+                    break;
+                default:
+                    throw new latte.Ex();
+            }
+            //            this.appendTo('body');
+        };
+        Object.defineProperty(Overlay.prototype, "left", {
+            /**
+             * Gets the left coordinate of the overlay
+             * @returns {number}
+             */
+            get: function () {
+                return this._left;
+            },
+            /**
+             * Sets the top coordinate of the overlay
+             *
+             * @param value
+             */
+            set: function (value) {
+                this._left = value;
+                this.element.css('left', value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Overlay.prototype, "parent", {
+            /**
+             * Gets or sets the parent element of the overlay (To inherit style and such)
+             * @returns {UiElement}
+             */
+            get: function () {
+                return this._parent;
+            },
+            /**
+             * Gets or sets the parent element of the overlay (To inherit style and such)
+             * @param value
+             */
+            set: function (value) {
+                this._parent = value;
+                this.element.detach().appendTo(value.element);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Overlay.prototype, "top", {
+            /**
+             * Gets the top coordinate of the overlay
+             *
+             * @returns {number}
+             */
+            get: function () {
+                return this._top;
+            },
+            /**
+             * Sets the top coordinate of the overlay
+             *
+             * @param value
+             */
+            set: function (value) {
+                this._top = value;
+                this.element.css('top', value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return Overlay;
+    }(latte.UiElement));
+    latte.Overlay = Overlay;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
     /**
      * Shows items in a stack
      **/
@@ -1773,223 +1883,6 @@ var latte;
         return ItemStack;
     }(latte.Item));
     latte.ItemStack = ItemStack;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    var Overlay = (function (_super) {
-        __extends(Overlay, _super);
-        /**
-         * Creates the overlay
-         */
-        function Overlay() {
-            _super.call(this);
-            this.element.addClass('latte-overlay');
-        }
-        Overlay.prototype.close = function () {
-            this.element.remove();
-        };
-        /**
-         * Sets the parent of the overlay, and the overlay is inserted as first node of the parent
-         * @param parent
-         */
-        Overlay.prototype.setFirstInParent = function (parent) {
-            this._parent = parent;
-            parent.element.prepend(this.element);
-        };
-        /**
-         * Shows at the specified position of the specified element
-         *
-         * @param side
-         * @param element
-         */
-        Overlay.prototype.showAtSide = function (side, uielement) {
-            var r = uielement.element.rectangle();
-            switch (side) {
-                case latte.Side.TOP:
-                    this.top = r.top - this.height;
-                    this.left = r.left;
-                    this.width = r.width;
-                    break;
-                case latte.Side.BOTTOM:
-                    this.top = r.bottom;
-                    this.left = r.left;
-                    this.width = r.width;
-                    break;
-                default:
-                    throw new latte.Ex();
-            }
-            //            this.appendTo('body');
-        };
-        Object.defineProperty(Overlay.prototype, "left", {
-            /**
-             * Gets the left coordinate of the overlay
-             * @returns {number}
-             */
-            get: function () {
-                return this._left;
-            },
-            /**
-             * Sets the top coordinate of the overlay
-             *
-             * @param value
-             */
-            set: function (value) {
-                this._left = value;
-                this.element.css('left', value);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Overlay.prototype, "parent", {
-            /**
-             * Gets or sets the parent element of the overlay (To inherit style and such)
-             * @returns {UiElement}
-             */
-            get: function () {
-                return this._parent;
-            },
-            /**
-             * Gets or sets the parent element of the overlay (To inherit style and such)
-             * @param value
-             */
-            set: function (value) {
-                this._parent = value;
-                this.element.detach().appendTo(value.element);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Overlay.prototype, "top", {
-            /**
-             * Gets the top coordinate of the overlay
-             *
-             * @returns {number}
-             */
-            get: function () {
-                return this._top;
-            },
-            /**
-             * Sets the top coordinate of the overlay
-             *
-             * @param value
-             */
-            set: function (value) {
-                this._top = value;
-                this.element.css('top', value);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return Overlay;
-    }(latte.UiElement));
-    latte.Overlay = Overlay;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
-     * Represents an item that is selectable
-     **/
-    var SelectableItem = (function (_super) {
-        __extends(SelectableItem, _super);
-        /**
-         * Creates the selectable
-         **/
-        function SelectableItem() {
-            var _this = this;
-            // Init
-            _super.call(this);
-            this.element.addClass('selectable');
-            // Init events
-            this.selectedChanged = new latte.LatteEvent(this);
-            // Init handlers
-            this.element.mouseover(function (e) { _this._thisMouseOver(e); });
-            this.element.mouseout(function (e) { _this._thisMouseOut(e); });
-            this.element.click(function (e) { _this._thisClick(e); });
-            this.element.mousedown(function (e) { _this._thisMouseDown(e); });
-        }
-        /**
-         *
-         **/
-        SelectableItem.prototype._thisClick = function (e) {
-        };
-        /**
-         *
-         **/
-        SelectableItem.prototype._thisMouseDown = function (e) {
-            if (!this.enabled)
-                return;
-            // Remove hover flag
-            this.element.removeClass('hover');
-            // Select
-            this.selected = true;
-        };
-        /**
-         *
-         **/
-        SelectableItem.prototype._thisMouseOut = function (e) {
-            if (!this.enabled)
-                return;
-            this.element.removeClass('hover pressed');
-        };
-        /**
-         *
-         **/
-        SelectableItem.prototype._thisMouseOver = function (e) {
-            if (!this.enabled)
-                return;
-            this.element.addClass('hover');
-        };
-        /**
-         * Raises the <c>selectedChanged</c> event
-         **/
-        SelectableItem.prototype.onSelectedChanged = function () {
-            this.selectedChanged.raise(this);
-        };
-        /**
-         * Sets a value indicaing if the item is currently selected.
-         Optionally specifies if <c>selectedChanged</c> event should be raised, if not specified, event will be raised.
-         **/
-        SelectableItem.prototype.setSelected = function (value, raiseEvent) {
-            if (value === void 0) { value = false; }
-            if (raiseEvent === void 0) { raiseEvent = false; }
-            var changed = false;
-            if (value) {
-                // Changed flag
-                changed = !this.element.hasClass('selected');
-                // Select face
-                this.element.addClass('selected');
-            }
-            else {
-                // Changed flag
-                changed = this.element.hasClass('selected');
-                // Remove flag
-                this.element.removeClass('selected');
-            }
-            // Raise event
-            if (changed && raiseEvent !== false)
-                this.onSelectedChanged();
-        };
-        Object.defineProperty(SelectableItem.prototype, "selected", {
-            /**
-             * Gets or sets a value indicaing if the item is currently selected.
-             Optionally specifies if <c>selectedChanged</c> event should be raised, if not specified, event will be raised.
-             **/
-            get: function () {
-                return this.element.hasClass('selected');
-            },
-            /**
-             * Gets or sets a value indicaing if the item is currently selected.
-             Optionally specifies if <c>selectedChanged</c> event should be raised, if not specified, event will be raised.
-             **/
-            set: function (value) {
-                this.setSelected(value, true);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return SelectableItem;
-    }(latte.Item));
-    latte.SelectableItem = SelectableItem;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -2849,6 +2742,113 @@ var latte;
         return SplitView;
     }(latte.View));
     latte.SplitView = SplitView;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
+     * Represents an item that is selectable
+     **/
+    var SelectableItem = (function (_super) {
+        __extends(SelectableItem, _super);
+        /**
+         * Creates the selectable
+         **/
+        function SelectableItem() {
+            var _this = this;
+            // Init
+            _super.call(this);
+            this.element.addClass('selectable');
+            // Init events
+            this.selectedChanged = new latte.LatteEvent(this);
+            // Init handlers
+            this.element.mouseover(function (e) { _this._thisMouseOver(e); });
+            this.element.mouseout(function (e) { _this._thisMouseOut(e); });
+            this.element.click(function (e) { _this._thisClick(e); });
+            this.element.mousedown(function (e) { _this._thisMouseDown(e); });
+        }
+        /**
+         *
+         **/
+        SelectableItem.prototype._thisClick = function (e) {
+        };
+        /**
+         *
+         **/
+        SelectableItem.prototype._thisMouseDown = function (e) {
+            if (!this.enabled)
+                return;
+            // Remove hover flag
+            this.element.removeClass('hover');
+            // Select
+            this.selected = true;
+        };
+        /**
+         *
+         **/
+        SelectableItem.prototype._thisMouseOut = function (e) {
+            if (!this.enabled)
+                return;
+            this.element.removeClass('hover pressed');
+        };
+        /**
+         *
+         **/
+        SelectableItem.prototype._thisMouseOver = function (e) {
+            if (!this.enabled)
+                return;
+            this.element.addClass('hover');
+        };
+        /**
+         * Raises the <c>selectedChanged</c> event
+         **/
+        SelectableItem.prototype.onSelectedChanged = function () {
+            this.selectedChanged.raise(this);
+        };
+        /**
+         * Sets a value indicaing if the item is currently selected.
+         Optionally specifies if <c>selectedChanged</c> event should be raised, if not specified, event will be raised.
+         **/
+        SelectableItem.prototype.setSelected = function (value, raiseEvent) {
+            if (value === void 0) { value = false; }
+            if (raiseEvent === void 0) { raiseEvent = false; }
+            var changed = false;
+            if (value) {
+                // Changed flag
+                changed = !this.element.hasClass('selected');
+                // Select face
+                this.element.addClass('selected');
+            }
+            else {
+                // Changed flag
+                changed = this.element.hasClass('selected');
+                // Remove flag
+                this.element.removeClass('selected');
+            }
+            // Raise event
+            if (changed && raiseEvent !== false)
+                this.onSelectedChanged();
+        };
+        Object.defineProperty(SelectableItem.prototype, "selected", {
+            /**
+             * Gets or sets a value indicaing if the item is currently selected.
+             Optionally specifies if <c>selectedChanged</c> event should be raised, if not specified, event will be raised.
+             **/
+            get: function () {
+                return this.element.hasClass('selected');
+            },
+            /**
+             * Gets or sets a value indicaing if the item is currently selected.
+             Optionally specifies if <c>selectedChanged</c> event should be raised, if not specified, event will be raised.
+             **/
+            set: function (value) {
+                this.setSelected(value, true);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return SelectableItem;
+    }(latte.Item));
+    latte.SelectableItem = SelectableItem;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -6123,6 +6123,216 @@ var latte;
 var latte;
 (function (latte) {
     /**
+     * ButtonGroup with pagination information
+     **/
+    var PaginationItem = (function (_super) {
+        __extends(PaginationItem, _super);
+        /**
+         *
+         **/
+        function PaginationItem() {
+            var _this = this;
+            _super.call(this);
+            /**
+             *
+             **/
+            this._page = 1;
+            /**
+             *
+             **/
+            this._pages = 1;
+            this.addClass('pagination');
+            // Events
+            this.pageChanged = new latte.LatteEvent(this);
+            // Elements
+            this.btnCurrent = new latte.ButtonItem();
+            this.btnNext = new latte.ButtonItem();
+            this.btnNext.icon = latte.Glyph.right;
+            this.btnPrevious = new latte.ButtonItem();
+            this.btnPrevious.icon = latte.Glyph.left;
+            // Tag CSS
+            this.btnPrevious.addClass('previous');
+            this.btnCurrent.addClass('current');
+            this.btnNext.addClass('next');
+            this.btnCurrent.items.add(this.btnOverlay);
+            this.buttons.addArray([
+                this.btnPrevious, this.btnCurrent, this.btnNext
+            ]);
+            // Wire events
+            this.btnNext.click.add(function () { _this.nextPage(); });
+            this.btnPrevious.click.add(function () { _this.previousPage(); });
+            this.page = 1;
+            this.pages = 1;
+        }
+        /**
+         * Navigates to next page, if possible.
+         **/
+        PaginationItem.prototype.nextPage = function () {
+            if (this.page < this.pages) {
+                this.page = this.page + 1;
+            }
+        };
+        /**
+         * Raises the <c>pageChanged</c> event
+         **/
+        PaginationItem.prototype.onPageChanged = function () {
+            this.pageChanged.raise();
+        };
+        /**
+         * Navigates to the previous page, if possible.
+         **/
+        PaginationItem.prototype.previousPage = function () {
+            if (this.page > 0) {
+                this.page = this.page - 1;
+            }
+        };
+        // region Private Methods
+        PaginationItem.prototype.txtPage_enterPressed = function () {
+            if (!(+this.txtPage.value > this.pages)) {
+                if (this.txtPage.value == "" || +this.txtPage.value <= 0 || isNaN(+this.txtPage.value))
+                    this.txtPage.value = this.page + "";
+                // Set page
+                this.page = parseInt(this.txtPage.value, 10);
+            }
+            else {
+                this.txtPage.value = this.page + "";
+            }
+        };
+        Object.defineProperty(PaginationItem.prototype, "page", {
+            // endregion
+            /**
+             * Gets or sets the current page
+             **/
+            get: function () {
+                return this.getPage();
+            },
+            /**
+             * Gets or sets the current page
+             **/
+            set: function (value) {
+                this.setPage(value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Gets the current page.
+         * @returns {number}
+         */
+        PaginationItem.prototype.getPage = function () {
+            return this._page;
+        };
+        /**
+         * Sets the current page.
+         * Optionally omits the <c>pageChanged</c> event trigger.
+         * @param value
+         * @param silent
+         */
+        PaginationItem.prototype.setPage = function (value, silent) {
+            if (silent === void 0) { silent = false; }
+            var changed = this._page != value;
+            this._page = value;
+            this.btnCurrent.text = this._page + '/' + this._pages;
+            this.btnNext.enabled = this._page < this.pages;
+            this.btnPrevious.enabled = this._page > 1;
+            this.txtPage.enabled = this._page <= this.pages && this._page >= 1;
+            if (changed && silent !== true) {
+                this.onPageChanged();
+            }
+        };
+        Object.defineProperty(PaginationItem.prototype, "pages", {
+            /**
+             * Gets or sets the amount of pages for navigation
+             **/
+            get: function () {
+                return this._pages;
+            },
+            /**
+             * Gets or sets the amount of pages for navigation
+             **/
+            set: function (value) {
+                this._pages = value;
+                this.btnCurrent.text = this._page + '/' + this._pages;
+                this.enabled = value > 1;
+                if (this.enabled)
+                    this.page = this.page;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PaginationItem.prototype, "txtPage", {
+            get: function () {
+                if (!this._txtPage) {
+                    this._txtPage = new latte.TextboxItem();
+                    this._txtPage.value = this.page + "";
+                    this._txtPage.input.width(20);
+                    this._txtPage.input.height(14);
+                    this._txtPage.enabled = false;
+                    this._txtPage.enterPressed.add(this.txtPage_enterPressed, this);
+                    this._txtPage.element.css({ float: 'left' });
+                }
+                return this._txtPage;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PaginationItem.prototype, "lblPages", {
+            /**
+             * Gets a value indicating
+             */
+            get: function () {
+                if (!this._lblPages) {
+                    this._lblPages = new latte.LabelItem(strings.goToPage);
+                    this._lblPages.element.css({ float: 'left', paddingTop: 5, paddingRight: 5, color: 'black' });
+                }
+                return this._lblPages;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PaginationItem.prototype, "btnGo", {
+            /**
+             * Gets a value indicating
+             */
+            get: function () {
+                if (!this._btnGo) {
+                    this._btnGo = new latte.ButtonItem("Ir");
+                    this._btnGo.removeClass('clickable');
+                    this._btnGo.element.css({ float: 'left' });
+                    this._btnGo.click.add(this.txtPage_enterPressed, this);
+                }
+                return this._btnGo;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PaginationItem.prototype, "btnOverlay", {
+            /**
+             * Gets a value indicating
+             */
+            get: function () {
+                if (!this._btnOverlay) {
+                    this._btnOverlay = new latte.ButtonItem();
+                    this._btnOverlay.faceVisible = false;
+                    this._btnOverlay.removeClass('clickable');
+                    this._btnOverlay.height = 28;
+                    this._btnOverlay.label.contentElement.append(this.lblPages.element);
+                    this._btnOverlay.label.contentElement.append(this.txtPage.element);
+                    //this._btnOverlay.label.contentElement.append(this.btnGo.element);
+                    this._btnOverlay.label.contentElement.clear();
+                }
+                return this._btnOverlay;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return PaginationItem;
+    }(latte.ButtonGroupItem));
+    latte.PaginationItem = PaginationItem;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
      * Represents a selectable tab
      **/
     var TabItem = (function (_super) {
@@ -6568,216 +6778,6 @@ var latte;
 var latte;
 (function (latte) {
     /**
-     * ButtonGroup with pagination information
-     **/
-    var PaginationItem = (function (_super) {
-        __extends(PaginationItem, _super);
-        /**
-         *
-         **/
-        function PaginationItem() {
-            var _this = this;
-            _super.call(this);
-            /**
-             *
-             **/
-            this._page = 1;
-            /**
-             *
-             **/
-            this._pages = 1;
-            this.addClass('pagination');
-            // Events
-            this.pageChanged = new latte.LatteEvent(this);
-            // Elements
-            this.btnCurrent = new latte.ButtonItem();
-            this.btnNext = new latte.ButtonItem();
-            this.btnNext.icon = latte.Glyph.right;
-            this.btnPrevious = new latte.ButtonItem();
-            this.btnPrevious.icon = latte.Glyph.left;
-            // Tag CSS
-            this.btnPrevious.addClass('previous');
-            this.btnCurrent.addClass('current');
-            this.btnNext.addClass('next');
-            this.btnCurrent.items.add(this.btnOverlay);
-            this.buttons.addArray([
-                this.btnPrevious, this.btnCurrent, this.btnNext
-            ]);
-            // Wire events
-            this.btnNext.click.add(function () { _this.nextPage(); });
-            this.btnPrevious.click.add(function () { _this.previousPage(); });
-            this.page = 1;
-            this.pages = 1;
-        }
-        /**
-         * Navigates to next page, if possible.
-         **/
-        PaginationItem.prototype.nextPage = function () {
-            if (this.page < this.pages) {
-                this.page = this.page + 1;
-            }
-        };
-        /**
-         * Raises the <c>pageChanged</c> event
-         **/
-        PaginationItem.prototype.onPageChanged = function () {
-            this.pageChanged.raise();
-        };
-        /**
-         * Navigates to the previous page, if possible.
-         **/
-        PaginationItem.prototype.previousPage = function () {
-            if (this.page > 0) {
-                this.page = this.page - 1;
-            }
-        };
-        // region Private Methods
-        PaginationItem.prototype.txtPage_enterPressed = function () {
-            if (!(+this.txtPage.value > this.pages)) {
-                if (this.txtPage.value == "" || +this.txtPage.value <= 0 || isNaN(+this.txtPage.value))
-                    this.txtPage.value = this.page + "";
-                // Set page
-                this.page = parseInt(this.txtPage.value, 10);
-            }
-            else {
-                this.txtPage.value = this.page + "";
-            }
-        };
-        Object.defineProperty(PaginationItem.prototype, "page", {
-            // endregion
-            /**
-             * Gets or sets the current page
-             **/
-            get: function () {
-                return this.getPage();
-            },
-            /**
-             * Gets or sets the current page
-             **/
-            set: function (value) {
-                this.setPage(value);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * Gets the current page.
-         * @returns {number}
-         */
-        PaginationItem.prototype.getPage = function () {
-            return this._page;
-        };
-        /**
-         * Sets the current page.
-         * Optionally omits the <c>pageChanged</c> event trigger.
-         * @param value
-         * @param silent
-         */
-        PaginationItem.prototype.setPage = function (value, silent) {
-            if (silent === void 0) { silent = false; }
-            var changed = this._page != value;
-            this._page = value;
-            this.btnCurrent.text = this._page + '/' + this._pages;
-            this.btnNext.enabled = this._page < this.pages;
-            this.btnPrevious.enabled = this._page > 1;
-            this.txtPage.enabled = this._page <= this.pages && this._page >= 1;
-            if (changed && silent !== true) {
-                this.onPageChanged();
-            }
-        };
-        Object.defineProperty(PaginationItem.prototype, "pages", {
-            /**
-             * Gets or sets the amount of pages for navigation
-             **/
-            get: function () {
-                return this._pages;
-            },
-            /**
-             * Gets or sets the amount of pages for navigation
-             **/
-            set: function (value) {
-                this._pages = value;
-                this.btnCurrent.text = this._page + '/' + this._pages;
-                this.enabled = value > 1;
-                if (this.enabled)
-                    this.page = this.page;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PaginationItem.prototype, "txtPage", {
-            get: function () {
-                if (!this._txtPage) {
-                    this._txtPage = new latte.TextboxItem();
-                    this._txtPage.value = this.page + "";
-                    this._txtPage.input.width(20);
-                    this._txtPage.input.height(14);
-                    this._txtPage.enabled = false;
-                    this._txtPage.enterPressed.add(this.txtPage_enterPressed, this);
-                    this._txtPage.element.css({ float: 'left' });
-                }
-                return this._txtPage;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PaginationItem.prototype, "lblPages", {
-            /**
-             * Gets a value indicating
-             */
-            get: function () {
-                if (!this._lblPages) {
-                    this._lblPages = new latte.LabelItem("Ir a página");
-                    this._lblPages.element.css({ float: 'left', paddingTop: 5, paddingRight: 5, color: 'black' });
-                }
-                return this._lblPages;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PaginationItem.prototype, "btnGo", {
-            /**
-             * Gets a value indicating
-             */
-            get: function () {
-                if (!this._btnGo) {
-                    this._btnGo = new latte.ButtonItem("Ir");
-                    this._btnGo.removeClass('clickable');
-                    this._btnGo.element.css({ float: 'left' });
-                    this._btnGo.click.add(this.txtPage_enterPressed, this);
-                }
-                return this._btnGo;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PaginationItem.prototype, "btnOverlay", {
-            /**
-             * Gets a value indicating
-             */
-            get: function () {
-                if (!this._btnOverlay) {
-                    this._btnOverlay = new latte.ButtonItem();
-                    this._btnOverlay.faceVisible = false;
-                    this._btnOverlay.removeClass('clickable');
-                    this._btnOverlay.height = 28;
-                    this._btnOverlay.label.contentElement.append(this.lblPages.element);
-                    this._btnOverlay.label.contentElement.append(this.txtPage.element);
-                    //this._btnOverlay.label.contentElement.append(this.btnGo.element);
-                    this._btnOverlay.label.contentElement.clear();
-                }
-                return this._btnOverlay;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return PaginationItem;
-    }(latte.ButtonGroupItem));
-    latte.PaginationItem = PaginationItem;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
      * Renders a conversation made of <c>CommentItem</c>s, allowing the user to add comments.
      **/
     var ConversationItem = (function (_super) {
@@ -6976,6 +6976,100 @@ var latte;
         return ConversationItem;
     }(latte.Item));
     latte.ConversationItem = ConversationItem;
+})(latte || (latte = {}));
+/*
+ * Commands available for <c>HtmlEditorItem</c>
+ *
+ * @enum
+ */
+var latte;
+(function (latte) {
+    var HtmlEditorCommands = (function () {
+        function HtmlEditorCommands() {
+        }
+        /**
+         * Swaps selection boldness
+         */
+        HtmlEditorCommands.BOLD = 'bold';
+        /**
+         * Wraps seletion into CODE tag
+         */
+        HtmlEditorCommands.CODE = 'code';
+        /**
+         * Clears all formatting on fonts and colors
+         */
+        HtmlEditorCommands.CLEAR_FORMAT = 'clearformat';
+        /**
+         * Formats the block as something
+         */
+        HtmlEditorCommands.FORMAT_BLOCK = 'formatblock';
+        /**
+         * Swaps selection italics
+         */
+        HtmlEditorCommands.ITALIC = 'italic';
+        /**
+         * Makes selectikon super-script
+         */
+        HtmlEditorCommands.SUPER_SCRIPT = 'superscript';
+        /**
+         * Makes selection sub-script
+         */
+        HtmlEditorCommands.SUB_SCRIPT = 'subscript';
+        /**
+         * Aligns text to left
+         */
+        HtmlEditorCommands.JUSTIFY_LEFT = 'justifyleft';
+        /**
+         * Centers text
+         */
+        HtmlEditorCommands.JUSTIFY_CENTER = 'justifycenter';
+        /**
+         * Aligns text to right
+         */
+        HtmlEditorCommands.JUSTIFY_RIGHT = 'justifyright';
+        /**
+         * Justifies text
+         */
+        HtmlEditorCommands.JUSTIFY_FULL = 'justifyfull';
+        /**
+         * Decreases indent
+         */
+        HtmlEditorCommands.OUTDENT = 'outdent';
+        /**
+         * Increases indent
+         */
+        HtmlEditorCommands.INDENT = 'indent';
+        /**
+         * Shows a dialog to insert HTML
+         */
+        HtmlEditorCommands.INSERT_HTML = 'inserthtml';
+        /**
+         * Inserts an image
+         */
+        HtmlEditorCommands.INSERT_IMAGE = 'insertimage';
+        /**
+         * Inserts a link
+         */
+        HtmlEditorCommands.INSERT_LINK = 'insertlink';
+        /**
+         * Inserts an ordered list
+         */
+        HtmlEditorCommands.INSERT_ORDERED_LIST = 'insertorderedlist';
+        /**
+         * Inserts an unordered list
+         */
+        HtmlEditorCommands.INSERT_UNORDERED_LIST = 'insertunorderedlist';
+        /**
+         * Shows a dialog to insert a YouTube video
+         */
+        HtmlEditorCommands.INSERT_YOUTUBE = 'insertyoutube';
+        /**
+         * Unerlines selection
+         */
+        HtmlEditorCommands.UNDERLINE = 'underline';
+        return HtmlEditorCommands;
+    }());
+    latte.HtmlEditorCommands = HtmlEditorCommands;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -7674,100 +7768,6 @@ var latte;
         return FormItem;
     }(latte.ItemStack));
     latte.FormItem = FormItem;
-})(latte || (latte = {}));
-/*
- * Commands available for <c>HtmlEditorItem</c>
- *
- * @enum
- */
-var latte;
-(function (latte) {
-    var HtmlEditorCommands = (function () {
-        function HtmlEditorCommands() {
-        }
-        /**
-         * Swaps selection boldness
-         */
-        HtmlEditorCommands.BOLD = 'bold';
-        /**
-         * Wraps seletion into CODE tag
-         */
-        HtmlEditorCommands.CODE = 'code';
-        /**
-         * Clears all formatting on fonts and colors
-         */
-        HtmlEditorCommands.CLEAR_FORMAT = 'clearformat';
-        /**
-         * Formats the block as something
-         */
-        HtmlEditorCommands.FORMAT_BLOCK = 'formatblock';
-        /**
-         * Swaps selection italics
-         */
-        HtmlEditorCommands.ITALIC = 'italic';
-        /**
-         * Makes selectikon super-script
-         */
-        HtmlEditorCommands.SUPER_SCRIPT = 'superscript';
-        /**
-         * Makes selection sub-script
-         */
-        HtmlEditorCommands.SUB_SCRIPT = 'subscript';
-        /**
-         * Aligns text to left
-         */
-        HtmlEditorCommands.JUSTIFY_LEFT = 'justifyleft';
-        /**
-         * Centers text
-         */
-        HtmlEditorCommands.JUSTIFY_CENTER = 'justifycenter';
-        /**
-         * Aligns text to right
-         */
-        HtmlEditorCommands.JUSTIFY_RIGHT = 'justifyright';
-        /**
-         * Justifies text
-         */
-        HtmlEditorCommands.JUSTIFY_FULL = 'justifyfull';
-        /**
-         * Decreases indent
-         */
-        HtmlEditorCommands.OUTDENT = 'outdent';
-        /**
-         * Increases indent
-         */
-        HtmlEditorCommands.INDENT = 'indent';
-        /**
-         * Shows a dialog to insert HTML
-         */
-        HtmlEditorCommands.INSERT_HTML = 'inserthtml';
-        /**
-         * Inserts an image
-         */
-        HtmlEditorCommands.INSERT_IMAGE = 'insertimage';
-        /**
-         * Inserts a link
-         */
-        HtmlEditorCommands.INSERT_LINK = 'insertlink';
-        /**
-         * Inserts an ordered list
-         */
-        HtmlEditorCommands.INSERT_ORDERED_LIST = 'insertorderedlist';
-        /**
-         * Inserts an unordered list
-         */
-        HtmlEditorCommands.INSERT_UNORDERED_LIST = 'insertunorderedlist';
-        /**
-         * Shows a dialog to insert a YouTube video
-         */
-        HtmlEditorCommands.INSERT_YOUTUBE = 'insertyoutube';
-        /**
-         * Unerlines selection
-         */
-        HtmlEditorCommands.UNDERLINE = 'underline';
-        return HtmlEditorCommands;
-    }());
-    latte.HtmlEditorCommands = HtmlEditorCommands;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -9165,6 +9165,49 @@ var latte;
 var latte;
 (function (latte) {
     /**
+     * Represents a column header
+     **/
+    var ColumnHeader = (function (_super) {
+        __extends(ColumnHeader, _super);
+        /**
+         * Creates the Column Header
+         **/
+        function ColumnHeader(text, width) {
+            if (text === void 0) { text = ''; }
+            if (width === void 0) { width = 150; }
+            _super.call(this);
+            /**
+             *
+             **/
+            this._width = 150;
+            this.element.addClass('column-header');
+            this.width = width;
+            this.text = text;
+        }
+        Object.defineProperty(ColumnHeader.prototype, "width", {
+            /**
+             * Gets or sets the width of the column
+             **/
+            get: function () {
+                return this._width;
+            },
+            /**
+             * Gets or sets the width of the column
+             **/
+            set: function (value) {
+                this._width = value;
+                this.element.width(value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return ColumnHeader;
+    }(latte.LabelItem));
+    latte.ColumnHeader = ColumnHeader;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
      * Represents a widget.
 
      Widgets are like small windows who can be maximized, minimized and dragged around.
@@ -9392,49 +9435,6 @@ var latte;
         return WidgetItem;
     }(latte.Item));
     latte.WidgetItem = WidgetItem;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
-     * Represents a column header
-     **/
-    var ColumnHeader = (function (_super) {
-        __extends(ColumnHeader, _super);
-        /**
-         * Creates the Column Header
-         **/
-        function ColumnHeader(text, width) {
-            if (text === void 0) { text = ''; }
-            if (width === void 0) { width = 150; }
-            _super.call(this);
-            /**
-             *
-             **/
-            this._width = 150;
-            this.element.addClass('column-header');
-            this.width = width;
-            this.text = text;
-        }
-        Object.defineProperty(ColumnHeader.prototype, "width", {
-            /**
-             * Gets or sets the width of the column
-             **/
-            get: function () {
-                return this._width;
-            },
-            /**
-             * Gets or sets the width of the column
-             **/
-            set: function (value) {
-                this._width = value;
-                this.element.width(value);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return ColumnHeader;
-    }(latte.LabelItem));
-    latte.ColumnHeader = ColumnHeader;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -10118,6 +10118,85 @@ var latte;
 var latte;
 (function (latte) {
     /**
+     *
+     **/
+    var CheckboxItem = (function (_super) {
+        __extends(CheckboxItem, _super);
+        /**
+         *
+         **/
+        function CheckboxItem() {
+            var _this = this;
+            _super.call(this);
+            this.element.addClass('checkbox');
+            this.label = new latte.LabelItem();
+            this.label.appendTo(this);
+            this.element.click(function () {
+                _this.value = !_this.value;
+            });
+            this.value = false;
+        }
+        Object.defineProperty(CheckboxItem.prototype, "text", {
+            /**
+             * Gets or sets the text of the checkbox
+             **/
+            get: function () {
+                return this.label.text;
+            },
+            /**
+             * Gets or sets the text of the checkbox
+             **/
+            set: function (value) {
+                this.label.text = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CheckboxItem.prototype, "value", {
+            /**
+             * Gets or sets the checked state of checkbox
+             **/
+            get: function () {
+                return this._value;
+            },
+            /**
+             * Gets or sets the checked state of checkbox
+             **/
+            set: function (value) {
+                if (!latte._isBoolean(value)) {
+                    var t = value;
+                    if (t == 1) {
+                        value = true;
+                    }
+                    else if (t == 0 || t == "") {
+                        value = false;
+                    }
+                    else {
+                        throw new latte.InvalidArgumentEx('value', value);
+                    }
+                }
+                var changed = value !== this._value;
+                if (value) {
+                    this.label.icon = latte.Glyph.checked;
+                }
+                else {
+                    this.label.icon = latte.Glyph.unchecked;
+                }
+                this._value = value;
+                if (changed) {
+                    this.onValueChanged();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return CheckboxItem;
+    }(latte.ValueItem));
+    latte.CheckboxItem = CheckboxItem;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
      * Renders an Item that may contains more <c>TreeItem</c>s and shows them as a tree.
      **/
     var TreeItem = (function (_super) {
@@ -10532,71 +10611,66 @@ var latte;
 var latte;
 (function (latte) {
     /**
-     *
+     * Presents a method for choosing options from a combobox.
+     Combo options are presented as the button's items.
+     The button's items tag value is assumed to be the value of the combobox.
      **/
-    var CheckboxItem = (function (_super) {
-        __extends(CheckboxItem, _super);
+    var ComboItem = (function (_super) {
+        __extends(ComboItem, _super);
         /**
          *
          **/
-        function CheckboxItem() {
-            var _this = this;
+        function ComboItem() {
             _super.call(this);
-            this.element.addClass('checkbox');
-            this.label = new latte.LabelItem();
-            this.label.appendTo(this);
-            this.element.click(function () {
-                _this.value = !_this.value;
-            });
-            this.value = false;
+            this.element.addClass('combo');
+            this.button = new latte.ButtonItem();
+            this.button.text = strings.pleaseSelect;
+            this.button.appendTo(this.element);
         }
-        Object.defineProperty(CheckboxItem.prototype, "text", {
+        Object.defineProperty(ComboItem.prototype, "options", {
             /**
-             * Gets or sets the text of the checkbox
+             * Gets or sets the options of the combo
              **/
             get: function () {
-                return this.label.text;
+                return this._options;
             },
             /**
-             * Gets or sets the text of the checkbox
+             * Gets or sets the options of the combo
              **/
-            set: function (value) {
-                this.label.text = value;
+            set: function (options) {
+                var __this = this;
+                if (!latte._isArray(options) && !latte._isObject(options))
+                    throw new latte.InvalidArgumentEx('options', options);
+                this.button.items.clear();
+                for (var i in options) {
+                    var b = new latte.ButtonItem();
+                    b.text = options[i].toString();
+                    b.tag = i;
+                    b.click.add(function () {
+                        __this.value = this.tag;
+                        __this.button.text = this.text;
+                    });
+                    this.button.items.add(b);
+                }
+                this._options = options;
             },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(CheckboxItem.prototype, "value", {
+        Object.defineProperty(ComboItem.prototype, "value", {
             /**
-             * Gets or sets the checked state of checkbox
+             * Gets or sets the selected value of the combo
              **/
             get: function () {
                 return this._value;
             },
             /**
-             * Gets or sets the checked state of checkbox
+             * Gets or sets the selected value of the combo
              **/
             set: function (value) {
-                if (!latte._isBoolean(value)) {
-                    var t = value;
-                    if (t == 1) {
-                        value = true;
-                    }
-                    else if (t == 0 || t == "") {
-                        value = false;
-                    }
-                    else {
-                        throw new latte.InvalidArgumentEx('value', value);
-                    }
-                }
-                var changed = value !== this._value;
-                if (value) {
-                    this.label.icon = latte.Glyph.checked;
-                }
-                else {
-                    this.label.icon = latte.Glyph.unchecked;
-                }
+                var changed = this._value !== value;
                 this._value = value;
+                this.button.text = value === null ? strings.pleaseSelect : this.valueString;
                 if (changed) {
                     this.onValueChanged();
                 }
@@ -10604,9 +10678,67 @@ var latte;
             enumerable: true,
             configurable: true
         });
-        return CheckboxItem;
+        Object.defineProperty(ComboItem.prototype, "valueString", {
+            /**
+             * Gets the value as a string for human reading
+             **/
+            get: function () {
+                var item;
+                while ((item = this.button.items.next())) {
+                    if (item.tag == this.value) {
+                        return item.text;
+                    }
+                }
+                return '';
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return ComboItem;
     }(latte.ValueItem));
-    latte.CheckboxItem = CheckboxItem;
+    latte.ComboItem = ComboItem;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
+     * Value item for files. Value of item is an array of system File objects.
+     */
+    var FileValueItem = (function (_super) {
+        __extends(FileValueItem, _super);
+        function FileValueItem() {
+            _super.call(this);
+            this.addClass('file');
+            this.resetInput();
+        }
+        /**
+         * Gets an array of selected files
+         *
+         * @returns {Array<File>}
+         */
+        FileValueItem.prototype.getValue = function () {
+            return this.fileInput.get(0).files;
+        };
+        /**
+         * Resets the input field
+         */
+        FileValueItem.prototype.resetInput = function () {
+            var _this = this;
+            this.fileInput = $('<input multiple type="file">').appendTo(this.element.empty());
+            this.fileInput.change(function () {
+                _this.onValueChanged();
+            });
+        };
+        /**
+         * Sets the value. This is ignored since UA won't allow it.
+         *
+         * @param value
+         */
+        FileValueItem.prototype.setValue = function (value) {
+            // Ignore. Files cannot be set
+        };
+        return FileValueItem;
+    }(latte.ValueItem));
+    latte.FileValueItem = FileValueItem;
 })(latte || (latte = {}));
 /**
  * Created by josemanuel on 7/1/14.
@@ -10734,92 +10866,169 @@ var latte;
 var latte;
 (function (latte) {
     /**
-     * Presents a method for choosing options from a combobox.
-     Combo options are presented as the button's items.
-     The button's items tag value is assumed to be the value of the combobox.
+     * Label with value property
      **/
-    var ComboItem = (function (_super) {
-        __extends(ComboItem, _super);
+    var LabelValueItem = (function (_super) {
+        __extends(LabelValueItem, _super);
         /**
          *
          **/
-        function ComboItem() {
+        function LabelValueItem() {
             _super.call(this);
-            this.element.addClass('combo');
-            this.button = new latte.ButtonItem();
-            this.button.text = strings.pleaseSelect;
-            this.button.appendTo(this.element);
+            this.element.addClass('label-value');
+            this.label = new latte.LabelItem();
+            this.label.appendTo(this.element);
         }
-        Object.defineProperty(ComboItem.prototype, "options", {
+        Object.defineProperty(LabelValueItem.prototype, "value", {
             /**
-             * Gets or sets the options of the combo
+             * Gets or sets the value
              **/
             get: function () {
-                return this._options;
+                return this.label.text;
             },
             /**
-             * Gets or sets the options of the combo
+             * Gets or sets the value
              **/
-            set: function (options) {
-                var __this = this;
-                if (!latte._isArray(options) && !latte._isObject(options))
-                    throw new latte.InvalidArgumentEx('options', options);
-                this.button.items.clear();
-                for (var i in options) {
-                    var b = new latte.ButtonItem();
-                    b.text = options[i].toString();
-                    b.tag = i;
-                    b.click.add(function () {
-                        __this.value = this.tag;
-                        __this.button.text = this.text;
-                    });
-                    this.button.items.add(b);
-                }
-                this._options = options;
+            set: function (value) {
+                this.label.text = value;
             },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(ComboItem.prototype, "value", {
+        return LabelValueItem;
+    }(latte.ValueItem));
+    latte.LabelValueItem = LabelValueItem;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
+     * Represents a progress bar
+     **/
+    var ProgressItem = (function (_super) {
+        __extends(ProgressItem, _super);
+        /**
+         * Creates the progress item
+         **/
+        function ProgressItem() {
+            _super.call(this);
             /**
-             * Gets or sets the selected value of the combo
+             *
+             **/
+            this._maxValue = 100;
+            /**
+             *
+             **/
+            this._minValue = 0;
+            /**
+             *
+             **/
+            this._value = 0;
+            this.element.addClass('progress');
+            // Initialize elements
+            this.container = $('<div>').addClass('container').appendTo(this.element);
+            this.bar = $('<div>').addClass('bar').appendTo(this.container);
+            this.onLayout(false);
+        }
+        /**
+         * Gets the percentage represented by min, max and value values.
+         Value ranges from 0 to 100
+         **/
+        ProgressItem.prototype.getPercentage = function () {
+            var diff = this.maxValue - this.minValue;
+            var curr = this.value - this.minValue;
+            return Math.ceil(curr * 100 / diff);
+        };
+        /**
+         * Raises the layout event
+         **/
+        ProgressItem.prototype.onLayout = function (animate) {
+            if (animate === void 0) { animate = true; }
+            var w = this.getPercentage();
+            if (animate !== false)
+                this.bar.animate({ width: w + '%' });
+            else
+                this.bar.css('width', w + '%');
+        };
+        Object.defineProperty(ProgressItem.prototype, "maxValue", {
+            /**
+             * Gets or sets the maximum value of the progress bar
+             **/
+            get: function () {
+                return this._maxValue;
+            },
+            /**
+             * Gets or sets the maximum value of the progress bar
+             **/
+            set: function (value) {
+                if (!latte._isNumber(value))
+                    throw new latte.InvalidArgumentEx('value', value);
+                var changed = value != this._maxValue;
+                this._maxValue = value;
+                if (changed)
+                    this.onLayout();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ProgressItem.prototype, "minValue", {
+            /**
+             * Gets or sets the minimum value of the progress bar
+             **/
+            get: function () {
+                return this._minValue;
+            },
+            /**
+             * Gets or sets the minimum value of the progress bar
+             **/
+            set: function (value) {
+                if (!latte._isNumber(value))
+                    throw new latte.InvalidArgumentEx('value', value);
+                var changed = value != this._minValue;
+                this._minValue = value;
+                if (changed)
+                    this.onLayout();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ProgressItem.prototype, "value", {
+            /**
+             * Gets or sets the current value of the progress bar
              **/
             get: function () {
                 return this._value;
             },
             /**
-             * Gets or sets the selected value of the combo
+             * Gets or sets the current value of the progress bar
              **/
             set: function (value) {
-                var changed = this._value !== value;
+                if (!latte._isNumber(value))
+                    throw new latte.InvalidArgumentEx('value', value);
+                if (value > this.maxValue) {
+                    value = this.maxValue;
+                    this.bar.css('backgroundColor', 'red');
+                }
+                else {
+                    this.bar.css('backgroundColor', '');
+                }
+                if (value < this.minValue) {
+                    value = this.minValue;
+                    this.container.css('borderColor', 'red');
+                }
+                else {
+                    this.container.css('borderColor', '');
+                }
+                var changed = value != this._value;
                 this._value = value;
-                this.button.text = value === null ? strings.pleaseSelect : this.valueString;
-                if (changed) {
-                    this.onValueChanged();
-                }
+                if (changed)
+                    this.onLayout();
             },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(ComboItem.prototype, "valueString", {
-            /**
-             * Gets the value as a string for human reading
-             **/
-            get: function () {
-                var item;
-                while ((item = this.button.items.next())) {
-                    if (item.tag == this.value) {
-                        return item.text;
-                    }
-                }
-                return '';
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return ComboItem;
+        return ProgressItem;
     }(latte.ValueItem));
-    latte.ComboItem = ComboItem;
+    latte.ProgressItem = ProgressItem;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -11313,215 +11522,6 @@ var latte;
 var latte;
 (function (latte) {
     /**
-     * Value item for files. Value of item is an array of system File objects.
-     */
-    var FileValueItem = (function (_super) {
-        __extends(FileValueItem, _super);
-        function FileValueItem() {
-            _super.call(this);
-            this.addClass('file');
-            this.resetInput();
-        }
-        /**
-         * Gets an array of selected files
-         *
-         * @returns {Array<File>}
-         */
-        FileValueItem.prototype.getValue = function () {
-            return this.fileInput.get(0).files;
-        };
-        /**
-         * Resets the input field
-         */
-        FileValueItem.prototype.resetInput = function () {
-            var _this = this;
-            this.fileInput = $('<input multiple type="file">').appendTo(this.element.empty());
-            this.fileInput.change(function () {
-                _this.onValueChanged();
-            });
-        };
-        /**
-         * Sets the value. This is ignored since UA won't allow it.
-         *
-         * @param value
-         */
-        FileValueItem.prototype.setValue = function (value) {
-            // Ignore. Files cannot be set
-        };
-        return FileValueItem;
-    }(latte.ValueItem));
-    latte.FileValueItem = FileValueItem;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
-     * Label with value property
-     **/
-    var LabelValueItem = (function (_super) {
-        __extends(LabelValueItem, _super);
-        /**
-         *
-         **/
-        function LabelValueItem() {
-            _super.call(this);
-            this.element.addClass('label-value');
-            this.label = new latte.LabelItem();
-            this.label.appendTo(this.element);
-        }
-        Object.defineProperty(LabelValueItem.prototype, "value", {
-            /**
-             * Gets or sets the value
-             **/
-            get: function () {
-                return this.label.text;
-            },
-            /**
-             * Gets or sets the value
-             **/
-            set: function (value) {
-                this.label.text = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return LabelValueItem;
-    }(latte.ValueItem));
-    latte.LabelValueItem = LabelValueItem;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
-     * Represents a progress bar
-     **/
-    var ProgressItem = (function (_super) {
-        __extends(ProgressItem, _super);
-        /**
-         * Creates the progress item
-         **/
-        function ProgressItem() {
-            _super.call(this);
-            /**
-             *
-             **/
-            this._maxValue = 100;
-            /**
-             *
-             **/
-            this._minValue = 0;
-            /**
-             *
-             **/
-            this._value = 0;
-            this.element.addClass('progress');
-            // Initialize elements
-            this.container = $('<div>').addClass('container').appendTo(this.element);
-            this.bar = $('<div>').addClass('bar').appendTo(this.container);
-            this.onLayout(false);
-        }
-        /**
-         * Gets the percentage represented by min, max and value values.
-         Value ranges from 0 to 100
-         **/
-        ProgressItem.prototype.getPercentage = function () {
-            var diff = this.maxValue - this.minValue;
-            var curr = this.value - this.minValue;
-            return Math.ceil(curr * 100 / diff);
-        };
-        /**
-         * Raises the layout event
-         **/
-        ProgressItem.prototype.onLayout = function (animate) {
-            if (animate === void 0) { animate = true; }
-            var w = this.getPercentage();
-            if (animate !== false)
-                this.bar.animate({ width: w + '%' });
-            else
-                this.bar.css('width', w + '%');
-        };
-        Object.defineProperty(ProgressItem.prototype, "maxValue", {
-            /**
-             * Gets or sets the maximum value of the progress bar
-             **/
-            get: function () {
-                return this._maxValue;
-            },
-            /**
-             * Gets or sets the maximum value of the progress bar
-             **/
-            set: function (value) {
-                if (!latte._isNumber(value))
-                    throw new latte.InvalidArgumentEx('value', value);
-                var changed = value != this._maxValue;
-                this._maxValue = value;
-                if (changed)
-                    this.onLayout();
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ProgressItem.prototype, "minValue", {
-            /**
-             * Gets or sets the minimum value of the progress bar
-             **/
-            get: function () {
-                return this._minValue;
-            },
-            /**
-             * Gets or sets the minimum value of the progress bar
-             **/
-            set: function (value) {
-                if (!latte._isNumber(value))
-                    throw new latte.InvalidArgumentEx('value', value);
-                var changed = value != this._minValue;
-                this._minValue = value;
-                if (changed)
-                    this.onLayout();
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ProgressItem.prototype, "value", {
-            /**
-             * Gets or sets the current value of the progress bar
-             **/
-            get: function () {
-                return this._value;
-            },
-            /**
-             * Gets or sets the current value of the progress bar
-             **/
-            set: function (value) {
-                if (!latte._isNumber(value))
-                    throw new latte.InvalidArgumentEx('value', value);
-                if (value > this.maxValue) {
-                    value = this.maxValue;
-                    this.bar.css('backgroundColor', 'red');
-                }
-                else {
-                    this.bar.css('backgroundColor', '');
-                }
-                if (value < this.minValue) {
-                    value = this.minValue;
-                    this.container.css('borderColor', 'red');
-                }
-                else {
-                    this.container.css('borderColor', '');
-                }
-                var changed = value != this._value;
-                this._value = value;
-                if (changed)
-                    this.onLayout();
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return ProgressItem;
-    }(latte.ValueItem));
-    latte.ProgressItem = ProgressItem;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
      * Presents a method for choosing options from a combobox.
      Combo options are presented as the button's items.
      The button's items tag value is assumed to be the value of the combobox.
@@ -11724,6 +11724,36 @@ var latte;
         return RadioItem;
     }(latte.ValueItem));
     latte.RadioItem = RadioItem;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
+     * Allows user to pick a time
+     **/
+    var TimePickerItem = (function (_super) {
+        __extends(TimePickerItem, _super);
+        /**
+         *
+         **/
+        function TimePickerItem() {
+            _super.call(this);
+            this.element.addClass('time-picker');
+            this.dateVisible = false;
+            this.timeVisible = true;
+        }
+        /**
+         * Gets or sets the value of the item
+         **/
+        TimePickerItem.prototype.getValue = function () {
+            return this.date.timeOfDay;
+        };
+        TimePickerItem.prototype.setValue = function (value) {
+            //var timeVal = TimeSpan.fromString(value);
+            _super.prototype.setValue.call(this, new latte.DateTime(1, 1, 1, value.hours, value.minutes, value.seconds));
+        };
+        return TimePickerItem;
+    }(latte.DatePickerItem));
+    latte.TimePickerItem = TimePickerItem;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -12369,35 +12399,94 @@ var latte;
     }(latte.ValueItem));
     latte.TextboxItem = TextboxItem;
 })(latte || (latte = {}));
+/**
+ * Created by josemanuel on 3/22/15.
+ */
 var latte;
 (function (latte) {
     /**
-     * Allows user to pick a time
-     **/
-    var TimePickerItem = (function (_super) {
-        __extends(TimePickerItem, _super);
+     *
+     */
+    var ItemOverlay = (function (_super) {
+        __extends(ItemOverlay, _super);
+        //region Static
+        //endregion
+        //region Fields
+        //endregion
         /**
-         *
-         **/
-        function TimePickerItem() {
+         * Creates the overlay
+         */
+        function ItemOverlay(item) {
             _super.call(this);
-            this.element.addClass('time-picker');
-            this.dateVisible = false;
-            this.timeVisible = true;
+            //region Private Methods
+            //endregion
+            //region Methods
+            //endregion
+            //region Events
+            //endregion
+            //region Properties
+            /**
+             * Property field
+             */
+            this._item = null;
+            if (item) {
+                this.item = item;
+            }
         }
+        Object.defineProperty(ItemOverlay.prototype, "item", {
+            /**
+             * Gets or sets the item of the overlay
+             *
+             * @returns {Item}
+             */
+            get: function () {
+                return this._item;
+            },
+            /**
+             * Gets or sets the item of the overlay
+             *
+             * @param {Item} value
+             */
+            set: function (value) {
+                // Check if value changed
+                var changed = value !== this._item;
+                // Set value
+                this._item = value;
+                // Trigger changed event
+                if (changed) {
+                    this.onItemChanged();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ItemOverlay.prototype, "itemChanged", {
+            /**
+             * Gets an event raised when the value of the item property changes
+             *
+             * @returns {LatteEvent}
+             */
+            get: function () {
+                if (!this._itemChanged) {
+                    this._itemChanged = new latte.LatteEvent(this);
+                }
+                return this._itemChanged;
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
-         * Gets or sets the value of the item
-         **/
-        TimePickerItem.prototype.getValue = function () {
-            return this.date.timeOfDay;
+         * Raises the <c>item</c> event
+         */
+        ItemOverlay.prototype.onItemChanged = function () {
+            if (this._itemChanged) {
+                this._itemChanged.raise();
+            }
+            this.element.clear().append(this.item.element);
         };
-        TimePickerItem.prototype.setValue = function (value) {
-            //var timeVal = TimeSpan.fromString(value);
-            _super.prototype.setValue.call(this, new latte.DateTime(1, 1, 1, value.hours, value.minutes, value.seconds));
-        };
-        return TimePickerItem;
-    }(latte.DatePickerItem));
-    latte.TimePickerItem = TimePickerItem;
+        return ItemOverlay;
+    }(latte.Overlay));
+    latte.ItemOverlay = ItemOverlay;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -12721,24 +12810,6 @@ var latte;
         return Loader;
     }(latte.Overlay));
     latte.Loader = Loader;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    var SuggestionOverlay = (function (_super) {
-        __extends(SuggestionOverlay, _super);
-        function SuggestionOverlay() {
-            _super.call(this);
-            this.addClass('suggestion');
-            // Remove face from buttons
-            this.items.addItem.add(function (item) {
-                if (item instanceof latte.ButtonItem) {
-                    item.faceVisible = false;
-                }
-            });
-        }
-        return SuggestionOverlay;
-    }(latte.StackOverlay));
-    latte.SuggestionOverlay = SuggestionOverlay;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -13155,6 +13226,24 @@ var latte;
     }(latte.Overlay));
     latte.MenuOverlay = MenuOverlay;
     $(function () { MenuOverlay._initialize(); });
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    var SuggestionOverlay = (function (_super) {
+        __extends(SuggestionOverlay, _super);
+        function SuggestionOverlay() {
+            _super.call(this);
+            this.addClass('suggestion');
+            // Remove face from buttons
+            this.items.addItem.add(function (item) {
+                if (item instanceof latte.ButtonItem) {
+                    item.faceVisible = false;
+                }
+            });
+        }
+        return SuggestionOverlay;
+    }(latte.StackOverlay));
+    latte.SuggestionOverlay = SuggestionOverlay;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -16467,11 +16556,11 @@ var latte;
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/base/Item.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/View.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/ValueItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/ItemStack.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/overlays/Overlay.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/selectables/SelectableItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/ItemStack.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/anchor/AnchorView.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/layout/SplitView.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/selectables/SelectableItem.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/base/IconItem.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/clickables/ClickableItem.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/labels/LabelItem.ts" />
@@ -16490,41 +16579,42 @@ var latte;
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/base/Glyph.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/base/ImageItem.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/base/SeparatorItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/clickables/PaginationItem.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/clickables/TabItem.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/ColorPicker.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/clickables/PaginationItem.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/ConversationItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/HtmlEditorCommands.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/DateItem.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/FormItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/HtmlEditorCommands.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/HtmlEditorItem.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/Ribbon.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/SelectableStack.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/TabContainer.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/TabToolbar.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/ViewItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/WidgetItem.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/labels/ColumnHeader.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/composites/WidgetItem.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/labels/CommentItem.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/labels/DateTimeLabel.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/labels/UiText.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/selectables/CalendarItem.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/selectables/ListViewItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/selectables/TreeItem.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/CheckboxItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/ColorValueItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/selectables/TreeItem.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/ComboItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/InputItem.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/FileValueItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/ColorValueItem.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/LabelValueItem.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/ProgressItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/InputItem.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/RadioGroup.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/RadioItem.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/TextboxItem.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/TimePickerItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/items/values/TextboxItem.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/overlays/ItemOverlay.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/overlays/Loader.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/overlays/SuggestionOverlay.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/overlays/MenuOverlay.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/overlays/SuggestionOverlay.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/anchor/RibbonView.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/anchor/TabView.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.ui/ts/latte.ui/views/anchor/ToolbarView.ts" />

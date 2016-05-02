@@ -1,164 +1,5 @@
 module latte{
-		export class categoryBase extends DataRecord{
-
-		/* Name of Php record */
-		_recordType: string = 'Category';
-
-		/* Name of Module where record lives */
-		_moduleName: string = 'app.contacts';
-
-		/**
-		 * Database field: int(11)
-		 */
-		_idcategory: any = null;
-
-		/**
-		 * Gets or sets the value of the idcategory field of type int(11)
-		 */
-		get idcategory(): any{
-			return this._idcategory;
-		}
-
-		/**
-		 * Gets or sets the value of the idcategory field of type int(11)
-		 */
-		set idcategory(value: any){
-			var changed: boolean = value !== this._idcategory
-			this._idcategory = value;
-			if(changed){ this.onIdcategoryChanged(); }
-		}
-
-		/**
-		 * Back field for event
-		 */
-		_idcategoryChanged: LatteEvent;
-
-		/**
-		 * Gets an event raised when the value of the idcategory property changes
-		 */
-		get idcategoryChanged(): LatteEvent{
-			if(!this._idcategoryChanged){ this._idcategoryChanged = new LatteEvent(this); }
-			return this._idcategoryChanged;
-		}
-
-		/**
-		 * Raises the <c>idcategoryChanged</c> event
-		 */
-		onIdcategoryChanged(){
-			if(this._idcategoryChanged){
-				this._idcategoryChanged.raise()
-			}
-			this.onFieldValueChanged('idcategory', this.idcategory)
-		}
-
-		/**
-		* Gets the name of the autoincrement field
-		**/
-		onGetRecordIdName(): string { return 'idcategory'; }
-
-		/**
-		 * Database field: varchar(128)
-		 */
-		_name: any = null;
-
-		/**
-		 * Gets or sets the value of the name field of type varchar(128)
-		 */
-		get name(): any{
-			return this._name;
-		}
-
-		/**
-		 * Gets or sets the value of the name field of type varchar(128)
-		 */
-		set name(value: any){
-			var changed: boolean = value !== this._name
-			this._name = value;
-			if(changed){ this.onNameChanged(); }
-		}
-
-		/**
-		 * Back field for event
-		 */
-		_nameChanged: LatteEvent;
-
-		/**
-		 * Gets an event raised when the value of the name property changes
-		 */
-		get nameChanged(): LatteEvent{
-			if(!this._nameChanged){ this._nameChanged = new LatteEvent(this); }
-			return this._nameChanged;
-		}
-
-		/**
-		 * Raises the <c>nameChanged</c> event
-		 */
-		onNameChanged(){
-			if(this._nameChanged){
-				this._nameChanged.raise()
-			}
-			this.onFieldValueChanged('name', this.name)
-		}
-
-		/**
-		 * Database field: int(11)
-		 */
-		_i: any = null;
-
-		/**
-		 * Gets or sets the value of the i field of type int(11)
-		 */
-		get i(): any{
-			return this._i;
-		}
-
-		/**
-		 * Gets or sets the value of the i field of type int(11)
-		 */
-		set i(value: any){
-			var changed: boolean = value !== this._i
-			this._i = value;
-			if(changed){ this.onIChanged(); }
-		}
-
-		/**
-		 * Back field for event
-		 */
-		_iChanged: LatteEvent;
-
-		/**
-		 * Gets an event raised when the value of the i property changes
-		 */
-		get iChanged(): LatteEvent{
-			if(!this._iChanged){ this._iChanged = new LatteEvent(this); }
-			return this._iChanged;
-		}
-
-		/**
-		 * Raises the <c>iChanged</c> event
-		 */
-		onIChanged(){
-			if(this._iChanged){
-				this._iChanged.raise()
-			}
-			this.onFieldValueChanged('i', this.i)
-		}
-
-		/**
-		* Override. Gets data about the fields of the record.
-		**/
-		onGetFields(): any { return {'idcategory': this.idcategory, 'name': this.name, 'i': this.i}; }
-
-		/*
-		 * Remote Method. 
-
-		 */
-		static fullCatalog(): RemoteCall<Array<Category>>{
-			return new RemoteCall<Array<Category>>('app.contacts', 'Category', 'fullCatalog', {} );
-		}
-	}
-
-	export class personBase extends DataRecord{
+		export class personBase extends DataRecord{
 
 		/* Name of Php record */
 		_recordType: string = 'Person';
@@ -756,6 +597,165 @@ module latte{
 		 */
 		static search(options: PersonSearchOptions, page: number = 1, pageSize: number = 50): RemoteCall<PageResult<Person>>{
 			return new RemoteCall<PageResult<Person>>('app.contacts', 'Person', 'search', {options: options, page: page, pageSize: pageSize} );
+		}
+	}
+
+	export class categoryBase extends DataRecord{
+
+		/* Name of Php record */
+		_recordType: string = 'Category';
+
+		/* Name of Module where record lives */
+		_moduleName: string = 'app.contacts';
+
+		/**
+		 * Database field: int(11)
+		 */
+		_idcategory: any = null;
+
+		/**
+		 * Gets or sets the value of the idcategory field of type int(11)
+		 */
+		get idcategory(): any{
+			return this._idcategory;
+		}
+
+		/**
+		 * Gets or sets the value of the idcategory field of type int(11)
+		 */
+		set idcategory(value: any){
+			var changed: boolean = value !== this._idcategory
+			this._idcategory = value;
+			if(changed){ this.onIdcategoryChanged(); }
+		}
+
+		/**
+		 * Back field for event
+		 */
+		_idcategoryChanged: LatteEvent;
+
+		/**
+		 * Gets an event raised when the value of the idcategory property changes
+		 */
+		get idcategoryChanged(): LatteEvent{
+			if(!this._idcategoryChanged){ this._idcategoryChanged = new LatteEvent(this); }
+			return this._idcategoryChanged;
+		}
+
+		/**
+		 * Raises the <c>idcategoryChanged</c> event
+		 */
+		onIdcategoryChanged(){
+			if(this._idcategoryChanged){
+				this._idcategoryChanged.raise()
+			}
+			this.onFieldValueChanged('idcategory', this.idcategory)
+		}
+
+		/**
+		* Gets the name of the autoincrement field
+		**/
+		onGetRecordIdName(): string { return 'idcategory'; }
+
+		/**
+		 * Database field: varchar(128)
+		 */
+		_name: any = null;
+
+		/**
+		 * Gets or sets the value of the name field of type varchar(128)
+		 */
+		get name(): any{
+			return this._name;
+		}
+
+		/**
+		 * Gets or sets the value of the name field of type varchar(128)
+		 */
+		set name(value: any){
+			var changed: boolean = value !== this._name
+			this._name = value;
+			if(changed){ this.onNameChanged(); }
+		}
+
+		/**
+		 * Back field for event
+		 */
+		_nameChanged: LatteEvent;
+
+		/**
+		 * Gets an event raised when the value of the name property changes
+		 */
+		get nameChanged(): LatteEvent{
+			if(!this._nameChanged){ this._nameChanged = new LatteEvent(this); }
+			return this._nameChanged;
+		}
+
+		/**
+		 * Raises the <c>nameChanged</c> event
+		 */
+		onNameChanged(){
+			if(this._nameChanged){
+				this._nameChanged.raise()
+			}
+			this.onFieldValueChanged('name', this.name)
+		}
+
+		/**
+		 * Database field: int(11)
+		 */
+		_i: any = null;
+
+		/**
+		 * Gets or sets the value of the i field of type int(11)
+		 */
+		get i(): any{
+			return this._i;
+		}
+
+		/**
+		 * Gets or sets the value of the i field of type int(11)
+		 */
+		set i(value: any){
+			var changed: boolean = value !== this._i
+			this._i = value;
+			if(changed){ this.onIChanged(); }
+		}
+
+		/**
+		 * Back field for event
+		 */
+		_iChanged: LatteEvent;
+
+		/**
+		 * Gets an event raised when the value of the i property changes
+		 */
+		get iChanged(): LatteEvent{
+			if(!this._iChanged){ this._iChanged = new LatteEvent(this); }
+			return this._iChanged;
+		}
+
+		/**
+		 * Raises the <c>iChanged</c> event
+		 */
+		onIChanged(){
+			if(this._iChanged){
+				this._iChanged.raise()
+			}
+			this.onFieldValueChanged('i', this.i)
+		}
+
+		/**
+		* Override. Gets data about the fields of the record.
+		**/
+		onGetFields(): any { return {'idcategory': this.idcategory, 'name': this.name, 'i': this.i}; }
+
+		/*
+		 * Remote Method. 
+
+		 */
+		static fullCatalog(): RemoteCall<Array<Category>>{
+			return new RemoteCall<Array<Category>>('app.contacts', 'Category', 'fullCatalog', {} );
 		}
 	}
 

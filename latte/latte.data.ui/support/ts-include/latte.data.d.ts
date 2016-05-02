@@ -3,6 +3,32 @@
 /// <reference path="latte.data.strings.d.ts" />
 /// <reference path="latte.strings.d.ts" />
 declare module latte {
+    /**
+     * Saves full lists of records in Memory
+     *
+     * <example>
+     * // Load cache of users
+     * Cache.load('User', 'users');
+     *
+     * // After load, now we can use the users cache
+     * // Cache.users is a DataRecordCollection object
+     * for(var i = 0; i < Cache.users.count; i++)
+     *  console.log(Cache.users.item(i));
+     * </example>
+     *
+     */
+    class Cache {
+        /**
+         * Loads a cache of the specified name into cache itself.
+         * @param recordType
+         * @param name
+         * @param callback
+         * @returns {null}
+         */
+        load(recordType: string, name: string, callback?: () => any): Message;
+    }
+}
+declare module latte {
     interface DataRecordArrayCallback {
         (records: Array<DataRecord>): void;
     }
@@ -216,32 +242,6 @@ declare module latte {
          * @returns {null}
          */
         byId(id: number): DataRecord;
-    }
-}
-declare module latte {
-    /**
-     * Saves full lists of records in Memory
-     *
-     * <example>
-     * // Load cache of users
-     * Cache.load('User', 'users');
-     *
-     * // After load, now we can use the users cache
-     * // Cache.users is a DataRecordCollection object
-     * for(var i = 0; i < Cache.users.count; i++)
-     *  console.log(Cache.users.item(i));
-     * </example>
-     *
-     */
-    class Cache {
-        /**
-         * Loads a cache of the specified name into cache itself.
-         * @param recordType
-         * @param name
-         * @param callback
-         * @returns {null}
-         */
-        load(recordType: string, name: string, callback?: () => any): Message;
     }
 }
 declare module latte {
