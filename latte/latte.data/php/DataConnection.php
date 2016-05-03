@@ -170,16 +170,16 @@
          * 
          * @param string $query
          * @return number
-         * @throws Exception If query falis
+         * @throws Exception If query fails
          */
 	public function update($query){
 		global $strings;
 
 		$result = $this->query($query);
 		
-		if(!$result)
-			throw new Exception(sprintf($strings['errorOnQueryS'], $this->getErrorDescription(),$this->queryornot($query)));
-		
+		if(!$result) {
+            throw new Exception(sprintf($strings['errorOnQueryS'], $this->getErrorDescription(), $this->queryornot($query)));
+        }
 		return $this->affectedRows();
 	}
 	

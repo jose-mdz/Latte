@@ -539,19 +539,29 @@ class DataLatteUa {
 
 //        die("name: $name, id: $id, values: " .var_export($values, true));
         $record = DataRecord::byAuto($name, $id);
+
+//        die("Record: " . var_export($record, true));
         
 //        if(!DataRecordMetadata::canEdit($record))
 //            throw new Exception("Cant update record");
         
         $fields = $record->getFields();
+
+//        die("Fields: " . var_export($fields, true));
         
         foreach($values as $field => $value){
             if(array_key_exists($field, $fields)){
                 $record->{$field} = $value;
             }
         }
+
+//        die("Updated Record: " . var_export($record, true));
+
+        $record->update();
+
+//        die("[UPDATED]");
         
-        return $record->update();
+        //return $record->update();
     }
     
     /**

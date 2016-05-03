@@ -57,7 +57,7 @@ module latte {
             if(this._loadingStart){
                 this._loadingStart.raise();
             }else {
-                log("Loading: " + this.loadingText);
+                //log("Loading: " + this.loadingText);
             }
         }
 
@@ -68,7 +68,7 @@ module latte {
             if(this._loadingEnd){
                 this._loadingEnd.raise();
             }else {
-                log(this.loadingText  + "-> Done.");
+                //log(this.loadingText  + "-> Done.");
             }
         }
 

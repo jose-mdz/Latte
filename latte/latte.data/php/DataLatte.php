@@ -139,6 +139,21 @@
         return implode(", ", $r);
     }
 
+     /**
+      * Makes an associative array of the specified DataRecord array,
+      * using the records' id as the id of the associative array
+      *
+      * @param array $array
+      * @return array
+      */
+     public static function associativeArray(array $array){
+         $result = array();
+         foreach($array as $r){
+             $result[$r->getIdValue()] = $r;
+         }
+         return $result;
+     }
+
     /**
      * Gets a value indicating if the current connection is running in debug mode
      * 

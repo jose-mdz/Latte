@@ -798,126 +798,6 @@ declare module latte {
         static post(url: string, data: any, success?: (string) => void, error?: (string) => void): void;
     }
 }
-/**
- * Created by josemanuel on 2/6/14.
- */
-declare module latte {
-    /**
-     *
-     */
-    class Culture {
-        /**
-         * Property field
-         */
-        private static _current;
-        /**
-         * Gets or sets the current culture of the system
-         *
-         * @returns {Culture}
-         */
-        /**
-         * Gets or sets the current culture of the system
-         *
-         * @param {Culture} value
-         */
-        static current: Culture;
-        /**
-         * Field for esMX property
-         */
-        private static _esMx;
-        /**
-         * Gets the Español-Mexico Culture
-         *
-         * @returns {Culture}
-         */
-        static esMx: Culture;
-        /**
-         * Field for enUs property
-         */
-        private static _enUs;
-        /**
-         * Gets the English-USA Culture
-         *
-         * @returns {Culture}
-         */
-        static enUs: Culture;
-        /**
-         * Formats currency using the current culture
-         * @param n
-         * @returns {string}
-         */
-        static formatCurrency(n: number): string;
-        /**
-         * Returns the date as a short format
-         * @param d
-         */
-        static formatShortDate(d: DateTime): string;
-        /**
-         * Returns the date as a short format
-         * @param d
-         */
-        static formatLongDate(d: DateTime): string;
-        /**
-         * Formats a number using the current Culture
-         * @param n
-         * @param decimals
-         * @param symbol
-         * @returns {string}
-         */
-        static formatNumber(n: number, decimals?: number, symbol?: string): string;
-        /**
-         * Short date format
-         */
-        shortDateFormat: string;
-        /**
-         * Long date format
-         */
-        longDateFormat: string;
-        /**
-         * Amount of decimals to show in currency format
-         */
-        currencyDecimals: number;
-        /**
-         * Separator of decimals for currency
-         */
-        numberDecimalsSeparator: string;
-        /**
-         * Thousands separator for currency
-         */
-        numberThousandsSeparator: string;
-        /**
-         * Symbol to use in currency
-         */
-        currencySymbol: string;
-        /**
-         *
-         */
-        constructor();
-        /**
-         * Returns the specified number as a currency
-         * @param n
-         */
-        onFormatCurrency(n: number): string;
-        /**
-         * Formats the specified number
-         * @param n
-         * @param decimals
-         * @param symbol
-         * @returns {string}
-         */
-        onFormatNumber(n: number, decimals?: number, symbol?: string): string;
-        /**
-         * Returns the date as a long format
-         * @param d
-         */
-        onFormatLongDate(d: DateTime): string;
-        /**
-         * Returns the date as a short format
-         * @param d
-         */
-        onFormatShortDate(d: DateTime): string;
-    }
-}
 declare module latte {
     /**
      *
@@ -1213,6 +1093,126 @@ declare module latte {
         r: number;
     }
 }
+/**
+ * Created by josemanuel on 2/6/14.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class Culture {
+        /**
+         * Property field
+         */
+        private static _current;
+        /**
+         * Gets or sets the current culture of the system
+         *
+         * @returns {Culture}
+         */
+        /**
+         * Gets or sets the current culture of the system
+         *
+         * @param {Culture} value
+         */
+        static current: Culture;
+        /**
+         * Field for esMX property
+         */
+        private static _esMx;
+        /**
+         * Gets the Español-Mexico Culture
+         *
+         * @returns {Culture}
+         */
+        static esMx: Culture;
+        /**
+         * Field for enUs property
+         */
+        private static _enUs;
+        /**
+         * Gets the English-USA Culture
+         *
+         * @returns {Culture}
+         */
+        static enUs: Culture;
+        /**
+         * Formats currency using the current culture
+         * @param n
+         * @returns {string}
+         */
+        static formatCurrency(n: number): string;
+        /**
+         * Returns the date as a short format
+         * @param d
+         */
+        static formatShortDate(d: DateTime): string;
+        /**
+         * Returns the date as a short format
+         * @param d
+         */
+        static formatLongDate(d: DateTime): string;
+        /**
+         * Formats a number using the current Culture
+         * @param n
+         * @param decimals
+         * @param symbol
+         * @returns {string}
+         */
+        static formatNumber(n: number, decimals?: number, symbol?: string): string;
+        /**
+         * Short date format
+         */
+        shortDateFormat: string;
+        /**
+         * Long date format
+         */
+        longDateFormat: string;
+        /**
+         * Amount of decimals to show in currency format
+         */
+        currencyDecimals: number;
+        /**
+         * Separator of decimals for currency
+         */
+        numberDecimalsSeparator: string;
+        /**
+         * Thousands separator for currency
+         */
+        numberThousandsSeparator: string;
+        /**
+         * Symbol to use in currency
+         */
+        currencySymbol: string;
+        /**
+         *
+         */
+        constructor();
+        /**
+         * Returns the specified number as a currency
+         * @param n
+         */
+        onFormatCurrency(n: number): string;
+        /**
+         * Formats the specified number
+         * @param n
+         * @param decimals
+         * @param symbol
+         * @returns {string}
+         */
+        onFormatNumber(n: number, decimals?: number, symbol?: string): string;
+        /**
+         * Returns the date as a long format
+         * @param d
+         */
+        onFormatLongDate(d: DateTime): string;
+        /**
+         * Returns the date as a short format
+         * @param d
+         */
+        onFormatShortDate(d: DateTime): string;
+    }
+}
 declare module latte {
     class EventHandler {
         handler: Function;
@@ -1482,6 +1482,36 @@ declare module latte {
      *
      * function pow(a){
      *
+     *      throw new latte.InvalidCallEx('pow')
+     *
+     * }
+     *
+     * </example>
+     */
+    class InvalidCallEx extends Ex {
+        method: string;
+        /**
+         * Creates the Exception
+         * @param method
+         */
+        constructor(method?: string);
+        /**
+         * Returns a string explaining the exception
+         *
+         * @returns {string}
+         */
+        toString(): string;
+    }
+}
+declare module latte {
+    /**
+     * Exception thrown when an argument of the function was invalid.
+     *
+     * Usage:
+     * <example>
+     *
+     * function pow(a){
+     *
      *      if(typeof a != 'number')
      *          // Inform user that the parameter was invalid
      *          throw new InvalidArgumentEx('a');
@@ -1600,34 +1630,73 @@ declare module latte {
         loadingText: string;
     }
 }
+/**
+ * Created by josemanuel on 5/12/14.
+ */
 declare module latte {
     /**
-     * Exception thrown when an argument of the function was invalid.
      *
-     * Usage:
-     * <example>
-     *
-     * function pow(a){
-     *
-     *      throw new latte.InvalidCallEx('pow')
-     *
-     * }
-     *
-     * </example>
      */
-    class InvalidCallEx extends Ex {
-        method: string;
+    class Point {
         /**
-         * Creates the Exception
-         * @param method
+         * Gets the distance between two points
+         * @param a
+         * @param b
          */
-        constructor(method?: string);
+        static distance(a: Point, b: Point): number;
         /**
-         * Returns a string explaining the exception
+         * Returns an empty point
+         * @returns {latte.Point}
+         */
+        static empty(): Point;
+        /**
+         * Returns a point situated on the origin
+         * @returns {latte.Point}
+         */
+        static origin(): Point;
+        /**
+         * Creates a new point, optionally
+         */
+        constructor(x?: number, y?: number);
+        /**
+         * Returns the offset operation of the point
          *
+         * @param x
+         * @param y
+         * @returns {latte.Point}
+         */
+        offset(x: number, y: number): Point;
+        /**
+         * Gets string representation of the point
          * @returns {string}
          */
         toString(): string;
+        /**
+         * Gets a value indicating if the point is empty (No value has been set)
+         *
+         * @returns {boolean}
+         */
+        isEmpty: boolean;
+        /**
+         * Property field
+         */
+        private _x;
+        /**
+         * Gets or sets the X of the point
+         *
+         * @returns {number}
+         */
+        x: number;
+        /**
+         * Property field
+         */
+        private _y;
+        /**
+         * Gets the Y coordinate of the point
+         *
+         * @returns {number}
+         */
+        y: number;
     }
 }
 declare module latte {
@@ -1756,73 +1825,65 @@ declare module latte {
         width: number;
     }
 }
-/**
- * Created by josemanuel on 5/12/14.
- */
 declare module latte {
     /**
-     *
-     */
-    class Point {
+     * Executes an action every specified amount of milliseconds
+     **/
+    class Timer {
         /**
-         * Gets the distance between two points
-         * @param a
-         * @param b
-         */
-        static distance(a: Point, b: Point): number;
-        /**
-         * Returns an empty point
-         * @returns {latte.Point}
-         */
-        static empty(): Point;
-        /**
-         * Returns a point situated on the origin
-         * @returns {latte.Point}
-         */
-        static origin(): Point;
-        /**
-         * Creates a new point, optionally
-         */
-        constructor(x?: number, y?: number);
-        /**
-         * Returns the offset operation of the point
          *
-         * @param x
-         * @param y
-         * @returns {latte.Point}
-         */
-        offset(x: number, y: number): Point;
+         **/
+        private _callback;
         /**
-         * Gets string representation of the point
-         * @returns {string}
-         */
-        toString(): string;
-        /**
-         * Gets a value indicating if the point is empty (No value has been set)
          *
-         * @returns {boolean}
-         */
-        isEmpty: boolean;
+         **/
+        private _context;
         /**
-         * Property field
-         */
-        private _x;
-        /**
-         * Gets or sets the X of the point
          *
-         * @returns {number}
-         */
-        x: number;
+         **/
+        private _milliseconds;
         /**
-         * Property field
-         */
-        private _y;
-        /**
-         * Gets the Y coordinate of the point
          *
-         * @returns {number}
-         */
-        y: number;
+         **/
+        private _paused;
+        /**
+         * Creates a timer that will call <c>callback</c> every specified amount of
+         <c>milliseconds</c> on the specified <c>context</c>.
+         **/
+        constructor(callback: Function, milliseconds: number, context: any);
+        /**
+         * Gets or sets the function who will be called every tick
+         **/
+        /**
+         * Gets or sets the function who will be called every tick
+         **/
+        callback: Function;
+        /**
+         * Gets or sets the context in which the function is executed
+         **/
+        /**
+         * Gets or sets the context in which the function is executed
+         **/
+        context: any;
+        /**
+         * Gets or sets the milliseconds to sleep between calls
+         **/
+        /**
+         * Gets or sets the milliseconds to sleep between calls
+         **/
+        milliseconds: number;
+        /**
+         * Pauses the timer
+         **/
+        pause(): void;
+        /**
+         * Starts ticking
+         **/
+        start(): void;
+        /**
+         * Ticks the timer. Executes the callback and programs next tick.
+         **/
+        tick(): void;
     }
 }
 /**
@@ -2036,67 +2097,6 @@ declare module latte {
          * Gets the value of this timespan expressed in whole and fractional seconds
          **/
         totalSeconds: number;
-    }
-}
-declare module latte {
-    /**
-     * Executes an action every specified amount of milliseconds
-     **/
-    class Timer {
-        /**
-         *
-         **/
-        private _callback;
-        /**
-         *
-         **/
-        private _context;
-        /**
-         *
-         **/
-        private _milliseconds;
-        /**
-         *
-         **/
-        private _paused;
-        /**
-         * Creates a timer that will call <c>callback</c> every specified amount of
-         <c>milliseconds</c> on the specified <c>context</c>.
-         **/
-        constructor(callback: Function, milliseconds: number, context: any);
-        /**
-         * Gets or sets the function who will be called every tick
-         **/
-        /**
-         * Gets or sets the function who will be called every tick
-         **/
-        callback: Function;
-        /**
-         * Gets or sets the context in which the function is executed
-         **/
-        /**
-         * Gets or sets the context in which the function is executed
-         **/
-        context: any;
-        /**
-         * Gets or sets the milliseconds to sleep between calls
-         **/
-        /**
-         * Gets or sets the milliseconds to sleep between calls
-         **/
-        milliseconds: number;
-        /**
-         * Pauses the timer
-         **/
-        pause(): void;
-        /**
-         * Starts ticking
-         **/
-        start(): void;
-        /**
-         * Ticks the timer. Executes the callback and programs next tick.
-         **/
-        tick(): void;
     }
 }
 declare module latte {

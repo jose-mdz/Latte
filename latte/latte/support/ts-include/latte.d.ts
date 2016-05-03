@@ -612,55 +612,6 @@ declare module latte {
 }
 declare module latte {
     /**
-     * Enumerates week days
-     */
-    enum WeekDay {
-        /**
-         * Sunday
-         *
-         * @type {number}
-         */
-        SUNDAY = 0,
-        /**
-         * Monday
-         *
-         * @type {number}
-         */
-        MONDAY = 1,
-        /**
-         * Tuesday
-         *
-         * @type {number}
-         */
-        TUESDAY = 2,
-        /**
-         * Wednesday
-         *
-         * @type {number}
-         */
-        WEDNESDAY = 3,
-        /**
-         * Thursday
-         *
-         * @type {number}
-         */
-        THURSDAY = 4,
-        /**
-         * Friday
-         *
-         * @type {number}
-         */
-        FRIDAY = 5,
-        /**
-         * Saturday
-         *
-         * @type {number}
-         */
-        SATURDAY = 6,
-    }
-}
-declare module latte {
-    /**
      * Holds a list of already included plugins
      *
      * @type {Array<string>}
@@ -746,6 +697,55 @@ declare module latte {
 }
 declare module latte {
     /**
+     * Enumerates week days
+     */
+    enum WeekDay {
+        /**
+         * Sunday
+         *
+         * @type {number}
+         */
+        SUNDAY = 0,
+        /**
+         * Monday
+         *
+         * @type {number}
+         */
+        MONDAY = 1,
+        /**
+         * Tuesday
+         *
+         * @type {number}
+         */
+        TUESDAY = 2,
+        /**
+         * Wednesday
+         *
+         * @type {number}
+         */
+        WEDNESDAY = 3,
+        /**
+         * Thursday
+         *
+         * @type {number}
+         */
+        THURSDAY = 4,
+        /**
+         * Friday
+         *
+         * @type {number}
+         */
+        FRIDAY = 5,
+        /**
+         * Saturday
+         *
+         * @type {number}
+         */
+        SATURDAY = 6,
+    }
+}
+declare module latte {
+    /**
      * Generic Exception class
      *
      * Usage
@@ -770,152 +770,6 @@ declare module latte {
          * @returns {string}
          */
         toString(): string;
-    }
-}
-/**
- * Created by josemanuel on 5/4/15.
- */
-declare module latte {
-    /**
-     *
-     */
-    class Ajax {
-        /**
-         * Loads an URL
-         * @param url
-         * @param success
-         * @param error
-         */
-        static get(url: string, success?: (string) => void, error?: (string) => void): void;
-        /**
-         * Loads an URL
-         *
-         * @param url
-         * @param data
-         * @param success
-         * @param error
-         */
-        static post(url: string, data: any, success?: (string) => void, error?: (string) => void): void;
-    }
-}
-/**
- * Created by josemanuel on 2/6/14.
- */
-declare module latte {
-    /**
-     *
-     */
-    class Culture {
-        /**
-         * Property field
-         */
-        private static _current;
-        /**
-         * Gets or sets the current culture of the system
-         *
-         * @returns {Culture}
-         */
-        /**
-         * Gets or sets the current culture of the system
-         *
-         * @param {Culture} value
-         */
-        static current: Culture;
-        /**
-         * Field for esMX property
-         */
-        private static _esMx;
-        /**
-         * Gets the Español-Mexico Culture
-         *
-         * @returns {Culture}
-         */
-        static esMx: Culture;
-        /**
-         * Field for enUs property
-         */
-        private static _enUs;
-        /**
-         * Gets the English-USA Culture
-         *
-         * @returns {Culture}
-         */
-        static enUs: Culture;
-        /**
-         * Formats currency using the current culture
-         * @param n
-         * @returns {string}
-         */
-        static formatCurrency(n: number): string;
-        /**
-         * Returns the date as a short format
-         * @param d
-         */
-        static formatShortDate(d: DateTime): string;
-        /**
-         * Returns the date as a short format
-         * @param d
-         */
-        static formatLongDate(d: DateTime): string;
-        /**
-         * Formats a number using the current Culture
-         * @param n
-         * @param decimals
-         * @param symbol
-         * @returns {string}
-         */
-        static formatNumber(n: number, decimals?: number, symbol?: string): string;
-        /**
-         * Short date format
-         */
-        shortDateFormat: string;
-        /**
-         * Long date format
-         */
-        longDateFormat: string;
-        /**
-         * Amount of decimals to show in currency format
-         */
-        currencyDecimals: number;
-        /**
-         * Separator of decimals for currency
-         */
-        numberDecimalsSeparator: string;
-        /**
-         * Thousands separator for currency
-         */
-        numberThousandsSeparator: string;
-        /**
-         * Symbol to use in currency
-         */
-        currencySymbol: string;
-        /**
-         *
-         */
-        constructor();
-        /**
-         * Returns the specified number as a currency
-         * @param n
-         */
-        onFormatCurrency(n: number): string;
-        /**
-         * Formats the specified number
-         * @param n
-         * @param decimals
-         * @param symbol
-         * @returns {string}
-         */
-        onFormatNumber(n: number, decimals?: number, symbol?: string): string;
-        /**
-         * Returns the date as a long format
-         * @param d
-         */
-        onFormatLongDate(d: DateTime): string;
-        /**
-         * Returns the date as a short format
-         * @param d
-         */
-        onFormatShortDate(d: DateTime): string;
     }
 }
 declare module latte {
@@ -1061,6 +915,32 @@ declare module latte {
          * @returns {number}
          */
         length: number;
+    }
+}
+/**
+ * Created by josemanuel on 5/4/15.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class Ajax {
+        /**
+         * Loads an URL
+         * @param url
+         * @param success
+         * @param error
+         */
+        static get(url: string, success?: (string) => void, error?: (string) => void): void;
+        /**
+         * Loads an URL
+         *
+         * @param url
+         * @param data
+         * @param success
+         * @param error
+         */
+        static post(url: string, data: any, success?: (string) => void, error?: (string) => void): void;
     }
 }
 declare module latte {
@@ -1211,6 +1091,126 @@ declare module latte {
          * Gets or sets the Red component of color, from 0 to 255.
          **/
         r: number;
+    }
+}
+/**
+ * Created by josemanuel on 2/6/14.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class Culture {
+        /**
+         * Property field
+         */
+        private static _current;
+        /**
+         * Gets or sets the current culture of the system
+         *
+         * @returns {Culture}
+         */
+        /**
+         * Gets or sets the current culture of the system
+         *
+         * @param {Culture} value
+         */
+        static current: Culture;
+        /**
+         * Field for esMX property
+         */
+        private static _esMx;
+        /**
+         * Gets the Español-Mexico Culture
+         *
+         * @returns {Culture}
+         */
+        static esMx: Culture;
+        /**
+         * Field for enUs property
+         */
+        private static _enUs;
+        /**
+         * Gets the English-USA Culture
+         *
+         * @returns {Culture}
+         */
+        static enUs: Culture;
+        /**
+         * Formats currency using the current culture
+         * @param n
+         * @returns {string}
+         */
+        static formatCurrency(n: number): string;
+        /**
+         * Returns the date as a short format
+         * @param d
+         */
+        static formatShortDate(d: DateTime): string;
+        /**
+         * Returns the date as a short format
+         * @param d
+         */
+        static formatLongDate(d: DateTime): string;
+        /**
+         * Formats a number using the current Culture
+         * @param n
+         * @param decimals
+         * @param symbol
+         * @returns {string}
+         */
+        static formatNumber(n: number, decimals?: number, symbol?: string): string;
+        /**
+         * Short date format
+         */
+        shortDateFormat: string;
+        /**
+         * Long date format
+         */
+        longDateFormat: string;
+        /**
+         * Amount of decimals to show in currency format
+         */
+        currencyDecimals: number;
+        /**
+         * Separator of decimals for currency
+         */
+        numberDecimalsSeparator: string;
+        /**
+         * Thousands separator for currency
+         */
+        numberThousandsSeparator: string;
+        /**
+         * Symbol to use in currency
+         */
+        currencySymbol: string;
+        /**
+         *
+         */
+        constructor();
+        /**
+         * Returns the specified number as a currency
+         * @param n
+         */
+        onFormatCurrency(n: number): string;
+        /**
+         * Formats the specified number
+         * @param n
+         * @param decimals
+         * @param symbol
+         * @returns {string}
+         */
+        onFormatNumber(n: number, decimals?: number, symbol?: string): string;
+        /**
+         * Returns the date as a long format
+         * @param d
+         */
+        onFormatLongDate(d: DateTime): string;
+        /**
+         * Returns the date as a short format
+         * @param d
+         */
+        onFormatShortDate(d: DateTime): string;
     }
 }
 declare module latte {
@@ -1473,43 +1473,6 @@ declare module latte {
         year: number;
     }
 }
-declare module latte {
-    /**
-     * Exception thrown when an argument of the function was invalid.
-     *
-     * Usage:
-     * <example>
-     *
-     * function pow(a){
-     *
-     *      if(typeof a != 'number')
-     *          // Inform user that the parameter was invalid
-     *          throw new InvalidArgumentEx('a');
-     *
-     *      return a * a;
-     *
-     * }
-     *
-     * </example>
-     */
-    class InvalidArgumentEx extends Ex {
-        argument: string;
-        value: any;
-        /**
-         * Creates the exception
-         *
-         * @param argument
-         * @param value
-         */
-        constructor(argument?: string, value?: any);
-        /**
-         * Returns a string explaining the exception
-         *
-         * @returns {string}
-         */
-        toString(): string;
-    }
-}
 /**
  * Created by josemanuel on 5/26/15.
  */
@@ -1609,6 +1572,43 @@ declare module latte {
      *
      * function pow(a){
      *
+     *      if(typeof a != 'number')
+     *          // Inform user that the parameter was invalid
+     *          throw new InvalidArgumentEx('a');
+     *
+     *      return a * a;
+     *
+     * }
+     *
+     * </example>
+     */
+    class InvalidArgumentEx extends Ex {
+        argument: string;
+        value: any;
+        /**
+         * Creates the exception
+         *
+         * @param argument
+         * @param value
+         */
+        constructor(argument?: string, value?: any);
+        /**
+         * Returns a string explaining the exception
+         *
+         * @returns {string}
+         */
+        toString(): string;
+    }
+}
+declare module latte {
+    /**
+     * Exception thrown when an argument of the function was invalid.
+     *
+     * Usage:
+     * <example>
+     *
+     * function pow(a){
+     *
      *      throw new latte.InvalidCallEx('pow')
      *
      * }
@@ -1628,132 +1628,6 @@ declare module latte {
          * @returns {string}
          */
         toString(): string;
-    }
-}
-declare module latte {
-    /**
-     * Reprsents a Rectangle
-     **/
-    class Rectangle {
-        /**
-         * Creates a rectangle with the specified left, right, top and bottom.
-         **/
-        static fromLRTB(left: number, right: number, top: number, bottom: number): Rectangle;
-        /**
-         * Height of rectangle
-         **/
-        private _height;
-        /**
-         * Left of rectangle
-         **/
-        private _left;
-        /**
-         * Top of rectangle
-         **/
-        private _top;
-        /**
-         * Width of rectangle
-         **/
-        private _width;
-        /**
-         *
-         */
-        private _tag;
-        /**
-         * Creates a rectangle with the specified left, top, width and height.
-         **/
-        constructor(left?: number, top?: number, width?: number, height?: number);
-        /**
-         * Returns the result of centering this into the specified container
-         **/
-        center(container: Rectangle): Rectangle;
-        /**
-         * Gets a value indicating if the specified point is contained
-         **/
-        contains(x: number, y: number): boolean;
-        /**
-         * Gets a value indicating if the rectangle is contained inside this rectangle
-         **/
-        containsRectangle(rectangle: Rectangle): boolean;
-        /**
-         * Returns the result of inflating the rectangle vertically and horizontally on each edge.
-         **/
-        inflate(horizontal: number, vertical: number): Rectangle;
-        /**
-         * Returns the rectangle result of intersecting this with passed rectangle
-         **/
-        intersection(rectangle: Rectangle): Rectangle;
-        /**
-         * Gets a value indicating if the rectangle intersects specified rectangle
-         **/
-        intersects(rectangle: Rectangle): boolean;
-        /**
-         * Returns a scaled rectangle
-         * @param width
-         */
-        scaleToHeight(height: number): Rectangle;
-        /**
-         * Returns a scaled rectangle
-         * @param width
-         */
-        scaleToWidth(width: number): Rectangle;
-        /**
-         * Returns a string describing the rectangle
-         **/
-        toString(): string;
-        /**
-         * Gets a rectangle representing the union of this rectangle and the passed one
-         **/
-        union(rectangle: Rectangle): Rectangle;
-        /**
-         * Gets or sets the right side of the rectangle
-         **/
-        /**
-         * Gets or sets the right side of the rectangle
-         **/
-        bottom: number;
-        /**
-         * Gets or sets the height of the rectangle
-         **/
-        /**
-         * Gets or sets the height of the rectangle
-         **/
-        height: number;
-        /**
-         * Gets or sets the left of the rectangle
-         **/
-        /**
-         * Gets or sets the left of the rectangle
-         **/
-        left: number;
-        /**
-         * Gets or sets the right side of the rectangle
-         **/
-        /**
-         * Gets or sets the right side of the rectangle
-         **/
-        right: number;
-        /**
-         * Gets the size of the rectangle
-         *
-         * @returns {Size}
-         */
-        size: Size;
-        tag: any;
-        /**
-         * Gets or sets the top of the rectangle
-         **/
-        /**
-         * Gets or sets the top of the rectangle
-         **/
-        top: number;
-        /**
-         * Gets or sets the width of the rectangle
-         **/
-        /**
-         * Gets or sets the width of the rectangle
-         **/
-        width: number;
     }
 }
 /**
@@ -1896,6 +1770,132 @@ declare module latte {
          *
          * @returns {number}
          */
+        width: number;
+    }
+}
+declare module latte {
+    /**
+     * Reprsents a Rectangle
+     **/
+    class Rectangle {
+        /**
+         * Creates a rectangle with the specified left, right, top and bottom.
+         **/
+        static fromLRTB(left: number, right: number, top: number, bottom: number): Rectangle;
+        /**
+         * Height of rectangle
+         **/
+        private _height;
+        /**
+         * Left of rectangle
+         **/
+        private _left;
+        /**
+         * Top of rectangle
+         **/
+        private _top;
+        /**
+         * Width of rectangle
+         **/
+        private _width;
+        /**
+         *
+         */
+        private _tag;
+        /**
+         * Creates a rectangle with the specified left, top, width and height.
+         **/
+        constructor(left?: number, top?: number, width?: number, height?: number);
+        /**
+         * Returns the result of centering this into the specified container
+         **/
+        center(container: Rectangle): Rectangle;
+        /**
+         * Gets a value indicating if the specified point is contained
+         **/
+        contains(x: number, y: number): boolean;
+        /**
+         * Gets a value indicating if the rectangle is contained inside this rectangle
+         **/
+        containsRectangle(rectangle: Rectangle): boolean;
+        /**
+         * Returns the result of inflating the rectangle vertically and horizontally on each edge.
+         **/
+        inflate(horizontal: number, vertical: number): Rectangle;
+        /**
+         * Returns the rectangle result of intersecting this with passed rectangle
+         **/
+        intersection(rectangle: Rectangle): Rectangle;
+        /**
+         * Gets a value indicating if the rectangle intersects specified rectangle
+         **/
+        intersects(rectangle: Rectangle): boolean;
+        /**
+         * Returns a scaled rectangle
+         * @param width
+         */
+        scaleToHeight(height: number): Rectangle;
+        /**
+         * Returns a scaled rectangle
+         * @param width
+         */
+        scaleToWidth(width: number): Rectangle;
+        /**
+         * Returns a string describing the rectangle
+         **/
+        toString(): string;
+        /**
+         * Gets a rectangle representing the union of this rectangle and the passed one
+         **/
+        union(rectangle: Rectangle): Rectangle;
+        /**
+         * Gets or sets the right side of the rectangle
+         **/
+        /**
+         * Gets or sets the right side of the rectangle
+         **/
+        bottom: number;
+        /**
+         * Gets or sets the height of the rectangle
+         **/
+        /**
+         * Gets or sets the height of the rectangle
+         **/
+        height: number;
+        /**
+         * Gets or sets the left of the rectangle
+         **/
+        /**
+         * Gets or sets the left of the rectangle
+         **/
+        left: number;
+        /**
+         * Gets or sets the right side of the rectangle
+         **/
+        /**
+         * Gets or sets the right side of the rectangle
+         **/
+        right: number;
+        /**
+         * Gets the size of the rectangle
+         *
+         * @returns {Size}
+         */
+        size: Size;
+        tag: any;
+        /**
+         * Gets or sets the top of the rectangle
+         **/
+        /**
+         * Gets or sets the top of the rectangle
+         **/
+        top: number;
+        /**
+         * Gets or sets the width of the rectangle
+         **/
+        /**
+         * Gets or sets the width of the rectangle
+         **/
         width: number;
     }
 }

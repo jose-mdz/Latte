@@ -107,6 +107,7 @@ class DataLatteCall{
                         }
 
                     } catch (Exception $e) {
+                        //die("Died because of exception: $e");
                         $response = DataLatteResponse::fromError($e->getMessage(), $e->getCode());
                     }
                 } else {

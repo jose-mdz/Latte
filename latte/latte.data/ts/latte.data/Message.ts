@@ -249,6 +249,7 @@ module latte{
 
             // Try to parse JSON
             try{
+                // log(data)
                 result = JSON.parse(data);
                 parsed = true;
             }catch(ex){}

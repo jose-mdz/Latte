@@ -44,6 +44,9 @@ module latte{
                 this['_' + i] = this.response[i];
             }
 
+            // log("Response: ")
+            // log(this.response)
+
             if(this.success === true){
                 this._data = DataRecord.scanAndConvert(this.data);
             }else{

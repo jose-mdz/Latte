@@ -115,7 +115,9 @@ class DataLatteModule {
         }
 
         foreach ($autoloads as $module){
-            DataLatteModule::memoryLoad($module)->loadConnection();
+            if(!DataLatteModule::isLoaded($module)){
+                DataLatteModule::memoryLoad($module)->loadConnection();
+            }
         }
     }
 
@@ -151,13 +153,16 @@ class DataLatteModule {
      * @return DataLatteModule
      */
     public static function memoryLoad($moduleName, $lang = null){
+        if(DataLatteModule::isLoaded($moduleName)){
+            return;
+        }
         $module = new DataLatteModule($moduleName);
         $module->load($lang);
         return $module;
     }
 
     //endregion
-
+ 
     //region Public Fields
 
     /**
@@ -437,7 +442,6 @@ class DataLatteModule {
      * @param string $lang
      */
     public function load($lang = null){
-
 
         // Report as loaded
         self::$loadedModules[] = $this;
