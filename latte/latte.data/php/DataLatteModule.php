@@ -463,6 +463,16 @@ class DataLatteModule {
         }
         //endregion
 
+        //region Module Includes
+        if(isset($this->metadata['module-include'])){
+            foreach($this->metadata['module-include'] as $moduleName){
+                if(!DataLatteModule::isLoaded($moduleName)){
+                    DataLatteModule::memoryLoad($moduleName, $lang);
+                }
+            }
+        }
+        //region
+
         //region Includes
         if(isset($this->metadata['php-include'])){
             foreach($this->metadata['php-include'] as $file){

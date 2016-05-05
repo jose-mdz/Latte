@@ -665,69 +665,6 @@ declare module latte {
         parent: ExplorerItem;
     }
 }
-declare module latte {
-    /**
-     * Shows a dialog to edit the specified <c>DataRecord</c>
-     **/
-    class DataRecordDialogView extends DialogView {
-        /**
-         * Shows a dialog to edit the specified record
-         * @param r
-         * @param onSaved
-         * @param title
-         */
-        static editRecord(r: DataRecord, onSaved?: () => any, title?: string): DataRecordDialogView;
-        /**
-         *
-         */
-        private _readOnly;
-        /**
-         *
-         **/
-        cancelButton: ButtonItem;
-        /**
-         *
-         **/
-        formView: DataRecordFormView;
-        /**
-         *
-         **/
-        saveButton: ButtonItem;
-        /**
-         *
-         **/
-        saving: LatteEvent;
-        /**
-         *
-         **/
-        saved: LatteEvent;
-        /**
-         *
-         **/
-        constructor(record?: DataRecord);
-        /**
-         * Raises the <c>saved</c> event
-         **/
-        onSaved(): void;
-        /**
-         * Raises the <c>saving</c> event
-         **/
-        onSaving(): void;
-        /**
-         * Gets or sets a value indicating if the form is for read-only
-         **/
-        /**
-         * Gets or sets a value indicating if the form is for read-only
-         **/
-        readOnly: boolean;
-        /**
-         * Gets the record of the view
-         *
-         * @returns {DataRecord}
-         */
-        record: DataRecord;
-    }
-}
 /**
  * Created by josemanuel on 10/25/14.
  */
@@ -903,45 +840,63 @@ declare module latte {
 }
 declare module latte {
     /**
-     * Creates a form for a specific <c>DataRecord</c>
+     * Shows a dialog to edit the specified <c>DataRecord</c>
      **/
-    class DataRecordFormItem extends FormItem {
+    class DataRecordDialogView extends DialogView {
         /**
-         * Creates the form of the specified record
+         * Shows a dialog to edit the specified record
+         * @param r
+         * @param onSaved
+         * @param title
+         */
+        static editRecord(r: DataRecord, onSaved?: () => any, title?: string): DataRecordDialogView;
+        /**
+         *
+         */
+        private _readOnly;
+        /**
+         *
+         **/
+        cancelButton: ButtonItem;
+        /**
+         *
+         **/
+        formView: DataRecordFormView;
+        /**
+         *
+         **/
+        saveButton: ButtonItem;
+        /**
+         *
+         **/
+        saving: LatteEvent;
+        /**
+         *
+         **/
+        saved: LatteEvent;
+        /**
+         *
          **/
         constructor(record?: DataRecord);
         /**
-         * Applies the values on form to the record. Optionally specifies which record
-         is supposed to receive the values
+         * Raises the <c>saved</c> event
          **/
-        applyValues(record?: DataRecord): void;
+        onSaved(): void;
         /**
-         * Raises the <c>record</c> event
-         */
-        onRecordChanged(): void;
+         * Raises the <c>saving</c> event
+         **/
+        onSaving(): void;
         /**
-         * Back field for event
-         */
-        private _recordChanged;
+         * Gets or sets a value indicating if the form is for read-only
+         **/
         /**
-         * Gets an event raised when the value of the record property changes
-         *
-         * @returns {LatteEvent}
-         */
-        recordChanged: LatteEvent;
+         * Gets or sets a value indicating if the form is for read-only
+         **/
+        readOnly: boolean;
         /**
-         * Property field
-         */
-        private _record;
-        /**
-         * Gets or sets the record of the form
+         * Gets the record of the view
          *
          * @returns {DataRecord}
-         */
-        /**
-         * Gets or sets the record of the form
-         *
-         * @param {DataRecord} value
          */
         record: DataRecord;
     }
@@ -1111,6 +1066,51 @@ declare module latte {
 }
 declare module latte {
     /**
+     * Creates a form for a specific <c>DataRecord</c>
+     **/
+    class DataRecordFormItem extends FormItem {
+        /**
+         * Creates the form of the specified record
+         **/
+        constructor(record?: DataRecord);
+        /**
+         * Applies the values on form to the record. Optionally specifies which record
+         is supposed to receive the values
+         **/
+        applyValues(record?: DataRecord): void;
+        /**
+         * Raises the <c>record</c> event
+         */
+        onRecordChanged(): void;
+        /**
+         * Back field for event
+         */
+        private _recordChanged;
+        /**
+         * Gets an event raised when the value of the record property changes
+         *
+         * @returns {LatteEvent}
+         */
+        recordChanged: LatteEvent;
+        /**
+         * Property field
+         */
+        private _record;
+        /**
+         * Gets or sets the record of the form
+         *
+         * @returns {DataRecord}
+         */
+        /**
+         * Gets or sets the record of the form
+         *
+         * @param {DataRecord} value
+         */
+        record: DataRecord;
+    }
+}
+declare module latte {
+    /**
      *
      **/
     class DataRecordFormView extends FormView {
@@ -1198,97 +1198,6 @@ declare module latte {
          * Gets or sets the recordType of the grid
          **/
         recordType: string;
-    }
-}
-/**
- * Created by josemanuel on 10/24/14.
- */
-declare module latte {
-    /**
-     *
-     */
-    class DataRecordWidget extends WidgetItem {
-        /**
-         *
-         */
-        constructor(record?: DataRecord);
-        /**
-         * Raises the <c>record</c> event
-         */
-        onRecordChanged(): void;
-        /**
-         * Raises the <c>saving</c> event
-         */
-        onSaving(): void;
-        /**
-         * Raises the <c>saved</c> event
-         */
-        onSaved(): void;
-        /**
-         * Back field for event
-         */
-        private _recordChanged;
-        /**
-         * Gets an event raised when the value of the record property changes
-         *
-         * @returns {LatteEvent}
-         */
-        recordChanged: LatteEvent;
-        /**
-         * Back field for event
-         */
-        private _saving;
-        /**
-         * Gets an event raised when the record is being saved
-         *
-         * @returns {LatteEvent}
-         */
-        saving: LatteEvent;
-        /**
-         * Back field for event
-         */
-        private _saved;
-        /**
-         * Gets an event raised when the record is saved
-         *
-         * @returns {LatteEvent}
-         */
-        saved: LatteEvent;
-        /**
-         * Field for form property
-         */
-        private _form;
-        /**
-         * Gets the form of the record
-         *
-         * @returns {DataRecordFormItem}
-         */
-        form: DataRecordFormItem;
-        /**
-         * Field for btnSave property
-         */
-        private _btnSave;
-        /**
-         * Gets the save button
-         *
-         * @returns {ButtonItem}
-         */
-        btnSave: ButtonItem;
-        /**
-         * Property field
-         */
-        private _record;
-        /**
-         * Gets or sets the record of the widget
-         *
-         * @returns {DataRecord}
-         */
-        /**
-         * Gets or sets the record of the widget
-         *
-         * @param {DataRecord} value
-         */
-        record: DataRecord;
     }
 }
 /**
@@ -1411,6 +1320,97 @@ declare module latte {
         text: string;
     }
 }
+/**
+ * Created by josemanuel on 10/24/14.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class DataRecordWidget extends WidgetItem {
+        /**
+         *
+         */
+        constructor(record?: DataRecord);
+        /**
+         * Raises the <c>record</c> event
+         */
+        onRecordChanged(): void;
+        /**
+         * Raises the <c>saving</c> event
+         */
+        onSaving(): void;
+        /**
+         * Raises the <c>saved</c> event
+         */
+        onSaved(): void;
+        /**
+         * Back field for event
+         */
+        private _recordChanged;
+        /**
+         * Gets an event raised when the value of the record property changes
+         *
+         * @returns {LatteEvent}
+         */
+        recordChanged: LatteEvent;
+        /**
+         * Back field for event
+         */
+        private _saving;
+        /**
+         * Gets an event raised when the record is being saved
+         *
+         * @returns {LatteEvent}
+         */
+        saving: LatteEvent;
+        /**
+         * Back field for event
+         */
+        private _saved;
+        /**
+         * Gets an event raised when the record is saved
+         *
+         * @returns {LatteEvent}
+         */
+        saved: LatteEvent;
+        /**
+         * Field for form property
+         */
+        private _form;
+        /**
+         * Gets the form of the record
+         *
+         * @returns {DataRecordFormItem}
+         */
+        form: DataRecordFormItem;
+        /**
+         * Field for btnSave property
+         */
+        private _btnSave;
+        /**
+         * Gets the save button
+         *
+         * @returns {ButtonItem}
+         */
+        btnSave: ButtonItem;
+        /**
+         * Property field
+         */
+        private _record;
+        /**
+         * Gets or sets the record of the widget
+         *
+         * @returns {DataRecord}
+         */
+        /**
+         * Gets or sets the record of the widget
+         *
+         * @param {DataRecord} value
+         */
+        record: DataRecord;
+    }
+}
 declare module latte {
     /**
      * Represents a row of data on the <c>GridView</c>
@@ -1520,35 +1520,6 @@ declare module latte {
          * @param {DataRecord} value
          */
         record: T;
-    }
-}
-/**
- * Created by josemanuel on 8/8/14.
- */
-declare module latte {
-    /**
-     *
-     */
-    class ExplorerTreeItem extends TreeItem {
-        /**
-         *
-         */
-        constructor();
-        /**
-         * Property field
-         */
-        private _record;
-        /**
-         * Gets or sets the record of the tree item
-         *
-         * @returns {DataRecord}
-         */
-        /**
-         * Gets or sets the record of the tree item
-         *
-         * @param {DataRecord} value
-         */
-        record: DataRecord;
     }
 }
 /**
@@ -1709,5 +1680,34 @@ declare module latte {
          * @returns {TreeView}
          */
         treeView: TreeView;
+    }
+}
+/**
+ * Created by josemanuel on 8/8/14.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class ExplorerTreeItem extends TreeItem {
+        /**
+         *
+         */
+        constructor();
+        /**
+         * Property field
+         */
+        private _record;
+        /**
+         * Gets or sets the record of the tree item
+         *
+         * @returns {DataRecord}
+         */
+        /**
+         * Gets or sets the record of the tree item
+         *
+         * @param {DataRecord} value
+         */
+        record: DataRecord;
     }
 }

@@ -66,7 +66,7 @@ module latte{
         static fromName(name:string, id:number, callback: DataRecordCallback) {
 
 
-            var m = new latte.Message('_core', 'DataLatteUa', 'recordSelect',
+            var m = new latte.Message('latte.data', 'DataLatteUa', 'recordSelect',
                 {name: name, id: id})
                 .send( (record: DataRecord) => {
 

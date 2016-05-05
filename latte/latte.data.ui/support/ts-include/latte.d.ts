@@ -1482,36 +1482,6 @@ declare module latte {
      *
      * function pow(a){
      *
-     *      throw new latte.InvalidCallEx('pow')
-     *
-     * }
-     *
-     * </example>
-     */
-    class InvalidCallEx extends Ex {
-        method: string;
-        /**
-         * Creates the Exception
-         * @param method
-         */
-        constructor(method?: string);
-        /**
-         * Returns a string explaining the exception
-         *
-         * @returns {string}
-         */
-        toString(): string;
-    }
-}
-declare module latte {
-    /**
-     * Exception thrown when an argument of the function was invalid.
-     *
-     * Usage:
-     * <example>
-     *
-     * function pow(a){
-     *
      *      if(typeof a != 'number')
      *          // Inform user that the parameter was invalid
      *          throw new InvalidArgumentEx('a');
@@ -1532,6 +1502,36 @@ declare module latte {
          * @param value
          */
         constructor(argument?: string, value?: any);
+        /**
+         * Returns a string explaining the exception
+         *
+         * @returns {string}
+         */
+        toString(): string;
+    }
+}
+declare module latte {
+    /**
+     * Exception thrown when an argument of the function was invalid.
+     *
+     * Usage:
+     * <example>
+     *
+     * function pow(a){
+     *
+     *      throw new latte.InvalidCallEx('pow')
+     *
+     * }
+     *
+     * </example>
+     */
+    class InvalidCallEx extends Ex {
+        method: string;
+        /**
+         * Creates the Exception
+         * @param method
+         */
+        constructor(method?: string);
         /**
          * Returns a string explaining the exception
          *
@@ -1825,67 +1825,6 @@ declare module latte {
         width: number;
     }
 }
-declare module latte {
-    /**
-     * Executes an action every specified amount of milliseconds
-     **/
-    class Timer {
-        /**
-         *
-         **/
-        private _callback;
-        /**
-         *
-         **/
-        private _context;
-        /**
-         *
-         **/
-        private _milliseconds;
-        /**
-         *
-         **/
-        private _paused;
-        /**
-         * Creates a timer that will call <c>callback</c> every specified amount of
-         <c>milliseconds</c> on the specified <c>context</c>.
-         **/
-        constructor(callback: Function, milliseconds: number, context: any);
-        /**
-         * Gets or sets the function who will be called every tick
-         **/
-        /**
-         * Gets or sets the function who will be called every tick
-         **/
-        callback: Function;
-        /**
-         * Gets or sets the context in which the function is executed
-         **/
-        /**
-         * Gets or sets the context in which the function is executed
-         **/
-        context: any;
-        /**
-         * Gets or sets the milliseconds to sleep between calls
-         **/
-        /**
-         * Gets or sets the milliseconds to sleep between calls
-         **/
-        milliseconds: number;
-        /**
-         * Pauses the timer
-         **/
-        pause(): void;
-        /**
-         * Starts ticking
-         **/
-        start(): void;
-        /**
-         * Ticks the timer. Executes the callback and programs next tick.
-         **/
-        tick(): void;
-    }
-}
 /**
  * Created by josemanuel on 5/12/14.
  */
@@ -2097,6 +2036,67 @@ declare module latte {
          * Gets the value of this timespan expressed in whole and fractional seconds
          **/
         totalSeconds: number;
+    }
+}
+declare module latte {
+    /**
+     * Executes an action every specified amount of milliseconds
+     **/
+    class Timer {
+        /**
+         *
+         **/
+        private _callback;
+        /**
+         *
+         **/
+        private _context;
+        /**
+         *
+         **/
+        private _milliseconds;
+        /**
+         *
+         **/
+        private _paused;
+        /**
+         * Creates a timer that will call <c>callback</c> every specified amount of
+         <c>milliseconds</c> on the specified <c>context</c>.
+         **/
+        constructor(callback: Function, milliseconds: number, context: any);
+        /**
+         * Gets or sets the function who will be called every tick
+         **/
+        /**
+         * Gets or sets the function who will be called every tick
+         **/
+        callback: Function;
+        /**
+         * Gets or sets the context in which the function is executed
+         **/
+        /**
+         * Gets or sets the context in which the function is executed
+         **/
+        context: any;
+        /**
+         * Gets or sets the milliseconds to sleep between calls
+         **/
+        /**
+         * Gets or sets the milliseconds to sleep between calls
+         **/
+        milliseconds: number;
+        /**
+         * Pauses the timer
+         **/
+        pause(): void;
+        /**
+         * Starts ticking
+         **/
+        start(): void;
+        /**
+         * Ticks the timer. Executes the callback and programs next tick.
+         **/
+        tick(): void;
     }
 }
 declare module latte {

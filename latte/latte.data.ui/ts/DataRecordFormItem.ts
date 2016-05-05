@@ -102,7 +102,7 @@ module latte{
                                         params['module'] = field['recordModule'];
                                     }
 
-                                    calls.push(new RemoteCall<DataRecord>('_core', 'DataLatteUa', 'recordSelect', params).withHandlers((r:DataRecord) => {
+                                    calls.push(new RemoteCall<DataRecord>('latte.data', 'DataLatteUa', 'recordSelect', params).withHandlers((r:DataRecord) => {
                                         //                                    log("Arrived foreign key record:")
                                         //                                    log(r)
                                         if (r && r.recordId) {

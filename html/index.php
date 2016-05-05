@@ -9,13 +9,13 @@ error_reporting(-1);
 /// Include DataLatte
 include 'latte/latte.php';
 
-// Load base modules
+/// Load base modules
 DataLatteModule::memoryLoad('latte', 'en');
 DataLatteModule::memoryLoad('latte.ui', 'en');
 DataLatteModule::memoryLoad('latte.data', 'en');
 DataLatteModule::memoryLoad('latte.data.ui', 'en');
 
-// Load app
+/// Load app
 $app = new DataLatteModule('app.list');
 $app->load('en');
 $app->loadConnection();

@@ -612,6 +612,55 @@ declare module latte {
 }
 declare module latte {
     /**
+     * Enumerates week days
+     */
+    enum WeekDay {
+        /**
+         * Sunday
+         *
+         * @type {number}
+         */
+        SUNDAY = 0,
+        /**
+         * Monday
+         *
+         * @type {number}
+         */
+        MONDAY = 1,
+        /**
+         * Tuesday
+         *
+         * @type {number}
+         */
+        TUESDAY = 2,
+        /**
+         * Wednesday
+         *
+         * @type {number}
+         */
+        WEDNESDAY = 3,
+        /**
+         * Thursday
+         *
+         * @type {number}
+         */
+        THURSDAY = 4,
+        /**
+         * Friday
+         *
+         * @type {number}
+         */
+        FRIDAY = 5,
+        /**
+         * Saturday
+         *
+         * @type {number}
+         */
+        SATURDAY = 6,
+    }
+}
+declare module latte {
+    /**
      * Holds a list of already included plugins
      *
      * @type {Array<string>}
@@ -697,55 +746,6 @@ declare module latte {
 }
 declare module latte {
     /**
-     * Enumerates week days
-     */
-    enum WeekDay {
-        /**
-         * Sunday
-         *
-         * @type {number}
-         */
-        SUNDAY = 0,
-        /**
-         * Monday
-         *
-         * @type {number}
-         */
-        MONDAY = 1,
-        /**
-         * Tuesday
-         *
-         * @type {number}
-         */
-        TUESDAY = 2,
-        /**
-         * Wednesday
-         *
-         * @type {number}
-         */
-        WEDNESDAY = 3,
-        /**
-         * Thursday
-         *
-         * @type {number}
-         */
-        THURSDAY = 4,
-        /**
-         * Friday
-         *
-         * @type {number}
-         */
-        FRIDAY = 5,
-        /**
-         * Saturday
-         *
-         * @type {number}
-         */
-        SATURDAY = 6,
-    }
-}
-declare module latte {
-    /**
      * Generic Exception class
      *
      * Usage
@@ -770,6 +770,32 @@ declare module latte {
          * @returns {string}
          */
         toString(): string;
+    }
+}
+/**
+ * Created by josemanuel on 5/4/15.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class Ajax {
+        /**
+         * Loads an URL
+         * @param url
+         * @param success
+         * @param error
+         */
+        static get(url: string, success?: (string) => void, error?: (string) => void): void;
+        /**
+         * Loads an URL
+         *
+         * @param url
+         * @param data
+         * @param success
+         * @param error
+         */
+        static post(url: string, data: any, success?: (string) => void, error?: (string) => void): void;
     }
 }
 declare module latte {
@@ -915,32 +941,6 @@ declare module latte {
          * @returns {number}
          */
         length: number;
-    }
-}
-/**
- * Created by josemanuel on 5/4/15.
- */
-declare module latte {
-    /**
-     *
-     */
-    class Ajax {
-        /**
-         * Loads an URL
-         * @param url
-         * @param success
-         * @param error
-         */
-        static get(url: string, success?: (string) => void, error?: (string) => void): void;
-        /**
-         * Loads an URL
-         *
-         * @param url
-         * @param data
-         * @param success
-         * @param error
-         */
-        static post(url: string, data: any, success?: (string) => void, error?: (string) => void): void;
     }
 }
 declare module latte {
@@ -1473,6 +1473,73 @@ declare module latte {
         year: number;
     }
 }
+declare module latte {
+    /**
+     * Exception thrown when an argument of the function was invalid.
+     *
+     * Usage:
+     * <example>
+     *
+     * function pow(a){
+     *
+     *      if(typeof a != 'number')
+     *          // Inform user that the parameter was invalid
+     *          throw new InvalidArgumentEx('a');
+     *
+     *      return a * a;
+     *
+     * }
+     *
+     * </example>
+     */
+    class InvalidArgumentEx extends Ex {
+        argument: string;
+        value: any;
+        /**
+         * Creates the exception
+         *
+         * @param argument
+         * @param value
+         */
+        constructor(argument?: string, value?: any);
+        /**
+         * Returns a string explaining the exception
+         *
+         * @returns {string}
+         */
+        toString(): string;
+    }
+}
+declare module latte {
+    /**
+     * Exception thrown when an argument of the function was invalid.
+     *
+     * Usage:
+     * <example>
+     *
+     * function pow(a){
+     *
+     *      throw new latte.InvalidCallEx('pow')
+     *
+     * }
+     *
+     * </example>
+     */
+    class InvalidCallEx extends Ex {
+        method: string;
+        /**
+         * Creates the Exception
+         * @param method
+         */
+        constructor(method?: string);
+        /**
+         * Returns a string explaining the exception
+         *
+         * @returns {string}
+         */
+        toString(): string;
+    }
+}
 /**
  * Created by josemanuel on 5/26/15.
  */
@@ -1563,73 +1630,6 @@ declare module latte {
         loadingText: string;
     }
 }
-declare module latte {
-    /**
-     * Exception thrown when an argument of the function was invalid.
-     *
-     * Usage:
-     * <example>
-     *
-     * function pow(a){
-     *
-     *      if(typeof a != 'number')
-     *          // Inform user that the parameter was invalid
-     *          throw new InvalidArgumentEx('a');
-     *
-     *      return a * a;
-     *
-     * }
-     *
-     * </example>
-     */
-    class InvalidArgumentEx extends Ex {
-        argument: string;
-        value: any;
-        /**
-         * Creates the exception
-         *
-         * @param argument
-         * @param value
-         */
-        constructor(argument?: string, value?: any);
-        /**
-         * Returns a string explaining the exception
-         *
-         * @returns {string}
-         */
-        toString(): string;
-    }
-}
-declare module latte {
-    /**
-     * Exception thrown when an argument of the function was invalid.
-     *
-     * Usage:
-     * <example>
-     *
-     * function pow(a){
-     *
-     *      throw new latte.InvalidCallEx('pow')
-     *
-     * }
-     *
-     * </example>
-     */
-    class InvalidCallEx extends Ex {
-        method: string;
-        /**
-         * Creates the Exception
-         * @param method
-         */
-        constructor(method?: string);
-        /**
-         * Returns a string explaining the exception
-         *
-         * @returns {string}
-         */
-        toString(): string;
-    }
-}
 /**
  * Created by josemanuel on 5/12/14.
  */
@@ -1697,80 +1697,6 @@ declare module latte {
          * @returns {number}
          */
         y: number;
-    }
-}
-/**
- * Created by josemanuel on 5/12/14.
- */
-declare module latte {
-    /**
-     *
-     */
-    class Size {
-        /**
-         * Returns an empty size
-         * @returns {latte.Size}
-         */
-        static empty(): Size;
-        /**
-         * Returns a size of zero width and zero height
-         * @returns {latte.Point}
-         */
-        static zero(): Size;
-        /**
-         * Creates a new Size, optionally sets its Width and Height components
-         */
-        constructor(width?: number, height?: number);
-        /**
-         * Inflates the size on the specified width and height
-         *
-         * @param width
-         * @param height
-         * @returns {latte.Size}
-         */
-        inflate(width: number, height: number): Size;
-        /**
-         * Inflates the size uniformly
-         * @param wide
-         */
-        inflateUniform(wide: number): Size;
-        /**
-         * Gets string representation of the size
-         * @returns {string}
-         */
-        toString(): string;
-        /**
-         * Gets the area represented by the size
-         *
-         * @returns {number}
-         */
-        area: number;
-        /**
-         * Gets a value indicating if the size has no compnents assigned or initialized
-         *
-         * @returns {boolean}
-         */
-        isEmpty: boolean;
-        /**
-         * Property field
-         */
-        private _height;
-        /**
-         * Gets the Height component of the size
-         *
-         * @returns {number}
-         */
-        height: number;
-        /**
-         * Property field
-         */
-        private _width;
-        /**
-         * Gets the Width component of the size
-         *
-         * @returns {number}
-         */
-        width: number;
     }
 }
 declare module latte {
@@ -1896,6 +1822,80 @@ declare module latte {
         /**
          * Gets or sets the width of the rectangle
          **/
+        width: number;
+    }
+}
+/**
+ * Created by josemanuel on 5/12/14.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class Size {
+        /**
+         * Returns an empty size
+         * @returns {latte.Size}
+         */
+        static empty(): Size;
+        /**
+         * Returns a size of zero width and zero height
+         * @returns {latte.Point}
+         */
+        static zero(): Size;
+        /**
+         * Creates a new Size, optionally sets its Width and Height components
+         */
+        constructor(width?: number, height?: number);
+        /**
+         * Inflates the size on the specified width and height
+         *
+         * @param width
+         * @param height
+         * @returns {latte.Size}
+         */
+        inflate(width: number, height: number): Size;
+        /**
+         * Inflates the size uniformly
+         * @param wide
+         */
+        inflateUniform(wide: number): Size;
+        /**
+         * Gets string representation of the size
+         * @returns {string}
+         */
+        toString(): string;
+        /**
+         * Gets the area represented by the size
+         *
+         * @returns {number}
+         */
+        area: number;
+        /**
+         * Gets a value indicating if the size has no compnents assigned or initialized
+         *
+         * @returns {boolean}
+         */
+        isEmpty: boolean;
+        /**
+         * Property field
+         */
+        private _height;
+        /**
+         * Gets the Height component of the size
+         *
+         * @returns {number}
+         */
+        height: number;
+        /**
+         * Property field
+         */
+        private _width;
+        /**
+         * Gets the Width component of the size
+         *
+         * @returns {number}
+         */
         width: number;
     }
 }

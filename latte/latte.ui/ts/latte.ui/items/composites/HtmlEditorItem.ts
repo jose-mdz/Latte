@@ -7,6 +7,8 @@ module latte{
      **/
     export class HtmlEditorItem extends ValueItem{
 
+        static rangyPath: string = 'latte/releases/latte.ui/support/js/rangy.js';
+
         //region Static
 
         static rangyLoaded: boolean = false;
@@ -72,7 +74,7 @@ module latte{
             if(!HtmlEditorItem.rangyLoaded){
                 var script = document.createElement('script');
                 script.type = 'text/javascript';
-                script.src = 'latte/releases/latte.ui/support/js/rangy.js';
+                script.src = HtmlEditorItem.rangyPath;
                 document.body.appendChild(script);
 
                 HtmlEditorItem.rangyLoaded = true;

@@ -1014,6 +1014,324 @@ var latte;
     }());
     latte.Ajax = Ajax;
 })(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
+     * Represents a color
+     **/
+    var Color = (function () {
+        //endregion
+        /**
+         * Creates the color from the specified RGB and Aplha components.
+         **/
+        function Color(r, g, b, a) {
+            if (r === void 0) { r = 0; }
+            if (g === void 0) { g = 0; }
+            if (b === void 0) { b = 0; }
+            if (a === void 0) { a = 255; }
+            //endregion
+            //region Properties
+            /**
+             *
+             **/
+            this._a = 255;
+            this.r = r;
+            this.g = g;
+            this.b = b;
+            this.a = a;
+        }
+        //region Static
+        /**
+         * Creates a color from the hexadecimal value.
+         * It may contain the <c>#</c> symbol at the beginning of the string.
+         **/
+        Color.fromHex = function (hexColor) {
+            if (latte._isString(hexColor)) {
+                if (hexColor.toLowerCase() == 'white') {
+                    hexColor = '#FFF';
+                }
+                if (hexColor.toLowerCase() == 'black') {
+                    hexColor = '#000';
+                }
+                if (hexColor.toLowerCase() == 'gray') {
+                    hexColor = '#777';
+                }
+                if (hexColor.length == 0) {
+                    hexColor = '#000';
+                }
+            }
+            // Check is string
+            if (!latte._isString(hexColor) || hexColor.length == 0)
+                throw new latte.InvalidArgumentEx('hexColor', hexColor);
+            // Remove #
+            if (hexColor.charAt(0) == '#')
+                hexColor = hexColor.substr(1);
+            // Check length
+            if (!(hexColor.length == 3 || hexColor.length == 6 || hexColor.length == 9))
+                throw new latte.InvalidArgumentEx('hexColor', hexColor);
+            var c = new latte.Color();
+            var toDecimal = function (hex) { return parseInt(hex, 16); };
+            // If three digits
+            if (hexColor.length == 3) {
+                c.r = (toDecimal(hexColor.charAt(0) + hexColor.charAt(0)));
+                c.g = (toDecimal(hexColor.charAt(1) + hexColor.charAt(1)));
+                c.b = (toDecimal(hexColor.charAt(2) + hexColor.charAt(2)));
+            }
+            else {
+                c.r = (toDecimal(hexColor.charAt(0) + hexColor.charAt(1)));
+                c.g = (toDecimal(hexColor.charAt(2) + hexColor.charAt(3)));
+                c.b = (toDecimal(hexColor.charAt(4) + hexColor.charAt(5)));
+                if (hexColor.length == 9)
+                    c.a = (toDecimal(hexColor.charAt(6) + hexColor.charAt(7)));
+            }
+            return c;
+        };
+        Object.defineProperty(Color, "black", {
+            /**
+             * Gets the black color
+             */
+            get: function () {
+                if (!this._black) {
+                    this._black = new Color(0, 0, 0);
+                }
+                return this._black;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Color, "white", {
+            /**
+             * Gets the white color
+             */
+            get: function () {
+                if (!this._white) {
+                    this._white = new Color(255, 255, 255);
+                }
+                return this._white;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Color, "red", {
+            /**
+             * Gets the red color
+             */
+            get: function () {
+                if (!this._red) {
+                    this._red = new Color(255, 0, 0);
+                }
+                return this._red;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Color, "green", {
+            /**
+             * Gets the green color
+             */
+            get: function () {
+                if (!this._green) {
+                    this._green = new Color(0, 128, 0);
+                }
+                return this._green;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Color, "blue", {
+            /**
+             * Gets the blue color
+             */
+            get: function () {
+                if (!this._blue) {
+                    this._blue = new Color(0, 0, 255);
+                }
+                return this._blue;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Color, "transparent", {
+            /**
+             * Gets the transparent color
+             */
+            get: function () {
+                if (!this._transparent) {
+                    this._transparent = new Color(0, 0, 0, 0);
+                }
+                return this._transparent;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        //region Methods
+        /**
+         * Returns the color as a hex string
+         **/
+        Color.prototype.toHexString = function () {
+            var d = function (s) { if (s.length == 1)
+                return '0' + s; return s; };
+            if (this.a != 255) {
+                return '#' + d(this.r.toString(16)) + d(this.g.toString(16)) + d(this.b.toString(16)) + d(this.a.toString(16));
+            }
+            else {
+                return '#' + d(this.r.toString(16)) + d(this.g.toString(16)) + d(this.b.toString(16));
+            }
+        };
+        /**
+         * Returns the color as a string
+         **/
+        Color.prototype.toString = function () {
+            if (this.isTransparent) {
+                return 'transparent';
+            }
+            else if (this.a != 255) {
+                return "rgba(" + this.r + ", " + this.g + ", " + this.b + ", " + this.a + ")";
+            }
+            else {
+                return this.toHexString();
+            }
+        };
+        Object.defineProperty(Color.prototype, "a", {
+            /**
+             * Gets r sets the Alpha component of color, from 0 to 255
+             * @returns {number}
+             */
+            get: function () {
+                return this._a;
+            },
+            /**
+             * Gets or sets the Aplha component of color, from 0 to 255.
+             **/
+            set: function (value) {
+                if (value < 0 || value > 255)
+                    throw new latte.InvalidArgumentEx('value', value);
+                this._a = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Color.prototype, "b", {
+            /**
+             * Gets or sets the Blue component of color, from 0 to 255.
+             **/
+            get: function () {
+                return this._b;
+            },
+            /**
+             * Gets or sets the Blue component of color, from 0 to 255.
+             **/
+            set: function (value) {
+                if (value < 0 || value > 255)
+                    throw new latte.InvalidArgumentEx('value', value);
+                this._b = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Color.prototype, "g", {
+            /**
+             * Gets or sets the Green component of color, from 0 to 255.
+             **/
+            get: function () {
+                return this._g;
+            },
+            /**
+             * Gets or sets the Green component of color, from 0 to 255.
+             **/
+            set: function (value) {
+                if (value < 0 || value > 255)
+                    throw new latte.InvalidArgumentEx('value', value);
+                this._g = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Returns a copy of the color with the specified alpha between 0 and 255.
+         *
+         * @param alpha
+         */
+        Color.prototype.fade = function (alpha) {
+            return new Color(this.r, this.g, this.b, alpha);
+        };
+        /**
+         * Returns a copy of the color with the specified alpha between 0 and 1.
+         *
+         * @param alpha
+         */
+        Color.prototype.fadeFloat = function (alpha) {
+            return new Color(this.r, this.g, this.b, alpha * 255);
+        };
+        Object.defineProperty(Color.prototype, "isDark", {
+            /**
+             * Gets a value indicating if the color is a dark color, by checking its perceived luminosity
+             *
+             * @returns {boolean}
+             */
+            get: function () {
+                return this.perceivedLuminosity > 0.5;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Color.prototype, "isLight", {
+            /**
+             * Gets a value indicating if the color is a light color, by checking its perceived luminosity
+             *
+             * @returns {boolean}
+             */
+            get: function () {
+                return this.perceivedLuminosity <= 0.5;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Color.prototype, "isTransparent", {
+            /**
+             * Gets a value indicating if the color is transparent.
+             **/
+            get: function () {
+                return this.a === 0;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Color.prototype, "perceivedLuminosity", {
+            /**
+             * Returns the perceived luminosity
+             * @returns {number}
+             */
+            get: function () {
+                // Preceived Luminosity
+                var a = 1 - (this.r * 0.299 + this.g * 0.587 + this.b * 0.114) / 255;
+                return a;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Color.prototype, "r", {
+            /**
+             * Gets or sets the Red component of color, from 0 to 255.
+             **/
+            get: function () {
+                return this._r;
+            },
+            /**
+             * Gets or sets the Red component of color, from 0 to 255.
+             **/
+            set: function (value) {
+                if (value < 0 || value > 255)
+                    throw new latte.InvalidArgumentEx('value', value);
+                this._r = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return Color;
+    }());
+    latte.Color = Color;
+})(latte || (latte = {}));
 /**
  * Created by josemanuel on 2/6/14.
  */
@@ -1521,324 +1839,6 @@ var latte;
         return Collection;
     }());
     latte.Collection = Collection;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
-     * Represents a color
-     **/
-    var Color = (function () {
-        //endregion
-        /**
-         * Creates the color from the specified RGB and Aplha components.
-         **/
-        function Color(r, g, b, a) {
-            if (r === void 0) { r = 0; }
-            if (g === void 0) { g = 0; }
-            if (b === void 0) { b = 0; }
-            if (a === void 0) { a = 255; }
-            //endregion
-            //region Properties
-            /**
-             *
-             **/
-            this._a = 255;
-            this.r = r;
-            this.g = g;
-            this.b = b;
-            this.a = a;
-        }
-        //region Static
-        /**
-         * Creates a color from the hexadecimal value.
-         * It may contain the <c>#</c> symbol at the beginning of the string.
-         **/
-        Color.fromHex = function (hexColor) {
-            if (latte._isString(hexColor)) {
-                if (hexColor.toLowerCase() == 'white') {
-                    hexColor = '#FFF';
-                }
-                if (hexColor.toLowerCase() == 'black') {
-                    hexColor = '#000';
-                }
-                if (hexColor.toLowerCase() == 'gray') {
-                    hexColor = '#777';
-                }
-                if (hexColor.length == 0) {
-                    hexColor = '#000';
-                }
-            }
-            // Check is string
-            if (!latte._isString(hexColor) || hexColor.length == 0)
-                throw new latte.InvalidArgumentEx('hexColor', hexColor);
-            // Remove #
-            if (hexColor.charAt(0) == '#')
-                hexColor = hexColor.substr(1);
-            // Check length
-            if (!(hexColor.length == 3 || hexColor.length == 6 || hexColor.length == 9))
-                throw new latte.InvalidArgumentEx('hexColor', hexColor);
-            var c = new latte.Color();
-            var toDecimal = function (hex) { return parseInt(hex, 16); };
-            // If three digits
-            if (hexColor.length == 3) {
-                c.r = (toDecimal(hexColor.charAt(0) + hexColor.charAt(0)));
-                c.g = (toDecimal(hexColor.charAt(1) + hexColor.charAt(1)));
-                c.b = (toDecimal(hexColor.charAt(2) + hexColor.charAt(2)));
-            }
-            else {
-                c.r = (toDecimal(hexColor.charAt(0) + hexColor.charAt(1)));
-                c.g = (toDecimal(hexColor.charAt(2) + hexColor.charAt(3)));
-                c.b = (toDecimal(hexColor.charAt(4) + hexColor.charAt(5)));
-                if (hexColor.length == 9)
-                    c.a = (toDecimal(hexColor.charAt(6) + hexColor.charAt(7)));
-            }
-            return c;
-        };
-        Object.defineProperty(Color, "black", {
-            /**
-             * Gets the black color
-             */
-            get: function () {
-                if (!this._black) {
-                    this._black = new Color(0, 0, 0);
-                }
-                return this._black;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Color, "white", {
-            /**
-             * Gets the white color
-             */
-            get: function () {
-                if (!this._white) {
-                    this._white = new Color(255, 255, 255);
-                }
-                return this._white;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Color, "red", {
-            /**
-             * Gets the red color
-             */
-            get: function () {
-                if (!this._red) {
-                    this._red = new Color(255, 0, 0);
-                }
-                return this._red;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Color, "green", {
-            /**
-             * Gets the green color
-             */
-            get: function () {
-                if (!this._green) {
-                    this._green = new Color(0, 128, 0);
-                }
-                return this._green;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Color, "blue", {
-            /**
-             * Gets the blue color
-             */
-            get: function () {
-                if (!this._blue) {
-                    this._blue = new Color(0, 0, 255);
-                }
-                return this._blue;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Color, "transparent", {
-            /**
-             * Gets the transparent color
-             */
-            get: function () {
-                if (!this._transparent) {
-                    this._transparent = new Color(0, 0, 0, 0);
-                }
-                return this._transparent;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        //region Methods
-        /**
-         * Returns the color as a hex string
-         **/
-        Color.prototype.toHexString = function () {
-            var d = function (s) { if (s.length == 1)
-                return '0' + s; return s; };
-            if (this.a != 255) {
-                return '#' + d(this.r.toString(16)) + d(this.g.toString(16)) + d(this.b.toString(16)) + d(this.a.toString(16));
-            }
-            else {
-                return '#' + d(this.r.toString(16)) + d(this.g.toString(16)) + d(this.b.toString(16));
-            }
-        };
-        /**
-         * Returns the color as a string
-         **/
-        Color.prototype.toString = function () {
-            if (this.isTransparent) {
-                return 'transparent';
-            }
-            else if (this.a != 255) {
-                return "rgba(" + this.r + ", " + this.g + ", " + this.b + ", " + this.a + ")";
-            }
-            else {
-                return this.toHexString();
-            }
-        };
-        Object.defineProperty(Color.prototype, "a", {
-            /**
-             * Gets r sets the Alpha component of color, from 0 to 255
-             * @returns {number}
-             */
-            get: function () {
-                return this._a;
-            },
-            /**
-             * Gets or sets the Aplha component of color, from 0 to 255.
-             **/
-            set: function (value) {
-                if (value < 0 || value > 255)
-                    throw new latte.InvalidArgumentEx('value', value);
-                this._a = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Color.prototype, "b", {
-            /**
-             * Gets or sets the Blue component of color, from 0 to 255.
-             **/
-            get: function () {
-                return this._b;
-            },
-            /**
-             * Gets or sets the Blue component of color, from 0 to 255.
-             **/
-            set: function (value) {
-                if (value < 0 || value > 255)
-                    throw new latte.InvalidArgumentEx('value', value);
-                this._b = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Color.prototype, "g", {
-            /**
-             * Gets or sets the Green component of color, from 0 to 255.
-             **/
-            get: function () {
-                return this._g;
-            },
-            /**
-             * Gets or sets the Green component of color, from 0 to 255.
-             **/
-            set: function (value) {
-                if (value < 0 || value > 255)
-                    throw new latte.InvalidArgumentEx('value', value);
-                this._g = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * Returns a copy of the color with the specified alpha between 0 and 255.
-         *
-         * @param alpha
-         */
-        Color.prototype.fade = function (alpha) {
-            return new Color(this.r, this.g, this.b, alpha);
-        };
-        /**
-         * Returns a copy of the color with the specified alpha between 0 and 1.
-         *
-         * @param alpha
-         */
-        Color.prototype.fadeFloat = function (alpha) {
-            return new Color(this.r, this.g, this.b, alpha * 255);
-        };
-        Object.defineProperty(Color.prototype, "isDark", {
-            /**
-             * Gets a value indicating if the color is a dark color, by checking its perceived luminosity
-             *
-             * @returns {boolean}
-             */
-            get: function () {
-                return this.perceivedLuminosity > 0.5;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Color.prototype, "isLight", {
-            /**
-             * Gets a value indicating if the color is a light color, by checking its perceived luminosity
-             *
-             * @returns {boolean}
-             */
-            get: function () {
-                return this.perceivedLuminosity <= 0.5;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Color.prototype, "isTransparent", {
-            /**
-             * Gets a value indicating if the color is transparent.
-             **/
-            get: function () {
-                return this.a === 0;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Color.prototype, "perceivedLuminosity", {
-            /**
-             * Returns the perceived luminosity
-             * @returns {number}
-             */
-            get: function () {
-                // Preceived Luminosity
-                var a = 1 - (this.r * 0.299 + this.g * 0.587 + this.b * 0.114) / 255;
-                return a;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Color.prototype, "r", {
-            /**
-             * Gets or sets the Red component of color, from 0 to 255.
-             **/
-            get: function () {
-                return this._r;
-            },
-            /**
-             * Gets or sets the Red component of color, from 0 to 255.
-             **/
-            set: function (value) {
-                if (value < 0 || value > 255)
-                    throw new latte.InvalidArgumentEx('value', value);
-                this._r = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return Color;
-    }());
-    latte.Color = Color;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -2563,167 +2563,6 @@ var latte;
     }(latte.Ex));
     latte.InvalidArgumentEx = InvalidArgumentEx;
 })(latte || (latte = {}));
-/**
- * Created by josemanuel on 5/26/15.
- */
-var latte;
-(function (latte) {
-    /**
-     *
-     */
-    var LoadInfo = (function () {
-        //endregion
-        //region Fields
-        //endregion
-        /**
-         * @private
-         */
-        function LoadInfo() {
-            //endregion
-            //region Properties
-            /**
-             * Property field
-             */
-            this._loadingText = null;
-        }
-        Object.defineProperty(LoadInfo, "instance", {
-            /**
-             * Gets the load mechanism singleton.
-             *
-             * @returns {LoadMechanism}
-             */
-            get: function () {
-                if (!this._instance) {
-                    this._instance = new LoadInfo();
-                }
-                return this._instance;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        //region Private Methods
-        //endregion
-        //region Methods
-        /**
-         * Ends a loading process
-         */
-        LoadInfo.prototype.end = function () {
-            this.onLoadingEnd();
-        };
-        /**
-         * Raises the <c>loadingStart</c> event
-         */
-        LoadInfo.prototype.onLoadingStart = function () {
-            if (this._loadingStart) {
-                this._loadingStart.raise();
-            }
-            else {
-                latte.log("Loading: " + this.loadingText);
-            }
-        };
-        /**
-         * Raises the <c>loadingEnd</c> event
-         */
-        LoadInfo.prototype.onLoadingEnd = function () {
-            if (this._loadingEnd) {
-                this._loadingEnd.raise();
-            }
-            else {
-                latte.log(this.loadingText + "-> Done.");
-            }
-        };
-        /**
-         * Raises the <c>loadingText</c> event
-         */
-        LoadInfo.prototype.onLoadingTextChanged = function () {
-            if (this._loadingTextChanged) {
-                this._loadingTextChanged.raise();
-            }
-        };
-        /**
-         * Starts a loading process
-         * @param text
-         */
-        LoadInfo.prototype.start = function (text) {
-            this.loadingText = text;
-            this.onLoadingStart();
-        };
-        Object.defineProperty(LoadInfo.prototype, "loadingStart", {
-            /**
-             * Gets an event raised when the loading starts
-             *
-             * @returns {LatteEvent}
-             */
-            get: function () {
-                if (!this._loadingStart) {
-                    this._loadingStart = new latte.LatteEvent(this);
-                }
-                return this._loadingStart;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(LoadInfo.prototype, "loadingEnd", {
-            /**
-             * Gets an event raised when the loading ends
-             *
-             * @returns {LatteEvent}
-             */
-            get: function () {
-                if (!this._loadingEnd) {
-                    this._loadingEnd = new latte.LatteEvent(this);
-                }
-                return this._loadingEnd;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(LoadInfo.prototype, "loadingTextChanged", {
-            /**
-             * Gets an event raised when the value of the loadingText property changes
-             *
-             * @returns {LatteEvent}
-             */
-            get: function () {
-                if (!this._loadingTextChanged) {
-                    this._loadingTextChanged = new latte.LatteEvent(this);
-                }
-                return this._loadingTextChanged;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(LoadInfo.prototype, "loadingText", {
-            /**
-             * Gets or sets the text of the load information
-             *
-             * @returns {string}
-             */
-            get: function () {
-                return this._loadingText;
-            },
-            /**
-             * Gets or sets the text of the load information
-             *
-             * @param {string} value
-             */
-            set: function (value) {
-                // Check if value changed
-                var changed = value !== this._loadingText;
-                // Set value
-                this._loadingText = value;
-                // Trigger changed event
-                if (changed) {
-                    this.onLoadingTextChanged();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return LoadInfo;
-    }());
-    latte.LoadInfo = LoadInfo;
-})(latte || (latte = {}));
 var latte;
 (function (latte) {
     /**
@@ -2763,6 +2602,126 @@ var latte;
         return InvalidCallEx;
     }(latte.Ex));
     latte.InvalidCallEx = InvalidCallEx;
+})(latte || (latte = {}));
+/**
+ * Created by josemanuel on 5/12/14.
+ */
+var latte;
+(function (latte) {
+    /**
+     *
+     */
+    var Point = (function () {
+        //endregion
+        //region Fields
+        //endregion
+        /**
+         * Creates a new point, optionally
+         */
+        function Point(x, y) {
+            if (x === void 0) { x = null; }
+            if (y === void 0) { y = null; }
+            /**
+             * Property field
+             */
+            this._x = null;
+            /**
+             * Property field
+             */
+            this._y = null;
+            if (x !== null) {
+                this._x = x;
+            }
+            if (y !== null) {
+                this._y = y;
+            }
+        }
+        //region Static
+        /**
+         * Gets the distance between two points
+         * @param a
+         * @param b
+         */
+        Point.distance = function (a, b) {
+            return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+        };
+        /**
+         * Returns an empty point
+         * @returns {latte.Point}
+         */
+        Point.empty = function () {
+            return new Point(null, null);
+        };
+        /**
+         * Returns a point situated on the origin
+         * @returns {latte.Point}
+         */
+        Point.origin = function () {
+            return new Point(0, 0);
+        };
+        //region Private Methods
+        //endregion
+        //region Methods
+        /**
+         * Returns the offset operation of the point
+         *
+         * @param x
+         * @param y
+         * @returns {latte.Point}
+         */
+        Point.prototype.offset = function (x, y) {
+            return new Point(this.x + x, this.y + y);
+        };
+        /**
+         * Gets string representation of the point
+         * @returns {string}
+         */
+        Point.prototype.toString = function () {
+            return latte.sprintf("Point(%s, %s)", this._x, this._y);
+        };
+        Object.defineProperty(Point.prototype, "isEmpty", {
+            //endregion
+            //region Events
+            //endregion
+            //region Properties
+            /**
+             * Gets a value indicating if the point is empty (No value has been set)
+             *
+             * @returns {boolean}
+             */
+            get: function () {
+                return this._x == null || this._y == null;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Point.prototype, "x", {
+            /**
+             * Gets or sets the X of the point
+             *
+             * @returns {number}
+             */
+            get: function () {
+                return this._x || 0;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Point.prototype, "y", {
+            /**
+             * Gets the Y coordinate of the point
+             *
+             * @returns {number}
+             */
+            get: function () {
+                return this._y || 0;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return Point;
+    }());
+    latte.Point = Point;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -2995,126 +2954,6 @@ var latte;
     /**
      *
      */
-    var Point = (function () {
-        //endregion
-        //region Fields
-        //endregion
-        /**
-         * Creates a new point, optionally
-         */
-        function Point(x, y) {
-            if (x === void 0) { x = null; }
-            if (y === void 0) { y = null; }
-            /**
-             * Property field
-             */
-            this._x = null;
-            /**
-             * Property field
-             */
-            this._y = null;
-            if (x !== null) {
-                this._x = x;
-            }
-            if (y !== null) {
-                this._y = y;
-            }
-        }
-        //region Static
-        /**
-         * Gets the distance between two points
-         * @param a
-         * @param b
-         */
-        Point.distance = function (a, b) {
-            return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
-        };
-        /**
-         * Returns an empty point
-         * @returns {latte.Point}
-         */
-        Point.empty = function () {
-            return new Point(null, null);
-        };
-        /**
-         * Returns a point situated on the origin
-         * @returns {latte.Point}
-         */
-        Point.origin = function () {
-            return new Point(0, 0);
-        };
-        //region Private Methods
-        //endregion
-        //region Methods
-        /**
-         * Returns the offset operation of the point
-         *
-         * @param x
-         * @param y
-         * @returns {latte.Point}
-         */
-        Point.prototype.offset = function (x, y) {
-            return new Point(this.x + x, this.y + y);
-        };
-        /**
-         * Gets string representation of the point
-         * @returns {string}
-         */
-        Point.prototype.toString = function () {
-            return latte.sprintf("Point(%s, %s)", this._x, this._y);
-        };
-        Object.defineProperty(Point.prototype, "isEmpty", {
-            //endregion
-            //region Events
-            //endregion
-            //region Properties
-            /**
-             * Gets a value indicating if the point is empty (No value has been set)
-             *
-             * @returns {boolean}
-             */
-            get: function () {
-                return this._x == null || this._y == null;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Point.prototype, "x", {
-            /**
-             * Gets or sets the X of the point
-             *
-             * @returns {number}
-             */
-            get: function () {
-                return this._x || 0;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Point.prototype, "y", {
-            /**
-             * Gets the Y coordinate of the point
-             *
-             * @returns {number}
-             */
-            get: function () {
-                return this._y || 0;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return Point;
-    }());
-    latte.Point = Point;
-})(latte || (latte = {}));
-/**
- * Created by josemanuel on 5/12/14.
- */
-var latte;
-(function (latte) {
-    /**
-     *
-     */
     var Size = (function () {
         //endregion
         //region Fields
@@ -3237,6 +3076,165 @@ var latte;
         return Size;
     }());
     latte.Size = Size;
+})(latte || (latte = {}));
+/**
+ * Created by josemanuel on 5/26/15.
+ */
+var latte;
+(function (latte) {
+    /**
+     *
+     */
+    var LoadInfo = (function () {
+        //endregion
+        //region Fields
+        //endregion
+        /**
+         * @private
+         */
+        function LoadInfo() {
+            //endregion
+            //region Properties
+            /**
+             * Property field
+             */
+            this._loadingText = null;
+        }
+        Object.defineProperty(LoadInfo, "instance", {
+            /**
+             * Gets the load mechanism singleton.
+             *
+             * @returns {LoadMechanism}
+             */
+            get: function () {
+                if (!this._instance) {
+                    this._instance = new LoadInfo();
+                }
+                return this._instance;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        //region Private Methods
+        //endregion
+        //region Methods
+        /**
+         * Ends a loading process
+         */
+        LoadInfo.prototype.end = function () {
+            this.onLoadingEnd();
+        };
+        /**
+         * Raises the <c>loadingStart</c> event
+         */
+        LoadInfo.prototype.onLoadingStart = function () {
+            if (this._loadingStart) {
+                this._loadingStart.raise();
+            }
+            else {
+            }
+        };
+        /**
+         * Raises the <c>loadingEnd</c> event
+         */
+        LoadInfo.prototype.onLoadingEnd = function () {
+            if (this._loadingEnd) {
+                this._loadingEnd.raise();
+            }
+            else {
+            }
+        };
+        /**
+         * Raises the <c>loadingText</c> event
+         */
+        LoadInfo.prototype.onLoadingTextChanged = function () {
+            if (this._loadingTextChanged) {
+                this._loadingTextChanged.raise();
+            }
+        };
+        /**
+         * Starts a loading process
+         * @param text
+         */
+        LoadInfo.prototype.start = function (text) {
+            this.loadingText = text;
+            this.onLoadingStart();
+        };
+        Object.defineProperty(LoadInfo.prototype, "loadingStart", {
+            /**
+             * Gets an event raised when the loading starts
+             *
+             * @returns {LatteEvent}
+             */
+            get: function () {
+                if (!this._loadingStart) {
+                    this._loadingStart = new latte.LatteEvent(this);
+                }
+                return this._loadingStart;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(LoadInfo.prototype, "loadingEnd", {
+            /**
+             * Gets an event raised when the loading ends
+             *
+             * @returns {LatteEvent}
+             */
+            get: function () {
+                if (!this._loadingEnd) {
+                    this._loadingEnd = new latte.LatteEvent(this);
+                }
+                return this._loadingEnd;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(LoadInfo.prototype, "loadingTextChanged", {
+            /**
+             * Gets an event raised when the value of the loadingText property changes
+             *
+             * @returns {LatteEvent}
+             */
+            get: function () {
+                if (!this._loadingTextChanged) {
+                    this._loadingTextChanged = new latte.LatteEvent(this);
+                }
+                return this._loadingTextChanged;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(LoadInfo.prototype, "loadingText", {
+            /**
+             * Gets or sets the text of the load information
+             *
+             * @returns {string}
+             */
+            get: function () {
+                return this._loadingText;
+            },
+            /**
+             * Gets or sets the text of the load information
+             *
+             * @param {string} value
+             */
+            set: function (value) {
+                // Check if value changed
+                var changed = value !== this._loadingText;
+                // Set value
+                this._loadingText = value;
+                // Trigger changed event
+                if (changed) {
+                    this.onLoadingTextChanged();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return LoadInfo;
+    }());
+    latte.LoadInfo = LoadInfo;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -3651,17 +3649,17 @@ var latte;
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/latte.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Ex.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Ajax.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Color.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Culture.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Collection.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Color.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Event.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/DateTime.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/InvaldArgumentEx.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/LoadInfo.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/InvalidCallEx.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Rectangle.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Point.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Rectangle.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Size.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/LoadInfo.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/TimeSpan.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Timer.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/TypeEvent.ts" /> 
