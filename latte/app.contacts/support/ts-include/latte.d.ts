@@ -1214,6 +1214,51 @@ declare module latte {
     }
 }
 declare module latte {
+    class EventHandler {
+        handler: Function;
+        context: any;
+        constructor(handler: Function, context: any);
+    }
+    /**
+     * Manages events and event handlers
+     */
+    class LatteEvent {
+        context: any;
+        handlers: Array<EventHandler>;
+        /**
+         * Raised when a handler is added to the event
+         */
+        _handlerAdded: LatteEvent;
+        /**
+         *
+         * @param context Context where
+         */
+        constructor(context: any);
+        /**
+         * Gets the event for handler adding
+         *
+         * @returns {LatteEvent}
+         */
+        handlerAdded: LatteEvent;
+        /**
+         * Adds a handler to the event
+         * @param handler
+         */
+        add(handler: Function, context?: any): void;
+        /**
+         * Raises the <c>handlerAdded</c> event
+         * @param handler
+         */
+        onHandlerAdded(handler: Function): void;
+        /**
+         * Raises the actual event handlers.
+         * @param parameter
+         * @returns {*}
+         */
+        raise(...parameter: any[]): any;
+    }
+}
+declare module latte {
     /**
      * Represents a specific date and time
      **/
@@ -1426,51 +1471,6 @@ declare module latte {
          * Gets the year of the date
          **/
         year: number;
-    }
-}
-declare module latte {
-    class EventHandler {
-        handler: Function;
-        context: any;
-        constructor(handler: Function, context: any);
-    }
-    /**
-     * Manages events and event handlers
-     */
-    class LatteEvent {
-        context: any;
-        handlers: Array<EventHandler>;
-        /**
-         * Raised when a handler is added to the event
-         */
-        _handlerAdded: LatteEvent;
-        /**
-         *
-         * @param context Context where
-         */
-        constructor(context: any);
-        /**
-         * Gets the event for handler adding
-         *
-         * @returns {LatteEvent}
-         */
-        handlerAdded: LatteEvent;
-        /**
-         * Adds a handler to the event
-         * @param handler
-         */
-        add(handler: Function, context?: any): void;
-        /**
-         * Raises the <c>handlerAdded</c> event
-         * @param handler
-         */
-        onHandlerAdded(handler: Function): void;
-        /**
-         * Raises the actual event handlers.
-         * @param parameter
-         * @returns {*}
-         */
-        raise(...parameter: any[]): any;
     }
 }
 declare module latte {
@@ -1757,6 +1757,16 @@ declare module latte {
          **/
         intersects(rectangle: Rectangle): boolean;
         /**
+         * Returns a scaled rectangle
+         * @param width
+         */
+        scaleToHeight(height: number): Rectangle;
+        /**
+         * Returns a scaled rectangle
+         * @param width
+         */
+        scaleToWidth(width: number): Rectangle;
+        /**
          * Returns a string describing the rectangle
          **/
         toString(): string;
@@ -1792,6 +1802,12 @@ declare module latte {
          * Gets or sets the right side of the rectangle
          **/
         right: number;
+        /**
+         * Gets the size of the rectangle
+         *
+         * @returns {Size}
+         */
+        size: Size;
         tag: any;
         /**
          * Gets or sets the top of the rectangle

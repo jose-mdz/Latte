@@ -55,11 +55,18 @@ class Document {
     public $outputRender;
 
     /**
+     * If set to true, will add Latte module tags when rendering
+     *
+     * @var boolean
+     */
+    public $addLatteTags;
+
+    /**
      * Creates the document. Optionally speifies if document should be rendered to output when deallocated from memory.
      * 
      * @param boolean $output
      */
-    function __construct($output = false) {
+    function __construct($output = false, $addLatteTags = false) {
 
         // Create basic tags
         $this->doctype = new Tag("!doctype");
@@ -84,6 +91,9 @@ class Document {
 
         // Flag to indicate if document goes to output
         $this->outputRender = $output;
+
+        // Flag to indicate if document should add latte tags
+        $this->addLatteTags = $addLatteTags;
     }
 
     /**
@@ -111,6 +121,22 @@ class Document {
      * @return string
      */
     public function render($return = false) {
+
+        if($this->addLatteTags){
+            /// Add latte tags
+            foreach(LatteModule::$loadedModules as $module){
+                $this->head->add($module->getTags());
+
+                if($module->isMain){
+                    $main = isset($module->metadata['ua-main']) ? $module->metadata['ua-main'] : "latte.Main";
+
+                    // Loader module
+                    $this->addScript(" window.addEventListener('load', function(){ new $main() });");
+                }
+            }
+
+
+        }
 
         foreach ($this->onRender as $function) {
             if (is_callable($function)) {
@@ -161,7 +187,7 @@ class Document {
                 ->attr("type", "text/javascript")
                 //->text("\r\n<!-- \r\n $jsCode \r\n//-->\r\n")
                 ->text("\r\n $jsCode \r\n")
-                ->addTo($this->head);
+                ->addTo($this->body);
     }
 
     /**

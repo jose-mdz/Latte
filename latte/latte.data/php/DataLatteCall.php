@@ -60,7 +60,7 @@ class DataLatteCall{
         }
 
         // Load module connection
-        DataLatteModule::byName($this->moduleName)->loadConnection();
+        LatteModule::byName($this->moduleName)->loadConnection();
 
 //        echo "[Loaded module: $this->moduleName]";
 //        echo "[Loaded connection:" . var_export(DataLatte::$current, true) . " ]" ;

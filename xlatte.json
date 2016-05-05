@@ -1,5 +1,5 @@
 {
   "modules": "latte/",
-
-  "output": "html/latte/"
+  "output": "html/latte/",
+  "output-url": "latte"
 }

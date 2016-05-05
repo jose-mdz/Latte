@@ -17,7 +17,7 @@
         
         /**
          * Returns the string value
-         * @return type 
+         * @return string
          */
         public function __toString(){
             return $this->string;
@@ -29,9 +29,10 @@
         
         /**
          * Combines the paths
-         * @param type $path1
-         * @param type $path2
-         * @param type $separator 
+         * @param string $path1
+         * @param string $path2
+         * @param string $separator
+         * @return string
          */
         public static function combinePath($path1, $path2, $separator = DIRECTORY_SEPARATOR){
             if( str($path1)->endsWith($separator) ){

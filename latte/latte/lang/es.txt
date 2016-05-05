@@ -1,0 +1,92 @@
+justNow Ahora
+oneMinuteAgo Hace un minuto
+SMinutesAgo Hace %s minutos
+oneHourAgo Hace una hora
+SHoursAgo Hace %s horas
+yesterday Ayer
+SDaysAgo Hace %s días
+oneWeekAgo Hace una semana
+SWeeksAgo Hace %s semanas
+oneYearAgo Hace un año
+SYearsAgo Hace %s años
+sunday Domingo
+monday Lunes
+tuesday Martes
+wednesday Miércoles
+thursday Jueves
+friday Viernes
+saturday Sábado
+sundayShort Dom
+mondayShort Lun
+tuesdayShort Mar
+wednesdayShort Mié
+thursdayShort Jue
+fridayShort Vie
+saturdayShort Sab
+sundayInitial D
+mondayInitial L
+tuesdayInitial M
+wednesdayInitial M
+thursdayInitial J
+fridayInitial V
+saturdayInitial S
+january Enero
+february Febrero
+march Marzo
+april Abril
+may Mayo
+june Junio
+july Julio
+august Augosto
+september Septiembre
+october Octubre
+november Noviembre
+december Diciembre
+januaryShort Ene
+februaryShort Feb
+marchShort Mar
+aprilShort Abr
+mayShort May
+juneShort Jun
+julyShort Jul
+augustShort Ago
+septemberShort Sep
+octoberShort Oct
+novemberShort Nov
+decemberShort Dic
+januaryInitial E
+februaryInitial F
+marchInitial M
+aprilInitial A
+mayInitial M
+juneInitial J
+julyInitial J
+augustInitial A
+septemberInitial S
+octoberInitial O
+novemberInitial N
+decemberInitial D
+Smillis %s milisegundos
+oneSecond 1 segundo
+Sseconds %s segundos
+oneMinute 1 minuto
+Sminutes %s minutos
+oneHour 1 hora
+Shours %s horas
+oneDay 1 día
+Sdays %s días
+oneWeek 1 semana
+Sweeks %s semanas
+SmillisShort = %sms
+oneSecondShort 1s
+SsecondsShort %ss
+oneMinuteShort 1m
+SminutesShort %sm
+oneHourShort 1h
+ShoursShort %sh
+oneDayShort 1d
+SdaysShort %sd
+oneWeekShort 1w
+SweeksShort %sw
+tomorrow Mañana
+today Hoy

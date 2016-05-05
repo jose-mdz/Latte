@@ -1,8 +1,8 @@
 <?php
 
-class DataLatteModule {
+class LatteModule {
 
-    //region Contants
+    //region Constants
     /**
      * Name of the system core module
      */
@@ -72,7 +72,7 @@ class DataLatteModule {
      * Returns the loaded instance of the module of the specified name.
      * If it is not yet loaded, loads it into memory
      * @param $name
-     * @return DataLatteModule
+     * @return LatteModule
      */
     public static function byName($name){
 
@@ -82,7 +82,7 @@ class DataLatteModule {
             }
         }
 
-        $module = new DataLatteModule($name);
+        $module = new LatteModule($name);
         $module->load();
 
         return $module;
@@ -96,7 +96,7 @@ class DataLatteModule {
      */
     public static function isLoaded($name){
         // Check on loaded modules
-        foreach(DataLatteModule::$loadedModules as $module){
+        foreach(LatteModule::$loadedModules as $module){
 
             if($module->name == $name) return true;
         }
@@ -115,10 +115,38 @@ class DataLatteModule {
         }
 
         foreach ($autoloads as $module){
-            if(!DataLatteModule::isLoaded($module)){
-                DataLatteModule::memoryLoad($module)->loadConnection();
+            if(!LatteModule::isLoaded($module)){
+                LatteModule::memoryLoad($module)->loadConnection();
             }
         }
+    }
+
+    /**
+     * Loads the specified module as the main module
+     * @param $moduleName
+     * @param string $lang
+     * @param bool $loadConnection
+     * @return LatteModule
+     */
+    public static function loadMain($moduleName, $lang = null, $loadConnection = true){
+
+        // Create the module
+        $app = new LatteModule($moduleName);
+
+        // Load the language
+        $app->load($lang);
+
+        // Load the connection if needed
+        if($loadConnection){
+            $app->loadConnection();
+        }
+
+        $app->isMain = true;
+
+        $app->addToAutoload(true);
+
+        return $app;
+
     }
 
     /**
@@ -128,7 +156,7 @@ class DataLatteModule {
      * @return array
      */
     public static function tagsOf($moduleName, $lang = null){
-        $module = new DataLatteModule($moduleName);
+        $module = new LatteModule($moduleName);
         $module->load($lang);
         return $module->getTags();
     }
@@ -140,7 +168,7 @@ class DataLatteModule {
      * @return array
      */
     public static function tagsAndConnectionOf($moduleName){
-        $module = new DataLatteModule($moduleName);
+        $module = new LatteModule($moduleName);
         $module->load();
         $module->loadConnection();
         return $module->getTags();
@@ -150,15 +178,27 @@ class DataLatteModule {
      * Loads the specified module into memory
      * @param $moduleName
      * @param null $lang
-     * @return DataLatteModule
+     * @return LatteModule
      */
     public static function memoryLoad($moduleName, $lang = null){
-        if(DataLatteModule::isLoaded($moduleName)){
-            return;
+
+        // If module already loaded, just load language
+        if(LatteModule::isLoaded($moduleName)){
+
+            $m =  LatteModule::$loadedModules[$moduleName];
+
+            // Load language if specified
+            if($lang){
+                $m->loadLanguage($lang);
+            }
+            return $m;
+        }else{
+
+            // Load Module
+            $module = new LatteModule($moduleName);
+            $module->load($lang);
+            return $module;
         }
-        $module = new DataLatteModule($moduleName);
-        $module->load($lang);
-        return $module;
     }
 
     //endregion
@@ -218,6 +258,13 @@ class DataLatteModule {
      * @var string
      */
     public $lang;
+
+    /**
+     * Flag indicating if the module is loaded as main module
+     *
+     * @var boolean
+     */
+    public $isMain;
 
     //endregion
 
@@ -289,8 +336,12 @@ class DataLatteModule {
     /**
      * Adds the module to the autoload list of user
      */
-    public function addToAutoload(){
+    public function addToAutoload($resetAutoloads = false){
         $autoloads = array();
+
+        if($resetAutoloads){
+            unset($_SESSION['latte-module-autoload']);
+        }
 
         if(isset($_SESSION['latte-module-autoload'])){
             $autoloads = explode('|', $_SESSION['latte-module-autoload']);
@@ -394,7 +445,7 @@ class DataLatteModule {
          */
         if(isset($this->metadata['ua-include-js'])){
             foreach($this->metadata['ua-include-js'] as $file){
-                $tags[] = tag('script')->src(DATALATTE_FILES_URL . "/releases/$this->name/support/$file");
+                $tags[] = tag('script')->src(String::combineUrl(DATALATTE_FILES_URL, "/releases/$this->name/support/$file"));
             }
         }
 
@@ -403,7 +454,7 @@ class DataLatteModule {
          */
         if(isset($this->metadata['ua-include-css'])){
             foreach($this->metadata['ua-include-css'] as $file){
-                $tags[] = tag('script')->src(DATALATTE_FILES_URL . "/releases/$this->name/support/$file");
+                $tags[] = tag('script')->src(String::combineUrl(DATALATTE_FILES_URL, "/releases/$this->name/support/$file"));
             }
         }
 
@@ -443,8 +494,17 @@ class DataLatteModule {
      */
     public function load($lang = null){
 
-        // Report as loaded
-        self::$loadedModules[] = $this;
+//        echo "[LOADING $this->name]" . PHP_EOL;
+
+
+        if(LatteModule::isLoaded($this->name)){
+
+            if($lang){
+                $this->loadLanguage($lang);
+            }
+
+            return;
+        }
 
         //region Load Metadata
         $metafile = String::combinePath($this->path, 'module.json');
@@ -466,12 +526,15 @@ class DataLatteModule {
         //region Module Includes
         if(isset($this->metadata['module-include'])){
             foreach($this->metadata['module-include'] as $moduleName){
-                if(!DataLatteModule::isLoaded($moduleName)){
-                    DataLatteModule::memoryLoad($moduleName, $lang);
+                if(!LatteModule::isLoaded($moduleName)){
+                    LatteModule::memoryLoad($moduleName, $lang);
                 }
             }
         }
         //region
+
+        // Report as loaded
+        self::$loadedModules[$this->name] = $this;
 
         //region Includes
         if(isset($this->metadata['php-include'])){
@@ -483,8 +546,14 @@ class DataLatteModule {
         //endregion
 
         //region Load strings
-        if($lang){
 
+        if(!$lang){
+            $lang = 'en';
+        }
+
+        $langFile = String::combinePath($this->pathLang, $lang . '.txt');
+
+        if(file_exists($langFile)){
             $this->loadLanguage($lang);
         }
         //endregion

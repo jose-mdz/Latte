@@ -7,7 +7,6 @@
     },
     
     "module-include":[
-        "latte.data",
         "latte.data.ui",
         "latte.ui"
     ],
@@ -17,5 +16,8 @@
     ],
 
     "release-export" :[
-    ]
+    ],
+
+    "ua-main": "latte.Main"
+
 }

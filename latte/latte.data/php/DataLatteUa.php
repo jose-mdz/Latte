@@ -488,13 +488,13 @@ class DataLatteUa {
     public static function recordSelect($name, $id = NULL, $module = NULL){
 
         if($module){
-            if(!DataLatteModule::isLoaded($module)){
-                $mod = DataLatteModule::memoryLoad($module);
+            if(!LatteModule::isLoaded($module)){
+                $mod = LatteModule::memoryLoad($module);
                 if($mod->hasConnection()){
                     $mod->loadConnection();
                 }
             }else{
-                DataLatteModule::byName($module)->loadConnection();
+                LatteModule::byName($module)->loadConnection();
             }
         }
 

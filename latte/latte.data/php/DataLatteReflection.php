@@ -921,7 +921,7 @@ class DataLatteReflection {
 
         // Execute method for each module name
         foreach ($tokens as $token){
-            $m = new DataLatteModule(trim($token));
+            $m = new LatteModule(trim($token));
             $gatherer = array_merge($gatherer, $m->getClassesInfo($version));
         }
 

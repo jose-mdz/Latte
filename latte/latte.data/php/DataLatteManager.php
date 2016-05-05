@@ -48,7 +48,7 @@
          */
         public static function getModulePhpClasses($moduleName, $version = 'development'){
             
-            $m = new DataLatteModule($moduleName);
+            $m = new LatteModule($moduleName);
             
             return $m->getPhpClasses($version);
         }
@@ -60,7 +60,7 @@
          */
         public static function getModuleUaNamespaces($moduleName, $version = 'development'){
             
-            $m = new DataLatteModule($moduleName);
+            $m = new LatteModule($moduleName);
             
             return $m->getUaNamespaces($version);
             
@@ -73,7 +73,7 @@
          */
         public static function getModuleUaNamespaceClasses($moduleName, $namespace, $version = 'development'){
             
-            $m = new DataLatteModule($moduleName);
+            $m = new LatteModule($moduleName);
             
             return $m->getUaNamespaceClasses($namespace, $version);
             
@@ -89,7 +89,7 @@
          */
         public static function getModulePhpClassInfo($moduleName, $class, $version = 'development'){
             
-            $m = new DataLatteModule($moduleName);
+            $m = new LatteModule($moduleName);
             
             return $m->getPhpClassInfo($class, $version);
             
@@ -105,7 +105,7 @@
          */
         public static function getModuleJsClassInfo($moduleName, $class, $version = 'development'){
             
-            $m = new DataLatteModule($moduleName);
+            $m = new LatteModule($moduleName);
             
             return $m->getUaClassInfo($class, $version);
         }
@@ -392,13 +392,13 @@
         
         /**
          * @remote
-         * @param DataLatteModule $module
+         * @param LatteModule $module
          * @param type $major
          * @return string
          */
         public static function makeRelease($module, $major = false){
             
-            $module = new DataLatteModule($module);
+            $module = new LatteModule($module);
             
             
             return $module->makeRelease($major);

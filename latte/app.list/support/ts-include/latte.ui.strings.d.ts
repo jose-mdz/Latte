@@ -140,4 +140,5 @@ declare module latte{ interface Strings{
 	confirmDeleteS: string;
 	cantBeUndone: string;
 	yesDeleteS: string;
+	goToPage: string;
 }}
