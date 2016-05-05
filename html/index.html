@@ -1,36 +1,32 @@
 <!DOCTYPE html>
-<!--
-    HTML Index
-    Use this index for non-php scripts
-
-    You have to manually check for includes of the modules you want to include
--->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>[App Name]</title>
-
-    <!-- latte Module -->
-    <script src="latte/releases/latte/en.js"></script>
-    <script src="latte/releases/latte/latte.js"></script>
-
-    <!-- latte.element Module -->
-    <script src="latte/releases/latte/latte.element.js"></script>
-
-    <!-- Your app module goes here!
-    <script src="latte/releases/[YOUR-MODULE]/[LANG].js"></script>
-    <script src="latte/releases/[YOUR-MODULE]/[YOUR-MODULE].js"></script>
-    -->
-
+    <title>Latte Framework</title>
+    <style>
+        body{
+            font-family:sans-serif;
+            margin: 100px;
+        }
+    </style>
 </head>
 <body>
 
-<!-- Your app initialization here!
-<script>
+    <h1>Latte Framework</h1>
+    <h2>You made it!</h2>
 
-    window.addEventListener('load', function(){ new app.Main })
+    <p>You should be able to see this page from your Apache (or equivalent) server.</p>
 
-</script>
--->
+    <h2>Choose An example:</h2>
+    <ul>
+        <li><a href="app.list.php">Contacts: based on latte.ui</a></li>
+        <li><a href="app.contacts.php">Contacts: based on latte.element</a></li>
+    </ul>
+
+    <h3>To set up this project in your server</h3>
+    <p>If you would like to have the PHP side of Latte, you have to configure the project as a site,
+        where the <code>html/</code> directory of the project is the public part of the site.
+    </p>
+
 </body>
 </html>
