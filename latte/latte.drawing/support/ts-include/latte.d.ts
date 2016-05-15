@@ -800,6 +800,151 @@ declare module latte {
 }
 declare module latte {
     /**
+     *
+     */
+    class Collection<T> {
+        private pointer;
+        /**
+         *
+         */
+        constructor(addCallback?: (T, number) => void, removeCallback?: (T, number) => any, context?: any);
+        /**
+         * Adds an element to the collection
+         *
+         * @param element
+         * @param raiseEvent
+         */
+        add(element: T, raiseEvent?: boolean): void;
+        /**
+         * Adds an array of elements
+         *
+         * @param elements
+         * @param raiseEvent
+         */
+        addArray(elements: Array<T>, raiseEvent?: boolean): void;
+        /**
+         * Adds a collection of elements to the collection
+         *
+         * @param collection
+         * @param raiseEvent
+         */
+        addCollection(collection: Collection<T>, raiseEvent?: boolean): void;
+        /**
+         * Clears the collection
+         */
+        clear(): void;
+        /**
+         * Iterates through the collection, executing the handler for each item
+         * @param handler
+         */
+        each(handler: (item: T, index: number) => any): void;
+        /**
+         * Gets the index of the specified element if found. -1 if not found.
+         * @param item
+         * @returns {number}
+         */
+        indexOf(item: T): number;
+        /**
+         * Gets the item at the specified position
+         * @param index
+         * @returns {*}
+         */
+        item(index: number): T;
+        /**
+         * Returns the object on current pointer and moves the pointer forward.
+         * It returns null and resets pointer if end of collection reached.
+         * @returns {*}
+         */
+        next(): T;
+        /**
+         * Raises the <c>addItem</c> event
+         */
+        onAddItem(item: T, index: number): void;
+        /**
+         * Raises the <c>removeItem</c> event
+         */
+        onRemoveItem(item: T, index: number): void;
+        /**
+         * Removes the specified item from the collection
+         * @param item
+         * @param raiseEvent
+         */
+        remove(item: T, raiseEvent?: boolean): this;
+        /**
+         * Removes the item ath the specified index
+         * @param index
+         * @param raiseEvent
+         */
+        removeAt(index: number, raiseEvent?: boolean): void;
+        /**
+         * Resets the internal pointer for calls to <c>next()</c> method.
+         */
+        resetPointer(): void;
+        /**
+         * Back field for event
+         */
+        private _addItem;
+        /**
+         * Gets an event raised when an item is added
+         *
+         * @returns {LatteEvent}
+         */
+        addItem: LatteEvent;
+        /**
+         * Back field for event
+         */
+        private _removeItem;
+        /**
+         * Gets an event raised when an item is removed
+         *
+         * @returns {LatteEvent}
+         */
+        removeItem: LatteEvent;
+        /**
+         * Property field
+         */
+        private _context;
+        /**
+         * Gets or sets the context to execute methods of collection
+         *
+         * @returns {any}
+         */
+        /**
+         * Gets or sets the context to execute methods of collection
+         *
+         * @param {any} value
+         */
+        context: any;
+        /**
+         * Gets the count of elements in collection
+         *
+         * @returns {number}
+         */
+        count: number;
+        /**
+         * Gets the first element of the collection
+         * @returns {*}
+         */
+        first: T;
+        /**
+         * Gets the last element of the collection
+         * @returns {*}
+         */
+        last: T;
+        /**
+         * Property field
+         */
+        private _length;
+        /**
+         * Gets the length of the collection
+         *
+         * @returns {number}
+         */
+        length: number;
+    }
+}
+declare module latte {
+    /**
      * Represents a color
      **/
     class Color {
@@ -948,151 +1093,6 @@ declare module latte {
         r: number;
     }
 }
-declare module latte {
-    /**
-     *
-     */
-    class Collection<T> {
-        private pointer;
-        /**
-         *
-         */
-        constructor(addCallback?: (T, number) => void, removeCallback?: (T, number) => any, context?: any);
-        /**
-         * Adds an element to the collection
-         *
-         * @param element
-         * @param raiseEvent
-         */
-        add(element: T, raiseEvent?: boolean): void;
-        /**
-         * Adds an array of elements
-         *
-         * @param elements
-         * @param raiseEvent
-         */
-        addArray(elements: Array<T>, raiseEvent?: boolean): void;
-        /**
-         * Adds a collection of elements to the collection
-         *
-         * @param collection
-         * @param raiseEvent
-         */
-        addCollection(collection: Collection<T>, raiseEvent?: boolean): void;
-        /**
-         * Clears the collection
-         */
-        clear(): void;
-        /**
-         * Iterates through the collection, executing the handler for each item
-         * @param handler
-         */
-        each(handler: (item: T, index: number) => any): void;
-        /**
-         * Gets the index of the specified element if found. -1 if not found.
-         * @param item
-         * @returns {number}
-         */
-        indexOf(item: T): number;
-        /**
-         * Gets the item at the specified position
-         * @param index
-         * @returns {*}
-         */
-        item(index: number): T;
-        /**
-         * Returns the object on current pointer and moves the pointer forward.
-         * It returns null and resets pointer if end of collection reached.
-         * @returns {*}
-         */
-        next(): T;
-        /**
-         * Raises the <c>addItem</c> event
-         */
-        onAddItem(item: T, index: number): void;
-        /**
-         * Raises the <c>removeItem</c> event
-         */
-        onRemoveItem(item: T, index: number): void;
-        /**
-         * Removes the specified item from the collection
-         * @param item
-         * @param raiseEvent
-         */
-        remove(item: T, raiseEvent?: boolean): this;
-        /**
-         * Removes the item ath the specified index
-         * @param index
-         * @param raiseEvent
-         */
-        removeAt(index: number, raiseEvent?: boolean): void;
-        /**
-         * Resets the internal pointer for calls to <c>next()</c> method.
-         */
-        resetPointer(): void;
-        /**
-         * Back field for event
-         */
-        private _addItem;
-        /**
-         * Gets an event raised when an item is added
-         *
-         * @returns {LatteEvent}
-         */
-        addItem: LatteEvent;
-        /**
-         * Back field for event
-         */
-        private _removeItem;
-        /**
-         * Gets an event raised when an item is removed
-         *
-         * @returns {LatteEvent}
-         */
-        removeItem: LatteEvent;
-        /**
-         * Property field
-         */
-        private _context;
-        /**
-         * Gets or sets the context to execute methods of collection
-         *
-         * @returns {any}
-         */
-        /**
-         * Gets or sets the context to execute methods of collection
-         *
-         * @param {any} value
-         */
-        context: any;
-        /**
-         * Gets the count of elements in collection
-         *
-         * @returns {number}
-         */
-        count: number;
-        /**
-         * Gets the first element of the collection
-         * @returns {*}
-         */
-        first: T;
-        /**
-         * Gets the last element of the collection
-         * @returns {*}
-         */
-        last: T;
-        /**
-         * Property field
-         */
-        private _length;
-        /**
-         * Gets the length of the collection
-         *
-         * @returns {number}
-         */
-        length: number;
-    }
-}
 /**
  * Created by josemanuel on 2/6/14.
  */
@@ -1211,6 +1211,51 @@ declare module latte {
          * @param d
          */
         onFormatShortDate(d: DateTime): string;
+    }
+}
+declare module latte {
+    class EventHandler {
+        handler: Function;
+        context: any;
+        constructor(handler: Function, context: any);
+    }
+    /**
+     * Manages events and event handlers
+     */
+    class LatteEvent {
+        context: any;
+        handlers: Array<EventHandler>;
+        /**
+         * Raised when a handler is added to the event
+         */
+        _handlerAdded: LatteEvent;
+        /**
+         *
+         * @param context Context where
+         */
+        constructor(context: any);
+        /**
+         * Gets the event for handler adding
+         *
+         * @returns {LatteEvent}
+         */
+        handlerAdded: LatteEvent;
+        /**
+         * Adds a handler to the event
+         * @param handler
+         */
+        add(handler: Function, context?: any): void;
+        /**
+         * Raises the <c>handlerAdded</c> event
+         * @param handler
+         */
+        onHandlerAdded(handler: Function): void;
+        /**
+         * Raises the actual event handlers.
+         * @param parameter
+         * @returns {*}
+         */
+        raise(...parameter: any[]): any;
     }
 }
 declare module latte {
@@ -1426,51 +1471,6 @@ declare module latte {
          * Gets the year of the date
          **/
         year: number;
-    }
-}
-declare module latte {
-    class EventHandler {
-        handler: Function;
-        context: any;
-        constructor(handler: Function, context: any);
-    }
-    /**
-     * Manages events and event handlers
-     */
-    class LatteEvent {
-        context: any;
-        handlers: Array<EventHandler>;
-        /**
-         * Raised when a handler is added to the event
-         */
-        _handlerAdded: LatteEvent;
-        /**
-         *
-         * @param context Context where
-         */
-        constructor(context: any);
-        /**
-         * Gets the event for handler adding
-         *
-         * @returns {LatteEvent}
-         */
-        handlerAdded: LatteEvent;
-        /**
-         * Adds a handler to the event
-         * @param handler
-         */
-        add(handler: Function, context?: any): void;
-        /**
-         * Raises the <c>handlerAdded</c> event
-         * @param handler
-         */
-        onHandlerAdded(handler: Function): void;
-        /**
-         * Raises the actual event handlers.
-         * @param parameter
-         * @returns {*}
-         */
-        raise(...parameter: any[]): any;
     }
 }
 declare module latte {

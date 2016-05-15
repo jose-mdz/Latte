@@ -1332,219 +1332,6 @@ var latte;
     }());
     latte.Color = Color;
 })(latte || (latte = {}));
-/**
- * Created by josemanuel on 2/6/14.
- */
-var latte;
-(function (latte) {
-    /**
-     *
-     */
-    var Culture = (function () {
-        //endregion
-        /**
-         *
-         */
-        function Culture() {
-            //endregion
-            //region Fields
-            /**
-             * Short date format
-             */
-            this.shortDateFormat = 'dd/MM/yyyy';
-            /**
-             * Long date format
-             */
-            this.longDateFormat = 'dddd, d de MMMM de YYYY';
-            /**
-             * Amount of decimals to show in currency format
-             */
-            this.currencyDecimals = 2;
-            /**
-             * Separator of decimals for currency
-             */
-            this.numberDecimalsSeparator = '.';
-            /**
-             * Thousands separator for currency
-             */
-            this.numberThousandsSeparator = ',';
-            /**
-             * Symbol to use in currency
-             */
-            this.currencySymbol = '$';
-        }
-        Object.defineProperty(Culture, "current", {
-            /**
-             * Gets or sets the current culture of the system
-             *
-             * @returns {Culture}
-             */
-            get: function () {
-                if (!Culture._current) {
-                    Culture._current = Culture.enUs;
-                }
-                return this._current;
-            },
-            /**
-             * Gets or sets the current culture of the system
-             *
-             * @param {Culture} value
-             */
-            set: function (value) {
-                this._current = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Culture, "esMx", {
-            /**
-             * Gets the Español-Mexico Culture
-             *
-             * @returns {Culture}
-             */
-            get: function () {
-                if (!Culture._esMx) {
-                    var _zeroPad = function (n) { return n <= 9 ? '0' + n.toString() : n.toString(); };
-                    Culture._esMx = new Culture();
-                    Culture._esMx.currencyDecimals = 2;
-                    Culture._esMx.numberDecimalsSeparator = '.';
-                    Culture._esMx.numberThousandsSeparator = ',';
-                    Culture._esMx.currencySymbol = '$';
-                    Culture._esMx.shortDateFormat = 'dd/MMM/yyyy';
-                    Culture._esMx.longDateFormat = 'dddd, d de MMMM de yyyy';
-                    Culture._esMx.onFormatShortDate = function (d) {
-                        return latte.sprintf("%s/%s/%s", _zeroPad(d.day), d.monthStringShort, d.year);
-                    };
-                    Culture._esMx.onFormatLongDate = function (d) {
-                        return latte.sprintf("%s, %s de %s de %s", d.dayOfWeekString, d.day, d.monthString, d.year);
-                    };
-                }
-                return Culture._esMx;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Culture, "enUs", {
-            /**
-             * Gets the English-USA Culture
-             *
-             * @returns {Culture}
-             */
-            get: function () {
-                if (!Culture._enUs) {
-                    var _zeroPad = function (n) { return n <= 9 ? '0' + n.toString() : n.toString(); };
-                    Culture._enUs = new Culture();
-                    Culture._enUs.currencyDecimals = 2;
-                    Culture._enUs.numberDecimalsSeparator = '.';
-                    Culture._enUs.numberThousandsSeparator = ',';
-                    Culture._enUs.currencySymbol = '$';
-                    Culture._enUs.shortDateFormat = 'MMM/dd/yyyy';
-                    Culture._enUs.longDateFormat = 'dddd, MMMM d yyyy';
-                    Culture._enUs.onFormatShortDate = function (d) {
-                        return latte.sprintf("%s/%s/%s", d.monthStringShort, _zeroPad(d.day), d.year);
-                    };
-                    Culture._enUs.onFormatLongDate = function (d) {
-                        return latte.sprintf("%s, %s %s %s", d.dayOfWeekString, d.monthString, d.day, d.year);
-                    };
-                }
-                return Culture._enUs;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * Formats currency using the current culture
-         * @param n
-         * @returns {string}
-         */
-        Culture.formatCurrency = function (n) {
-            return Culture.current.onFormatCurrency(n);
-        };
-        /**
-         * Returns the date as a short format
-         * @param d
-         */
-        Culture.formatShortDate = function (d) {
-            return Culture.current.onFormatShortDate(d);
-        };
-        /**
-         * Returns the date as a short format
-         * @param d
-         */
-        Culture.formatLongDate = function (d) {
-            return Culture.current.onFormatLongDate(d);
-        };
-        /**
-         * Formats a number using the current Culture
-         * @param n
-         * @param decimals
-         * @param symbol
-         * @returns {string}
-         */
-        Culture.formatNumber = function (n, decimals, symbol) {
-            if (decimals === void 0) { decimals = 0; }
-            if (symbol === void 0) { symbol = ''; }
-            return Culture.current.onFormatNumber(n, decimals, symbol);
-        };
-        //region Private Methods
-        //endregion
-        //region Methods
-        /**
-         * Returns the specified number as a currency
-         * @param n
-         */
-        Culture.prototype.onFormatCurrency = function (n) {
-            return this.onFormatNumber(n, this.currencyDecimals, this.currencySymbol);
-        };
-        /**
-         * Formats the specified number
-         * @param n
-         * @param decimals
-         * @param symbol
-         * @returns {string}
-         */
-        Culture.prototype.onFormatNumber = function (n, decimals, symbol) {
-            if (decimals === void 0) { decimals = 0; }
-            if (symbol === void 0) { symbol = ''; }
-            var point = this.numberDecimalsSeparator; //if no decimal separator is passed we use the dot as default decimal separator (we MUST use a decimal separator)
-            //if you don't want to use a thousands separator you can pass empty string as thousands_sep value
-            var separator = this.numberThousandsSeparator;
-            var sign = (n < 0) ? '-' : '';
-            //extracting the absolute value of the integer part of the number and converting to string
-            var round = parseInt(Math.abs(n).toFixed(decimals)) + '';
-            var length = round.length;
-            var offset = ((length) > 3) ? length % 3 : 0;
-            var a = sign;
-            var b = symbol;
-            var c = (offset ? round.substr(0, offset) + separator : '');
-            var d = round.substr(offset).replace(/(\d{3})(?=\d)/g, "$1" + separator);
-            //[Hack]
-            var e = (decimals ? point + (Math.abs(n) - parseInt(round)).toFixed(decimals).slice(2) : '');
-            return a + b + c + d + e;
-        };
-        /**
-         * Returns the date as a long format
-         * @param d
-         */
-        Culture.prototype.onFormatLongDate = function (d) {
-            return "NotImplemented";
-        };
-        /**
-         * Returns the date as a short format
-         * @param d
-         */
-        Culture.prototype.onFormatShortDate = function (d) {
-            return "NotImplemented";
-        };
-        //region Static
-        /**
-         * Property field
-         */
-        Culture._current = null;
-        return Culture;
-    }());
-    latte.Culture = Culture;
-})(latte || (latte = {}));
 var latte;
 (function (latte) {
     /**
@@ -1840,83 +1627,218 @@ var latte;
     }());
     latte.Collection = Collection;
 })(latte || (latte = {}));
+/**
+ * Created by josemanuel on 2/6/14.
+ */
 var latte;
 (function (latte) {
-    var EventHandler = (function () {
-        function EventHandler(handler, context) {
-            this.handler = handler;
-            this.context = context;
-        }
-        return EventHandler;
-    }());
-    latte.EventHandler = EventHandler;
     /**
-     * Manages events and event handlers
+     *
      */
-    var LatteEvent = (function () {
+    var Culture = (function () {
+        //endregion
         /**
          *
-         * @param context Context where
          */
-        function LatteEvent(context) {
-            this.context = context;
-            this.handlers = [];
-        }
-        Object.defineProperty(LatteEvent.prototype, "handlerAdded", {
+        function Culture() {
+            //endregion
+            //region Fields
             /**
-             * Gets the event for handler adding
+             * Short date format
+             */
+            this.shortDateFormat = 'dd/MM/yyyy';
+            /**
+             * Long date format
+             */
+            this.longDateFormat = 'dddd, d de MMMM de YYYY';
+            /**
+             * Amount of decimals to show in currency format
+             */
+            this.currencyDecimals = 2;
+            /**
+             * Separator of decimals for currency
+             */
+            this.numberDecimalsSeparator = '.';
+            /**
+             * Thousands separator for currency
+             */
+            this.numberThousandsSeparator = ',';
+            /**
+             * Symbol to use in currency
+             */
+            this.currencySymbol = '$';
+        }
+        Object.defineProperty(Culture, "current", {
+            /**
+             * Gets or sets the current culture of the system
              *
-             * @returns {LatteEvent}
+             * @returns {Culture}
              */
             get: function () {
-                if (!this._handlerAdded) {
-                    this._handlerAdded = new latte.LatteEvent(this);
+                if (!Culture._current) {
+                    Culture._current = Culture.enUs;
                 }
-                return this._handlerAdded;
+                return this._current;
+            },
+            /**
+             * Gets or sets the current culture of the system
+             *
+             * @param {Culture} value
+             */
+            set: function (value) {
+                this._current = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Culture, "esMx", {
+            /**
+             * Gets the Español-Mexico Culture
+             *
+             * @returns {Culture}
+             */
+            get: function () {
+                if (!Culture._esMx) {
+                    var _zeroPad = function (n) { return n <= 9 ? '0' + n.toString() : n.toString(); };
+                    Culture._esMx = new Culture();
+                    Culture._esMx.currencyDecimals = 2;
+                    Culture._esMx.numberDecimalsSeparator = '.';
+                    Culture._esMx.numberThousandsSeparator = ',';
+                    Culture._esMx.currencySymbol = '$';
+                    Culture._esMx.shortDateFormat = 'dd/MMM/yyyy';
+                    Culture._esMx.longDateFormat = 'dddd, d de MMMM de yyyy';
+                    Culture._esMx.onFormatShortDate = function (d) {
+                        return latte.sprintf("%s/%s/%s", _zeroPad(d.day), d.monthStringShort, d.year);
+                    };
+                    Culture._esMx.onFormatLongDate = function (d) {
+                        return latte.sprintf("%s, %s de %s de %s", d.dayOfWeekString, d.day, d.monthString, d.year);
+                    };
+                }
+                return Culture._esMx;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Culture, "enUs", {
+            /**
+             * Gets the English-USA Culture
+             *
+             * @returns {Culture}
+             */
+            get: function () {
+                if (!Culture._enUs) {
+                    var _zeroPad = function (n) { return n <= 9 ? '0' + n.toString() : n.toString(); };
+                    Culture._enUs = new Culture();
+                    Culture._enUs.currencyDecimals = 2;
+                    Culture._enUs.numberDecimalsSeparator = '.';
+                    Culture._enUs.numberThousandsSeparator = ',';
+                    Culture._enUs.currencySymbol = '$';
+                    Culture._enUs.shortDateFormat = 'MMM/dd/yyyy';
+                    Culture._enUs.longDateFormat = 'dddd, MMMM d yyyy';
+                    Culture._enUs.onFormatShortDate = function (d) {
+                        return latte.sprintf("%s/%s/%s", d.monthStringShort, _zeroPad(d.day), d.year);
+                    };
+                    Culture._enUs.onFormatLongDate = function (d) {
+                        return latte.sprintf("%s, %s %s %s", d.dayOfWeekString, d.monthString, d.day, d.year);
+                    };
+                }
+                return Culture._enUs;
             },
             enumerable: true,
             configurable: true
         });
         /**
-         * Adds a handler to the event
-         * @param handler
+         * Formats currency using the current culture
+         * @param n
+         * @returns {string}
          */
-        LatteEvent.prototype.add = function (handler, context) {
-            //            var c = context === null ? this.context : context;
-            if (context === void 0) { context = null; }
-            this.handlers.push(new EventHandler(handler, context));
-            this.onHandlerAdded(handler);
+        Culture.formatCurrency = function (n) {
+            return Culture.current.onFormatCurrency(n);
         };
         /**
-         * Raises the <c>handlerAdded</c> event
-         * @param handler
+         * Returns the date as a short format
+         * @param d
          */
-        LatteEvent.prototype.onHandlerAdded = function (handler) {
-            this.handlerAdded.raise(handler);
+        Culture.formatShortDate = function (d) {
+            return Culture.current.onFormatShortDate(d);
         };
         /**
-         * Raises the actual event handlers.
-         * @param parameter
-         * @returns {*}
+         * Returns the date as a short format
+         * @param d
          */
-        LatteEvent.prototype.raise = function () {
-            var parameter = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                parameter[_i - 0] = arguments[_i];
-            }
-            var args = arguments;
-            // Call each handler
-            for (var i = 0; i < this.handlers.length; i++) {
-                var evh = this.handlers[i];
-                var result = evh.handler.apply(evh.context || this.context, args);
-                if (typeof result !== 'undefined') {
-                    return result;
-                }
-            }
+        Culture.formatLongDate = function (d) {
+            return Culture.current.onFormatLongDate(d);
         };
-        return LatteEvent;
+        /**
+         * Formats a number using the current Culture
+         * @param n
+         * @param decimals
+         * @param symbol
+         * @returns {string}
+         */
+        Culture.formatNumber = function (n, decimals, symbol) {
+            if (decimals === void 0) { decimals = 0; }
+            if (symbol === void 0) { symbol = ''; }
+            return Culture.current.onFormatNumber(n, decimals, symbol);
+        };
+        //region Private Methods
+        //endregion
+        //region Methods
+        /**
+         * Returns the specified number as a currency
+         * @param n
+         */
+        Culture.prototype.onFormatCurrency = function (n) {
+            return this.onFormatNumber(n, this.currencyDecimals, this.currencySymbol);
+        };
+        /**
+         * Formats the specified number
+         * @param n
+         * @param decimals
+         * @param symbol
+         * @returns {string}
+         */
+        Culture.prototype.onFormatNumber = function (n, decimals, symbol) {
+            if (decimals === void 0) { decimals = 0; }
+            if (symbol === void 0) { symbol = ''; }
+            var point = this.numberDecimalsSeparator; //if no decimal separator is passed we use the dot as default decimal separator (we MUST use a decimal separator)
+            //if you don't want to use a thousands separator you can pass empty string as thousands_sep value
+            var separator = this.numberThousandsSeparator;
+            var sign = (n < 0) ? '-' : '';
+            //extracting the absolute value of the integer part of the number and converting to string
+            var round = parseInt(Math.abs(n).toFixed(decimals)) + '';
+            var length = round.length;
+            var offset = ((length) > 3) ? length % 3 : 0;
+            var a = sign;
+            var b = symbol;
+            var c = (offset ? round.substr(0, offset) + separator : '');
+            var d = round.substr(offset).replace(/(\d{3})(?=\d)/g, "$1" + separator);
+            //[Hack]
+            var e = (decimals ? point + (Math.abs(n) - parseInt(round)).toFixed(decimals).slice(2) : '');
+            return a + b + c + d + e;
+        };
+        /**
+         * Returns the date as a long format
+         * @param d
+         */
+        Culture.prototype.onFormatLongDate = function (d) {
+            return "NotImplemented";
+        };
+        /**
+         * Returns the date as a short format
+         * @param d
+         */
+        Culture.prototype.onFormatShortDate = function (d) {
+            return "NotImplemented";
+        };
+        //region Static
+        /**
+         * Property field
+         */
+        Culture._current = null;
+        return Culture;
     }());
-    latte.LatteEvent = LatteEvent;
+    latte.Culture = Culture;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -2516,6 +2438,84 @@ var latte;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
+    var EventHandler = (function () {
+        function EventHandler(handler, context) {
+            this.handler = handler;
+            this.context = context;
+        }
+        return EventHandler;
+    }());
+    latte.EventHandler = EventHandler;
+    /**
+     * Manages events and event handlers
+     */
+    var LatteEvent = (function () {
+        /**
+         *
+         * @param context Context where
+         */
+        function LatteEvent(context) {
+            this.context = context;
+            this.handlers = [];
+        }
+        Object.defineProperty(LatteEvent.prototype, "handlerAdded", {
+            /**
+             * Gets the event for handler adding
+             *
+             * @returns {LatteEvent}
+             */
+            get: function () {
+                if (!this._handlerAdded) {
+                    this._handlerAdded = new latte.LatteEvent(this);
+                }
+                return this._handlerAdded;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Adds a handler to the event
+         * @param handler
+         */
+        LatteEvent.prototype.add = function (handler, context) {
+            //            var c = context === null ? this.context : context;
+            if (context === void 0) { context = null; }
+            this.handlers.push(new EventHandler(handler, context));
+            this.onHandlerAdded(handler);
+        };
+        /**
+         * Raises the <c>handlerAdded</c> event
+         * @param handler
+         */
+        LatteEvent.prototype.onHandlerAdded = function (handler) {
+            this.handlerAdded.raise(handler);
+        };
+        /**
+         * Raises the actual event handlers.
+         * @param parameter
+         * @returns {*}
+         */
+        LatteEvent.prototype.raise = function () {
+            var parameter = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                parameter[_i - 0] = arguments[_i];
+            }
+            var args = arguments;
+            // Call each handler
+            for (var i = 0; i < this.handlers.length; i++) {
+                var evh = this.handlers[i];
+                var result = evh.handler.apply(evh.context || this.context, args);
+                if (typeof result !== 'undefined') {
+                    return result;
+                }
+            }
+        };
+        return LatteEvent;
+    }());
+    latte.LatteEvent = LatteEvent;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
     /**
      * Exception thrown when an argument of the function was invalid.
      *
@@ -2602,6 +2602,165 @@ var latte;
         return InvalidCallEx;
     }(latte.Ex));
     latte.InvalidCallEx = InvalidCallEx;
+})(latte || (latte = {}));
+/**
+ * Created by josemanuel on 5/26/15.
+ */
+var latte;
+(function (latte) {
+    /**
+     *
+     */
+    var LoadInfo = (function () {
+        //endregion
+        //region Fields
+        //endregion
+        /**
+         * @private
+         */
+        function LoadInfo() {
+            //endregion
+            //region Properties
+            /**
+             * Property field
+             */
+            this._loadingText = null;
+        }
+        Object.defineProperty(LoadInfo, "instance", {
+            /**
+             * Gets the load mechanism singleton.
+             *
+             * @returns {LoadMechanism}
+             */
+            get: function () {
+                if (!this._instance) {
+                    this._instance = new LoadInfo();
+                }
+                return this._instance;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        //region Private Methods
+        //endregion
+        //region Methods
+        /**
+         * Ends a loading process
+         */
+        LoadInfo.prototype.end = function () {
+            this.onLoadingEnd();
+        };
+        /**
+         * Raises the <c>loadingStart</c> event
+         */
+        LoadInfo.prototype.onLoadingStart = function () {
+            if (this._loadingStart) {
+                this._loadingStart.raise();
+            }
+            else {
+            }
+        };
+        /**
+         * Raises the <c>loadingEnd</c> event
+         */
+        LoadInfo.prototype.onLoadingEnd = function () {
+            if (this._loadingEnd) {
+                this._loadingEnd.raise();
+            }
+            else {
+            }
+        };
+        /**
+         * Raises the <c>loadingText</c> event
+         */
+        LoadInfo.prototype.onLoadingTextChanged = function () {
+            if (this._loadingTextChanged) {
+                this._loadingTextChanged.raise();
+            }
+        };
+        /**
+         * Starts a loading process
+         * @param text
+         */
+        LoadInfo.prototype.start = function (text) {
+            this.loadingText = text;
+            this.onLoadingStart();
+        };
+        Object.defineProperty(LoadInfo.prototype, "loadingStart", {
+            /**
+             * Gets an event raised when the loading starts
+             *
+             * @returns {LatteEvent}
+             */
+            get: function () {
+                if (!this._loadingStart) {
+                    this._loadingStart = new latte.LatteEvent(this);
+                }
+                return this._loadingStart;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(LoadInfo.prototype, "loadingEnd", {
+            /**
+             * Gets an event raised when the loading ends
+             *
+             * @returns {LatteEvent}
+             */
+            get: function () {
+                if (!this._loadingEnd) {
+                    this._loadingEnd = new latte.LatteEvent(this);
+                }
+                return this._loadingEnd;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(LoadInfo.prototype, "loadingTextChanged", {
+            /**
+             * Gets an event raised when the value of the loadingText property changes
+             *
+             * @returns {LatteEvent}
+             */
+            get: function () {
+                if (!this._loadingTextChanged) {
+                    this._loadingTextChanged = new latte.LatteEvent(this);
+                }
+                return this._loadingTextChanged;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(LoadInfo.prototype, "loadingText", {
+            /**
+             * Gets or sets the text of the load information
+             *
+             * @returns {string}
+             */
+            get: function () {
+                return this._loadingText;
+            },
+            /**
+             * Gets or sets the text of the load information
+             *
+             * @param {string} value
+             */
+            set: function (value) {
+                // Check if value changed
+                var changed = value !== this._loadingText;
+                // Set value
+                this._loadingText = value;
+                // Trigger changed event
+                if (changed) {
+                    this.onLoadingTextChanged();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return LoadInfo;
+    }());
+    latte.LoadInfo = LoadInfo;
 })(latte || (latte = {}));
 /**
  * Created by josemanuel on 5/12/14.
@@ -3077,165 +3236,6 @@ var latte;
     }());
     latte.Size = Size;
 })(latte || (latte = {}));
-/**
- * Created by josemanuel on 5/26/15.
- */
-var latte;
-(function (latte) {
-    /**
-     *
-     */
-    var LoadInfo = (function () {
-        //endregion
-        //region Fields
-        //endregion
-        /**
-         * @private
-         */
-        function LoadInfo() {
-            //endregion
-            //region Properties
-            /**
-             * Property field
-             */
-            this._loadingText = null;
-        }
-        Object.defineProperty(LoadInfo, "instance", {
-            /**
-             * Gets the load mechanism singleton.
-             *
-             * @returns {LoadMechanism}
-             */
-            get: function () {
-                if (!this._instance) {
-                    this._instance = new LoadInfo();
-                }
-                return this._instance;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        //region Private Methods
-        //endregion
-        //region Methods
-        /**
-         * Ends a loading process
-         */
-        LoadInfo.prototype.end = function () {
-            this.onLoadingEnd();
-        };
-        /**
-         * Raises the <c>loadingStart</c> event
-         */
-        LoadInfo.prototype.onLoadingStart = function () {
-            if (this._loadingStart) {
-                this._loadingStart.raise();
-            }
-            else {
-            }
-        };
-        /**
-         * Raises the <c>loadingEnd</c> event
-         */
-        LoadInfo.prototype.onLoadingEnd = function () {
-            if (this._loadingEnd) {
-                this._loadingEnd.raise();
-            }
-            else {
-            }
-        };
-        /**
-         * Raises the <c>loadingText</c> event
-         */
-        LoadInfo.prototype.onLoadingTextChanged = function () {
-            if (this._loadingTextChanged) {
-                this._loadingTextChanged.raise();
-            }
-        };
-        /**
-         * Starts a loading process
-         * @param text
-         */
-        LoadInfo.prototype.start = function (text) {
-            this.loadingText = text;
-            this.onLoadingStart();
-        };
-        Object.defineProperty(LoadInfo.prototype, "loadingStart", {
-            /**
-             * Gets an event raised when the loading starts
-             *
-             * @returns {LatteEvent}
-             */
-            get: function () {
-                if (!this._loadingStart) {
-                    this._loadingStart = new latte.LatteEvent(this);
-                }
-                return this._loadingStart;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(LoadInfo.prototype, "loadingEnd", {
-            /**
-             * Gets an event raised when the loading ends
-             *
-             * @returns {LatteEvent}
-             */
-            get: function () {
-                if (!this._loadingEnd) {
-                    this._loadingEnd = new latte.LatteEvent(this);
-                }
-                return this._loadingEnd;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(LoadInfo.prototype, "loadingTextChanged", {
-            /**
-             * Gets an event raised when the value of the loadingText property changes
-             *
-             * @returns {LatteEvent}
-             */
-            get: function () {
-                if (!this._loadingTextChanged) {
-                    this._loadingTextChanged = new latte.LatteEvent(this);
-                }
-                return this._loadingTextChanged;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(LoadInfo.prototype, "loadingText", {
-            /**
-             * Gets or sets the text of the load information
-             *
-             * @returns {string}
-             */
-            get: function () {
-                return this._loadingText;
-            },
-            /**
-             * Gets or sets the text of the load information
-             *
-             * @param {string} value
-             */
-            set: function (value) {
-                // Check if value changed
-                var changed = value !== this._loadingText;
-                // Set value
-                this._loadingText = value;
-                // Trigger changed event
-                if (changed) {
-                    this.onLoadingTextChanged();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return LoadInfo;
-    }());
-    latte.LoadInfo = LoadInfo;
-})(latte || (latte = {}));
 var latte;
 (function (latte) {
     /**
@@ -3650,16 +3650,16 @@ var latte;
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Ex.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Ajax.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Color.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Culture.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Collection.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Event.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Culture.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/DateTime.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Event.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/InvaldArgumentEx.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/InvalidCallEx.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/LoadInfo.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Point.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Rectangle.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Size.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/LoadInfo.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/TimeSpan.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/Timer.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte/ts/TypeEvent.ts" /> 
