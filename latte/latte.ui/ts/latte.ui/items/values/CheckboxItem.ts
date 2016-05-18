@@ -56,8 +56,8 @@ module latte{
             return this._value;
         }
 
-        /**
-         * Gets or sets the checked state of checkbox 
+        /** 
+         * Gets or sets the checked state of checkbox
          **/
         set value(value: boolean){
 
