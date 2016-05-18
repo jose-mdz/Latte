@@ -57,7 +57,7 @@ module latte{
         }
 
         /**
-         * Gets or sets the checked state of checkbox
+         * Gets or sets the checked state of checkbox 
          **/
         set value(value: boolean){
 
@@ -69,7 +69,7 @@ module latte{
                 if(t == 1) {
                     value = true;
 
-                }else if(t == 0 || t == ""){
+                }else if(t == 0 || t == "" || t == null){
                     value = false;
                 }else{
                     throw new InvalidArgumentEx('value', value);
