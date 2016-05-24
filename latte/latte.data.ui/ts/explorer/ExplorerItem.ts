@@ -225,6 +225,7 @@ module latte {
                 this._childAdded.raise(item);
             }
 
+            item.explorer = this.explorer;
             item._parent = this;
         }
 
@@ -286,7 +287,6 @@ module latte {
 
         }
 
-
         /**
          * Back field for event
          */
@@ -312,7 +312,6 @@ module latte {
                 this._childrenLoadStarted.raise();
             }
         }
-
 
         /**
          * Back field for event
@@ -499,6 +498,10 @@ module latte {
          */
         public set explorer(value:ExplorerView) {
             this._explorer = value;
+
+            for (var i = 0; i < this.children.length; i++) {
+                this.children[i].explorer = value;
+            }
         }
 
         /**
@@ -514,7 +517,6 @@ module latte {
         public get childrenLoading():boolean {
             return this._childrenLoading;
         }
-
 
         /**
          * Property field

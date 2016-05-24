@@ -74,6 +74,9 @@ module latte{
             for(var i = 0; i < this.handlers.length; i++){
 
                 var evh = this.handlers[i];
+
+                if(!evh.handler) continue;
+
                 var result: any = evh.handler.apply(evh.context || this.context, args);
 
                 if(typeof result !== 'undefined'){

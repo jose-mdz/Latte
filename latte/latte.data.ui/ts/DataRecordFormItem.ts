@@ -70,15 +70,21 @@ module latte{
                         var input:InputItem = new InputItem();
                         var value = _undef(record[i]) ? null : record[i];
 
-                        input.text = field.text ? field.text : '(No name)';
+                        input.text = field.text ? field.text : i;
                         input.type = field.type ? field.type : 'string';
                         input.name = i;
                         input.tag = i;
-                        input.readOnly = field['readonly'] === true;
+                        input.readOnly = field['readonly'] === true || field['readOnly'] === true;
                         input.visible = field['visible'] !== false;
                         input.options = field['options'];
-                        input.value = value;//value !== null ? value : field['defaultValue'];
                         input.separator = field['separator'] === true;
+
+                        // Check for fieldString declaration when read-only
+                        if(input.readOnly && record[i + 'String']) {
+                            input.value = record[i + 'String'];
+                        }else{
+                            input.value = value;//value !== null ? value : field['defaultValue'];
+                        }
 
                         if (field.type == 'record') {
 
@@ -97,14 +103,14 @@ module latte{
                                         id: value
                                     };
 
-                                    if(_isString(field['recordModule'])){
-                                        log("Added module")
-                                        params['module'] = field['recordModule'];
+                                    if(_isString(record['_moduleName'])){
+                                        // log("Added module")
+                                        params['module'] = record['_moduleName'];
                                     }
 
                                     calls.push(new RemoteCall<DataRecord>('latte.data', 'DataLatteUa', 'recordSelect', params).withHandlers((r:DataRecord) => {
-                                        //                                    log("Arrived foreign key record:")
-                                        //                                    log(r)
+                                        //log("Arrived foreign key record:")
+                                        //log(r)
                                         if (r && r.recordId) {
                                             d.setRecordSilent(r);
                                             input.value = input.value;

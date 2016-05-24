@@ -215,6 +215,14 @@ abstract class DataRecord {
     //region Public
 
     /**
+     * Override to specify if record can be deleted
+     * @return bool
+     */
+    public function canDelete(){
+        return false;
+    }
+
+    /**
      * Deletes this record on the database.
      *
      * @param DataConnection $connection
@@ -234,10 +242,13 @@ abstract class DataRecord {
             }
         }
 
+        $q = $this->getDeleteQuery();
+
+
         if ($connection) {
-            $connection->update($this->getdeletequery());
+            $connection->update($q);
         } else {
-            DataLatte::update($this->getdeletequery());
+            DataLatte::update($q);
         }
         if (method_exists($this, 'onDelete')) {
             call_user_func(array($this, 'onDelete'));
@@ -487,6 +498,7 @@ abstract class DataRecord {
             call_user_func(array($this, 'onSave'));
         }
     }
+
 
 
 

@@ -483,5 +483,3 @@
     }
 
 }
-
-class DL extends DataLatte{}

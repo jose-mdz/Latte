@@ -56,7 +56,7 @@ module latte{
             return this._value;
         }
 
-        /** 
+        /**
          * Gets or sets the checked state of checkbox
          **/
         set value(value: boolean){
@@ -65,7 +65,7 @@ module latte{
             if(!_isBoolean(value)){
 
                 var t:any = value;
-
+ 
                 if(t == 1) {
                     value = true;
 

@@ -45,6 +45,7 @@ module latte {
             listSide.view = this.listView;
 
             this.listViewToolbar.sideItems.add(this.paginator);
+            this.listViewToolbar.sideItems.add(this.btnRefresh);
 
             // Second split view
             var secondSplitView = new SplitView();
@@ -58,6 +59,9 @@ module latte {
             this.view = secondSplitView;
 
             //endregion
+
+            // TODO: Use it for something
+            this.treeViewToolbar.visible = false;
 
             if(rootItem) {
                 this.addRootItem(rootItem);
@@ -266,11 +270,17 @@ module latte {
          */
         addRootItem(item: ExplorerItem){
 
+            item.explorer = this;
+
             var node = item.createTreeItem();
 
             this.addTreeItemHandlers(node);
 
             this.treeView.items.add(node);
+
+            if(this.treeView.items.length == 1) {
+                node.selected = true;
+            }
 
         }
 
@@ -317,12 +327,32 @@ module latte {
             if (!this._btnSaveDetail) {
                 this._btnSaveDetail = new ButtonItem(strings.save, IconItem.standard(4, 2), () =>{
                     if(this.detailView.view) {
-                        this.detailView.view.onSaveChanges();
+                        this.detailView.view.saveChanges();
+                        //this.detailView.view.onSaveChanges();
                     }
                 });
                 this._btnSaveDetail.enabled = false;
             }
             return this._btnSaveDetail;
+        }
+
+        /**
+         * Field for btnRefresh property
+         */
+        private _btnRefresh:ButtonItem;
+
+        /**
+         * Gets the refresh button
+         *
+         * @returns {ButtonItem}
+         */
+        get btnRefresh():ButtonItem {
+            if (!this._btnRefresh) {
+                this._btnRefresh = new ButtonItem(null, IconItem.refreshIcon(), () => {
+                    this.refreshList()
+                });
+            }
+            return this._btnRefresh;
         }
 
         /**

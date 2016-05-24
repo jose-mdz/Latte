@@ -594,15 +594,17 @@ class DataLatteUa {
     
     /**
      * @remote 
-     * @param type $name
-     * @param type $id
+     * @param string $name
+     * @param int $id
+     * @return any
+     * @throws Exception
      */
     public static function recordDelete($name, $id){
-        
+
         $record = DataRecord::byAuto($name, $id);
         
-        if(!DataRecordMetadata::canDelete($record))
-            throw new Exception("Can't delete record");
+        if(!$record->canDelete())
+            throw new Exception("Can't delete record: Denied by canDelete()");
         
         return $record->delete();
     }

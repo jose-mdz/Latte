@@ -24,6 +24,6 @@
     min-height: 5px;
 }
 
-.latte-item.list > .columns > div .label-content{
-    margin-top: 0px;
+.latte-item.list > .columns > div .latte-item.label{
+    margin-top: 2px;
 }

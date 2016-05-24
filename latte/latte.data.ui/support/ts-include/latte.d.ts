@@ -944,6 +944,51 @@ declare module latte {
     }
 }
 declare module latte {
+    class EventHandler {
+        handler: Function;
+        context: any;
+        constructor(handler: Function, context: any);
+    }
+    /**
+     * Manages events and event handlers
+     */
+    class LatteEvent {
+        context: any;
+        handlers: Array<EventHandler>;
+        /**
+         * Raised when a handler is added to the event
+         */
+        _handlerAdded: LatteEvent;
+        /**
+         *
+         * @param context Context where
+         */
+        constructor(context: any);
+        /**
+         * Gets the event for handler adding
+         *
+         * @returns {LatteEvent}
+         */
+        handlerAdded: LatteEvent;
+        /**
+         * Adds a handler to the event
+         * @param handler
+         */
+        add(handler: Function, context?: any): void;
+        /**
+         * Raises the <c>handlerAdded</c> event
+         * @param handler
+         */
+        onHandlerAdded(handler: Function): void;
+        /**
+         * Raises the actual event handlers.
+         * @param parameter
+         * @returns {*}
+         */
+        raise(...parameter: any[]): any;
+    }
+}
+declare module latte {
     /**
      * Represents a color
      **/
@@ -1214,48 +1259,40 @@ declare module latte {
     }
 }
 declare module latte {
-    class EventHandler {
-        handler: Function;
-        context: any;
-        constructor(handler: Function, context: any);
-    }
     /**
-     * Manages events and event handlers
+     * Exception thrown when an argument of the function was invalid.
+     *
+     * Usage:
+     * <example>
+     *
+     * function pow(a){
+     *
+     *      if(typeof a != 'number')
+     *          // Inform user that the parameter was invalid
+     *          throw new InvalidArgumentEx('a');
+     *
+     *      return a * a;
+     *
+     * }
+     *
+     * </example>
      */
-    class LatteEvent {
-        context: any;
-        handlers: Array<EventHandler>;
+    class InvalidArgumentEx extends Ex {
+        argument: string;
+        value: any;
         /**
-         * Raised when a handler is added to the event
-         */
-        _handlerAdded: LatteEvent;
-        /**
+         * Creates the exception
          *
-         * @param context Context where
+         * @param argument
+         * @param value
          */
-        constructor(context: any);
+        constructor(argument?: string, value?: any);
         /**
-         * Gets the event for handler adding
+         * Returns a string explaining the exception
          *
-         * @returns {LatteEvent}
+         * @returns {string}
          */
-        handlerAdded: LatteEvent;
-        /**
-         * Adds a handler to the event
-         * @param handler
-         */
-        add(handler: Function, context?: any): void;
-        /**
-         * Raises the <c>handlerAdded</c> event
-         * @param handler
-         */
-        onHandlerAdded(handler: Function): void;
-        /**
-         * Raises the actual event handlers.
-         * @param parameter
-         * @returns {*}
-         */
-        raise(...parameter: any[]): any;
+        toString(): string;
     }
 }
 declare module latte {
@@ -1471,43 +1508,6 @@ declare module latte {
          * Gets the year of the date
          **/
         year: number;
-    }
-}
-declare module latte {
-    /**
-     * Exception thrown when an argument of the function was invalid.
-     *
-     * Usage:
-     * <example>
-     *
-     * function pow(a){
-     *
-     *      if(typeof a != 'number')
-     *          // Inform user that the parameter was invalid
-     *          throw new InvalidArgumentEx('a');
-     *
-     *      return a * a;
-     *
-     * }
-     *
-     * </example>
-     */
-    class InvalidArgumentEx extends Ex {
-        argument: string;
-        value: any;
-        /**
-         * Creates the exception
-         *
-         * @param argument
-         * @param value
-         */
-        constructor(argument?: string, value?: any);
-        /**
-         * Returns a string explaining the exception
-         *
-         * @returns {string}
-         */
-        toString(): string;
     }
 }
 declare module latte {
@@ -2039,6 +2039,10 @@ declare module latte {
     }
 }
 declare module latte {
+    class HEvent<T> {
+    }
+}
+declare module latte {
     /**
      * Executes an action every specified amount of milliseconds
      **/
@@ -2097,9 +2101,5 @@ declare module latte {
          * Ticks the timer. Executes the callback and programs next tick.
          **/
         tick(): void;
-    }
-}
-declare module latte {
-    class HEvent<T> {
     }
 }

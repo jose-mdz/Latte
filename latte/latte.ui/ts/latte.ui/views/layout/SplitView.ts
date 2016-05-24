@@ -215,7 +215,7 @@ module latte{
                     sideCss.left = 0;
                     sideCss.right = 'auto';
                     splitterCss.left = size;
-                    containerCss.left = size - sp;
+                    containerCss.left = size - sp + 1; // This plus one is because a misterious padding
                     containerCss.right = 0;
                     break;
                 case Side.RIGHT:

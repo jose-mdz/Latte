@@ -141,3 +141,4 @@ strings.confirmDeleteS = "¿Desea eliminar \"%s\"?";
 strings.cantBeUndone = "Esta acción no se puede deshacer";
 strings.yesDeleteS = "Sí, eliminar %s";
 strings.goToPage = "Ir a página";
+strings.refresh = "Actualizar";

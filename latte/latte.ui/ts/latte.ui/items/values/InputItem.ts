@@ -162,8 +162,6 @@ module latte{
          **/
         isValid(): boolean{
 
-
-
             var value = this.value;
 
             switch(this.type()){
@@ -622,6 +620,7 @@ module latte{
 
 
         }
+        
         //endregion
 
     }

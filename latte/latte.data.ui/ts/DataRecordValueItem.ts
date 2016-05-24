@@ -23,6 +23,8 @@ module latte{
         constructor(loader: DataRecordSuggestionLoader = null, textboxCreated: (t: TextboxItem) => any = null, placeholder: string = null){
             super();
 
+            this.addClass('data-record');
+
             if(textboxCreated) {
                 this.textboxCreated.add(textboxCreated);
             }

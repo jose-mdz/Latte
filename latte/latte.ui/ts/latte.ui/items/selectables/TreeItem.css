@@ -14,7 +14,7 @@
     margin-bottom: 0px;
     position:relative;
     overflow: hidden;
-    padding: 7px;
+    /*padding: 7px;*/
 }
 
 .latte-item.tree-item .selectable .level{
@@ -39,4 +39,5 @@
 .latte-item.tree-item .selectable .text{
     position: static;
     white-space: pre;
+    margin-top: 2px;
 }

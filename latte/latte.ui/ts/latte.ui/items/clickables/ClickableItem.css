@@ -26,6 +26,10 @@
     background-color: #E8F2FC;
 }
 
+.latte-item.clickable.defaulted{
+    border-color:#527DE0;
+}
+
 .latte-item.clickable.pressed,
 .latte-item.clickable.with-face.pressed{
     border-color:#527DE0;

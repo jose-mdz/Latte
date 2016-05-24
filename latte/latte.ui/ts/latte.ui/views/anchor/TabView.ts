@@ -159,6 +159,11 @@ module latte{
         public set tabsSide(value:Side) {
             this._tabsSide = value;
 
+            this.anchorTop    = null;
+            this.anchorRight  = null;
+            this.anchorBottom = null;
+            this.anchorLeft   = null;
+
             switch(value){
                 case Side.AUTO:
                 case Side.TOP:      this.anchorTop = this.tabToolbar; break;

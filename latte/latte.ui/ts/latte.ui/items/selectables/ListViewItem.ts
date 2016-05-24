@@ -170,6 +170,8 @@ module latte{
             this.columnsElement.width(w);
             this.iconElement.css('margin-right', this._iconPadding);
             // this.element.css('min-width', w + this._iconPadding * 2);
+
+            if(this.listView)
             this.element.css('min-width', this.listView.columnHeadersWidth);
 
         }

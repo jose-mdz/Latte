@@ -141,3 +141,4 @@ strings.confirmDeleteS = "Do you want to delete\"%s\"?";
 strings.cantBeUndone = "This action can't be undone.";
 strings.yesDeleteS = "Yes, delete %s";
 strings.goToPage = "Go to page";
+strings.refresh = "Refresh";

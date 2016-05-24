@@ -4,6 +4,8 @@ module latte{
      **/
     export class DialogView extends View {
 
+        //region Static
+
         private static initialized: boolean;
 
         /**
@@ -19,23 +21,24 @@ module latte{
             // Flag as initialized
             f.initialized = true;
 
-            $(document)
+            $(window)
                 .keydown(function (e) {
 
-                    var modal = View.modalView;
+                    var modal: DialogView = (View.modalView instanceof DialogView) ? <DialogView>View.modalView : null;
                     modal = modal instanceof DialogView ? modal : null;
 
                     if (e.keyCode == Key.ESCAPE) {
-                        if (modal && (<DialogView>modal).closeable)
-                            (<DialogView>modal).close();
+                        if (modal && modal.closeable)
+                            (modal).close();
 
                     } else if (e.keyCode == Key.ENTER) {
-                        if (modal && View.defaultButton)
-                            View.defaultButton.onClick();
+                        if (modal && modal.defaultButton)
+                            modal.defaultButton.onClick();
                     }
                 });
 
 
+            // log("DialogView Inited")
         }
 
         /**
@@ -56,6 +59,10 @@ module latte{
             if (!_undef(description)) m.description = description;
 
             m.iconAlert();
+
+            if(!items) {
+                items = [new ButtonItem(strings.ok)];
+            }
 
             return DialogView.showMessage(m, items);
 
@@ -161,7 +168,9 @@ module latte{
             return new DialogView(message, items).show();
 
         }
+        //endregion
 
+        //region Fields
         /**
          *
          **/
@@ -170,7 +179,7 @@ module latte{
         /**
          *
          **/
-        private _closeable:boolean;
+        private _closeable:boolean = true;
 
         /**
          *
@@ -211,7 +220,7 @@ module latte{
          * Raised when the dialog has been closed.
          **/
         closed:LatteEvent;
-
+        //endregion
 
         /**
          * Creates the Dialog
@@ -261,12 +270,20 @@ module latte{
 
         }
 
+        //region Methods
+
+        private clickableItemsCount(): number{
+            var count = 0;
+            this.items.each((item: Item) => {
+                if(item instanceof ClickableItem) count++;
+            })
+            return count;
+        }
+
         /**
          *
          **/
         private _onAddItem(item: Item) {
-
-
 
             if (item instanceof ButtonItem) {
                 (<ButtonItem>item).click.add( () => {
@@ -277,6 +294,12 @@ module latte{
             this.itemsElement.append(item.element);
             this.onLayout();
 
+            item.focusable = true;
+
+            if(this.items.length == 1 && item instanceof ButtonItem) {
+                (<ClickableItem>item).defaulted = true;
+                this.defaultButton = <ButtonItem>item;
+            }
         }
 
         /**
@@ -307,7 +330,7 @@ module latte{
         /**
          * Adds an 'Cancel' button to the dialog items
          **/
-            addCancelButton(handler:GenericCallback = null):DialogView {
+        addCancelButton(handler:GenericCallback = null):DialogView {
 
             return this.addButton(strings.cancel, handler);
 
@@ -316,7 +339,7 @@ module latte{
         /**
          * Adds an 'No' button to the dialog items
          **/
-            addNoButton(handler:GenericCallback):DialogView {
+        addNoButton(handler:GenericCallback = null):DialogView {
 
             return this.addButton(strings.no, handler);
 
@@ -325,7 +348,7 @@ module latte{
         /**
          * Adds an 'Ok' button to the dialog items
          **/
-            addOkButton(handler:GenericCallback):DialogView {
+        addOkButton(handler:GenericCallback = null):DialogView {
 
             return this.addButton(strings.ok, handler);
 
@@ -334,7 +357,7 @@ module latte{
         /**
          * Adds an 'Save' button to the dialog items
          **/
-            addSaveButton(handler:GenericCallback):DialogView {
+        addSaveButton(handler:GenericCallback = null):DialogView {
 
             return this.addButton(strings.save, handler);
 
@@ -343,7 +366,7 @@ module latte{
         /**
          * Adds a 'Yes' button to the dialog items
          **/
-            addYesButton(handler:GenericCallback):DialogView {
+        addYesButton(handler:GenericCallback = null):DialogView {
 
             return this.addButton(strings.yes, handler);
 
@@ -377,7 +400,7 @@ module latte{
         /**
          * Raises the <c>closed</c> event
          **/
-            onClosed() {
+        onClosed() {
 
             this.closed.raise();
 
@@ -386,7 +409,7 @@ module latte{
         /**
          * Raises the <c>closing</c> event
          **/
-            onClosing():boolean {
+        onClosing():boolean {
 
             return this.closing.raise();
 
@@ -395,7 +418,7 @@ module latte{
         /**
          * Raises the <c>layout</c> event
          **/
-            onLayout() {
+        onLayout() {
 
             super.onLayout();
 
@@ -421,11 +444,16 @@ module latte{
 
             if(items) {
                 this.items.addArray(items);
+
+
             }
 
             return this;
 
         }
+        //endregion
+
+        //region Properties
 
         /**
          * Gets or sets the button which is to be pressed by default when cancelling the dialog.
@@ -508,5 +536,6 @@ module latte{
 
 
         }
+        //endregion
     }
 }

@@ -26,6 +26,8 @@ module latte {
 
             this.items.add(this.form);
 
+            this.optionsButton.visible = false;
+
             if(record) {
                 this.record = record;
             }

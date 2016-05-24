@@ -1545,175 +1545,29 @@ var latte;
     latte.Animation = Animation;
 })(latte || (latte = {}));
 /**
- * Created by josemanuel on 5/28/15.
+ * Created by josemanuel on 5/29/15.
  */
 var latte;
 (function (latte) {
     /**
      *
      */
-    var ElementCollection = (function (_super) {
-        __extends(ElementCollection, _super);
+    var CollectionDataBind = (function () {
+        //region Static
         //endregion
         //region Fields
         //endregion
         /**
-         *
+         * Creates and automatically sets up the binding
          */
-        function ElementCollection() {
-            _super.call(this);
+        function CollectionDataBind(element, elementProperty, collection, type) {
+            if (type === void 0) { type = latte.DataBindType.AUTO; }
+            collection.each(function (object) {
+            });
         }
-        //region Static
-        /**
-         * Creates the collection from the specified NodeList
-         * @param list
-         * @returns {latte.ElementCollection}
-         */
-        ElementCollection.fromNodeList = function (list) {
-            var collection = new ElementCollection();
-            for (var i = 0; i < list.length; i++) {
-                (function (node) {
-                    if (node['latte-element-instance'] instanceof latte.Element) {
-                        collection.add(node['latte-element-instance']);
-                    }
-                })(list[i]);
-            }
-            return collection;
-        };
-        /**
-         * Creates an array of elements of the specified base class, binds them to the specified array of records
-         * and returns them as a ElementCollection
-         *
-         * @param array
-         * @param baseClass
-         * @returns {latte.ElementCollection}
-         */
-        ElementCollection.fromBindArray = function (array, baseClass) {
-            var collection = new ElementCollection();
-            for (var i = 0; i < array.length; i++) {
-                (function (object) {
-                    var c = baseClass;
-                    var element = (new c);
-                    element.bind(object);
-                    collection.add(element);
-                })(array[i]);
-            }
-            return collection;
-        };
-        //region Private Methods
-        //endregion
-        //region Methods
-        /**
-         * Adds an event listener to the elements in the collection
-         * @param event
-         * @param handler
-         * @param capture
-         */
-        ElementCollection.prototype.addEventListener = function (event, handler, capture) {
-            if (capture === void 0) { capture = false; }
-            this.each(function (e) {
-                e.addEventListener(event, function (evt) {
-                    var args = [e, evt];
-                    for (var i = 0; i < arguments.length; i++)
-                        args.push(arguments[i]);
-                    handler.apply(e, args);
-                }, capture);
-            });
-        };
-        /**
-         * Adds the specified class to the class list of the elements in the collection
-         * @param className
-         */
-        ElementCollection.prototype.addClass = function (className) {
-            this.each(function (e) {
-                e.addClass(className);
-            });
-        };
-        /**
-         * Clears all the children of the elements in the collection
-         */
-        ElementCollection.prototype.clear = function () {
-            this.each(function (e) {
-                e.clear();
-            });
-        };
-        /**
-         * Fades in the elements in the collection
-         * @param duration
-         * @param callback
-         */
-        ElementCollection.prototype.fadeIn = function (duration, callback) {
-            if (duration === void 0) { duration = 0.1; }
-            if (callback === void 0) { callback = null; }
-            this.each(function (e) {
-                e.fadeIn(duration, callback);
-            });
-        };
-        /**
-         * Fades out the elements in the collection
-         * @param duration
-         * @param callback
-         */
-        ElementCollection.prototype.fadeOut = function (duration, callback) {
-            if (duration === void 0) { duration = 0.1; }
-            if (callback === void 0) { callback = null; }
-            this.each(function (e) {
-                e.fadeOut(duration, callback);
-            });
-        };
-        /**
-         * Adds an event handler to the elements in the collection
-         * @param context
-         * @param event
-         * @param f
-         */
-        ElementCollection.prototype.handle = function (context, event, f) {
-            this.each(function (e) {
-                e.handle(context, event, f);
-            });
-        };
-        /**
-         * Removes the specified class to the class list of elements in the collection
-         *
-         * @param className
-         */
-        ElementCollection.prototype.removeClass = function (className) {
-            this.each(function (e) {
-                e.removeClass(className);
-            });
-        };
-        /**
-         * Sets the attribute of the elements
-         * @param property
-         * @param value
-         */
-        ElementCollection.prototype.setAttribute = function (att, value) {
-            this.each(function (e) {
-                e.element.setAttribute(att, value);
-            });
-        };
-        /**
-         * Sets the property of the elements
-         * @param property
-         * @param value
-         */
-        ElementCollection.prototype.setProperty = function (property, value) {
-            this.each(function (e) {
-                e[property] = value;
-            });
-        };
-        /**
-         * Sets the visibility of the elements in the collection
-         * @param visible
-         */
-        ElementCollection.prototype.setVisible = function (visible) {
-            this.each(function (e) {
-                e.visible = visible;
-            });
-        };
-        return ElementCollection;
-    }(latte.Collection));
-    latte.ElementCollection = ElementCollection;
+        return CollectionDataBind;
+    }());
+    latte.CollectionDataBind = CollectionDataBind;
 })(latte || (latte = {}));
 /**
  * Created by josemanuel on 4/15/15.
@@ -1960,29 +1814,329 @@ var latte;
     latte.Textbox = Textbox;
 })(latte || (latte = {}));
 /**
- * Created by josemanuel on 5/29/15.
+ * Created by josemanuel on 5/28/15.
  */
 var latte;
 (function (latte) {
     /**
      *
      */
-    var CollectionDataBind = (function () {
+    var ElementCollection = (function (_super) {
+        __extends(ElementCollection, _super);
+        //endregion
+        //region Fields
+        //endregion
+        /**
+         *
+         */
+        function ElementCollection() {
+            _super.call(this);
+        }
+        //region Static
+        /**
+         * Creates the collection from the specified NodeList
+         * @param list
+         * @returns {latte.ElementCollection}
+         */
+        ElementCollection.fromNodeList = function (list) {
+            var collection = new ElementCollection();
+            for (var i = 0; i < list.length; i++) {
+                (function (node) {
+                    if (node['latte-element-instance'] instanceof latte.Element) {
+                        collection.add(node['latte-element-instance']);
+                    }
+                })(list[i]);
+            }
+            return collection;
+        };
+        /**
+         * Creates an array of elements of the specified base class, binds them to the specified array of records
+         * and returns them as a ElementCollection
+         *
+         * @param array
+         * @param baseClass
+         * @returns {latte.ElementCollection}
+         */
+        ElementCollection.fromBindArray = function (array, baseClass) {
+            var collection = new ElementCollection();
+            for (var i = 0; i < array.length; i++) {
+                (function (object) {
+                    var c = baseClass;
+                    var element = (new c);
+                    element.bind(object);
+                    collection.add(element);
+                })(array[i]);
+            }
+            return collection;
+        };
+        //region Private Methods
+        //endregion
+        //region Methods
+        /**
+         * Adds an event listener to the elements in the collection
+         * @param event
+         * @param handler
+         * @param capture
+         */
+        ElementCollection.prototype.addEventListener = function (event, handler, capture) {
+            if (capture === void 0) { capture = false; }
+            this.each(function (e) {
+                e.addEventListener(event, function (evt) {
+                    var args = [e, evt];
+                    for (var i = 0; i < arguments.length; i++)
+                        args.push(arguments[i]);
+                    handler.apply(e, args);
+                }, capture);
+            });
+        };
+        /**
+         * Adds the specified class to the class list of the elements in the collection
+         * @param className
+         */
+        ElementCollection.prototype.addClass = function (className) {
+            this.each(function (e) {
+                e.addClass(className);
+            });
+        };
+        /**
+         * Clears all the children of the elements in the collection
+         */
+        ElementCollection.prototype.clear = function () {
+            this.each(function (e) {
+                e.clear();
+            });
+        };
+        /**
+         * Fades in the elements in the collection
+         * @param duration
+         * @param callback
+         */
+        ElementCollection.prototype.fadeIn = function (duration, callback) {
+            if (duration === void 0) { duration = 0.1; }
+            if (callback === void 0) { callback = null; }
+            this.each(function (e) {
+                e.fadeIn(duration, callback);
+            });
+        };
+        /**
+         * Fades out the elements in the collection
+         * @param duration
+         * @param callback
+         */
+        ElementCollection.prototype.fadeOut = function (duration, callback) {
+            if (duration === void 0) { duration = 0.1; }
+            if (callback === void 0) { callback = null; }
+            this.each(function (e) {
+                e.fadeOut(duration, callback);
+            });
+        };
+        /**
+         * Adds an event handler to the elements in the collection
+         * @param context
+         * @param event
+         * @param f
+         */
+        ElementCollection.prototype.handle = function (context, event, f) {
+            this.each(function (e) {
+                e.handle(context, event, f);
+            });
+        };
+        /**
+         * Removes the specified class to the class list of elements in the collection
+         *
+         * @param className
+         */
+        ElementCollection.prototype.removeClass = function (className) {
+            this.each(function (e) {
+                e.removeClass(className);
+            });
+        };
+        /**
+         * Sets the attribute of the elements
+         * @param property
+         * @param value
+         */
+        ElementCollection.prototype.setAttribute = function (att, value) {
+            this.each(function (e) {
+                e.element.setAttribute(att, value);
+            });
+        };
+        /**
+         * Sets the property of the elements
+         * @param property
+         * @param value
+         */
+        ElementCollection.prototype.setProperty = function (property, value) {
+            this.each(function (e) {
+                e[property] = value;
+            });
+        };
+        /**
+         * Sets the visibility of the elements in the collection
+         * @param visible
+         */
+        ElementCollection.prototype.setVisible = function (visible) {
+            this.each(function (e) {
+                e.visible = visible;
+            });
+        };
+        return ElementCollection;
+    }(latte.Collection));
+    latte.ElementCollection = ElementCollection;
+})(latte || (latte = {}));
+/**
+ * Created by josemanuel on 5/28/15.
+ */
+var latte;
+(function (latte) {
+    /**
+     *
+     */
+    var EventBind = (function () {
         //region Static
         //endregion
         //region Fields
         //endregion
         /**
-         * Creates and automatically sets up the binding
+         *
          */
-        function CollectionDataBind(element, elementProperty, collection, type) {
-            if (type === void 0) { type = latte.DataBindType.AUTO; }
-            collection.each(function (object) {
-            });
+        function EventBind(element, elementEvent, record, recordMethod) {
+            this.setup(element, elementEvent, record, recordMethod);
         }
-        return CollectionDataBind;
+        //region Private Methods
+        //endregion
+        //region Methods
+        /**
+         * Sets up the bind
+         * @param element
+         * @param elementEvethis.bindedElements.push(e);nt
+         * @param record
+         * @param recordMethod
+         */
+        EventBind.prototype.setup = function (element, elementEvent, record, recordMethod) {
+            this._element = element;
+            this._elementEvent = elementEvent;
+            this._record = record;
+            this._recordMethod = recordMethod;
+            var __this = this;
+            if (this.element[this.elementEvent] instanceof latte.LatteEvent) {
+                this.element[this.elementEvent].add(function () {
+                    var args = [];
+                    for (var i = 0; i < arguments.length; i++) {
+                        args.push(arguments[i]);
+                    }
+                    if (latte._isFunction(__this.record[__this.recordMethod])) {
+                        __this.record[__this.recordMethod].apply(__this.record, args);
+                    }
+                    else {
+                    }
+                });
+            }
+            else {
+                this.element.addEventListener(this.elementEvent, function () {
+                    var args = [];
+                    for (var i = 0; i < arguments.length; i++) {
+                        args.push(arguments[i]);
+                    }
+                    if (latte._isFunction(__this.record[__this.recordMethod])) {
+                        __this.record[__this.recordMethod].apply(__this.record, args);
+                    }
+                    else {
+                    }
+                });
+            }
+        };
+        Object.defineProperty(EventBind.prototype, "element", {
+            /**
+             * Gets the element to bind
+             *
+             * @returns {Element<HTMLElement>}
+             */
+            get: function () {
+                return this._element;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EventBind.prototype, "elementEvent", {
+            /**
+             * Gets the element event
+             *
+             * @returns {string}
+             */
+            get: function () {
+                return this._elementEvent;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EventBind.prototype, "record", {
+            /**
+             * Gets the record to bind
+             *
+             * @returns {any}
+             */
+            get: function () {
+                return this._record;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EventBind.prototype, "recordMethod", {
+            /**
+             * Gets the method to execute on the record
+             *
+             * @returns {string}
+             */
+            get: function () {
+                return this._recordMethod;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return EventBind;
     }());
-    latte.CollectionDataBind = CollectionDataBind;
+    latte.EventBind = EventBind;
+})(latte || (latte = {}));
+/**
+ * Created by josemanuel on 5/28/15.
+ */
+var latte;
+(function (latte) {
+    /**
+     * Represents a very simple data adapter that passes the data along as strings.
+     */
+    var DefaultDataAdapter = (function () {
+        //region Static
+        //endregion
+        //region Fields
+        //endregion
+        /**
+         * Creates the adapter
+         */
+        function DefaultDataAdapter() {
+        }
+        //region Private Methods
+        //endregion
+        //region Methods
+        /**
+         * Transforms the value of the record into a proper value for the element
+         *
+         * @param value
+         */
+        DefaultDataAdapter.prototype.adaptForElement = function (value) {
+            return value;
+        };
+        /**
+         * Transforms the value of the element into a proper value for the record
+         * @param value
+         */
+        DefaultDataAdapter.prototype.adaptForRecord = function (value) {
+            return value;
+        };
+        return DefaultDataAdapter;
+    }());
+    latte.DefaultDataAdapter = DefaultDataAdapter;
 })(latte || (latte = {}));
 /**
  * Created by josemanuel on 5/28/15.
@@ -2294,160 +2448,6 @@ var latte;
     }());
     latte.DataBind = DataBind;
 })(latte || (latte = {}));
-/**
- * Created by josemanuel on 5/28/15.
- */
-var latte;
-(function (latte) {
-    /**
-     * Represents a very simple data adapter that passes the data along as strings.
-     */
-    var DefaultDataAdapter = (function () {
-        //region Static
-        //endregion
-        //region Fields
-        //endregion
-        /**
-         * Creates the adapter
-         */
-        function DefaultDataAdapter() {
-        }
-        //region Private Methods
-        //endregion
-        //region Methods
-        /**
-         * Transforms the value of the record into a proper value for the element
-         *
-         * @param value
-         */
-        DefaultDataAdapter.prototype.adaptForElement = function (value) {
-            return value;
-        };
-        /**
-         * Transforms the value of the element into a proper value for the record
-         * @param value
-         */
-        DefaultDataAdapter.prototype.adaptForRecord = function (value) {
-            return value;
-        };
-        return DefaultDataAdapter;
-    }());
-    latte.DefaultDataAdapter = DefaultDataAdapter;
-})(latte || (latte = {}));
-/**
- * Created by josemanuel on 5/28/15.
- */
-var latte;
-(function (latte) {
-    /**
-     *
-     */
-    var EventBind = (function () {
-        //region Static
-        //endregion
-        //region Fields
-        //endregion
-        /**
-         *
-         */
-        function EventBind(element, elementEvent, record, recordMethod) {
-            this.setup(element, elementEvent, record, recordMethod);
-        }
-        //region Private Methods
-        //endregion
-        //region Methods
-        /**
-         * Sets up the bind
-         * @param element
-         * @param elementEvethis.bindedElements.push(e);nt
-         * @param record
-         * @param recordMethod
-         */
-        EventBind.prototype.setup = function (element, elementEvent, record, recordMethod) {
-            this._element = element;
-            this._elementEvent = elementEvent;
-            this._record = record;
-            this._recordMethod = recordMethod;
-            var __this = this;
-            if (this.element[this.elementEvent] instanceof latte.LatteEvent) {
-                this.element[this.elementEvent].add(function () {
-                    var args = [];
-                    for (var i = 0; i < arguments.length; i++) {
-                        args.push(arguments[i]);
-                    }
-                    if (latte._isFunction(__this.record[__this.recordMethod])) {
-                        __this.record[__this.recordMethod].apply(__this.record, args);
-                    }
-                    else {
-                    }
-                });
-            }
-            else {
-                this.element.addEventListener(this.elementEvent, function () {
-                    var args = [];
-                    for (var i = 0; i < arguments.length; i++) {
-                        args.push(arguments[i]);
-                    }
-                    if (latte._isFunction(__this.record[__this.recordMethod])) {
-                        __this.record[__this.recordMethod].apply(__this.record, args);
-                    }
-                    else {
-                    }
-                });
-            }
-        };
-        Object.defineProperty(EventBind.prototype, "element", {
-            /**
-             * Gets the element to bind
-             *
-             * @returns {Element<HTMLElement>}
-             */
-            get: function () {
-                return this._element;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EventBind.prototype, "elementEvent", {
-            /**
-             * Gets the element event
-             *
-             * @returns {string}
-             */
-            get: function () {
-                return this._elementEvent;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EventBind.prototype, "record", {
-            /**
-             * Gets the record to bind
-             *
-             * @returns {any}
-             */
-            get: function () {
-                return this._record;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EventBind.prototype, "recordMethod", {
-            /**
-             * Gets the method to execute on the record
-             *
-             * @returns {string}
-             */
-            get: function () {
-                return this._recordMethod;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return EventBind;
-    }());
-    latte.EventBind = EventBind;
-})(latte || (latte = {}));
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/support/ts-include/datalatte.d.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/support/ts-include/latte.d.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/support/ts-include/latte.data.d.ts" />
@@ -2456,9 +2456,9 @@ var latte;
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/ts/data-bind/DataAdapter.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/ts/Element.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/ts/Animation.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/ts/ElementCollection.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/ts/Textbox.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/ts/data-bind/CollectionDataBind.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/ts/data-bind/DataBind.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/ts/Textbox.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/ts/ElementCollection.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/ts/data-bind/EventBind.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/ts/data-bind/DefaultDataAdapter.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/ts/data-bind/EventBind.ts" /> 
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.element/ts/data-bind/DataBind.ts" /> 

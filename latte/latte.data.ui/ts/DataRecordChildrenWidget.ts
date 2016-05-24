@@ -34,6 +34,8 @@ module latte {
 
             this.items.add(this.stackChildren);
 
+            this.optionsButton.visible = false;
+
             if(loadChildren) {
                 this.loadChildren.add(loadChildren);
             }
@@ -75,6 +77,28 @@ module latte {
         }
 
         /**
+         * Raises the <c>childRemove</c> event
+         */
+        onChildRemove(){
+            if(this._childRemove){
+                this._childRemove.raise();
+            }
+        }
+
+        /**
+         * Raises the <c>loadChildren</c> event
+         */
+        onLoadChildren(){
+
+            this.btnRemove.enabled = this.btnEdit.enabled = false;
+            this.children.clear();
+
+            if(this._loadChildren){
+                this._loadChildren.raise();
+            }
+        }
+
+        /**
          * Raises the <c>record</c> event
          */
         onRecordChanged(){
@@ -85,6 +109,12 @@ module latte {
             this.onLoadChildren();
         }
 
+        /**
+         * Reloads children
+         */
+        reloadChildren(){
+            this.onLoadChildren();
+        }
         //endregion
 
         //region Events
@@ -144,15 +174,6 @@ module latte {
         }
 
         /**
-         * Raises the <c>childRemove</c> event
-         */
-        onChildRemove(){
-            if(this._childRemove){
-                this._childRemove.raise();
-            }
-        }
-
-        /**
          * Back field for event
          */
         private _loadChildren: LatteEvent;
@@ -167,19 +188,6 @@ module latte {
                 this._loadChildren = new LatteEvent(this);
             }
             return this._loadChildren;
-        }
-
-        /**
-         * Raises the <c>loadChildren</c> event
-         */
-        onLoadChildren(){
-
-            this.btnRemove.enabled = this.btnEdit.enabled = false;
-            this.children.clear();
-
-            if(this._loadChildren){
-                this._loadChildren.raise();
-            }
         }
 
         /**

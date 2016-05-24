@@ -535,7 +535,33 @@ module latte{
         /**
          * Back field for event
          */
-         private _dragOver: LatteEvent
+        private _blur: LatteEvent;
+
+        /**
+         * Gets an event raised when the element loses focus (if focusable)
+         *
+         * @returns {LatteEvent}
+         */
+        get blur(): LatteEvent{
+            if(!this._blur){
+                this._blur = new LatteEvent(this);
+            }
+            return this._blur;
+        }
+
+        /**
+         * Raises the <c>blur</c> event
+         */
+        onBlur(){
+            if(this._blur){
+                this._blur.raise();
+            }
+        }
+
+        /**
+         * Back field for event
+         */
+        private _dragOver: LatteEvent
 
         /**
          * Gets an event raised when an element is dragged over this element.
@@ -593,6 +619,33 @@ module latte{
         public onFinalizing(){
             if(this._finalizing){
                 return this._finalizing.raise();
+            }
+        }
+
+
+        /**
+         * Back field for event
+         */
+        private _focused: LatteEvent;
+
+        /**
+         * Gets an event raised when the element recieves focus (if focusasble)
+         *
+         * @returns {LatteEvent}
+         */
+        get focused(): LatteEvent{
+            if(!this._focused){
+                this._focused = new LatteEvent(this);
+            }
+            return this._focused;
+        }
+
+        /**
+         * Raises the <c>focused</c> event
+         */
+        onFocused(){
+            if(this._focused){
+                this._focused.raise();
             }
         }
 
@@ -788,10 +841,17 @@ module latte{
         set focusable(value: boolean){
 
 
-            if(!_isBoolean(value)) throw new InvalidArgumentEx('value');
-
             if(value){
-                this.element.attr('tabindex', 0);
+                this.element.attr('tabindex', 0);// TabIndexManager.subscribe(this));
+
+                this.element.get(0).addEventListener('focus', () => {
+                    this.onFocused();
+                })
+
+                this.element.get(0).addEventListener('blur', () => {
+                    this.onBlur();
+                })
+
             }else{
                 this.element.removeAttr('tabindex');
             }

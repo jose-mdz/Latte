@@ -35,6 +35,71 @@ module latte{
             return icon;
 
         }
+
+        /**
+         *
+         * @returns {IconItem}
+         */
+        static fileIcon(): IconItem{
+            return IconItem.standard(2, 1);
+        }
+
+        /**
+         *
+         * @returns {IconItem}
+         */
+        static folderIcon(): IconItem{
+            return IconItem.standard(5, 1);
+        }
+
+        /**
+         *
+         * @returns {IconItem}
+         */
+        static homeIcon(): IconItem{
+            return IconItem.standard(11, 1);
+        }
+
+        /**
+         *
+         * @returns {IconItem}
+         */
+        static newIcon(): IconItem{
+            return IconItem.standard(3, 3);
+        }
+
+        /**
+         *
+         * @returns {IconItem}
+         */
+        static saveIcon(): IconItem{
+            return IconItem.standard(4, 2);
+        }
+
+        /**
+         *
+         * @returns {IconItem}
+         */
+        static refreshIcon(): IconItem{
+            return IconItem.standard(1, 4);
+        }
+
+        /**
+         *
+         * @returns {IconItem}
+         */
+        static editIcon(): IconItem{
+            return IconItem.standard(14, 8);
+        }
+
+        /**
+         *
+         * @returns {IconItem}
+         */
+        static deleteIcon(): IconItem{
+            return IconItem.standard(9, 1);
+        }
+
         //endregion
 
 

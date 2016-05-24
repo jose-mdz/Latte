@@ -21,6 +21,9 @@ module latte{
 
         }
 
+
+
+        //region Methods
         /**
          * Applies the values on form to the record. Optionally specifies which record
          is supposed to recieve the values
@@ -30,6 +33,15 @@ module latte{
             (<DataRecordFormItem>this.form).applyValues(record);
 
         }
+
+        onSaveChanges(){
+            super.onSaveChanges();
+
+            this.applyValues(this.record);
+            this.record.save(() => { this.unsavedChanges = false })
+        }
+
+        //endregion
 
         //region Components
 
@@ -43,7 +55,7 @@ module latte{
          *
          * @returns {DataRecordFormItem}
          */
-        public get form():DataRecordFormItem {
+        get form():DataRecordFormItem {
             if (!this._dataform) {
                 this._dataform = new DataRecordFormItem();
                 this._dataform.valueChanged.add(this.onValueChanged, this);

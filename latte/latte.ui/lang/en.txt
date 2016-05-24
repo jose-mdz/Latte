@@ -140,3 +140,4 @@ confirmDeleteS Do you want to delete"%s"?
 cantBeUndone This action can't be undone.
 yesDeleteS Yes, delete %s
 goToPage Go to page
+refresh Refresh

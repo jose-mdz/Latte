@@ -9,6 +9,7 @@
 .latte-item.list.selectable,
 .latte-item.tree-item  > .selectable{
     border: solid 1px transparent;
+    border-bottom-color: #f0f0f0;
     float: none;
     padding: 10px;
     cursor: pointer;
@@ -16,12 +17,15 @@
 
 .latte-item.selectable.hover,
 .latte-item.tree-item > .selectable.hover, .selectable.hover{
-    border-color: #D1D1D1;
+    /*border-color: #D1D1D1;*/
     background: #EFEFEF;
 }
 
 .latte-item.selectable.selected,
 .latte-item.tree-item > .selectable.selected, .selectable.selected{
-    border-color: #93A0B3;
-    background: #E8F3FF;
+    /*border-color: #93A0B3;*/
+    /*background: #E8F3FF;*/
+    background-color: #4285F4;
+    border-color: #4285F4;
+    color: white;
 }

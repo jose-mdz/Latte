@@ -30,6 +30,294 @@ declare module latte {
         onViewCreating?(view: View): any;
     }
 }
+/**
+ * Created by josemanuel on 8/8/14.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class ExplorerItem {
+        /**
+         *
+         */
+        constructor();
+        /**
+         * Creates a tree item for the record
+         */
+        createTreeItem(): TreeItem;
+        /**
+         * Creates a list view item for the record
+         */
+        createListViewItem(): ListViewItem;
+        /**
+         * Gets the actions of the button
+         *
+         * @returns {Array}
+         */
+        getItems(): Item[];
+        /**
+         * Gets the actions that apply for child items
+         *
+         * @returns {Array}
+         */
+        getChildrenItems(): Item[];
+        /**
+         * Gets the icon of 16 pixels
+         *
+         * @returns {IconItem}
+         */
+        getIcon(): IconItem;
+        /**
+         * Gets the icon of 32 pixels
+         *
+         * @returns {IconItem}
+         */
+        getIcon32(): IconItem;
+        /**
+         * Gets the name for the item
+         *
+         * @returns {string}
+         */
+        getName(): string;
+        /**
+         * Gets a value indicating if the item may be deleted
+         *
+         * @returns {boolean}
+         */
+        getCanBeDeleted(): boolean;
+        /**
+         * Gets the name of the columns that go in the lists
+         * This are names of fields, described in metadata of record.
+         */
+        getColumns(): string[];
+        /**
+         * Loads the children of the item
+         */
+        getChildrenLoader(): RemoteCall<any>;
+        /**
+         * Gets the detail view of the item
+         *
+         * @returns {latte.DataRecordFormItem}
+         */
+        getDetailView(): View;
+        /**
+         * Loads children if necessary.
+         * Checks <c>loadsChildren</c> and <c>childrenLoaded</c> flags to avoid re-loading.
+         */
+        loadChildren(callback?: () => void): void;
+        /**
+         * Back field for event
+         */
+        private _childAdded;
+        /**
+         * Gets an event raised when a child is added
+         *
+         * @returns {LatteEvent}
+         */
+        childAdded: LatteEvent;
+        /**
+         * Raises the <c>childAdded</c> event
+         */
+        onChildAdded(item: ExplorerItem): void;
+        /**
+         * Back field for event
+         */
+        private _childRemoved;
+        /**
+         * Gets an event raised when a child is removed
+         *
+         * @returns {LatteEvent}
+         */
+        childRemoved: LatteEvent;
+        /**
+         * Raises the <c>childRemoved</c> event
+         */
+        onChildRemoved(item: ExplorerItem): void;
+        /**
+         * Back field for event
+         */
+        private _childrenChanged;
+        /**
+         * Gets an event raised when the children of the item changed
+         *
+         * @returns {LatteEvent}
+         */
+        childrenChanged: LatteEvent;
+        /**
+         * Raises the <c>childrenChanged</c> event
+         */
+        onChildrenChanged(): void;
+        /**
+         * Back field for event
+         */
+        private _childrenLoadStarted;
+        /**
+         * Gets an event raised when the load of children starts
+         *
+         * @returns {LatteEvent}
+         */
+        childrenLoadStarted: LatteEvent;
+        /**
+         * Raises the <c>childrenLoadStarted</c> event
+         */
+        onChildrenLoadStarted(): void;
+        /**
+         * Back field for event
+         */
+        private _childrenLoadEnd;
+        /**
+         * Gets an event raised when the load of children ends
+         *
+         * @returns {LatteEvent}
+         */
+        childrenLoadEnd: LatteEvent;
+        /**
+         * Raises the <c>childrenLoadEnd</c> event
+         */
+        onChildrenLoadEnd(): void;
+        /**
+         * Field for children property
+         */
+        private _children;
+        /**
+         * Gets the collection of child items of this item
+         *
+         * @returns {Collection<ExplorerItem>}
+         */
+        children: Collection<ExplorerItem>;
+        /**
+         * Property field
+         */
+        private _childrenLoaded;
+        /**
+         * Gets or sets a value indicating if the children is loaded
+         *
+         * @returns {boolean}
+         */
+        /**
+         * Gets or sets a value indicating if the children is loaded
+         *
+         * @param {boolean} value
+         */
+        childrenLoaded: boolean;
+        /**
+         * Gets a value indicating if the node needs to load children, by analyzing its state
+         *
+         * @returns {boolean}
+         */
+        childrenLoadNeeded: boolean;
+        /**
+         * Property field
+         */
+        private _childrenPage;
+        /**
+         * Gets or sets the current page of children
+         *
+         * @returns {number}
+         */
+        /**
+         * Gets or sets the current page of children
+         *
+         * @param {number} value
+         */
+        childrenPage: number;
+        /**
+         * Property field
+         */
+        private _childrenPages;
+        /**
+         * Gets or sets the total pages of children items
+         *
+         * @returns {number}
+         */
+        /**
+         * Gets or sets the total pages of children items
+         *
+         * @param {number} value
+         */
+        childrenPages: number;
+        /**
+         * Back field for event
+         */
+        private _childrenPagesChanged;
+        /**
+         * Gets an event raised when the value of the childrenPages property changes
+         *
+         * @returns {LatteEvent}
+         */
+        childrenPagesChanged: LatteEvent;
+        /**
+         * Raises the <c>childrenPages</c> event
+         */
+        onChildrenPagesChanged(): void;
+        /**
+         * Property field
+         */
+        private _explorer;
+        /**
+         * Gets or sets the explorer view where the item lives
+         *
+         * @returns {ExplorerView}
+         */
+        /**
+         * Gets or sets the explorer view where the item lives
+         *
+         * @param {ExplorerView} value
+         */
+        explorer: ExplorerView;
+        /**
+         * Property field
+         */
+        private _childrenLoading;
+        /**
+         * Gets a value indicating if children are being loaded
+         *
+         * @returns {boolean}
+         */
+        childrenLoading: boolean;
+        /**
+         * Property field
+         */
+        private _loadsChildren;
+        /**
+         * Gets or sets a flag indicating if the item may load children for sub-items
+         *
+         * @returns {boolean}
+         */
+        /**
+         * Gets or sets a flag indicating if the item may load children for sub-items
+         *
+         * @param {boolean} value
+         */
+        loadsChildren: boolean;
+        /**
+         * Property field
+         */
+        private _loadsChildrenFolders;
+        /**
+         * Gets or sets a value indicating if the item will load items with sub-items.
+         *
+         * @returns {boolean}
+         */
+        /**
+         * Gets or sets a value indicating if the item will load items with sub-items.
+         *
+         * @param {boolean} value
+         */
+        loadsChildrenFolders: boolean;
+        /**
+         * Property field
+         */
+        private _parent;
+        /**
+         * Gets the parent item of this item
+         *
+         * @returns {ExplorerItem}
+         */
+        parent: ExplorerItem;
+    }
+}
 declare module latte {
     /**
      * Renders a grid that allows data manipulation
@@ -378,294 +666,6 @@ declare module latte {
     }
 }
 /**
- * Created by josemanuel on 8/8/14.
- */
-declare module latte {
-    /**
-     *
-     */
-    class ExplorerItem {
-        /**
-         *
-         */
-        constructor();
-        /**
-         * Creates a tree item for the record
-         */
-        createTreeItem(): TreeItem;
-        /**
-         * Creates a list view item for the record
-         */
-        createListViewItem(): ListViewItem;
-        /**
-         * Gets the actions of the button
-         *
-         * @returns {Array}
-         */
-        getItems(): Item[];
-        /**
-         * Gets the actions that apply for child items
-         *
-         * @returns {Array}
-         */
-        getChildrenItems(): Item[];
-        /**
-         * Gets the icon of 16 pixels
-         *
-         * @returns {IconItem}
-         */
-        getIcon(): IconItem;
-        /**
-         * Gets the icon of 32 pixels
-         *
-         * @returns {IconItem}
-         */
-        getIcon32(): IconItem;
-        /**
-         * Gets the name for the item
-         *
-         * @returns {string}
-         */
-        getName(): string;
-        /**
-         * Gets a value indicating if the item may be deleted
-         *
-         * @returns {boolean}
-         */
-        getCanBeDeleted(): boolean;
-        /**
-         * Gets the name of the columns that go in the lists
-         * This are names of fields, described in metadata of record.
-         */
-        getColumns(): string[];
-        /**
-         * Loads the children of the item
-         */
-        getChildrenLoader(): RemoteCall<any>;
-        /**
-         * Gets the detail view of the item
-         *
-         * @returns {latte.DataRecordFormItem}
-         */
-        getDetailView(): View;
-        /**
-         * Loads children if necessary.
-         * Checks <c>loadsChildren</c> and <c>childrenLoaded</c> flags to avoid re-loading.
-         */
-        loadChildren(callback?: () => void): void;
-        /**
-         * Back field for event
-         */
-        private _childAdded;
-        /**
-         * Gets an event raised when a child is added
-         *
-         * @returns {LatteEvent}
-         */
-        childAdded: LatteEvent;
-        /**
-         * Raises the <c>childAdded</c> event
-         */
-        onChildAdded(item: ExplorerItem): void;
-        /**
-         * Back field for event
-         */
-        private _childRemoved;
-        /**
-         * Gets an event raised when a child is removed
-         *
-         * @returns {LatteEvent}
-         */
-        childRemoved: LatteEvent;
-        /**
-         * Raises the <c>childRemoved</c> event
-         */
-        onChildRemoved(item: ExplorerItem): void;
-        /**
-         * Back field for event
-         */
-        private _childrenChanged;
-        /**
-         * Gets an event raised when the children of the item changed
-         *
-         * @returns {LatteEvent}
-         */
-        childrenChanged: LatteEvent;
-        /**
-         * Raises the <c>childrenChanged</c> event
-         */
-        onChildrenChanged(): void;
-        /**
-         * Back field for event
-         */
-        private _childrenLoadStarted;
-        /**
-         * Gets an event raised when the load of children starts
-         *
-         * @returns {LatteEvent}
-         */
-        childrenLoadStarted: LatteEvent;
-        /**
-         * Raises the <c>childrenLoadStarted</c> event
-         */
-        onChildrenLoadStarted(): void;
-        /**
-         * Back field for event
-         */
-        private _childrenLoadEnd;
-        /**
-         * Gets an event raised when the load of children ends
-         *
-         * @returns {LatteEvent}
-         */
-        childrenLoadEnd: LatteEvent;
-        /**
-         * Raises the <c>childrenLoadEnd</c> event
-         */
-        onChildrenLoadEnd(): void;
-        /**
-         * Field for children property
-         */
-        private _children;
-        /**
-         * Gets the collection of child items of this item
-         *
-         * @returns {Collection<ExplorerItem>}
-         */
-        children: Collection<ExplorerItem>;
-        /**
-         * Property field
-         */
-        private _childrenLoaded;
-        /**
-         * Gets or sets a value indicating if the children is loaded
-         *
-         * @returns {boolean}
-         */
-        /**
-         * Gets or sets a value indicating if the children is loaded
-         *
-         * @param {boolean} value
-         */
-        childrenLoaded: boolean;
-        /**
-         * Gets a value indicating if the node needs to load children, by analyzing its state
-         *
-         * @returns {boolean}
-         */
-        childrenLoadNeeded: boolean;
-        /**
-         * Property field
-         */
-        private _childrenPage;
-        /**
-         * Gets or sets the current page of children
-         *
-         * @returns {number}
-         */
-        /**
-         * Gets or sets the current page of children
-         *
-         * @param {number} value
-         */
-        childrenPage: number;
-        /**
-         * Property field
-         */
-        private _childrenPages;
-        /**
-         * Gets or sets the total pages of children items
-         *
-         * @returns {number}
-         */
-        /**
-         * Gets or sets the total pages of children items
-         *
-         * @param {number} value
-         */
-        childrenPages: number;
-        /**
-         * Back field for event
-         */
-        private _childrenPagesChanged;
-        /**
-         * Gets an event raised when the value of the childrenPages property changes
-         *
-         * @returns {LatteEvent}
-         */
-        childrenPagesChanged: LatteEvent;
-        /**
-         * Raises the <c>childrenPages</c> event
-         */
-        onChildrenPagesChanged(): void;
-        /**
-         * Property field
-         */
-        private _explorer;
-        /**
-         * Gets or sets the explorer view where the item lives
-         *
-         * @returns {ExplorerView}
-         */
-        /**
-         * Gets or sets the explorer view where the item lives
-         *
-         * @param {ExplorerView} value
-         */
-        explorer: ExplorerView;
-        /**
-         * Property field
-         */
-        private _childrenLoading;
-        /**
-         * Gets a value indicating if children are being loaded
-         *
-         * @returns {boolean}
-         */
-        childrenLoading: boolean;
-        /**
-         * Property field
-         */
-        private _loadsChildren;
-        /**
-         * Gets or sets a flag indicating if the item may load children for sub-items
-         *
-         * @returns {boolean}
-         */
-        /**
-         * Gets or sets a flag indicating if the item may load children for sub-items
-         *
-         * @param {boolean} value
-         */
-        loadsChildren: boolean;
-        /**
-         * Property field
-         */
-        private _loadsChildrenFolders;
-        /**
-         * Gets or sets a value indicating if the item will load items with sub-items.
-         *
-         * @returns {boolean}
-         */
-        /**
-         * Gets or sets a value indicating if the item will load items with sub-items.
-         *
-         * @param {boolean} value
-         */
-        loadsChildrenFolders: boolean;
-        /**
-         * Property field
-         */
-        private _parent;
-        /**
-         * Gets the parent item of this item
-         *
-         * @returns {ExplorerItem}
-         */
-        parent: ExplorerItem;
-    }
-}
-/**
  * Created by josemanuel on 10/25/14.
  */
 declare module latte {
@@ -688,9 +688,21 @@ declare module latte {
          */
         onChildEdit(): void;
         /**
+         * Raises the <c>childRemove</c> event
+         */
+        onChildRemove(): void;
+        /**
+         * Raises the <c>loadChildren</c> event
+         */
+        onLoadChildren(): void;
+        /**
          * Raises the <c>record</c> event
          */
         onRecordChanged(): void;
+        /**
+         * Reloads children of the view
+         */
+        reloadChildren(): void;
         /**
          * Back field for event
          */
@@ -722,10 +734,6 @@ declare module latte {
          */
         childRemove: LatteEvent;
         /**
-         * Raises the <c>childRemove</c> event
-         */
-        onChildRemove(): void;
-        /**
          * Back field for event
          */
         private _loadChildren;
@@ -735,10 +743,6 @@ declare module latte {
          * @returns {LatteEvent}
          */
         loadChildren: LatteEvent;
-        /**
-         * Raises the <c>loadChildren</c> event
-         */
-        onLoadChildren(): void;
         /**
          * Back field for event
          */
@@ -838,69 +842,6 @@ declare module latte {
         selectedChild: SelectableItem;
     }
 }
-declare module latte {
-    /**
-     * Shows a dialog to edit the specified <c>DataRecord</c>
-     **/
-    class DataRecordDialogView extends DialogView {
-        /**
-         * Shows a dialog to edit the specified record
-         * @param r
-         * @param onSaved
-         * @param title
-         */
-        static editRecord(r: DataRecord, onSaved?: () => any, title?: string): DataRecordDialogView;
-        /**
-         *
-         */
-        private _readOnly;
-        /**
-         *
-         **/
-        cancelButton: ButtonItem;
-        /**
-         *
-         **/
-        formView: DataRecordFormView;
-        /**
-         *
-         **/
-        saveButton: ButtonItem;
-        /**
-         *
-         **/
-        saving: LatteEvent;
-        /**
-         *
-         **/
-        saved: LatteEvent;
-        /**
-         *
-         **/
-        constructor(record?: DataRecord);
-        /**
-         * Raises the <c>saved</c> event
-         **/
-        onSaved(): void;
-        /**
-         * Raises the <c>saving</c> event
-         **/
-        onSaving(): void;
-        /**
-         * Gets or sets a value indicating if the form is for read-only
-         **/
-        /**
-         * Gets or sets a value indicating if the form is for read-only
-         **/
-        readOnly: boolean;
-        /**
-         * Gets the record of the view
-         *
-         * @returns {DataRecord}
-         */
-        record: DataRecord;
-    }
-}
 /**
  * Created by josemanuel on 10/25/14.
  */
@@ -924,9 +865,21 @@ declare module latte {
          */
         onChildEdit(): void;
         /**
+         * Raises the <c>childRemove</c> event
+         */
+        onChildRemove(): void;
+        /**
+         * Raises the <c>loadChildren</c> event
+         */
+        onLoadChildren(): void;
+        /**
          * Raises the <c>record</c> event
          */
         onRecordChanged(): void;
+        /**
+         * Reloads children
+         */
+        reloadChildren(): void;
         /**
          * Back field for event
          */
@@ -958,10 +911,6 @@ declare module latte {
          */
         childRemove: LatteEvent;
         /**
-         * Raises the <c>childRemove</c> event
-         */
-        onChildRemove(): void;
-        /**
          * Back field for event
          */
         private _loadChildren;
@@ -971,10 +920,6 @@ declare module latte {
          * @returns {LatteEvent}
          */
         loadChildren: LatteEvent;
-        /**
-         * Raises the <c>loadChildren</c> event
-         */
-        onLoadChildren(): void;
         /**
          * Back field for event
          */
@@ -1066,6 +1011,69 @@ declare module latte {
 }
 declare module latte {
     /**
+     * Shows a dialog to edit the specified <c>DataRecord</c>
+     **/
+    class DataRecordDialogView extends DialogView {
+        /**
+         * Shows a dialog to edit the specified record
+         * @param r
+         * @param onSaved
+         * @param title
+         */
+        static editRecord(r: DataRecord, onSaved?: () => any, title?: string): DataRecordDialogView;
+        /**
+         *
+         */
+        private _readOnly;
+        /**
+         *
+         **/
+        cancelButton: ButtonItem;
+        /**
+         *
+         **/
+        formView: DataRecordFormView;
+        /**
+         *
+         **/
+        saveButton: ButtonItem;
+        /**
+         *
+         **/
+        saving: LatteEvent;
+        /**
+         *
+         **/
+        saved: LatteEvent;
+        /**
+         *
+         **/
+        constructor(record?: DataRecord);
+        /**
+         * Raises the <c>saved</c> event
+         **/
+        onSaved(): void;
+        /**
+         * Raises the <c>saving</c> event
+         **/
+        onSaving(): void;
+        /**
+         * Gets or sets a value indicating if the form is for read-only
+         **/
+        /**
+         * Gets or sets a value indicating if the form is for read-only
+         **/
+        readOnly: boolean;
+        /**
+         * Gets the record of the view
+         *
+         * @returns {DataRecord}
+         */
+        record: DataRecord;
+    }
+}
+declare module latte {
+    /**
      * Creates a form for a specific <c>DataRecord</c>
      **/
     class DataRecordFormItem extends FormItem {
@@ -1123,6 +1131,7 @@ declare module latte {
          is supposed to recieve the values
          **/
         applyValues(record?: DataRecord): void;
+        onSaveChanges(): void;
         /**
          * Field for form property
          */
@@ -1140,64 +1149,6 @@ declare module latte {
          * Gets or sets the record of the form
          **/
         record: DataRecord;
-    }
-}
-declare module latte {
-    /**
-     * Hanldles insertions, updates and deletion of <c>DataRecords</c>
-     **/
-    class DataRecordGridView extends GridView {
-        /**
-         *
-         **/
-        private _metadata;
-        /**
-         *
-         **/
-        _recordType: string;
-        /**
-         * Collection of records on the grid
-         **/
-        records: Collection<DataRecord>;
-        /**
-         *
-         **/
-        constructor();
-        /**
-         *
-         **/
-        private _onAddRecord(record);
-        /**
-         *
-         **/
-        private _onRemoveRecord(record);
-        /**
-         * Applies the values on row to the speified record
-         **/
-        applyValues(row: DataSetRow, record: DataRecord): void;
-        /**
-         * Prepares items for context item showing
-         **/
-        onContextItemsShow(): void;
-        /**
-         * Raises the <c>rowsAdded</c> event.
-         **/
-        onRowsAdded(dataset: DataSet): void;
-        /**
-         * Raises the <c>rowsChanged</c> event.
-         **/
-        onRowsChanged(dataset: DataSet): void;
-        /**
-         * Raises the <c>rowsRemoved</c> event.
-         **/
-        onRowsRemoved(dataset: DataSet): void;
-        /**
-         * Gets or sets the recordType of the grid
-         **/
-        /**
-         * Gets or sets the recordType of the grid
-         **/
-        recordType: string;
     }
 }
 /**
@@ -1413,51 +1364,60 @@ declare module latte {
 }
 declare module latte {
     /**
-     * Represents a row of data on the <c>GridView</c>
+     * Hanldles insertions, updates and deletion of <c>DataRecords</c>
      **/
-    class GridViewRow extends DataSetRow {
-        /**
-         * Points to the row element on grid
-         **/
-        element: JQuery;
-        /**
-         * Creates the row
-         **/
-        constructor(data?: Array<any>);
-    }
-}
-declare module latte {
-    /**
-     * Represents a column of data in the GridView
-     **/
-    class GridViewColumn extends DataSetColumn {
+    class DataRecordGridView extends GridView {
         /**
          *
          **/
-        private _header;
+        private _metadata;
         /**
          *
          **/
-        private _readonly;
+        _recordType: string;
         /**
-         * Creates the column.
-         Optionally specifies its name, type and length.
+         * Collection of records on the grid
          **/
-        constructor(name?: string, type?: string, length?: number);
+        records: Collection<DataRecord>;
         /**
-         * Gets or sets the GridView header element this column represents
+         *
+         **/
+        constructor();
+        /**
+         *
+         **/
+        private _onAddRecord(record);
+        /**
+         *
+         **/
+        private _onRemoveRecord(record);
+        /**
+         * Applies the values on row to the speified record
+         **/
+        applyValues(row: DataSetRow, record: DataRecord): void;
+        /**
+         * Prepares items for context item showing
+         **/
+        onContextItemsShow(): void;
+        /**
+         * Raises the <c>rowsAdded</c> event.
+         **/
+        onRowsAdded(dataset: DataSet): void;
+        /**
+         * Raises the <c>rowsChanged</c> event.
+         **/
+        onRowsChanged(dataset: DataSet): void;
+        /**
+         * Raises the <c>rowsRemoved</c> event.
+         **/
+        onRowsRemoved(dataset: DataSet): void;
+        /**
+         * Gets or sets the recordType of the grid
          **/
         /**
-         * Gets or sets the GridView header element this column represents
+         * Gets or sets the recordType of the grid
          **/
-        header: JQuery;
-        /**
-         * Gets or sets a value indicating if the column is read only
-         **/
-        /**
-         * Gets or sets a value indicating if the column is read only
-         **/
-        readOnly: boolean;
+        recordType: string;
     }
 }
 /**
@@ -1522,6 +1482,40 @@ declare module latte {
         record: T;
     }
 }
+declare module latte {
+    /**
+     * Represents a column of data in the GridView
+     **/
+    class GridViewColumn extends DataSetColumn {
+        /**
+         *
+         **/
+        private _header;
+        /**
+         *
+         **/
+        private _readonly;
+        /**
+         * Creates the column.
+         Optionally specifies its name, type and length.
+         **/
+        constructor(name?: string, type?: string, length?: number);
+        /**
+         * Gets or sets the GridView header element this column represents
+         **/
+        /**
+         * Gets or sets the GridView header element this column represents
+         **/
+        header: JQuery;
+        /**
+         * Gets or sets a value indicating if the column is read only
+         **/
+        /**
+         * Gets or sets a value indicating if the column is read only
+         **/
+        readOnly: boolean;
+    }
+}
 /**
  * Created by josemanuel on 8/6/14.
  */
@@ -1580,6 +1574,16 @@ declare module latte {
          * @returns {boolean}
          */
         btnSaveDetail: ButtonItem;
+        /**
+         * Field for btnRefresh property
+         */
+        private _btnRefresh;
+        /**
+         * Gets the refresh button
+         *
+         * @returns {ButtonItem}
+         */
+        btnRefresh: ButtonItem;
         /**
          * Field for btnRemoveDetail property
          */
@@ -1680,6 +1684,21 @@ declare module latte {
          * @returns {TreeView}
          */
         treeView: TreeView;
+    }
+}
+declare module latte {
+    /**
+     * Represents a row of data on the <c>GridView</c>
+     **/
+    class GridViewRow extends DataSetRow {
+        /**
+         * Points to the row element on grid
+         **/
+        element: JQuery;
+        /**
+         * Creates the row
+         **/
+        constructor(data?: Array<any>);
     }
 }
 /**

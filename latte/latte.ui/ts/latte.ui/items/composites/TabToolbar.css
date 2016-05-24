@@ -1,22 +1,32 @@
 
 /* Inset margin when content on bottom */
 .latte-item.toolbar.tab > .face > .holder > .items-container > .latte-item.tab.flat-bottom{
-    margin-bottom: -7px;
+    margin-bottom: -1px;
 }
 
 /* Inset margin when content on top */
 .latte-item.toolbar.tab > .face > .holder > .items-container > .latte-item.tab.flat-top{
-    margin-top: -7px;
+    margin-top: -1px;
 }
 
 /* Inset margin when content on left */
 .latte-item.toolbar.tab > .face > .holder > .items-container > .latte-item.tab.flat-left{
-    margin-left: -7px;
+    margin-left: -1px;
 }
 
 /* Inset margin when content on right */
 .latte-item.toolbar.tab > .face > .holder > .items-container > .latte-item.tab.flat-right{
-    margin-right: -7px;
+    margin-right: -1px;
+}
+
+.latte-item.toolbar.tab.content-at-bottom > .face > .holder > .items-container{
+    padding-top: 3px;
+    padding-left: 3px;
+}
+
+.latte-item.toolbar.tab.content-at-top > .face > .holder > .items-container{
+    padding-bottom: 3px;
+    padding-left: 3px;
 }
 
 /*  */

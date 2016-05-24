@@ -92,7 +92,14 @@ module latte {
          * @param name
          */
         getItemForColumn(name: string): Item{
-            return new LabelItem(this.record[name]);
+
+            var value = this.record[name];
+
+            if(this.record[name + 'String']) {
+                value = this.record[name + 'String'];
+            }
+
+            return new LabelItem(value);
         }
 
         /**
@@ -103,11 +110,6 @@ module latte {
         getDetailView(): View{
 
             var d = new DataRecordFormView(this.record);
-
-            d.savedChanges.add(() => {
-                d.applyValues(this.record);
-                this.record.save(() => {d.unsavedChanges = false });
-            });
 
             return d;
         }

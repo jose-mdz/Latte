@@ -28,6 +28,80 @@
 */
 
 /* 
+    Document   : ClickableItem
+    Created on : Jan 31, 2013, 1:01:18 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.clickable{
+    border-width: 1px;
+    border-style: solid;
+    border-color: transparent;
+    border-radius: 3px;
+    cursor: pointer;
+    position: relative;
+}
+
+.latte-item.clickable.with-face{
+    border-color: #B0B0B0;
+    background-color: #F9FAFB;
+}
+
+.latte-item.clickable.selected,
+.latte-item.clickable.with-face.selected{
+    border-color:#527DE0;
+    background-color: #E8F2FC;
+}
+
+.latte-item.clickable.defaulted{
+    border-color:#527DE0;
+}
+
+.latte-item.clickable.pressed,
+.latte-item.clickable.with-face.pressed{
+    border-color:#527DE0;
+    background-color: #C1CDDD;
+}
+
+.latte-item.clickable.checked,
+.latte-item.clickable.with-face.checked{
+    border-color:#527DE0;
+    background-color: #D7E3EF;
+}
+
+.latte-item.clickable.with-context,
+.latte-item.clickable.tab.active,
+.latte-item.clickable.with-face.with-context{
+    border-color:#b0b0b0;
+    background-color: white;
+}
+
+.latte-item.clickable.flat-bottom{ border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.latte-item.clickable.flat-right{ border-top-right-radius: 0; border-bottom-right-radius: 0;}
+.latte-item.clickable.flat-left{ border-top-left-radius: 0; border-bottom-left-radius: 0;}
+.latte-item.clickable.flat-top{ border-top-left-radius: 0; border-top-right-radius: 0;}
+
+.latte-item.clickable.open-at-bottom,
+.latte-item.clickable.open-at-bottom.selected,
+.latte-item.clickable.open-at-bottom.pressed,
+.latte-item.clickable.open-at-bottom.checked{ border-bottom-color: transparent !important; }
+
+.latte-item.clickable.open-at-right,
+.latte-item.clickable.open-at-right.selected,
+.latte-item.clickable.open-at-right.pressed,
+.latte-item.clickable.open-at-right.checked{ border-right-color: transparent !important; }
+
+.latte-item.clickable.open-at-left,
+.latte-item.clickable.open-at-left.selected,
+.latte-item.clickable.open-at-left.pressed,
+.latte-item.clickable.open-at-left.checked { border-left-color: transparent !important; }
+
+.latte-item.clickable.open-at-top,
+.latte-item.clickable.open-at-top.selected,
+.latte-item.clickable.open-at-top.pressed,
+.latte-item.clickable.open-at-top.checked { border-top-color: transparent !important; }/* 
     Document   : Item
     Created on : Aug 3, 2012, 9:05:05 AM
     Author     : josemanuel
@@ -40,40 +114,26 @@
     display: block;
     float: left;
 }
-/* 
-    Document   : SeparatorItem
-    Created on : Aug 6, 2012, 12:52:06 PM
-    Author     : josemanuel
-    Description:
-        Purpose of the stylesheet follows.
-*/
 
-.latte-item.separator{
-    float: none;
-}
+ /*Inset margin when content on bottom */
+/*.latte-item.toolbar > .face > .holder > .items-container > .latte-item.tab.flat-bottom{*/
+    /*margin-bottom: -7px;*/
+/*}*/
 
-.latte-item.separator.with-text{
-    padding: 0 4px 3px 4px;
-    background: #f9fafb;
-    color: black;
-    font-size: 8px;
-    font-weight: bold;
-    border-bottom: solid 1px #b0b0b0;
-}
+ /*Inset margin when content on top */
+/*.latte-item.toolbar > .face > .holder > .items-container > .latte-item.tab.flat-top{*/
+    /*margin-top: -7px;*/
+/*}*/
 
-.latte-overlay.menu .latte-item.separator{
-    border-bottom: solid 1px #D2D5D9;
-    margin: 1px 0;
-}
+ /*Inset margin when content on left */
+/*.latte-item.toolbar > .face > .holder > .items-container > .latte-item.tab.flat-left{*/
+    /*margin-left: -7px;*/
+/*}*/
 
-.latte-item.ribbon .items-container .latte-item.separator{
-    border-left: solid 1px #D2D5D9;
-    height: 85px;
-    float: left;
-    width: 1px;
-    margin: 0 2px;
-}
-/* 
+ /*Inset margin when content on right */
+/*.latte-item.toolbar > .face > .holder > .items-container > .latte-item.tab.flat-right{*/
+    /*margin-right: -7px;*/
+/*}*//* 
     Document   : ButtonItem
     Created on : Aug 3, 2012, 9:04:59 AM
     Author     : josemanuel
@@ -146,95 +206,72 @@
     margin-top: -8px;
     margin-left: -8px;
 }/* 
-    Document   : ClickableItem
-    Created on : Jan 31, 2013, 1:01:18 PM
+    Document   : FormItem
+    Created on : Feb 3, 2013, 8:52:46 AM
+    Author     : menendezpoo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.latte-item.form {
+    padding: 20px;
+
+}
+
+.latte-item.form.with-face{
+    background: white;
+    border: solid 1px #dedede;
+    border-radius: 5px;
+}
+
+.latte-item.form > .container > .latte-item{
+    margin-bottom: 15px;
+}
+
+.latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox{
+    float: none;
+}
+
+.latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox input,
+.latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox textarea,
+.latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox textarea,
+.latte-item.form > .container > .latte-item.input > .value .value.data-record,
+.latte-item.form > .container > .latte-item.input > .value .value.data-record .value.textbox,
+.latte-item.form > .container > .latte-item.input > .value .value.data-record .latte-item.textbox input{
+    width: 100%;
+}/* 
+    Document   : SeparatorItem
+    Created on : Aug 6, 2012, 12:52:06 PM
     Author     : josemanuel
     Description:
         Purpose of the stylesheet follows.
 */
 
-.latte-item.clickable{
-    border-width: 1px;
-    border-style: solid;
-    border-color: transparent;
-    border-radius: 3px;
-    cursor: pointer;
-    position: relative;
+.latte-item.separator{
+    float: none;
 }
 
-.latte-item.clickable.with-face{
-    border-color: #B0B0B0;
-    background-color: #F9FAFB;
+.latte-item.separator.with-text{
+    padding: 0 4px 3px 4px;
+    background: #f9fafb;
+    color: black;
+    font-size: 8px;
+    font-weight: bold;
+    border-bottom: solid 1px #b0b0b0;
 }
 
-.latte-item.clickable.selected,
-.latte-item.clickable.with-face.selected{
-    border-color:#527DE0;
-    background-color: #E8F2FC;
+.latte-overlay.menu .latte-item.separator{
+    border-bottom: solid 1px #D2D5D9;
+    margin: 1px 0;
 }
 
-.latte-item.clickable.pressed,
-.latte-item.clickable.with-face.pressed{
-    border-color:#527DE0;
-    background-color: #C1CDDD;
+.latte-item.ribbon .items-container .latte-item.separator{
+    border-left: solid 1px #D2D5D9;
+    height: 85px;
+    float: left;
+    width: 1px;
+    margin: 0 2px;
 }
-
-.latte-item.clickable.checked,
-.latte-item.clickable.with-face.checked{
-    border-color:#527DE0;
-    background-color: #D7E3EF;
-}
-
-.latte-item.clickable.with-context,
-.latte-item.clickable.tab.active,
-.latte-item.clickable.with-face.with-context{
-    border-color:#b0b0b0;
-    background-color: white;
-}
-
-.latte-item.clickable.flat-bottom{ border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
-.latte-item.clickable.flat-right{ border-top-right-radius: 0; border-bottom-right-radius: 0;}
-.latte-item.clickable.flat-left{ border-top-left-radius: 0; border-bottom-left-radius: 0;}
-.latte-item.clickable.flat-top{ border-top-left-radius: 0; border-top-right-radius: 0;}
-
-.latte-item.clickable.open-at-bottom,
-.latte-item.clickable.open-at-bottom.selected,
-.latte-item.clickable.open-at-bottom.pressed,
-.latte-item.clickable.open-at-bottom.checked{ border-bottom-color: transparent !important; }
-
-.latte-item.clickable.open-at-right,
-.latte-item.clickable.open-at-right.selected,
-.latte-item.clickable.open-at-right.pressed,
-.latte-item.clickable.open-at-right.checked{ border-right-color: transparent !important; }
-
-.latte-item.clickable.open-at-left,
-.latte-item.clickable.open-at-left.selected,
-.latte-item.clickable.open-at-left.pressed,
-.latte-item.clickable.open-at-left.checked { border-left-color: transparent !important; }
-
-.latte-item.clickable.open-at-top,
-.latte-item.clickable.open-at-top.selected,
-.latte-item.clickable.open-at-top.pressed,
-.latte-item.clickable.open-at-top.checked { border-top-color: transparent !important; }
- /*Inset margin when content on bottom */
-/*.latte-item.toolbar > .face > .holder > .items-container > .latte-item.tab.flat-bottom{*/
-    /*margin-bottom: -7px;*/
-/*}*/
-
- /*Inset margin when content on top */
-/*.latte-item.toolbar > .face > .holder > .items-container > .latte-item.tab.flat-top{*/
-    /*margin-top: -7px;*/
-/*}*/
-
- /*Inset margin when content on left */
-/*.latte-item.toolbar > .face > .holder > .items-container > .latte-item.tab.flat-left{*/
-    /*margin-left: -7px;*/
-/*}*/
-
- /*Inset margin when content on right */
-/*.latte-item.toolbar > .face > .holder > .items-container > .latte-item.tab.flat-right{*/
-    /*margin-right: -7px;*/
-/*}*//* 
+/* 
     Document   : ConversationItem
     Created on : Sep 14, 2012, 6:51:55 PM
     Author     : josemanuel
@@ -275,35 +312,6 @@
 
 .latte-item.conversation > .new-comment > .latte-item.textbox {
     float: none;
-}/* 
-    Document   : FormItem
-    Created on : Feb 3, 2013, 8:52:46 AM
-    Author     : menendezpoo
-    Description:
-        Purpose of the stylesheet follows.
-*/
-.latte-item.form {
-    padding: 20px;
-
-}
-
-.latte-item.form.with-face{
-    background: white;
-    border: solid 1px #dedede;
-    border-radius: 5px;
-}
-
-.latte-item.form > .container > .latte-item{
-    margin-bottom: 15px;
-}
-
-.latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox{
-    float: none;
-}
-
-.latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox input,
-.latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox textarea{
-    width: 100%;
 }/* 
     Document   : DateItem
     Created on : Oct 4, 2012, 8:09:10 PM
@@ -398,22 +406,47 @@ body.html-editor table{
 body.html-editor td{
     border: solid 1px silver;
     padding: 8px;
-}/* 
-    Document   : ItemStack
-    Created on : Sep 24, 2012, 12:55:04 PM
-    Author     : josemanuel
-    Description:
-        Purpose of the stylesheet follows.
-*/
-
-.latte-item.stack{
-    float: none;
+}
+/* Inset margin when content on bottom */
+.latte-item.toolbar.tab > .face > .holder > .items-container > .latte-item.tab.flat-bottom{
+    margin-bottom: -1px;
 }
 
-.latte-item.stack > .container > .latte-item{
-    float: none;
-    clear:both;
-}/* 
+/* Inset margin when content on top */
+.latte-item.toolbar.tab > .face > .holder > .items-container > .latte-item.tab.flat-top{
+    margin-top: -1px;
+}
+
+/* Inset margin when content on left */
+.latte-item.toolbar.tab > .face > .holder > .items-container > .latte-item.tab.flat-left{
+    margin-left: -1px;
+}
+
+/* Inset margin when content on right */
+.latte-item.toolbar.tab > .face > .holder > .items-container > .latte-item.tab.flat-right{
+    margin-right: -1px;
+}
+
+.latte-item.toolbar.tab.content-at-bottom > .face > .holder > .items-container{
+    padding-top: 3px;
+    padding-left: 3px;
+}
+
+.latte-item.toolbar.tab.content-at-top > .face > .holder > .items-container{
+    padding-bottom: 3px;
+    padding-left: 3px;
+}
+
+/*  */
+.latte-view.toolbar.tab > .latte-item.toolbar {
+    background: #f0f0f0;
+}
+
+/* Borders for tab effect */
+.latte-item.toolbar.tab.content-at-top      { border-top:       solid 1px #ccc; }
+.latte-item.toolbar.tab.content-at-bottom   { border-bottom:    solid 1px #ccc; }
+.latte-item.toolbar.tab.content-at-left     { border-left:      solid 1px #ccc; }
+.latte-item.toolbar.tab.content-at-right    { border-right:     solid 1px #ccc; }/* 
     Document   : Ribbon
     Created on : Aug 3, 2012, 12:06:31 PM
     Author     : josemanuel
@@ -550,6 +583,21 @@ body.html-editor td{
 .latte-item.ribbon > .face > .items-container > .ribbon-wrapper > .latte-item.input > .text > .label{
     float: left;
     font-weight: normal;
+}/* 
+    Document   : ItemStack
+    Created on : Sep 24, 2012, 12:55:04 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.stack{
+    float: none;
+}
+
+.latte-item.stack > .container > .latte-item{
+    float: none;
+    clear:both;
 }.latte-item.tab-container > .container > .latte-item.content{
     border: solid 1px #ccc;
     background-color: #ffffff;
@@ -564,154 +612,6 @@ body.html-editor td{
 /* Remove bottom border */
 .latte-item.tab-container.content-at-top > .container > .latte-item.content{
     border-bottom-color: transparent;
-}
-/* Inset margin when content on bottom */
-.latte-item.toolbar.tab > .face > .holder > .items-container > .latte-item.tab.flat-bottom{
-    margin-bottom: -7px;
-}
-
-/* Inset margin when content on top */
-.latte-item.toolbar.tab > .face > .holder > .items-container > .latte-item.tab.flat-top{
-    margin-top: -7px;
-}
-
-/* Inset margin when content on left */
-.latte-item.toolbar.tab > .face > .holder > .items-container > .latte-item.tab.flat-left{
-    margin-left: -7px;
-}
-
-/* Inset margin when content on right */
-.latte-item.toolbar.tab > .face > .holder > .items-container > .latte-item.tab.flat-right{
-    margin-right: -7px;
-}
-
-/*  */
-.latte-view.toolbar.tab > .latte-item.toolbar {
-    background: #f0f0f0;
-}
-
-/* Borders for tab effect */
-.latte-item.toolbar.tab.content-at-top      { border-top:       solid 1px #ccc; }
-.latte-item.toolbar.tab.content-at-bottom   { border-bottom:    solid 1px #ccc; }
-.latte-item.toolbar.tab.content-at-left     { border-left:      solid 1px #ccc; }
-.latte-item.toolbar.tab.content-at-right    { border-right:     solid 1px #ccc; }/* 
-    Document   : ViewItem
-    Created on : Jan 24, 2013, 9:28:40 AM
-    Author     : josemanuel
-    Description:
-        Purpose of the stylesheet follows.
-*/
-
-.latte-item.view{
-    float: none;
-    position: relative;
-    min-height: 10px;
-}
-
-.latte-item.view > .latte-view{
-    
-}/* 
-    Document   : Toolbar
-    Created on : Sep 10, 2012, 11:01:15 AM
-    Author     : josemanuel
-    Description:
-        Purpose of the stylesheet follows.
-*/
-
-.latte-item.toolbar{
-    position: relative;
-    float: none;
-}
-
-.latte-item.toolbar > .face{
-    padding: 0px; /* 6px */
-    /*border-radius: 4px;*/
-}
-
-.latte-item.toolbar > .face > .holder{
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/**
- * Extra padding on buttons
- */
-.latte-item.toolbar > .face > .holder .latte-item.button{
-    border-radius: 0;
-    padding: 10px;
-}
-.latte-item.toolbar > .face > .holder .latte-item.button.horizontal.no-icon{
-    padding: 10px 30px;
-}
-
-/**
- * Extra padding on labels
- */
-.latte-item.toolbar.horizontal > .face > .holder > .items-container > .latte-item.label,
-.latte-item.toolbar.horizontal > .face > .holder > .side-items-container > .latte-item.label{
-    padding-top: 6px;
-}
-
-/**
- * Extra margin on textboxes
- */
-.latte-item.toolbar.horizontal > .face > .holder > .items-container  .latte-item.value.textbox,
-.latte-item.toolbar.horizontal > .face > .holder > .side-items-container .latte-item.value.textbox{
-    margin-top: 6px;
-    margin-bottom: 5px;
-    margin-left: 10px;
-    margin-right: 10px;
-}
-
-/**
- * Separators
- */
-.latte-item.toolbar > .face > .holder > .items-container > .latte-item.separator,
-.latte-item.toolbar > .face > .holder > .side-items-container > .latte-item.separator{
-    border-left: solid 1px silver;
-    border-right: solid 1px white;
-    margin: 6px 5px;
-    height: 25px;
-}
-
-.latte-item.toolbar > .face > .holder > .items-container > .latte-item.label,
-.latte-item.toolbar > .face > .holder > .side-items-container > .latte-item.label{
-    margin: 5px;
-}
-
-.latte-item.toolbar.vertical > .face > .holder > .items-container > .latte-item,
-.latte-item.toolbar.vertical > .face > .holder > .side-items-container > .latte-item{
-    float: none;
-    margin-bottom: 1px;
-}
-
-.latte-item.toolbar.horizontal > .face > .holder > .items-container{
-    float: left;
-}
-
-.latte-item.toolbar.horizontal > .face > .holder > .items-container > .latte-item{
-    float: left;
-    margin-right: 1px;
-}
-
-.latte-item.toolbar.horizontal > .face > .holder > .side-items-container{
-    float: right;
-}
-
-.latte-item.toolbar.horizontal > .face > .holder > .side-items-container > .latte-item{
-    float: right;
-    margin-left: 1px;
-}
-
-.latte-item.toolbar.with-face > .face{
-    background: #f9fafb; /* Old DetailViews */
-    background: -moz-linear-gradient(top,  #ffffff 0%, #f9fafb 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f9fafb));
-    background: -webkit-linear-gradient(top,  #ffffff 0%,#f9fafb 100%);
-    background: -o-linear-gradient(top,  #ffffff 0%,#f9fafb 100%);
-    background: -ms-linear-gradient(top,  #ffffff 0%,#f9fafb 100%);
-    background: linear-gradient(top,  #ffffff 0%,#f9fafb 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f9fafb', GradientType=0 );
 }/* 
     Document   : WidgetItem
     Created on : Sep 24, 2012, 10:20:50 AM
@@ -768,6 +668,22 @@ body.html-editor td{
 .latte-item.widget > .latte-item.toolbar.with-face{
     border-bottom: none;
 }/* 
+    Document   : ViewItem
+    Created on : Jan 24, 2013, 9:28:40 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.view{
+    float: none;
+    position: relative;
+    min-height: 10px;
+}
+
+.latte-item.view > .latte-view{
+    
+}/* 
     Document   : ColumnHeader
     Created on : Oct 3, 2012, 12:47:30 PM
     Author     : josemanuel
@@ -808,6 +724,176 @@ body.html-editor td{
     background: -ms-linear-gradient(top,  #E8F3FF 0%,#C5DFF8 100%); /* IE10+ */
     background: linear-gradient(top,  #E8F3FF 0%,#C5DFF8 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#E8F3FF', endColorstr='#C5DFF8',GradientType=0 ); /* IE6-9 */
+}/* 
+    Document   : CommentItem
+    Created on : Sep 14, 2012, 10:27:16 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.comment{
+    /*padding-top: 7px;
+    padding-bottom: 5px;*/
+    position: relative;
+    margin-bottom: 2px;
+    overflow: hidden;
+}
+
+.latte-item.comment > .blinker{
+    background: #FFFAD7;
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.latte-item.comment > .comment-content{
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+.latte-item.comment > .comment-content > .icon-side {
+    margin: 5px;
+    margin-top: 0;
+    width: 32px;
+    float: left;
+}
+
+.latte-item.comment > .comment-content > .comment-side {
+    margin-left: 45px;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.latte-item.comment > .comment-content > .comment-side > .user{
+    display: inline;
+}
+
+.latte-item.comment > .comment-content > .comment-side > .user,
+.latte-item.comment > .comment-content > .comment-side  a
+{
+    color: #15C;
+    margin-right: 3px;
+    text-decoration: none;
+}
+
+.latte-item.comment > .comment-content > .comment-side > .user:hover,
+.latte-item.comment > .comment-content > .comment-side  a:hover
+{
+    text-decoration: underline;
+}
+
+.latte-item.comment > .comment-content > .comment-side > .date {
+    color: #bbb;
+}
+
+.latte-item.comment > .comment-content > .comment-side > .text {
+    white-space: pre-wrap;
+}/* 
+    Document   : ListViewItem
+    Created on : Oct 3, 2012, 11:24:42 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.selectable.list{
+    /*margin-bottom: 1px;*/
+    padding: 10px;
+}
+
+.latte-item.list > .icon{
+    float: left;
+}
+
+.latte-item.list > .columns > div{
+    float: left;
+    overflow: hidden;
+}
+
+.latte-item.list > .columns > div{
+    min-height: 5px;
+}
+
+.latte-item.list > .columns > div .latte-item.label{
+    margin-top: 2px;
+}/* 
+    Document   : x
+    Created on : Sep 27, 2012, 8:53:49 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.list.selectable,
+.latte-item.tree-item  > .selectable{
+    border: solid 1px transparent;
+    border-bottom-color: #f0f0f0;
+    float: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.latte-item.selectable.hover,
+.latte-item.tree-item > .selectable.hover, .selectable.hover{
+    /*border-color: #D1D1D1;*/
+    background: #EFEFEF;
+}
+
+.latte-item.selectable.selected,
+.latte-item.tree-item > .selectable.selected, .selectable.selected{
+    /*border-color: #93A0B3;*/
+    /*background: #E8F3FF;*/
+    background-color: #4285F4;
+    border-color: #4285F4;
+    color: white;
+}/* 
+    Document   : TreeItem
+    Created on : Aug 8, 2012, 10:07:49 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.tree-item{
+    padding: 0;
+}
+
+.latte-item.tree-item .selectable{
+    margin-bottom: 0px;
+    position:relative;
+    overflow: hidden;
+    /*padding: 7px;*/
+}
+
+.latte-item.tree-item .selectable .level{
+    float: left;
+    height: 16px;
+}
+
+.latte-item.tree-item .selectable .glyph{
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin-right: 3px;
+}
+
+.latte-item.tree-item .selectable .icon{
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin-right: 3px;
+}
+
+.latte-item.tree-item .selectable .text{
+    position: static;
+    white-space: pre;
+    margin-top: 2px;
 }/* 
     Document   : LabelItem
     Created on : Sep 24, 2012, 10:33:29 AM
@@ -918,173 +1004,110 @@ body.html-editor td{
 
 .latte-item.selectable.calendar.selected{
     /*box-shadow: 0 0 0 2px black;*/
-}/* 
-    Document   : CommentItem
-    Created on : Sep 14, 2012, 10:27:16 AM
-    Author     : josemanuel
-    Description:
-        Purpose of the stylesheet follows.
-*/
-
-.latte-item.comment{
-    /*padding-top: 7px;
-    padding-bottom: 5px;*/
-    position: relative;
-    margin-bottom: 2px;
-    overflow: hidden;
-}
-
-.latte-item.comment > .blinker{
-    background: #FFFAD7;
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-}
-
-.latte-item.comment > .comment-content{
-    position: relative;
-    top: 0;
-    left: 0;
-}
-
-.latte-item.comment > .comment-content > .icon-side {
-    margin: 5px;
-    margin-top: 0;
-    width: 32px;
-    float: left;
-}
-
-.latte-item.comment > .comment-content > .comment-side {
-    margin-left: 45px;
-    margin-right: 5px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-
-.latte-item.comment > .comment-content > .comment-side > .user{
-    display: inline;
-}
-
-.latte-item.comment > .comment-content > .comment-side > .user,
-.latte-item.comment > .comment-content > .comment-side  a
-{
-    color: #15C;
-    margin-right: 3px;
-    text-decoration: none;
-}
-
-.latte-item.comment > .comment-content > .comment-side > .user:hover,
-.latte-item.comment > .comment-content > .comment-side  a:hover
-{
-    text-decoration: underline;
-}
-
-.latte-item.comment > .comment-content > .comment-side > .date {
-    color: #bbb;
-}
-
-.latte-item.comment > .comment-content > .comment-side > .text {
-    white-space: pre-wrap;
-}/* 
-    Document   : ListViewItem
-    Created on : Oct 3, 2012, 11:24:42 AM
-    Author     : josemanuel
-    Description:
-        Purpose of the stylesheet follows.
-*/
-
-.latte-item.selectable.list{
-    /*margin-bottom: 1px;*/
-    padding: 10px;
-}
-
-.latte-item.list > .icon{
-    float: left;
-}
-
-.latte-item.list > .columns > div{
-    float: left;
-    overflow: hidden;
-}
-
-.latte-item.list > .columns > div{
-    min-height: 5px;
-}
-
-.latte-item.list > .columns > div .label-content{
-    margin-top: 0px;
 }.latte-item.selectable.with-label{
     padding: 10px;
 }/* 
-    Document   : TreeItem
-    Created on : Aug 8, 2012, 10:07:49 AM
+    Document   : Toolbar
+    Created on : Sep 10, 2012, 11:01:15 AM
     Author     : josemanuel
     Description:
         Purpose of the stylesheet follows.
 */
 
-.latte-item.tree-item{
-    padding: 0;
-}
-
-.latte-item.tree-item .selectable{
-    margin-bottom: 0px;
-    position:relative;
-    overflow: hidden;
-    padding: 7px;
-}
-
-.latte-item.tree-item .selectable .level{
-    float: left;
-    height: 16px;
-}
-
-.latte-item.tree-item .selectable .glyph{
-    width: 16px;
-    height: 16px;
-    float: left;
-    margin-right: 3px;
-}
-
-.latte-item.tree-item .selectable .icon{
-    width: 16px;
-    height: 16px;
-    float: left;
-    margin-right: 3px;
-}
-
-.latte-item.tree-item .selectable .text{
-    position: static;
-    white-space: pre;
-}/* 
-    Document   : x
-    Created on : Sep 27, 2012, 8:53:49 PM
-    Author     : josemanuel
-    Description:
-        Purpose of the stylesheet follows.
-*/
-
-.latte-item.list.selectable,
-.latte-item.tree-item  > .selectable{
-    border: solid 1px transparent;
+.latte-item.toolbar{
+    position: relative;
     float: none;
+}
+
+.latte-item.toolbar > .face{
+    padding: 0px; /* 6px */
+    /*border-radius: 4px;*/
+}
+
+.latte-item.toolbar > .face > .holder{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/**
+ * Extra padding on buttons
+ */
+.latte-item.toolbar > .face > .holder .latte-item.button{
+    border-radius: 0;
     padding: 10px;
-    cursor: pointer;
+}
+.latte-item.toolbar > .face > .holder .latte-item.button.horizontal.no-icon{
+    padding: 10px 30px;
 }
 
-.latte-item.selectable.hover,
-.latte-item.tree-item > .selectable.hover, .selectable.hover{
-    border-color: #D1D1D1;
-    background: #EFEFEF;
+/**
+ * Extra padding on labels
+ */
+.latte-item.toolbar.horizontal > .face > .holder > .items-container > .latte-item.label,
+.latte-item.toolbar.horizontal > .face > .holder > .side-items-container > .latte-item.label{
+    padding-top: 6px;
 }
 
-.latte-item.selectable.selected,
-.latte-item.tree-item > .selectable.selected, .selectable.selected{
-    border-color: #93A0B3;
-    background: #E8F3FF;
+/**
+ * Extra margin on textboxes
+ */
+.latte-item.toolbar.horizontal > .face > .holder > .items-container  .latte-item.value.textbox,
+.latte-item.toolbar.horizontal > .face > .holder > .side-items-container .latte-item.value.textbox{
+    margin-top: 6px;
+    margin-bottom: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+/**
+ * Separators
+ */
+.latte-item.toolbar > .face > .holder > .items-container > .latte-item.separator,
+.latte-item.toolbar > .face > .holder > .side-items-container > .latte-item.separator{
+    border-left: solid 1px silver;
+    border-right: solid 1px white;
+    margin: 6px 5px;
+    height: 25px;
+}
+
+.latte-item.toolbar > .face > .holder > .items-container > .latte-item.label,
+.latte-item.toolbar > .face > .holder > .side-items-container > .latte-item.label{
+    margin: 5px;
+}
+
+.latte-item.toolbar.vertical > .face > .holder > .items-container > .latte-item,
+.latte-item.toolbar.vertical > .face > .holder > .side-items-container > .latte-item{
+    float: none;
+    margin-bottom: 1px;
+}
+
+.latte-item.toolbar.horizontal > .face > .holder > .items-container{
+    float: left;
+}
+
+.latte-item.toolbar.horizontal > .face > .holder > .items-container > .latte-item{
+    float: left;
+    margin-right: 1px;
+}
+
+.latte-item.toolbar.horizontal > .face > .holder > .side-items-container{
+    float: right;
+}
+
+.latte-item.toolbar.horizontal > .face > .holder > .side-items-container > .latte-item{
+    float: right;
+    margin-left: 1px;
+}
+
+.latte-item.toolbar.with-face > .face{
+    background: #f9fafb; /* Old DetailViews */
+    background: -moz-linear-gradient(top,  #ffffff 0%, #f9fafb 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f9fafb));
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#f9fafb 100%);
+    background: -o-linear-gradient(top,  #ffffff 0%,#f9fafb 100%);
+    background: -ms-linear-gradient(top,  #ffffff 0%,#f9fafb 100%);
+    background: linear-gradient(top,  #ffffff 0%,#f9fafb 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f9fafb', GradientType=0 );
 }/* 
     Document   : CheckboxItem
     Created on : Feb 1, 2013, 2:16:38 PM
@@ -1219,6 +1242,25 @@ body.html-editor td{
     /*float: none;*/
     cursor: default;
 }/* 
+    Document   : Loader
+    Created on : Aug 12, 2012, 3:54:15 PM
+    Author     : menendezpoo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.latte-overlay.loader{
+    font-family: "Lucida Grande", sans-serif;
+    font-size: 11px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 7px 3em 7px 3em;
+    border-radius: 4px;
+    text-shadow: 0 -1px 1px black;
+}
+
+.latte-overlay.loader .latte-item.progress{
+    float: none;
+}/* 
     Document   : TextboxItem
     Created on : Jan 16, 2013, 2:32:43 PM
     Author     : josemanuel
@@ -1292,25 +1334,6 @@ body.html-editor td{
     top: 0;
     right: 0;
 }/* 
-    Document   : Loader
-    Created on : Aug 12, 2012, 3:54:15 PM
-    Author     : menendezpoo
-    Description:
-        Purpose of the stylesheet follows.
-*/
-.latte-overlay.loader{
-    font-family: "Lucida Grande", sans-serif;
-    font-size: 11px;
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 7px 3em 7px 3em;
-    border-radius: 4px;
-    text-shadow: 0 -1px 1px black;
-}
-
-.latte-overlay.loader .latte-item.progress{
-    float: none;
-}/* 
     Document   : MenuItem
     Created on : Aug 3, 2012, 9:06:35 AM
     Author     : josemanuel
@@ -1334,16 +1357,6 @@ body.html-editor td{
 .latte-overlay.menu > .latte-item{
     display: block;
     float: none;
-}.latte-overlay.suggestion{
-    font-family: "Lucida Grande", sans-serif;
-    font-size: 11px;
-    border: solid 1px #ccc;
-    background: white;
-    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
-    overflow: auto;
-}
-.latte-overlay.suggestion .latte-item.separator{
-    border-top: solid 1px silver;
 }/**
  * Overlay
  */
@@ -1355,6 +1368,16 @@ body.html-editor td{
     position: fixed;
     left: 100px; /* Default position. Should be altered by JS */
     top: 100px; /* Default position. Should be altered by JS */
+}.latte-overlay.suggestion{
+    font-family: "Lucida Grande", sans-serif;
+    font-size: 11px;
+    border: solid 1px #ccc;
+    background: white;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+    overflow: auto;
+}
+.latte-overlay.suggestion .latte-item.separator{
+    border-top: solid 1px silver;
 }
 .latte-view {
     position: absolute;
@@ -1436,44 +1459,6 @@ body.html-editor td{
     /*left: 0;*/
     /*right: 0;*/
 /*}*//* 
-    Document   : TabView
-    Created on : Mar 5, 2013, 11:06:20 AM
-    Author     : josemanuel
-    Description:
-        Purpose of the stylesheet follows.
-*/
-
-.latte-view.tab > .container {
-    background: white;
-    border: solid 1px white;
-}
-/* 
-    Document   : ToolbarView
-    Created on : Mar 5, 2013, 11:27:59 AM
-    Author     : josemanuel
-    Description:
-        Purpose of the stylesheet follows.
-*/
-
-.latte-view.toolbar{
-    
-}
-
-.latte-view.toolbar.top > .latte-item.toolbar.with-face{
-    border-bottom: solid 1px #D2D5D9;
-}
-
-.latte-view.toolbar.bottom > .latte-item.toolbar.with-face{
-    border-top: solid 1px #D2D5D9;
-}
-
-.latte-view.toolbar.left > .latte-item.toolbar.with-face{
-    border-right: solid 1px #D2D5D9;
-}
-
-.latte-view.toolbar.right > .latte-item.toolbar.with-face{
-    border-left: solid 1px #D2D5D9;
-}/* 
     Document   : CalendarDayView
     Created on : Oct 11, 2012, 1:33:58 PM
     Author     : josemanuel
@@ -1628,6 +1613,44 @@ body.html-editor td{
     background-color: highlight;
     background-color: rgba(0, 153, 255, 0.15);
 }/* 
+    Document   : TabView
+    Created on : Mar 5, 2013, 11:06:20 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.tab > .container {
+    background: white;
+    border: solid 1px white;
+}
+/* 
+    Document   : ToolbarView
+    Created on : Mar 5, 2013, 11:27:59 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.toolbar{
+    
+}
+
+.latte-view.toolbar.top > .latte-item.toolbar.with-face{
+    border-bottom: solid 1px #D2D5D9;
+}
+
+.latte-view.toolbar.bottom > .latte-item.toolbar.with-face{
+    border-top: solid 1px #D2D5D9;
+}
+
+.latte-view.toolbar.left > .latte-item.toolbar.with-face{
+    border-right: solid 1px #D2D5D9;
+}
+
+.latte-view.toolbar.right > .latte-item.toolbar.with-face{
+    border-left: solid 1px #D2D5D9;
+}/* 
     Document   : CalendarMonthView
     Created on : Oct 18, 2012, 7:41:55 PM
     Author     : menendezpoo
@@ -1737,6 +1760,13 @@ body.html-editor td{
     top: 20px;
     
 }/* 
+    Document   : Form.css
+    Created on : Aug 3, 2012, 10:13:39 AM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+/* 
     Document   : DateView
     Created on : Oct 9, 2012, 7:15:30 PM
     Author     : josemanuel
@@ -1763,13 +1793,6 @@ body.html-editor td{
     text-align: center;
     float: none;
 }/* 
-    Document   : Form.css
-    Created on : Aug 3, 2012, 10:13:39 AM
-    Author     : josemanuel
-    Description:
-        Purpose of the stylesheet follows.
-*/
-/* 
     Document   : HtmlView
     Created on : Aug 9, 2012, 8:47:42 AM
     Author     : josemanuel
@@ -1787,6 +1810,30 @@ body.html-editor td{
 .latte-view.item > .container > .latte-item{
     margin: 0 auto;
     float: none;
+}/* 
+    Document   : TextView
+    Created on : Sep 10, 2012, 12:41:28 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-view.text textarea{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: none;
+    font-family: monospace;
+    font-size: 10pt;
+    min-height: 4em;
+}
+
+.latte-view.text textarea:active,
+.latte-view.text textarea:focus
+{
+    outline: none;
 }/* 
     Document   : MessageView
     Created on : Sep 11, 2012, 6:32:24 PM
@@ -1819,30 +1866,6 @@ body.html-editor td{
 
 .latte-view.message > .container{
     margin-left: 52px;
-}/* 
-    Document   : TextView
-    Created on : Sep 10, 2012, 12:41:28 PM
-    Author     : josemanuel
-    Description:
-        Purpose of the stylesheet follows.
-*/
-
-.latte-view.text textarea{
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border: none;
-    font-family: monospace;
-    font-size: 10pt;
-    min-height: 4em;
-}
-
-.latte-view.text textarea:active,
-.latte-view.text textarea:focus
-{
-    outline: none;
 }/* 
     Document   : ColumnView
     Created on : Sep 23, 2012, 9:25:49 PM

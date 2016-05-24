@@ -168,7 +168,6 @@ module latte{
 
         }
 
-
         /**
          *
          **/
@@ -176,6 +175,15 @@ module latte{
 
             return this._selected;
 
+        }
+
+        /**
+         * Override
+         */
+        onBlur(){
+            super.onBlur();
+
+            this.selected = false;
         }
 
         /**
@@ -202,6 +210,21 @@ module latte{
         }
 
         /**
+         * Raises the <c>defaulted</c> event
+         */
+        onDefaultedChanged(){
+            if(this._defaultedChanged){
+                this._defaultedChanged.raise();
+            }
+
+            if(this.defaulted) {
+                this.addClass('defaulted')
+            }else {
+                this.removeClass('defaulted')
+            }
+        }
+
+        /**
          * Overriden. Raises the <c>enabledChanged</c> event
          **/
         onEnabledChanged(){
@@ -220,6 +243,15 @@ module latte{
 
             this.faceVisibleChanged.raise();
 
+        }
+
+        /**
+         * Override
+         */
+        onFocused(){
+            super.onFocused();
+
+            this.selected = true;
         }
 
         /**
@@ -308,6 +340,62 @@ module latte{
                 this.onSelectedChanged();
             }
 
+        }
+
+        //region Events
+        /**
+         * Back field for event
+         */
+        private _defaultedChanged: LatteEvent
+
+        /**
+         * Gets an event raised when the value of the defaulted property changes
+         *
+         * @returns {LatteEvent}
+         */
+        get defaultedChanged(): LatteEvent{
+            if(!this._defaultedChanged){
+                this._defaultedChanged = new LatteEvent(this);
+            }
+            return this._defaultedChanged;
+        }
+
+
+        //endregion
+
+        //region Props
+
+        /**
+         * Property field
+         */
+        private _defaulted: boolean = false;
+
+        /**
+         * Gets or sets a value indicating if the item is defaulted (Will recieve enter when pressed)
+         *
+         * @returns {boolean}
+         */
+        get defaulted(): boolean{
+            return this._defaulted;
+        }
+
+        /**
+         * Gets or sets a value indicating if the item is defaulted (Will recieve enter when pressed)
+         *
+         * @param {boolean} value
+         */
+        set defaulted(value: boolean){
+
+            // Check if value changed
+            var changed: boolean = value !== this._defaulted;
+
+            // Set value
+            this._defaulted = value;
+
+            // Trigger changed event
+            if(changed){
+                this.onDefaultedChanged();
+            }
         }
 
         /**
@@ -585,7 +673,6 @@ module latte{
 
         }
 
-
         /**
          * Gets or sets a value indicating if the item has currently context
          **/
@@ -619,5 +706,6 @@ module latte{
 
 
         }
+        //endregion
     }
 }
