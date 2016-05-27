@@ -1,25 +1,19 @@
+/// <reference path="datalatte.d.ts" />
+/// <reference path="latte.d.ts" />
+/// <reference path="latte.strings.d.ts" />
 /**
  * Main Class
  * Start your program here.
  * This class is automatically constructed at window load by Latte.
  */
-module latte {
-
+declare module latte {
     /**
      *
      */
-    export class Main {
-
-
+    class Main {
         /**
          * Start your program here
          */
-        constructor() {
-            log("Hello.")
-        }
-
-
-
+        constructor();
     }
-
 }
