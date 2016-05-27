@@ -6,6 +6,41 @@ var __extends = (this && this.__extends) || function (d, b) {
 var latte;
 (function (latte) {
     /**
+     * Represents a collection of records
+     */
+    var DataRecordCollection = (function (_super) {
+        __extends(DataRecordCollection, _super);
+        /**
+         * Creates the collection of the specified type.
+         * Optionally specifies handlers for adding and removing items, and a
+         * context to call as closure of events.
+         *
+         * @param addCallback
+         * @param removeCallback
+         * @param context
+         */
+        function DataRecordCollection(addCallback, removeCallback, context) {
+            if (addCallback === void 0) { addCallback = null; }
+            if (removeCallback === void 0) { removeCallback = null; }
+            if (context === void 0) { context = null; }
+            _super.call(this, addCallback, removeCallback, context);
+        }
+        /**
+         * Finds the record of the specified <c>id</c>
+         *
+         * @param id
+         * @returns {null}
+         */
+        DataRecordCollection.prototype.byId = function (id) {
+            return null;
+        };
+        return DataRecordCollection;
+    }(latte.Collection));
+    latte.DataRecordCollection = DataRecordCollection;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
      * Saves full lists of records in Memory
      *
      * <example>
@@ -107,7 +142,7 @@ var latte;
          * Creates a record from the specified name and id. If no id is specified, empty record will arrive.
          **/
         DataRecord.fromName = function (name, id, callback) {
-            var m = new latte.Message('_core', 'DataLatteUa', 'recordSelect', { name: name, id: id })
+            var m = new latte.Message('latte.data', 'DataLatteUa', 'recordSelect', { name: name, id: id })
                 .send(function (record) {
                 // Execute callback with record
                 callback(record);
@@ -438,41 +473,6 @@ var latte;
         return DataRecord;
     }());
     latte.DataRecord = DataRecord;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
-     * Represents a collection of records
-     */
-    var DataRecordCollection = (function (_super) {
-        __extends(DataRecordCollection, _super);
-        /**
-         * Creates the collection of the specified type.
-         * Optionally specifies handlers for adding and removing items, and a
-         * context to call as closure of events.
-         *
-         * @param addCallback
-         * @param removeCallback
-         * @param context
-         */
-        function DataRecordCollection(addCallback, removeCallback, context) {
-            if (addCallback === void 0) { addCallback = null; }
-            if (removeCallback === void 0) { removeCallback = null; }
-            if (context === void 0) { context = null; }
-            _super.call(this, addCallback, removeCallback, context);
-        }
-        /**
-         * Finds the record of the specified <c>id</c>
-         *
-         * @param id
-         * @returns {null}
-         */
-        DataRecordCollection.prototype.byId = function (id) {
-            return null;
-        };
-        return DataRecordCollection;
-    }(latte.Collection));
-    latte.DataRecordCollection = DataRecordCollection;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -925,6 +925,7 @@ var latte;
             }
             // Try to parse JSON
             try {
+                // log(data)
                 result = JSON.parse(data);
                 parsed = true;
             }
@@ -1615,6 +1616,8 @@ var latte;
             for (var i in this.response) {
                 this['_' + i] = this.response[i];
             }
+            // log("Response: ")
+            // log(this.response)
             if (this.success === true) {
                 this._data = latte.DataRecord.scanAndConvert(this.data);
             }
@@ -1740,9 +1743,9 @@ var latte;
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/support/ts-include/latte.d.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/support/ts-include/latte.data.strings.d.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/support/ts-include/latte.strings.d.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/DataRecordCollection.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/Cache.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/DataRecord.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/DataRecordCollection.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/DataSet.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/DataSetColumn.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/DataSetRow.ts" />
