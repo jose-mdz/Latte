@@ -73,7 +73,7 @@ class DataLatteCall{
 
         $object = $this->id > 0 ? DataRecord::byAuto($this->className, $this->id) : $this->className;
         $reflector = new ReflectionObject(new $this->className);
-        $info = DataLatteReflection::generatePhpFileInfo($reflector->getFileName());
+        $info = LatteReflection::generatePhpFileInfo($reflector->getFileName());
         $response = null;
         $error = null;
 

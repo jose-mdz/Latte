@@ -352,7 +352,7 @@ module latte{
         /**
          * Inserts or updates the record
          **/
-        save(callback:VoidCallback):latte.Message {
+        save(callback:VoidCallback = null):latte.Message {
 
             return this.saveCall().send(( ) => {
                 if(_isFunction(callback)){

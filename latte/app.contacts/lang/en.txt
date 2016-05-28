@@ -1,7 +1,0 @@
-appName Contacts
-noContacts No contacts found
-noName No Name
-name Name
-lastName Last
-allContacts All Contacts
-myContacts My Contacts

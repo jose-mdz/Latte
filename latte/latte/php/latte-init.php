@@ -29,11 +29,10 @@ if(file_exists($config_path)){
 
 /// Create constant with directories
 define('DATALATTE_MODULES', $project_path . $GLOBALS['xlatte_config']['modules']);
-define('DATALATTE_CORE', DATALATTE_MODULES . '/latte.data');
+define('DATALATTE_CORE', DATALATTE_MODULES . '/latte');
 define('DATALATTE_APP', DATALATTE_MODULES . "/app");
 define('DATALATTE_FILES', $project_path . $GLOBALS['xlatte_config']['output']);
 define('DATALATTE_FILES_URL', '/' . $GLOBALS['xlatte_config']['output-url'] . '/');
-
 
 /// Declare autoload
 function dataLatte_Autoloader($className){

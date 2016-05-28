@@ -6,86 +6,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 var latte;
 (function (latte) {
     /**
-     * Represents a collection of records
-     */
-    var DataRecordCollection = (function (_super) {
-        __extends(DataRecordCollection, _super);
-        /**
-         * Creates the collection of the specified type.
-         * Optionally specifies handlers for adding and removing items, and a
-         * context to call as closure of events.
-         *
-         * @param addCallback
-         * @param removeCallback
-         * @param context
-         */
-        function DataRecordCollection(addCallback, removeCallback, context) {
-            if (addCallback === void 0) { addCallback = null; }
-            if (removeCallback === void 0) { removeCallback = null; }
-            if (context === void 0) { context = null; }
-            _super.call(this, addCallback, removeCallback, context);
-        }
-        /**
-         * Finds the record of the specified <c>id</c>
-         *
-         * @param id
-         * @returns {null}
-         */
-        DataRecordCollection.prototype.byId = function (id) {
-            return null;
-        };
-        return DataRecordCollection;
-    }(latte.Collection));
-    latte.DataRecordCollection = DataRecordCollection;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
-     * Saves full lists of records in Memory
-     *
-     * <example>
-     * // Load cache of users
-     * Cache.load('User', 'users');
-     *
-     * // After load, now we can use the users cache
-     * // Cache.users is a DataRecordCollection object
-     * for(var i = 0; i < Cache.users.count; i++)
-     *  console.log(Cache.users.item(i));
-     * </example>
-     *
-     */
-    var Cache = (function () {
-        function Cache() {
-        }
-        /**
-         * Loads a cache of the specified name into cache itself.
-         * @param recordType
-         * @param name
-         * @param callback
-         * @returns {null}
-         */
-        Cache.prototype.load = function (recordType, name, callback) {
-            /*
-            DataRecord.fromListing(recordType, '/', {}, function(stages){
-
-                // Add users to cache
-                latte.Cache[name] = new latte.DataRecordCollection();
-                latte.Cache[name].add(stages);
-
-                // Call callback
-                if(_isFunction(callback))
-                    callback.call(this);
-            });*/
-            if (callback === void 0) { callback = null; }
-            return null;
-        };
-        return Cache;
-    }());
-    latte.Cache = Cache;
-})(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
      * Represents a DataRecord on App
      **/
     var DataRecord = (function () {
@@ -324,6 +244,7 @@ var latte;
          * Inserts or updates the record
          **/
         DataRecord.prototype.save = function (callback) {
+            if (callback === void 0) { callback = null; }
             return this.saveCall().send(function () {
                 if (latte._isFunction(callback)) {
                     callback();
@@ -477,6 +398,41 @@ var latte;
 var latte;
 (function (latte) {
     /**
+     * Represents a collection of records
+     */
+    var DataRecordCollection = (function (_super) {
+        __extends(DataRecordCollection, _super);
+        /**
+         * Creates the collection of the specified type.
+         * Optionally specifies handlers for adding and removing items, and a
+         * context to call as closure of events.
+         *
+         * @param addCallback
+         * @param removeCallback
+         * @param context
+         */
+        function DataRecordCollection(addCallback, removeCallback, context) {
+            if (addCallback === void 0) { addCallback = null; }
+            if (removeCallback === void 0) { removeCallback = null; }
+            if (context === void 0) { context = null; }
+            _super.call(this, addCallback, removeCallback, context);
+        }
+        /**
+         * Finds the record of the specified <c>id</c>
+         *
+         * @param id
+         * @returns {null}
+         */
+        DataRecordCollection.prototype.byId = function (id) {
+            return null;
+        };
+        return DataRecordCollection;
+    }(latte.Collection));
+    latte.DataRecordCollection = DataRecordCollection;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
      * Represents a set of structured data
      **/
     var DataSet = (function () {
@@ -590,6 +546,51 @@ var latte;
         return DataSet;
     }());
     latte.DataSet = DataSet;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
+     * Saves full lists of records in Memory
+     *
+     * <example>
+     * // Load cache of users
+     * Cache.load('User', 'users');
+     *
+     * // After load, now we can use the users cache
+     * // Cache.users is a DataRecordCollection object
+     * for(var i = 0; i < Cache.users.count; i++)
+     *  console.log(Cache.users.item(i));
+     * </example>
+     *
+     */
+    var Cache = (function () {
+        function Cache() {
+        }
+        /**
+         * Loads a cache of the specified name into cache itself.
+         * @param recordType
+         * @param name
+         * @param callback
+         * @returns {null}
+         */
+        Cache.prototype.load = function (recordType, name, callback) {
+            /*
+            DataRecord.fromListing(recordType, '/', {}, function(stages){
+
+                // Add users to cache
+                latte.Cache[name] = new latte.DataRecordCollection();
+                latte.Cache[name].add(stages);
+
+                // Call callback
+                if(_isFunction(callback))
+                    callback.call(this);
+            });*/
+            if (callback === void 0) { callback = null; }
+            return null;
+        };
+        return Cache;
+    }());
+    latte.Cache = Cache;
 })(latte || (latte = {}));
 var latte;
 (function (latte) {
@@ -1224,6 +1225,167 @@ var latte;
 var latte;
 (function (latte) {
     /**
+     *
+     */
+    var RemoteResponse = (function () {
+        //endregion
+        /**
+         * Creates the response
+         * @param call
+         * @param responseText
+         */
+        function RemoteResponse(call, response) {
+            //region Fields
+            this._call = null;
+            this._errorCode = -1;
+            this._errorDescription = null;
+            this._success = false;
+            /**
+             * Property field
+             */
+            this._logs = [];
+            /**
+             * Property field
+             */
+            this._warnings = [];
+            this._call = call;
+            this._response = response;
+            this.unmarshall();
+        }
+        //region Private Methods
+        /**
+         * Unpacks the response text to indicate attributes
+         */
+        RemoteResponse.prototype.unmarshall = function () {
+            for (var i in this.response) {
+                this['_' + i] = this.response[i];
+            }
+            // log("Response: ")
+            // log(this.response)
+            if (this.success === true) {
+                this._data = latte.DataRecord.scanAndConvert(this.data);
+            }
+            else {
+                latte.log("Error on call: " + this.call.toString());
+                latte.log(latte.sprintf("(%s) - %s", this.errorCode, this.errorDescription));
+                this.call.onFailure(this.errorDescription, String(this.errorCode));
+            }
+        };
+        Object.defineProperty(RemoteResponse.prototype, "call", {
+            //endregion
+            //region Properties
+            /**
+             * Gets the call who originated this response
+             * @returns {RemoteCall}
+             */
+            get: function () {
+                return this._call;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(RemoteResponse.prototype, "errorCode", {
+            /**
+             * Gets the error code returned (if any)
+             * @returns {number}
+             */
+            get: function () {
+                return this._errorCode;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(RemoteResponse.prototype, "errorDescription", {
+            /**
+             * Gets the error description returned (if any)
+             * @returns {string}
+             */
+            get: function () {
+                return this._errorDescription;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(RemoteResponse.prototype, "logs", {
+            /**
+             * Gets or sets the logs array in response
+             *
+             * @returns {Array<string>}
+             */
+            get: function () {
+                return this._logs;
+            },
+            /**
+             * Gets or sets the logs array in response
+             *
+             * @param {Array<string>} value
+             */
+            set: function (value) {
+                this._logs = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(RemoteResponse.prototype, "response", {
+            /**
+             * Gets the literal response from server
+             * @returns {string}
+             */
+            get: function () {
+                return this._response;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(RemoteResponse.prototype, "data", {
+            /**
+             * Gets
+             * @returns {T}
+             */
+            get: function () {
+                return this._data;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(RemoteResponse.prototype, "success", {
+            /**
+             * Gets a value indicating if the call was a success
+             * @returns {boolean}
+             */
+            get: function () {
+                return this._success;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(RemoteResponse.prototype, "warnings", {
+            /**
+             * Gets or sets
+             *
+             * @returns {Array<string>}
+             */
+            get: function () {
+                return this._warnings;
+            },
+            /**
+             * Gets or sets
+             *
+             * @param {Array<string>} value
+             */
+            set: function (value) {
+                this._warnings = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return RemoteResponse;
+    }());
+    latte.RemoteResponse = RemoteResponse;
+})(latte || (latte = {}));
+var latte;
+(function (latte) {
+    /**
      * Represents a call to a remote procedure
      */
     var RemoteCall = (function () {
@@ -1578,177 +1740,16 @@ var latte;
     }());
     latte.RemoteCall = RemoteCall;
 })(latte || (latte = {}));
-var latte;
-(function (latte) {
-    /**
-     *
-     */
-    var RemoteResponse = (function () {
-        //endregion
-        /**
-         * Creates the response
-         * @param call
-         * @param responseText
-         */
-        function RemoteResponse(call, response) {
-            //region Fields
-            this._call = null;
-            this._errorCode = -1;
-            this._errorDescription = null;
-            this._success = false;
-            /**
-             * Property field
-             */
-            this._logs = [];
-            /**
-             * Property field
-             */
-            this._warnings = [];
-            this._call = call;
-            this._response = response;
-            this.unmarshall();
-        }
-        //region Private Methods
-        /**
-         * Unpacks the response text to indicate attributes
-         */
-        RemoteResponse.prototype.unmarshall = function () {
-            for (var i in this.response) {
-                this['_' + i] = this.response[i];
-            }
-            // log("Response: ")
-            // log(this.response)
-            if (this.success === true) {
-                this._data = latte.DataRecord.scanAndConvert(this.data);
-            }
-            else {
-                latte.log("Error on call: " + this.call.toString());
-                latte.log(latte.sprintf("(%s) - %s", this.errorCode, this.errorDescription));
-                this.call.onFailure(this.errorDescription, String(this.errorCode));
-            }
-        };
-        Object.defineProperty(RemoteResponse.prototype, "call", {
-            //endregion
-            //region Properties
-            /**
-             * Gets the call who originated this response
-             * @returns {RemoteCall}
-             */
-            get: function () {
-                return this._call;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(RemoteResponse.prototype, "errorCode", {
-            /**
-             * Gets the error code returned (if any)
-             * @returns {number}
-             */
-            get: function () {
-                return this._errorCode;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(RemoteResponse.prototype, "errorDescription", {
-            /**
-             * Gets the error description returned (if any)
-             * @returns {string}
-             */
-            get: function () {
-                return this._errorDescription;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(RemoteResponse.prototype, "logs", {
-            /**
-             * Gets or sets the logs array in response
-             *
-             * @returns {Array<string>}
-             */
-            get: function () {
-                return this._logs;
-            },
-            /**
-             * Gets or sets the logs array in response
-             *
-             * @param {Array<string>} value
-             */
-            set: function (value) {
-                this._logs = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(RemoteResponse.prototype, "response", {
-            /**
-             * Gets the literal response from server
-             * @returns {string}
-             */
-            get: function () {
-                return this._response;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(RemoteResponse.prototype, "data", {
-            /**
-             * Gets
-             * @returns {T}
-             */
-            get: function () {
-                return this._data;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(RemoteResponse.prototype, "success", {
-            /**
-             * Gets a value indicating if the call was a success
-             * @returns {boolean}
-             */
-            get: function () {
-                return this._success;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(RemoteResponse.prototype, "warnings", {
-            /**
-             * Gets or sets
-             *
-             * @returns {Array<string>}
-             */
-            get: function () {
-                return this._warnings;
-            },
-            /**
-             * Gets or sets
-             *
-             * @param {Array<string>} value
-             */
-            set: function (value) {
-                this._warnings = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return RemoteResponse;
-    }());
-    latte.RemoteResponse = RemoteResponse;
-})(latte || (latte = {}));
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/support/ts-include/datalatte.d.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/support/ts-include/latte.d.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/support/ts-include/latte.data.strings.d.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/support/ts-include/latte.strings.d.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/DataRecordCollection.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/Cache.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/DataRecord.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/DataRecordCollection.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/DataSet.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/Cache.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/DataSetColumn.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/DataSetRow.ts" />
 /// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/Message.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/RemoteCall.ts" />
-/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/RemoteResponse.ts" /> 
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/RemoteResponse.ts" />
+/// <reference path="/Users/josemanuel/Sites/Latte/latte/latte.data/ts/latte.data/RemoteCall.ts" /> 

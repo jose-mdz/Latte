@@ -40,7 +40,7 @@ class DataLatteUa {
         
         $response .= PHP_EOL . "/* App: $app */" . PHP_EOL;
         
-        $namespaces = DataLatteReflection::getAppUaNamespaces($app);
+        $namespaces = LatteReflection::getAppUaNamespaces($app);
         $files = array();
         
         $response .= PHP_EOL . "/* Namespaces in : $app \n" . implode(PHP_EOL, $namespaces) . "*/" . PHP_EOL;
@@ -63,11 +63,11 @@ class DataLatteUa {
     public static function getFolderJs($path){
         
         $response = '';
-        $folders = DataLatteReflection::getDirectoryList($path);
+        $folders = LatteReflection::getDirectoryList($path);
         $files = array();
         
         // Root files
-        foreach(DataLatteReflection::getFileList($path, 'js') as $file){
+        foreach(LatteReflection::getFileList($path, 'js') as $file){
             $response .= file_get_contents(String::combinePath($path, $file));
         }
         
@@ -78,7 +78,7 @@ class DataLatteUa {
             $folderPath = String::combinePath($path, $folder);
             
             // Scan files in folder
-            foreach(DataLatteReflection::getFileList($folderPath, 'js') as $file){
+            foreach(LatteReflection::getFileList($folderPath, 'js') as $file){
                 $files[] = String::combinePath($folderPath, $file);
             }
         }
@@ -95,7 +95,7 @@ class DataLatteUa {
      * @param boolean= $includeCore
      */
     public static function dumpAppCss($app){
-        $namespaces = DataLatteReflection::getAppUaNamespaces($app);
+        $namespaces = LatteReflection::getAppUaNamespaces($app);
        
         foreach($namespaces as $namespace){
             self::dumpNamespaceCss($app, $namespace); 
@@ -158,7 +158,7 @@ class DataLatteUa {
         if($path){
             
             // Get files to export
-            $files = DataLatteReflection::getFileList($path, '.css');
+            $files = LatteReflection::getFileList($path, '.css');
             
             foreach($files as $file){
                 $response .= '/' . 
@@ -187,7 +187,7 @@ class DataLatteUa {
     public static function getFolderCss($path){
         
         $response = '';
-        $folders = DataLatteReflection::getDirectoryList($path);
+        $folders = LatteReflection::getDirectoryList($path);
         $files = array();
         
         foreach($folders as $folder){
@@ -196,7 +196,7 @@ class DataLatteUa {
             $folderPath = String::combinePath($path, $folder);
             
             // Scan files in folder
-            foreach(DataLatteReflection::getFileList($folderPath, 'css') as $file){
+            foreach(LatteReflection::getFileList($folderPath, 'css') as $file){
                 $files[] = String::combinePath($folderPath, $file);
             }
         }
@@ -266,7 +266,7 @@ class DataLatteUa {
         if(!$path) die("throw '(PHP) DataLatteUa: path for $namespace not found.';");
             
         // Get files to export
-        $files = DataLatteReflection::getFileList($path, '.js');
+        $files = LatteReflection::getFileList($path, '.js');
         
         // Create files array into a full path files array
         foreach($files as $i => $file)
@@ -298,7 +298,7 @@ class DataLatteUa {
 
         /// Initialize classes array
         foreach($files as $file){
-            $meta = DataLatteReflection::generateJavaScriptFileInfo($file);
+            $meta = LatteReflection::generateJavaScriptFileInfo($file);
             $name = $meta['name'];
             $classes[$name] = 0;
             $lines[$name] = sizeof(file($file));

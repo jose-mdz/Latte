@@ -308,7 +308,7 @@ class LatteModule {
             return $response;
         }
 
-        $files = DataLatteReflection::getFileList($filesPath, 'txt');
+        $files = LatteReflection::getFileList($filesPath, 'txt');
 
         foreach($files as $file){
             
@@ -494,8 +494,7 @@ class LatteModule {
      */
     public function load($lang = null){
 
-//        echo "[LOADING $this->name]" . PHP_EOL;
-
+//        echo PHP_EOL . "[LOADING $this->name]";
 
         if(LatteModule::isLoaded($this->name)){
 
@@ -515,14 +514,6 @@ class LatteModule {
         }
         //endregion
 
-        //region Load Records
-        $records = String::combinePath($this->pathSupport, 'records.php');
-
-        if(file_exists($records)){
-            include $records;
-        }
-        //endregion
-
         //region Module Includes
         if(isset($this->metadata['module-include'])){
             foreach($this->metadata['module-include'] as $moduleName){
@@ -532,6 +523,14 @@ class LatteModule {
             }
         }
         //region
+
+        //region Load Records
+        $records = String::combinePath($this->pathSupport, 'records.php');
+
+        if(file_exists($records)){
+            include $records;
+        }
+        //endregion
 
         // Report as loaded
         self::$loadedModules[$this->name] = $this;

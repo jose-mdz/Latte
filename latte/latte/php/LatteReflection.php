@@ -49,7 +49,7 @@
  * The structure is the same for both PHP and JavaScript classes, though, types and attributes are specific to the language.
  */
 
-class DataLatteReflection {
+class LatteReflection {
     
     /**
      * Recursively searches for all files in directory presented by <c>$path</c>
@@ -850,7 +850,7 @@ class DataLatteReflection {
     * @return array
     */
     public static function getAppUaNamespaces($app){
-        return DataLatteReflection::getDirectoryList(DataLatteUa::getAppPath($app) . '/ua');
+        return LatteReflection::getDirectoryList(DataLatteUa::getAppPath($app) . '/ua');
     }
 
     private static function getCommentDescription($comment) {
@@ -942,7 +942,7 @@ class DataLatteReflection {
 
         $path = DataLatteUa::getAppPath($app) . "/php/$className.php";
 
-        return DataLatteReflection::generatePhpFileInfo($path);
+        return LatteReflection::generatePhpFileInfo($path);
     }
 
     /**
@@ -955,7 +955,7 @@ class DataLatteReflection {
      */
     public static function getServerObjects($app) {
 
-        $list = DataLatteReflection::getFileList(DataLatteUa::getAppPath($app) . '/php', '.php');
+        $list = LatteReflection::getFileList(DataLatteUa::getAppPath($app) . '/php', '.php');
 
         foreach ($list as $i => $value) {
             $s = str($value);

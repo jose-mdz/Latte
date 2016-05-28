@@ -35,7 +35,7 @@
          */
         public static function getUaNamespaces($app){
             
-            return DataLatteReflection::getAppUaNamespaces($app);
+            return LatteReflection::getAppUaNamespaces($app);
         }
         
         /**
@@ -121,7 +121,7 @@
          */
         public static function getUaObjects($app, $namespace){
             
-            $list = DataLatteReflection::getFileList(DataLatteUa::getAppPath($app) . '/ua/' . $namespace, '.js');
+            $list = LatteReflection::getFileList(DataLatteUa::getAppPath($app) . '/ua/' . $namespace, '.js');
             
             foreach($list as $i => $value){
                 $s = str($value);
@@ -187,7 +187,7 @@
             
             $path = DataLatteUa::getAppPath($app) . "/ua/$namespace/$filename.js";
 
-            return  DataLatteReflection::generateJavaScriptFileInfo($path); 
+            return  LatteReflection::generateJavaScriptFileInfo($path); 
         }
         
         /**

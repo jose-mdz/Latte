@@ -8,7 +8,7 @@
 include 'latte/latte.php';
 
 // Load app
-LatteModule::loadMain('app');
+LatteModule::loadMain('contacts');
 
 /// Create document
 $doc = new LatteDocument();

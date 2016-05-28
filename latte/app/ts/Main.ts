@@ -1,24 +1,17 @@
-/**
- * Main Class
- * Start your program here.
- * This class is automatically constructed at window load by Latte.
- */
 module latte {
 
     /**
-     *
+     * Main Class
+     * Your app starts here.
      */
     export class Main {
 
-
         /**
-         * Start your program here
+         * Start your program on the constructor.
          */
         constructor() {
-            log("Hello.")
+            log("Hello")
         }
-
-
 
     }
 
