@@ -43,6 +43,24 @@
      */
     public static $current = NULL;
 
+     /**
+      * Global flag that allows remote connections to insert records
+      * @var bool
+      */
+     public static $globalCanInsert = false;
+
+     /**
+      * Global flag that allows remote connections to update records
+      * @var bool
+      */
+     public static $globalCanUpdate = false;
+
+     /**
+      * Global flag that allows remote connections to delete records
+      * @var bool
+      */
+     public static $globalCanDelete = false;
+
     /**
      * Throws an Exception. This class should not be instantiated.
      */

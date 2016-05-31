@@ -215,7 +215,23 @@ abstract class DataRecord {
     //region Public
 
     /**
-     * Override to specify if record can be deleted
+     * Override to specify if record can be inserted remotely
+     * @return bool
+     */
+    public function canInsert(){
+        return true;
+    }
+
+    /**
+     * Override to specify if record can be update remotely
+     * @return bool
+     */
+    public function canUpdate(){
+        return true;
+    }
+
+    /**
+     * Override to specify if record can be deleted remotely
      * @return bool
      */
     public function canDelete(){

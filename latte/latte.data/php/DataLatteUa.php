@@ -557,7 +557,12 @@ class DataLatteUa {
 
 //        die("Updated Record: " . var_export($record, true));
 
-        $record->update();
+        if(DL::$globalCanUpdate || $record->canUpdate()){
+            $record->update();
+        }else{
+            throw new Exception("Record can't be updated (::canUpdate)");
+        }
+
 
 //        die("[UPDATED]");
         
@@ -585,8 +590,13 @@ class DataLatteUa {
                 $record->{$field} = $value;
             }
         }
-        
-        $record->insert();
+
+        if (DL::$globalCanInsert || $record->canInsert()){
+            $record->insert();
+        }else{
+            throw new Exception("Record can't be inserted (::canInsert)");
+        }
+
 
 
         return $record->getIdValue();
@@ -603,8 +613,8 @@ class DataLatteUa {
 
         $record = DataRecord::byAuto($name, $id);
         
-        if(!$record->canDelete())
-            throw new Exception("Can't delete record: Denied by canDelete()");
+        if(DL::$globalCanDelete || !$record->canDelete())
+            throw new Exception("Record can't be deleted (::canDelete)");
         
         return $record->delete();
     }
