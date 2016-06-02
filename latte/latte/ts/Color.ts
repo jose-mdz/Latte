@@ -10,7 +10,7 @@ module latte{
          * Creates a color from the hexadecimal value.
          * It may contain the <c>#</c> symbol at the beginning of the string.
          **/
-        static fromHex(hexColor: string): latte.Color{
+        static fromHex(hexColor: string): Color{
 
             if(_isString(hexColor)) {
                 if(hexColor.toLowerCase() == 'white') {
@@ -61,6 +61,170 @@ module latte{
 
             return c;
 
+        }
+
+        /**
+         * Gets the RGB (Red, Green, Blue) components from a CMYK namespace
+         * @param c
+         * @param m
+         * @param y
+         * @param k
+         * @returns number[]
+         */
+        static cmykToRgb(c: number, m: number, y: number, k: number): number[]{
+            return [
+                255 * (1 - c) * (1 - k),
+                255 * (1 - m) * (1 - k),
+                255 * (1 - y) * (1 - k)
+            ]
+        }
+
+        /**
+         * HSV to RGB color conversion
+         *
+         * H runs from 0 to 360 degrees
+         * S and V run from 0 to 100
+         *
+         * Ported from the excellent java algorithm by Eugene Vishnevsky at:
+         * http://www.cs.rit.edu/~ncs/color/t_convert.html
+         */
+        static hsvToRgb(h, s, v) {
+            var r, g, b;
+            var i;
+            var f, p, q, t;
+
+            // Make sure our arguments stay in-range
+            h = Math.max(0, Math.min(360, h));
+            s = Math.max(0, Math.min(100, s));
+            v = Math.max(0, Math.min(100, v));
+
+            // We accept saturation and value arguments from 0 to 100 because that's
+            // how Photoshop represents those values. Internally, however, the
+            // saturation and value are calculated from a range of 0 to 1. We make
+            // That conversion here.
+            s /= 100;
+            v /= 100;
+
+            if(s == 0) {
+                // Achromatic (grey)
+                r = g = b = v;
+                return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+            }
+
+            h /= 60; // sector 0 to 5
+            i = Math.floor(h);
+            f = h - i; // factorial part of h
+            p = v * (1 - s);
+            q = v * (1 - s * f);
+            t = v * (1 - s * (1 - f));
+
+            switch(i) {
+                case 0:
+                    r = v;
+                    g = t;
+                    b = p;
+                    break;
+
+                case 1:
+                    r = q;
+                    g = v;
+                    b = p;
+                    break;
+
+                case 2:
+                    r = p;
+                    g = v;
+                    b = t;
+                    break;
+
+                case 3:
+                    r = p;
+                    g = q;
+                    b = v;
+                    break;
+
+                case 4:
+                    r = t;
+                    g = p;
+                    b = v;
+                    break;
+
+                default: // case 5:
+                    r = v;
+                    g = p;
+                    b = q;
+            }
+
+            return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+        }
+
+        /**
+         * Gets the CMYK (Cyan, Magenta, Yellow and Key Black) components from a RGB namespace
+         * @param red
+         * @param green
+         * @param blue
+         * @returns {number[]}
+         */
+        static rgbToCmyk(red: number, green: number, blue: number): number[]{
+            var r = red / 255;
+            var g = green / 255;
+            var b = blue / 255;
+            var k = 1 - Math.max(r, g, b);
+            var ck = 1 - k;
+            return [
+                (1 - r - k) / ck,
+                (1 - g - k) / ck,
+                (1 - b - k) / ck,
+                k
+            ]
+        }
+
+        /**
+         * Gets the HSV (Hue, Saturation, Value) components from a RGB namespace
+         * @param red
+         * @param green
+         * @param blue
+         * @returns {number[]}
+         */
+        static rgbToHsv(red: number, green: number, blue: number): number[]{
+            var rr, gg, bb;
+            var r = red / 255;
+            var g = green / 255;
+            var b = blue / 255;
+            var h = 0;
+            var s = 0;
+            var v = Math.max(r, g, b);
+            var diff = v - Math.min(r, g, b);
+            var diffc = (c) => { return (v - c) / 6 / diff + 1 / 2 }
+
+            if(diff == 0) {
+                h = s = 0;
+            }else {
+                s = diff / v;
+                rr = diffc(r);
+                gg = diffc(g);
+                bb = diffc(b);
+
+                if(r === v) {
+                    h = bb - gg;
+                }else if(g === v) {
+                    h = (1 / 3) + rr - bb;
+                }else if(b === v) {
+                    h = (2 / 3) + gg - rr;
+                }
+            }
+
+            if(h < 0) {
+                h += 1;
+            }else if(h > 1) {
+                h -= 1;
+            }
+
+            return [
+                Math.round(h * 360),
+                Math.round(s * 100),
+                Math.round(v * 100)
+            ];
         }
 
         /**
@@ -240,7 +404,7 @@ module latte{
          **/
         get b(): number{
 
-                return this._b;
+            return this._b;
 
         }
 
@@ -258,6 +422,24 @@ module latte{
         }
 
         /**
+         * Gets or sets the Cyan component of the CMKYK namespace
+         *
+         * @returns {number}
+         */
+        get c():number {
+            return (1 - (this.r / 255) - this.k) / (1 - this.k);
+        }
+
+        /**
+         * Gets or sets the Cyan component of the CMKYK namespace
+         *
+         * @returns {number}
+         */
+        set c(value: number){
+            this.r = 255 * (1 - value) * (1 - this.k);
+        }
+
+        /**
          *
          **/
         private _g: number;
@@ -267,7 +449,7 @@ module latte{
          **/
         get g(): number{
 
-                return this._g;
+            return this._g;
 
         }
 
@@ -282,6 +464,34 @@ module latte{
             this._g = value;
 
         }
+
+        /**
+         * Gets the K (Black Key) component of the CMKYK namespace
+         *
+         * @returns {number}
+         */
+        get k():number {
+            return 1 - Math.max(this.r / 255, this.g / 255, this.b / 255);
+        }
+
+        /**
+         * Gets the Magenta component of the CMYK namespace
+         *
+         * @returns {number}
+         */
+        get m():number{
+            return (1 - (this.g / 255) - this.k) / (1 - this.k);
+        }
+
+        /**
+         * Gets the Yellow component of the CMYK namespace
+         *
+         * @returns {number}
+         */
+        get y():number {
+            return (1 - (this.b / 255) - this.k) / (1 - this.k);
+        }
+
 
         /**
          * Returns a copy of the color with the specified alpha between 0 and 255.
@@ -327,7 +537,9 @@ module latte{
         }
 
         /**
-         * Returns the perceived luminosity
+         * Returns the perceived luminosity (https://en.wikipedia.org/wiki/Luminous_intensity)
+         *
+         *
          * @returns {number}
          */
         get perceivedLuminosity(): number{
@@ -349,7 +561,7 @@ module latte{
          **/
         get r(): number{
 
-                return this._r;
+            return this._r;
 
         }
 
