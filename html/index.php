@@ -7,6 +7,8 @@
 /// Include DataLatte
 include 'latte/latte.php';
 
+LatteModule::memoryLoad('latte.api');
+
 // Load app
 LatteModule::loadMain('app');
 

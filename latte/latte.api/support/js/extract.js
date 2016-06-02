@@ -81,10 +81,11 @@ for(var i = 0; i < modules.length; i++){
         for(var lineIndex = 0; lineIndex < lines.length; lineIndex++){
 
             var line = lines[lineIndex].trim();
+            var lineIsClass = false;
 
             //region Comment process
 
-            if(line.indexOf('/*') === 0){
+            if(line.indexOf('/*') >= 0){
                 readingComment = true;
                 currentComment = '';
             }
@@ -93,7 +94,7 @@ for(var i = 0; i < modules.length; i++){
                 currentComment += line + '\n';
             }
 
-            if(line.indexOf('*/') === line.length - 2 ){
+            if(line.indexOf('*/') >= 0 ){
                 readingComment = false;
             }
 
@@ -113,53 +114,62 @@ for(var i = 0; i < modules.length; i++){
                         methods: {},
                         properties: {}
                     };
-                    console.log(line)
+                    lineIsClass = true;
+                    console.log(sprintf("class %s", currentClass));
                 }
             }
             //endregion
 
-            //region Class member process
-            if (   line.indexOf('public ') === 0
-                || line.indexOf('private ') === 0
-                || line.indexOf('static ') === 0
-                || line.indexOf('constructor(') === 0) {
-                var itemParts = line.match(/(public\s+|private\s+)?(static\s*)?(\w+)(\s*\()?/i);
-
-                if(currentClass){
-                    if (itemParts && itemParts[3]) {
-                        if(itemParts[4] && itemParts[4].trim() == '('){
-
-                            //region Process Method
-                            tree[currentClass].methods[itemParts[3]] = {
-
-                                description: useComment(),
-                                source: line,
-                                isPublic: line.indexOf('private') !== 0,
-                                isStatic: line.indexOf('static ') >= 0
-                            };
-                            //endregion
-
-                        }else{
-                            //region Process Property
-                            var typeMatch = line.match(/:\s*([\w\.<>\[\]]+)/i);
+            if (!readingComment && !lineIsClass) { //region Class member process
 
 
-                            tree[currentClass].properties[itemParts[3]] = {
-                                description: useComment(),
-                                source: line,
-                                isPublic: line.indexOf('private') !== 0,
-                                isStatic: line.indexOf('static ') >= 0,
-                                type: (typeMatch && typeMatch[1] ? typeMatch[1] : '[unrecognized]')
-                            };
+                var itemParts = line.match(/(public\s+|private\s+)?(static\s*)?(get\s+|set\s+)?(\w+)(\s*\()?/i);
 
-                            //endregion
+                if (line.indexOf('public ') === 0
+                    || line.indexOf('private ') === 0
+                    || line.indexOf('static ') === 0
+                    || line.indexOf('constructor(') === 0
+                    || (itemParts && itemParts[4])) {
+
+                    // console.log("MEMBER(" + itemParts[4]+ "): " + line)
+
+                    if (currentClass) {
+                        if (itemParts && itemParts[4]) {
+                            if (itemParts[5] && itemParts[5].trim() == '(') {
+
+                                //region Process Method
+                                tree[currentClass].methods[itemParts[4]] = {
+
+                                    description: useComment(),
+                                    source: line,
+                                    isPublic: line.indexOf('private') !== 0,
+                                    isStatic: line.indexOf('static ') >= 0
+
+                                };
+                                //endregion
+
+                            } else {
+                                //region Process Property
+                                var typeMatch = line.match(/:\s*([\w\.<>\[\]]+)/i);
+
+
+                                tree[currentClass].properties[itemParts[4]] = {
+                                    description: useComment(),
+                                    source: line,
+                                    isPublic: line.indexOf('private') !== 0,
+                                    isStatic: line.indexOf('static ') >= 0,
+                                    type: (typeMatch && typeMatch[1] ? typeMatch[1] : '[unrecognized]')
+                                };
+
+                                //endregion
+                            }
+
                         }
-
                     }
-                }
 
+                }
+                //endregion
             }
-            //endregion
 
         }
 

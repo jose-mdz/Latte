@@ -51,10 +51,44 @@ module latte {
             this.items.add(this.methodsTable());
         }
 
+        cleanDescription(lines: string[]): string{
+
+            if(!lines || lines.length == 0) return '';
+
+            var r = [];
+
+            lines.forEach((line: string) => {
+                if(line.trim().indexOf('@') != 0){
+                    r.push(line)
+                }
+            })
+
+            return r.join('\n');
+        }
+
+        sortObject(o: any): any{
+            var keys = [];
+
+            for(var i in o){
+                keys.push(i)
+            }
+
+            keys.sort();
+
+            var r = {};
+
+            keys.forEach((k: string) => {
+                r[k] = o[k];
+            });
+
+            return r;
+        }
+
         propertiesTable(): Item{
 
             var item = new Item();
             var table = $('<table>').addClass('api-table').appendTo(item.element);
+            var props: any = this.sortObject(this.source.properties);
 
             // Add headers
             table.append($('<tr></tr>')
@@ -64,7 +98,8 @@ module latte {
                 .append($('<th>').text('Description'))
             );
 
-            for(var prop in this.source.properties){
+
+            for(var prop in props){
 
                 var property:any = this.source.properties[prop];
                 var indicators;
@@ -76,7 +111,9 @@ module latte {
                 row.append(indicators = $('<td>').append( (IconItem.standard(4, 4)).element ));
                 row.append($('<td>').html(prop));
                 row.append($('<td>').append(this.typeLabel(property.type).element));
-                row.append($('<td>').html(property.description));
+                row.append($('<td>').html(this.cleanDescription(
+                    property.description
+                )));
 
                 if(property.isStatic === true) {
                     indicators.append(this.staticLabel());
@@ -93,6 +130,7 @@ module latte {
 
             var item = new Item();
             var table = $('<table>').addClass('api-table').appendTo(item.element);
+            var meths = this.sortObject(this.source.methods);
 
             // Add headers
             table.append($('<tr></tr>')
@@ -102,7 +140,7 @@ module latte {
                 .append($('<th>').text('Description'))
             );
 
-            for(var methodName in this.source.methods){
+            for(var methodName in meths){
 
                 var method: any = this.source.methods[methodName];
                 var indicators;
@@ -111,10 +149,12 @@ module latte {
 
                 var row = $('<tr></tr>').appendTo(table);
 
+
+
                 row.append(indicators = $('<td>').append( (IconItem.standard(13, 8)).element ));
                 row.append($('<td>').html(methodName));
                 row.append($('<td>').html('<code>' + method.source.substr(method.source.indexOf('(')) + '</code>'));
-                row.append($('<td>').html(method.description));
+                row.append($('<td>').html(this.cleanDescription(method.description)));
 
 
                 if(method.isStatic === true) {
