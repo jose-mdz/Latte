@@ -47,6 +47,29 @@ module latte{
         }
 
         /**
+         * Property field
+         */
+        private _animated:boolean = true;
+
+        /**
+         * Gets or sets a value indicating if the progress should be animated
+         *
+         * @returns {boolean}
+         */
+        get animated():boolean {
+            return this._animated;
+        }
+
+        /**
+         * Gets or sets a value indicating if the progress should be animated
+         *
+         * @param {boolean} value
+         */
+        set animated(value:boolean) {
+            this._animated = value;
+        }
+
+        /**
          * Gets the percentage represented by min, max and value values.
          Value ranges from 0 to 100
          **/
@@ -66,7 +89,7 @@ module latte{
 
             var w = this.getPercentage();
 
-            if(animate !== false)
+            if(animate !== false && this.animated !== false)
                 this.bar.animate({width: w + '%'});
             else
                 this.bar.css('width', w + '%');

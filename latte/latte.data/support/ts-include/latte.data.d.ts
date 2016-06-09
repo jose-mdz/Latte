@@ -3,6 +3,56 @@
 /// <reference path="latte.data.strings.d.ts" />
 /// <reference path="latte.strings.d.ts" />
 declare module latte {
+    /**
+     * Saves full lists of records in Memory
+     *
+     * <example>
+     * // Load cache of users
+     * Cache.load('User', 'users');
+     *
+     * // After load, now we can use the users cache
+     * // Cache.users is a DataRecordCollection object
+     * for(var i = 0; i < Cache.users.count; i++)
+     *  console.log(Cache.users.item(i));
+     * </example>
+     *
+     */
+    class Cache {
+        /**
+         * Loads a cache of the specified name into cache itself.
+         * @param recordType
+         * @param name
+         * @param callback
+         * @returns {null}
+         */
+        load(recordType: string, name: string, callback?: () => any): Message;
+    }
+}
+declare module latte {
+    /**
+     * Represents a collection of records
+     */
+    class DataRecordCollection extends Collection<DataRecord> {
+        /**
+         * Creates the collection of the specified type.
+         * Optionally specifies handlers for adding and removing items, and a
+         * context to call as closure of events.
+         *
+         * @param addCallback
+         * @param removeCallback
+         * @param context
+         */
+        constructor(addCallback?: (DataRecord, number) => any, removeCallback?: (DataRecord, number) => any, context?: any);
+        /**
+         * Finds the record of the specified <c>id</c>
+         *
+         * @param id
+         * @returns {null}
+         */
+        byId(id: number): DataRecord;
+    }
+}
+declare module latte {
     interface DataRecordArrayCallback {
         (records: Array<DataRecord>): void;
     }
@@ -196,30 +246,6 @@ declare module latte {
 }
 declare module latte {
     /**
-     * Represents a collection of records
-     */
-    class DataRecordCollection extends Collection<DataRecord> {
-        /**
-         * Creates the collection of the specified type.
-         * Optionally specifies handlers for adding and removing items, and a
-         * context to call as closure of events.
-         *
-         * @param addCallback
-         * @param removeCallback
-         * @param context
-         */
-        constructor(addCallback?: (DataRecord, number) => any, removeCallback?: (DataRecord, number) => any, context?: any);
-        /**
-         * Finds the record of the specified <c>id</c>
-         *
-         * @param id
-         * @returns {null}
-         */
-        byId(id: number): DataRecord;
-    }
-}
-declare module latte {
-    /**
      * Represents a set of structured data
      **/
     class DataSet {
@@ -267,32 +293,6 @@ declare module latte {
          * Sets the value at the specified position
          **/
         setValueAt(columnIndex: number, rowIndex: number, value: any): DataSet;
-    }
-}
-declare module latte {
-    /**
-     * Saves full lists of records in Memory
-     *
-     * <example>
-     * // Load cache of users
-     * Cache.load('User', 'users');
-     *
-     * // After load, now we can use the users cache
-     * // Cache.users is a DataRecordCollection object
-     * for(var i = 0; i < Cache.users.count; i++)
-     *  console.log(Cache.users.item(i));
-     * </example>
-     *
-     */
-    class Cache {
-        /**
-         * Loads a cache of the specified name into cache itself.
-         * @param recordType
-         * @param name
-         * @param callback
-         * @returns {null}
-         */
-        load(recordType: string, name: string, callback?: () => any): Message;
     }
 }
 declare module latte {
@@ -617,95 +617,6 @@ declare module latte {
     }
 }
 declare module latte {
-    interface IRemoteResponse {
-        success: boolean;
-        data: any;
-        errorCode: number;
-        errorDescription: string;
-    }
-    /**
-     *
-     */
-    class RemoteResponse<T> {
-        private _call;
-        private _response;
-        private _errorCode;
-        private _errorDescription;
-        private _success;
-        private _data;
-        /**
-         * Creates the response
-         * @param call
-         * @param responseText
-         */
-        constructor(call: RemoteCall<T>, response: IRemoteResponse);
-        /**
-         * Unpacks the response text to indicate attributes
-         */
-        private unmarshall();
-        /**
-         * Gets the call who originated this response
-         * @returns {RemoteCall}
-         */
-        call: RemoteCall<T>;
-        /**
-         * Gets the error code returned (if any)
-         * @returns {number}
-         */
-        errorCode: number;
-        /**
-         * Gets the error description returned (if any)
-         * @returns {string}
-         */
-        errorDescription: string;
-        /**
-         * Property field
-         */
-        private _logs;
-        /**
-         * Gets or sets the logs array in response
-         *
-         * @returns {Array<string>}
-         */
-        /**
-         * Gets or sets the logs array in response
-         *
-         * @param {Array<string>} value
-         */
-        logs: Array<string>;
-        /**
-         * Gets the literal response from server
-         * @returns {string}
-         */
-        response: IRemoteResponse;
-        /**
-         * Gets
-         * @returns {T}
-         */
-        data: T;
-        /**
-         * Gets a value indicating if the call was a success
-         * @returns {boolean}
-         */
-        success: boolean;
-        /**
-         * Property field
-         */
-        private _warnings;
-        /**
-         * Gets or sets
-         *
-         * @returns {Array<string>}
-         */
-        /**
-         * Gets or sets
-         *
-         * @param {Array<string>} value
-         */
-        warnings: Array<string>;
-    }
-}
-declare module latte {
     /**
      * Object who contains marshalled call data
      */
@@ -875,5 +786,94 @@ declare module latte {
          * Gets an event raised when message arrives successfully
          */
         success: LatteEvent;
+    }
+}
+declare module latte {
+    interface IRemoteResponse {
+        success: boolean;
+        data: any;
+        errorCode: number;
+        errorDescription: string;
+    }
+    /**
+     *
+     */
+    class RemoteResponse<T> {
+        private _call;
+        private _response;
+        private _errorCode;
+        private _errorDescription;
+        private _success;
+        private _data;
+        /**
+         * Creates the response
+         * @param call
+         * @param responseText
+         */
+        constructor(call: RemoteCall<T>, response: IRemoteResponse);
+        /**
+         * Unpacks the response text to indicate attributes
+         */
+        private unmarshall();
+        /**
+         * Gets the call who originated this response
+         * @returns {RemoteCall}
+         */
+        call: RemoteCall<T>;
+        /**
+         * Gets the error code returned (if any)
+         * @returns {number}
+         */
+        errorCode: number;
+        /**
+         * Gets the error description returned (if any)
+         * @returns {string}
+         */
+        errorDescription: string;
+        /**
+         * Property field
+         */
+        private _logs;
+        /**
+         * Gets or sets the logs array in response
+         *
+         * @returns {Array<string>}
+         */
+        /**
+         * Gets or sets the logs array in response
+         *
+         * @param {Array<string>} value
+         */
+        logs: Array<string>;
+        /**
+         * Gets the literal response from server
+         * @returns {string}
+         */
+        response: IRemoteResponse;
+        /**
+         * Gets
+         * @returns {T}
+         */
+        data: T;
+        /**
+         * Gets a value indicating if the call was a success
+         * @returns {boolean}
+         */
+        success: boolean;
+        /**
+         * Property field
+         */
+        private _warnings;
+        /**
+         * Gets or sets
+         *
+         * @returns {Array<string>}
+         */
+        /**
+         * Gets or sets
+         *
+         * @param {Array<string>} value
+         */
+        warnings: Array<string>;
     }
 }

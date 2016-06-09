@@ -32,25 +32,6 @@ declare module latte {
 }
 declare module latte {
     /**
-     * Possible Directions
-     **/
-    enum Direction {
-        /**
-         * Horizontal direction
-         **/
-        HORIZONTAL = 0,
-        /**
-         * Vertical direction
-         **/
-        VERTICAL = 1,
-        /**
-         * Non established direction
-         */
-        NONE = 2,
-    }
-}
-declare module latte {
-    /**
      * Enumerates sides of objects
      **/
     enum Side {
@@ -74,6 +55,25 @@ declare module latte {
          * Top side of something
          **/
         TOP = 32,
+    }
+}
+declare module latte {
+    /**
+     * Possible Directions
+     **/
+    enum Direction {
+        /**
+         * Horizontal direction
+         **/
+        HORIZONTAL = 0,
+        /**
+         * Vertical direction
+         **/
+        VERTICAL = 1,
+        /**
+         * Non established direction
+         */
+        NONE = 2,
     }
 }
 declare module latte {
@@ -299,6 +299,20 @@ declare module latte {
         /**
          * Back field for event
          */
+        private _blur;
+        /**
+         * Gets an event raised when the element loses focus (if focusable)
+         *
+         * @returns {LatteEvent}
+         */
+        blur: LatteEvent;
+        /**
+         * Raises the <c>blur</c> event
+         */
+        onBlur(): void;
+        /**
+         * Back field for event
+         */
         private _dragOver;
         /**
          * Gets an event raised when an element is dragged over this element.
@@ -325,6 +339,20 @@ declare module latte {
          * Raises the <c>finalizing</c> event
          */
         onFinalizing(): any;
+        /**
+         * Back field for event
+         */
+        private _focused;
+        /**
+         * Gets an event raised when the element recieves focus (if focusasble)
+         *
+         * @returns {LatteEvent}
+         */
+        focused: LatteEvent;
+        /**
+         * Raises the <c>focused</c> event
+         */
+        onFocused(): void;
         /**
          * Back field for event
          */
@@ -812,69 +840,6 @@ declare module latte {
     }
 }
 declare module latte {
-    class Overlay extends UiElement {
-        /**
-         *
-         */
-        private _top;
-        /**
-         *
-         */
-        private _left;
-        /**
-         *
-         */
-        private _parent;
-        /**
-         * Creates the overlay
-         */
-        constructor();
-        close(): void;
-        /**
-         * Sets the parent of the overlay, and the overlay is inserted as first node of the parent
-         * @param parent
-         */
-        setFirstInParent(parent: UiElement): void;
-        /**
-         * Shows at the specified position of the specified element
-         *
-         * @param side
-         * @param element
-         */
-        showAtSide(side: Side, uielement: UiElement): void;
-        /**
-         * Gets the left coordinate of the overlay
-         * @returns {number}
-         */
-        /**
-         * Sets the top coordinate of the overlay
-         *
-         * @param value
-         */
-        left: number;
-        /**
-         * Gets or sets the parent element of the overlay (To inherit style and such)
-         * @returns {UiElement}
-         */
-        /**
-         * Gets or sets the parent element of the overlay (To inherit style and such)
-         * @param value
-         */
-        parent: UiElement;
-        /**
-         * Gets the top coordinate of the overlay
-         *
-         * @returns {number}
-         */
-        /**
-         * Sets the top coordinate of the overlay
-         *
-         * @param value
-         */
-        top: number;
-    }
-}
-declare module latte {
     /**
      * Shows items in a stack
      **/
@@ -942,6 +907,69 @@ declare module latte {
          Default is null.
          **/
         padding: number;
+    }
+}
+declare module latte {
+    class Overlay extends UiElement {
+        /**
+         *
+         */
+        private _top;
+        /**
+         *
+         */
+        private _left;
+        /**
+         *
+         */
+        private _parent;
+        /**
+         * Creates the overlay
+         */
+        constructor();
+        close(): void;
+        /**
+         * Sets the parent of the overlay, and the overlay is inserted as first node of the parent
+         * @param parent
+         */
+        setFirstInParent(parent: UiElement): void;
+        /**
+         * Shows at the specified position of the specified element
+         *
+         * @param side
+         * @param element
+         */
+        showAtSide(side: Side, uielement: UiElement): void;
+        /**
+         * Gets the left coordinate of the overlay
+         * @returns {number}
+         */
+        /**
+         * Sets the top coordinate of the overlay
+         *
+         * @param value
+         */
+        left: number;
+        /**
+         * Gets or sets the parent element of the overlay (To inherit style and such)
+         * @returns {UiElement}
+         */
+        /**
+         * Gets or sets the parent element of the overlay (To inherit style and such)
+         * @param value
+         */
+        parent: UiElement;
+        /**
+         * Gets the top coordinate of the overlay
+         *
+         * @returns {number}
+         */
+        /**
+         * Sets the top coordinate of the overlay
+         *
+         * @param value
+         */
+        top: number;
     }
 }
 declare module latte {
@@ -1363,6 +1391,46 @@ declare module latte {
          **/
         static standard(u: number, v: number, size?: number): IconItem;
         /**
+         *
+         * @returns {IconItem}
+         */
+        static fileIcon(): IconItem;
+        /**
+         *
+         * @returns {IconItem}
+         */
+        static folderIcon(): IconItem;
+        /**
+         *
+         * @returns {IconItem}
+         */
+        static homeIcon(): IconItem;
+        /**
+         *
+         * @returns {IconItem}
+         */
+        static newIcon(): IconItem;
+        /**
+         *
+         * @returns {IconItem}
+         */
+        static saveIcon(): IconItem;
+        /**
+         *
+         * @returns {IconItem}
+         */
+        static refreshIcon(): IconItem;
+        /**
+         *
+         * @returns {IconItem}
+         */
+        static editIcon(): IconItem;
+        /**
+         *
+         * @returns {IconItem}
+         */
+        static deleteIcon(): IconItem;
+        /**
          * Creates the icon
          **/
         constructor();
@@ -1546,6 +1614,10 @@ declare module latte {
          **/
         getSelected(): boolean;
         /**
+         * Override
+         */
+        onBlur(): void;
+        /**
          * Raises the <c>checkedChanged</c> event
          **/
         onCheckedChanged(): void;
@@ -1554,6 +1626,10 @@ declare module latte {
          **/
         onClick(): void;
         /**
+         * Raises the <c>defaulted</c> event
+         */
+        onDefaultedChanged(): void;
+        /**
          * Overriden. Raises the <c>enabledChanged</c> event
          **/
         onEnabledChanged(): void;
@@ -1561,6 +1637,10 @@ declare module latte {
          * Raises the <c>faceVisibleChanged</c> event
          **/
         onFaceVisibleChanged(): void;
+        /**
+         * Override
+         */
+        onFocused(): void;
         /**
          * Raises the <c>pressedChanged</c> event
          **/
@@ -1586,6 +1666,31 @@ declare module latte {
          *
          **/
         setSelected(value: boolean, silent?: boolean): void;
+        /**
+         * Back field for event
+         */
+        private _defaultedChanged;
+        /**
+         * Gets an event raised when the value of the defaulted property changes
+         *
+         * @returns {LatteEvent}
+         */
+        defaultedChanged: LatteEvent;
+        /**
+         * Property field
+         */
+        private _defaulted;
+        /**
+         * Gets or sets a value indicating if the item is defaulted (Will recieve enter when pressed)
+         *
+         * @returns {boolean}
+         */
+        /**
+         * Gets or sets a value indicating if the item is defaulted (Will recieve enter when pressed)
+         *
+         * @param {boolean} value
+         */
+        defaulted: boolean;
         /**
          * Gets or sets a value indicating if the item is checkable.
          When checkable, the item will be turned to checked when clicked.
@@ -2713,6 +2818,35 @@ declare module latte {
         static updateZIndexes(): void;
     }
 }
+/**
+ * Created by josemanuel on 7/1/14.
+ */
+declare module latte {
+    /**
+     *
+     */
+    class ColorIconItem extends IconItem {
+        /**
+         *
+         */
+        constructor(color: Color, size?: number);
+        /**
+         * Property field
+         */
+        private _color;
+        /**
+         * Gets or sets the color of the icon
+         *
+         * @returns {Color}
+         */
+        /**
+         * Gets or sets the color of the icon
+         *
+         * @param {Color} value
+         */
+        color: Color;
+    }
+}
 declare module latte {
     /**
      * Provides an icon from provided built-in glyphs to indicate graphical actions.
@@ -2818,35 +2952,6 @@ declare module latte {
         constructor();
     }
 }
-/**
- * Created by josemanuel on 7/1/14.
- */
-declare module latte {
-    /**
-     *
-     */
-    class ColorIconItem extends IconItem {
-        /**
-         *
-         */
-        constructor(color: Color, size?: number);
-        /**
-         * Property field
-         */
-        private _color;
-        /**
-         * Gets or sets the color of the icon
-         *
-         * @returns {Color}
-         */
-        /**
-         * Gets or sets the color of the icon
-         *
-         * @param {Color} value
-         */
-        color: Color;
-    }
-}
 declare module latte {
     class ImageItem extends Item {
         /**
@@ -2901,6 +3006,51 @@ declare module latte {
          * Gets or sets the text of the separator
          **/
         text: string;
+    }
+}
+declare module latte {
+    /**
+     * Represents a selectable tab
+     **/
+    class TabItem extends ButtonItem {
+        private _active;
+        private _contentSide;
+        /**
+         * Raised when the value of the <c>active</c> property changes
+         */
+        activeChanged: LatteEvent;
+        /**
+         * Raised when the value of the <c>
+         */
+        contentSideChanged: LatteEvent;
+        /**
+         * Creates the tab
+         **/
+        constructor(text?: string, icon?: IconItem, click?: Function, tab?: any);
+        private _applyActiveProperties();
+        /**
+         * Raises the activeChanged event.
+         */
+        onActiveChanged(): void;
+        /**
+         * Gets a value indicating if the tab is currently active.
+         * @returns {boolean}
+         */
+        /**
+         * Sets a value indicating if the tab is currently active.
+         * @param value
+         */
+        active: boolean;
+        /**
+         * Gets the side where content is shown. So tab is drawn accordingly.
+         *
+         * @returns {Side}
+         */
+        /**
+         * Sets the side where content is shown. So tab is drawn accordingly.
+         * @param value
+         */
+        contentSide: Side;
     }
 }
 declare module latte {
@@ -3001,51 +3151,6 @@ declare module latte {
          * Gets a value indicating
          */
         btnOverlay: ButtonItem;
-    }
-}
-declare module latte {
-    /**
-     * Represents a selectable tab
-     **/
-    class TabItem extends ButtonItem {
-        private _active;
-        private _contentSide;
-        /**
-         * Raised when the value of the <c>active</c> property changes
-         */
-        activeChanged: LatteEvent;
-        /**
-         * Raised when the value of the <c>
-         */
-        contentSideChanged: LatteEvent;
-        /**
-         * Creates the tab
-         **/
-        constructor(text?: string, icon?: IconItem, click?: Function, tab?: any);
-        private _applyActiveProperties();
-        /**
-         * Raises the activeChanged event.
-         */
-        onActiveChanged(): void;
-        /**
-         * Gets a value indicating if the tab is currently active.
-         * @returns {boolean}
-         */
-        /**
-         * Sets a value indicating if the tab is currently active.
-         * @param value
-         */
-        active: boolean;
-        /**
-         * Gets the side where content is shown. So tab is drawn accordingly.
-         *
-         * @returns {Side}
-         */
-        /**
-         * Sets the side where content is shown. So tab is drawn accordingly.
-         * @param value
-         */
-        contentSide: Side;
     }
 }
 /**
@@ -3689,43 +3794,6 @@ declare module latte {
 }
 declare module latte {
     /**
-     * Stack of items. It unselects siblings when a selectable within is selected
-     */
-    class SelectableStack extends ItemStack {
-        private _selectedItem;
-        private _selectedItemChanged;
-        /**
-         * Creates the item
-         */
-        constructor();
-        /**
-         * Clears the current selection
-         */
-        clearSelection(): void;
-        /**
-         * Adds selection handlers
-         * @param item
-         */
-        onAddItem(item: Item): void;
-        /**
-         * Raises the <c>selectedItemChanged</c> event
-         */
-        onSelectedItemChanged(): void;
-        /**
-         * Gets the selected item of the stack
-         *
-         * @returns {SelectableItem}
-         */
-        selectedItem: SelectableItem;
-        /**
-         * Gets an event raised when
-         * @returns {LatteEvent}
-         */
-        selectedItemChanged: LatteEvent;
-    }
-}
-declare module latte {
-    /**
      * Html Editor. Loads the <c>rangy</c> plugin.
 
      For specification of <c>rangy</c> objects refer to:
@@ -3911,6 +3979,43 @@ declare module latte {
          * Gets the Window of the iframe
          **/
         window: any;
+    }
+}
+declare module latte {
+    /**
+     * Stack of items. It unselects siblings when a selectable within is selected
+     */
+    class SelectableStack extends ItemStack {
+        private _selectedItem;
+        private _selectedItemChanged;
+        /**
+         * Creates the item
+         */
+        constructor();
+        /**
+         * Clears the current selection
+         */
+        clearSelection(): void;
+        /**
+         * Adds selection handlers
+         * @param item
+         */
+        onAddItem(item: Item): void;
+        /**
+         * Raises the <c>selectedItemChanged</c> event
+         */
+        onSelectedItemChanged(): void;
+        /**
+         * Gets the selected item of the stack
+         *
+         * @returns {SelectableItem}
+         */
+        selectedItem: SelectableItem;
+        /**
+         * Gets an event raised when
+         * @returns {LatteEvent}
+         */
+        selectedItemChanged: LatteEvent;
     }
 }
 declare module latte {
@@ -4760,39 +4865,6 @@ declare module latte {
 }
 declare module latte {
     /**
-     *
-     **/
-    class CheckboxItem extends ValueItem {
-        /**
-         *
-         **/
-        private _value;
-        /**
-         * Label for checkbox
-         **/
-        label: LabelItem;
-        /**
-         *
-         **/
-        constructor();
-        /**
-         * Gets or sets the text of the checkbox
-         **/
-        /**
-         * Gets or sets the text of the checkbox
-         **/
-        text: string;
-        /**
-         * Gets or sets the checked state of checkbox
-         **/
-        /**
-         * Gets or sets the checked state of checkbox
-         **/
-        value: boolean;
-    }
-}
-declare module latte {
-    /**
      * Renders an Item that may contains more <c>TreeItem</c>s and shows them as a tree.
      **/
     class TreeItem extends Item {
@@ -4987,6 +5059,39 @@ declare module latte {
          * Gets the <c>TreeView</c> item who contains this item, if any
          **/
         treeView: TreeView;
+    }
+}
+declare module latte {
+    /**
+     *
+     **/
+    class CheckboxItem extends ValueItem {
+        /**
+         *
+         **/
+        private _value;
+        /**
+         * Label for checkbox
+         **/
+        label: LabelItem;
+        /**
+         *
+         **/
+        constructor();
+        /**
+         * Gets or sets the text of the checkbox
+         **/
+        /**
+         * Gets or sets the text of the checkbox
+         **/
+        text: string;
+        /**
+         * Gets or sets the checked state of checkbox
+         **/
+        /**
+         * Gets or sets the checked state of checkbox
+         **/
+        value: boolean;
     }
 }
 /**
@@ -5442,6 +5547,36 @@ declare module latte {
         valueString: any;
     }
 }
+/**
+ * Created by josemanuel on 12/23/13.
+ */
+declare module latte {
+    /**
+     * Shows a selectable radio button
+     */
+    class RadioItem extends ValueItem {
+        private _value;
+        /**
+         * Label for radio
+         **/
+        label: LabelItem;
+        constructor(text?: string, value?: boolean);
+        /**
+         * Gets or sets the text of the checkbox
+         **/
+        /**
+         * Gets or sets the text of the checkbox
+         **/
+        text: string;
+        /**
+         * Gets or sets the checked state of checkbox
+         **/
+        /**
+         * Gets or sets the checked state of checkbox
+         **/
+        value: boolean;
+    }
+}
 declare module latte {
     /**
      * Allows user to pick a time
@@ -5773,49 +5908,6 @@ declare module latte {
         width: number;
     }
 }
-/**
- * Created by josemanuel on 3/22/15.
- */
-declare module latte {
-    /**
-     *
-     */
-    class ItemOverlay extends Overlay {
-        /**
-         * Creates the overlay
-         */
-        constructor(item: Item);
-        /**
-         * Property field
-         */
-        private _item;
-        /**
-         * Gets or sets the item of the overlay
-         *
-         * @returns {Item}
-         */
-        /**
-         * Gets or sets the item of the overlay
-         *
-         * @param {Item} value
-         */
-        item: Item;
-        /**
-         * Back field for event
-         */
-        private _itemChanged;
-        /**
-         * Gets an event raised when the value of the item property changes
-         *
-         * @returns {LatteEvent}
-         */
-        itemChanged: LatteEvent;
-        /**
-         * Raises the <c>item</c> event
-         */
-        onItemChanged(): void;
-    }
-}
 declare module latte {
     /**
      * Shows a graphical indicator of activity.
@@ -6072,36 +6164,6 @@ declare module latte {
          * Gets the orientation of the menu, relative to element provided by <c>domElement</c>
          **/
         side: Side;
-    }
-}
-/**
- * Created by josemanuel on 12/23/13.
- */
-declare module latte {
-    /**
-     * Shows a selectable radio button
-     */
-    class RadioItem extends ValueItem {
-        private _value;
-        /**
-         * Label for radio
-         **/
-        label: LabelItem;
-        constructor(text?: string, value?: boolean);
-        /**
-         * Gets or sets the text of the checkbox
-         **/
-        /**
-         * Gets or sets the text of the checkbox
-         **/
-        text: string;
-        /**
-         * Gets or sets the checked state of checkbox
-         **/
-        /**
-         * Gets or sets the checked state of checkbox
-         **/
-        value: boolean;
     }
 }
 declare module latte {
@@ -6491,63 +6553,6 @@ declare module latte {
 }
 declare module latte {
     /**
-     * View for choosing dates or date ranges.
-
-     The <c>DateItem</c> used inside the view adapts its <c>rows</c> and <c>columns</c> to take advantage of the view area.
-     **/
-    class DateView extends View {
-        /**
-         *
-         **/
-        private _useWorkWeek;
-        /**
-         * DateItem for date choosing.
-         **/
-        dateItem: DateItem;
-        /**
-         * Button for activating day selection mode.
-         **/
-        dayButton: ButtonItem;
-        /**
-         * Button for activating month selection mode.
-         **/
-        monthButton: ButtonItem;
-        /**
-         * Button for activating week selection mode.
-         **/
-        weekButton: ButtonItem;
-        /**
-         * Button for activating work week selection mode.
-         **/
-        workWeekButton: ButtonItem;
-        /**
-         * Creates the view
-         **/
-        constructor();
-        /**
-         * Hides the selection mode buttons
-         **/
-        hideButtons(): void;
-        /**
-         * Overriden
-         **/
-        onLayout(): void;
-        /**
-         * Layout of buttons
-         **/
-        onLayoutButtons(): void;
-        /**
-         * Shows the selection mode buttons
-         **/
-        showButtons(): void;
-        /**
-         * Updates the selection mode indicators
-         **/
-        updateSelectionMode(): void;
-    }
-}
-declare module latte {
-    /**
      * Represents a month who show <c>CalendarItem</c>s
      **/
     class CalendarMonthView extends View {
@@ -6706,118 +6711,6 @@ declare module latte {
          * Gets the start of view
          **/
         viewStart: DateTime;
-    }
-}
-declare module latte {
-    /**
-     * Provides a view that contains just HTML
-     <example><code><span style="color: #000000">
-     <span style="color: #0000BB"><br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Show&nbsp;an&nbsp;HTML&nbsp;view&nbsp;as&nbsp;modal&nbsp;dialog<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">View</span><span style="color: #007700">.</span><span style="color: #0000BB">modalView</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">HtmlView</span><span style="color: #007700">(</span><span style="color: #DD0000">"&lt;p&gt;Hello&nbsp;World&lt;/p&gt;"</span><span style="color: #007700">));<br />&nbsp;<br /></span><span style="color: #0000BB"></span>
-     </span>
-     </code></example>
-     **/
-    class HtmlView extends View {
-        /**
-         * Creates the view with HTML or jQuery elements
-         **/
-        constructor(html: any);
-        /**
-         * Appends elements to the HTML view DOM
-         **/
-        append(element: JQuery): void;
-        /**
-         * Gets or sets the html of the view
-         **/
-        /**
-         * Gets or sets the html of the view
-         **/
-        html: string;
-    }
-}
-declare module latte {
-    /**
-     * Renders a form to iunput data.
-     **/
-    class FormView extends ColumnView {
-        /**
-         * Creates a new form, using the specified fields
-         and commands
-         **/
-        constructor(inputs?: Array<InputItem>);
-        /**
-         * Checks every input in <c>inputs</c> to be valid
-         **/
-        valid(): boolean;
-        /**
-         * Returns an object with the values of fields
-         **/
-        getValues(): any;
-        /**
-         * Gets or sets the with of the text parts.
-         * Value must be percent since it must be leveled with value part. Value size will be adjusted
-         * to 5% less large than it should to avoid edge collisions.
-         * Values lower than 1 accepted.
-         * Note that when horizontal input, layout may become affected.
-         *
-         */
-        setTextWidth(value: number): void;
-        /**
-         * Back field for event
-         */
-        private _valueChanged;
-        /**
-         * Gets an event raised when a value of the form changes
-         *
-         * @returns {LatteEvent}
-         */
-        valueChanged: LatteEvent;
-        /**
-         * Raises the <c>valueChanged</c> event
-         */
-        onValueChanged(): void;
-        /**
-         * Field for form property
-         */
-        private _form;
-        /**
-         * Gets the form of the view
-         *
-         * @returns {FormItem}
-         */
-        form: FormItem;
-        /**
-         * Gets or sets a value indicating if the form has a visible face style.
-         **/
-        /**
-         * Gets or sets a value indicating if the form has a visible face style.
-         **/
-        faceVisible: boolean;
-        /**
-         * Gets the inputs of the form
-         *
-         * @returns {Collection<InputItem>}
-         */
-        inputs: Collection<InputItem>;
-        /**
-         * Gets or sets a value indicating if the inputs in the form are read-only
-         **/
-        /**
-         * Gets or sets a value indicating if the inputs in the form are read-only
-         **/
-        readOnly: boolean;
-        /**
-         * Gets or sets the title of the form
-         **/
-        /**
-         * Gets or sets the title of the form
-         **/
-        title: string;
-        /**
-         * Gets the title label of the form
-         *
-         * @returns {LabelItem}
-         */
-        titleLabel: LabelItem;
     }
 }
 declare module latte {
@@ -7045,6 +6938,175 @@ declare module latte {
 }
 declare module latte {
     /**
+     * View for choosing dates or date ranges.
+
+     The <c>DateItem</c> used inside the view adapts its <c>rows</c> and <c>columns</c> to take advantage of the view area.
+     **/
+    class DateView extends View {
+        /**
+         *
+         **/
+        private _useWorkWeek;
+        /**
+         * DateItem for date choosing.
+         **/
+        dateItem: DateItem;
+        /**
+         * Button for activating day selection mode.
+         **/
+        dayButton: ButtonItem;
+        /**
+         * Button for activating month selection mode.
+         **/
+        monthButton: ButtonItem;
+        /**
+         * Button for activating week selection mode.
+         **/
+        weekButton: ButtonItem;
+        /**
+         * Button for activating work week selection mode.
+         **/
+        workWeekButton: ButtonItem;
+        /**
+         * Creates the view
+         **/
+        constructor();
+        /**
+         * Hides the selection mode buttons
+         **/
+        hideButtons(): void;
+        /**
+         * Overriden
+         **/
+        onLayout(): void;
+        /**
+         * Layout of buttons
+         **/
+        onLayoutButtons(): void;
+        /**
+         * Shows the selection mode buttons
+         **/
+        showButtons(): void;
+        /**
+         * Updates the selection mode indicators
+         **/
+        updateSelectionMode(): void;
+    }
+}
+declare module latte {
+    /**
+     * Provides a view that contains just HTML
+     <example><code><span style="color: #000000">
+     <span style="color: #0000BB"><br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Show&nbsp;an&nbsp;HTML&nbsp;view&nbsp;as&nbsp;modal&nbsp;dialog<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">View</span><span style="color: #007700">.</span><span style="color: #0000BB">modalView</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">HtmlView</span><span style="color: #007700">(</span><span style="color: #DD0000">"&lt;p&gt;Hello&nbsp;World&lt;/p&gt;"</span><span style="color: #007700">));<br />&nbsp;<br /></span><span style="color: #0000BB"></span>
+     </span>
+     </code></example>
+     **/
+    class HtmlView extends View {
+        /**
+         * Creates the view with HTML or jQuery elements
+         **/
+        constructor(html: any);
+        /**
+         * Appends elements to the HTML view DOM
+         **/
+        append(element: JQuery): void;
+        /**
+         * Gets or sets the html of the view
+         **/
+        /**
+         * Gets or sets the html of the view
+         **/
+        html: string;
+    }
+}
+declare module latte {
+    /**
+     * Renders a form to iunput data.
+     **/
+    class FormView extends ColumnView {
+        /**
+         * Creates a new form, using the specified fields
+         and commands
+         **/
+        constructor(inputs?: Array<InputItem>);
+        /**
+         * Checks every input in <c>inputs</c> to be valid
+         **/
+        valid(): boolean;
+        /**
+         * Returns an object with the values of fields
+         **/
+        getValues(): any;
+        /**
+         * Gets or sets the with of the text parts.
+         * Value must be percent since it must be leveled with value part. Value size will be adjusted
+         * to 5% less large than it should to avoid edge collisions.
+         * Values lower than 1 accepted.
+         * Note that when horizontal input, layout may become affected.
+         *
+         */
+        setTextWidth(value: number): void;
+        /**
+         * Back field for event
+         */
+        private _valueChanged;
+        /**
+         * Gets an event raised when a value of the form changes
+         *
+         * @returns {LatteEvent}
+         */
+        valueChanged: LatteEvent;
+        /**
+         * Raises the <c>valueChanged</c> event
+         */
+        onValueChanged(): void;
+        /**
+         * Field for form property
+         */
+        private _form;
+        /**
+         * Gets the form of the view
+         *
+         * @returns {FormItem}
+         */
+        form: FormItem;
+        /**
+         * Gets or sets a value indicating if the form has a visible face style.
+         **/
+        /**
+         * Gets or sets a value indicating if the form has a visible face style.
+         **/
+        faceVisible: boolean;
+        /**
+         * Gets the inputs of the form
+         *
+         * @returns {Collection<InputItem>}
+         */
+        inputs: Collection<InputItem>;
+        /**
+         * Gets or sets a value indicating if the inputs in the form are read-only
+         **/
+        /**
+         * Gets or sets a value indicating if the inputs in the form are read-only
+         **/
+        readOnly: boolean;
+        /**
+         * Gets or sets the title of the form
+         **/
+        /**
+         * Gets or sets the title of the form
+         **/
+        title: string;
+        /**
+         * Gets the title label of the form
+         *
+         * @returns {LabelItem}
+         */
+        titleLabel: LabelItem;
+    }
+}
+declare module latte {
+    /**
      * A View containing an Item
      **/
     class ItemView extends View {
@@ -7132,6 +7194,28 @@ declare module latte {
 }
 declare module latte {
     /**
+     * A view with an editable text box
+     **/
+    class TextView extends View {
+        /**
+         * Points to the TEXTAREA of the view.
+         **/
+        textElement: JQuery;
+        /**
+         * Creates the TextView
+         **/
+        constructor();
+        /**
+         * Gets or sets the text of the view
+         **/
+        /**
+         * Gets or sets the text of the view
+         **/
+        text: string;
+    }
+}
+declare module latte {
+    /**
      * Shows a resizable dialog
      **/
     class DialogView extends View {
@@ -7210,6 +7294,7 @@ declare module latte {
          * Creates the Dialog
          **/
         constructor(view?: View, items?: Array<Item>);
+        private clickableItemsCount();
         /**
          *
          **/
@@ -7229,19 +7314,19 @@ declare module latte {
         /**
          * Adds an 'No' button to the dialog items
          **/
-        addNoButton(handler: GenericCallback): DialogView;
+        addNoButton(handler?: GenericCallback): DialogView;
         /**
          * Adds an 'Ok' button to the dialog items
          **/
-        addOkButton(handler: GenericCallback): DialogView;
+        addOkButton(handler?: GenericCallback): DialogView;
         /**
          * Adds an 'Save' button to the dialog items
          **/
-        addSaveButton(handler: GenericCallback): DialogView;
+        addSaveButton(handler?: GenericCallback): DialogView;
         /**
          * Adds a 'Yes' button to the dialog items
          **/
-        addYesButton(handler: GenericCallback): DialogView;
+        addYesButton(handler?: GenericCallback): DialogView;
         /**
          * Closes the dialog
          **/
@@ -7298,6 +7383,25 @@ declare module latte {
          * Gets or sets the title of the dialog
          **/
         title: string;
+    }
+}
+declare module latte {
+    /**
+     *
+     **/
+    class NavigationListView extends NavigationView {
+        /**
+         *
+         **/
+        list: ListView;
+        /**
+         *
+         **/
+        toolbar: Toolbar;
+        /**
+         *
+         **/
+        constructor();
     }
 }
 declare module latte {
@@ -7395,47 +7499,6 @@ declare module latte {
          * Raises the <c>selectedItem</c> event
          */
         onSelectedItemChanged(): void;
-    }
-}
-declare module latte {
-    /**
-     * A view with an editable text box
-     **/
-    class TextView extends View {
-        /**
-         * Points to the TEXTAREA of the view.
-         **/
-        textElement: JQuery;
-        /**
-         * Creates the TextView
-         **/
-        constructor();
-        /**
-         * Gets or sets the text of the view
-         **/
-        /**
-         * Gets or sets the text of the view
-         **/
-        text: string;
-    }
-}
-declare module latte {
-    /**
-     *
-     **/
-    class NavigationListView extends NavigationView {
-        /**
-         *
-         **/
-        list: ListView;
-        /**
-         *
-         **/
-        toolbar: Toolbar;
-        /**
-         *
-         **/
-        constructor();
     }
 }
 declare module latte {

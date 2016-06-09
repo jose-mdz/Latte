@@ -944,51 +944,6 @@ declare module latte {
     }
 }
 declare module latte {
-    class EventHandler {
-        handler: Function;
-        context: any;
-        constructor(handler: Function, context: any);
-    }
-    /**
-     * Manages events and event handlers
-     */
-    class LatteEvent {
-        context: any;
-        handlers: Array<EventHandler>;
-        /**
-         * Raised when a handler is added to the event
-         */
-        _handlerAdded: LatteEvent;
-        /**
-         *
-         * @param context Context where
-         */
-        constructor(context: any);
-        /**
-         * Gets the event for handler adding
-         *
-         * @returns {LatteEvent}
-         */
-        handlerAdded: LatteEvent;
-        /**
-         * Adds a handler to the event
-         * @param handler
-         */
-        add(handler: Function, context?: any): void;
-        /**
-         * Raises the <c>handlerAdded</c> event
-         * @param handler
-         */
-        onHandlerAdded(handler: Function): void;
-        /**
-         * Raises the actual event handlers.
-         * @param parameter
-         * @returns {*}
-         */
-        raise(...parameter: any[]): any;
-    }
-}
-declare module latte {
     /**
      * Represents a color
      **/
@@ -997,7 +952,42 @@ declare module latte {
          * Creates a color from the hexadecimal value.
          * It may contain the <c>#</c> symbol at the beginning of the string.
          **/
-        static fromHex(hexColor: string): latte.Color;
+        static fromHex(hexColor: string): Color;
+        /**
+         * Gets the RGB (Red, Green, Blue) components from a CMYK namespace
+         * @param c
+         * @param m
+         * @param y
+         * @param k
+         * @returns number[]
+         */
+        static cmykToRgb(c: number, m: number, y: number, k: number): number[];
+        /**
+         * HSV to RGB color conversion
+         *
+         * H runs from 0 to 360 degrees
+         * S and V run from 0 to 100
+         *
+         * Ported from the excellent java algorithm by Eugene Vishnevsky at:
+         * http://www.cs.rit.edu/~ncs/color/t_convert.html
+         */
+        static hsvToRgb(h: any, s: any, v: any): number[];
+        /**
+         * Gets the CMYK (Cyan, Magenta, Yellow and Key Black) components from a RGB namespace
+         * @param red
+         * @param green
+         * @param blue
+         * @returns {number[]}
+         */
+        static rgbToCmyk(red: number, green: number, blue: number): number[];
+        /**
+         * Gets the HSV (Hue, Saturation, Value) components from a RGB namespace
+         * @param red
+         * @param green
+         * @param blue
+         * @returns {number[]}
+         */
+        static rgbToHsv(red: number, green: number, blue: number): number[];
         /**
          * Field for black property.
          */
@@ -1082,6 +1072,17 @@ declare module latte {
          **/
         b: number;
         /**
+         * Gets or sets the Cyan component of the CMKYK namespace
+         *
+         * @returns {number}
+         */
+        /**
+         * Gets or sets the Cyan component of the CMKYK namespace
+         *
+         * @returns {number}
+         */
+        c: number;
+        /**
          *
          **/
         private _g;
@@ -1092,6 +1093,24 @@ declare module latte {
          * Gets or sets the Green component of color, from 0 to 255.
          **/
         g: number;
+        /**
+         * Gets the K (Black Key) component of the CMKYK namespace
+         *
+         * @returns {number}
+         */
+        k: number;
+        /**
+         * Gets the Magenta component of the CMYK namespace
+         *
+         * @returns {number}
+         */
+        m: number;
+        /**
+         * Gets the Yellow component of the CMYK namespace
+         *
+         * @returns {number}
+         */
+        y: number;
         /**
          * Returns a copy of the color with the specified alpha between 0 and 255.
          *
@@ -1121,7 +1140,9 @@ declare module latte {
          **/
         isTransparent: boolean;
         /**
-         * Returns the perceived luminosity
+         * Returns the perceived luminosity (https://en.wikipedia.org/wiki/Luminous_intensity)
+         *
+         *
          * @returns {number}
          */
         perceivedLuminosity: number;
@@ -1256,43 +1277,6 @@ declare module latte {
          * @param d
          */
         onFormatShortDate(d: DateTime): string;
-    }
-}
-declare module latte {
-    /**
-     * Exception thrown when an argument of the function was invalid.
-     *
-     * Usage:
-     * <example>
-     *
-     * function pow(a){
-     *
-     *      if(typeof a != 'number')
-     *          // Inform user that the parameter was invalid
-     *          throw new InvalidArgumentEx('a');
-     *
-     *      return a * a;
-     *
-     * }
-     *
-     * </example>
-     */
-    class InvalidArgumentEx extends Ex {
-        argument: string;
-        value: any;
-        /**
-         * Creates the exception
-         *
-         * @param argument
-         * @param value
-         */
-        constructor(argument?: string, value?: any);
-        /**
-         * Returns a string explaining the exception
-         *
-         * @returns {string}
-         */
-        toString(): string;
     }
 }
 declare module latte {
@@ -1508,6 +1492,88 @@ declare module latte {
          * Gets the year of the date
          **/
         year: number;
+    }
+}
+declare module latte {
+    class EventHandler {
+        handler: Function;
+        context: any;
+        constructor(handler: Function, context: any);
+    }
+    /**
+     * Manages events and event handlers
+     */
+    class LatteEvent {
+        context: any;
+        handlers: Array<EventHandler>;
+        /**
+         * Raised when a handler is added to the event
+         */
+        _handlerAdded: LatteEvent;
+        /**
+         *
+         * @param context Context where
+         */
+        constructor(context: any);
+        /**
+         * Gets the event for handler adding
+         *
+         * @returns {LatteEvent}
+         */
+        handlerAdded: LatteEvent;
+        /**
+         * Adds a handler to the event
+         * @param handler
+         */
+        add(handler: Function, context?: any): void;
+        /**
+         * Raises the <c>handlerAdded</c> event
+         * @param handler
+         */
+        onHandlerAdded(handler: Function): void;
+        /**
+         * Raises the actual event handlers.
+         * @param parameter
+         * @returns {*}
+         */
+        raise(...parameter: any[]): any;
+    }
+}
+declare module latte {
+    /**
+     * Exception thrown when an argument of the function was invalid.
+     *
+     * Usage:
+     * <example>
+     *
+     * function pow(a){
+     *
+     *      if(typeof a != 'number')
+     *          // Inform user that the parameter was invalid
+     *          throw new InvalidArgumentEx('a');
+     *
+     *      return a * a;
+     *
+     * }
+     *
+     * </example>
+     */
+    class InvalidArgumentEx extends Ex {
+        argument: string;
+        value: any;
+        /**
+         * Creates the exception
+         *
+         * @param argument
+         * @param value
+         */
+        constructor(argument?: string, value?: any);
+        /**
+         * Returns a string explaining the exception
+         *
+         * @returns {string}
+         */
+        toString(): string;
     }
 }
 declare module latte {
@@ -2039,10 +2105,6 @@ declare module latte {
     }
 }
 declare module latte {
-    class HEvent<T> {
-    }
-}
-declare module latte {
     /**
      * Executes an action every specified amount of milliseconds
      **/
@@ -2101,5 +2163,9 @@ declare module latte {
          * Ticks the timer. Executes the callback and programs next tick.
          **/
         tick(): void;
+    }
+}
+declare module latte {
+    class HEvent<T> {
     }
 }
