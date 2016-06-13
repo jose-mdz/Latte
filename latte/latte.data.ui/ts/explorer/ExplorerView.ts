@@ -32,9 +32,7 @@ module latte {
             treeSide.view = this.treeView;
 
             // Detail View Side
-            var detailSide = new ToolbarView();
-            this._detailViewToolbar = detailSide.toolbar;
-            detailSide.view = this.detailView;
+            this.detailViewToolbarView.view = this.detailView;
 
             this.detailViewToolbar.items.add(this.btnSaveDetail);
             this.detailViewToolbar.sideItems.add(this.btnRemoveDetail);
@@ -48,15 +46,13 @@ module latte {
             this.listViewToolbar.sideItems.add(this.btnRefresh);
 
             // Second split view
-            var secondSplitView = new SplitView();
-            secondSplitView.sideView = detailSide;
-            secondSplitView.view = listSide;
-            secondSplitView.side = Side.RIGHT;
-            secondSplitView.sideSize = 400;
+            this.detailSplitView.sideView = this.detailViewToolbarView;
+            this.detailSplitView.view = listSide;
 
             // Set tree view side
             this.sideView = treeSide;
-            this.view = secondSplitView;
+            this.view = this.detailSplitView;
+
 
             //endregion
 
@@ -397,9 +393,41 @@ module latte {
         }
 
         /**
-         * Property field
+         * Field for detailSplitView property
          */
-        private _detailViewToolbar:Toolbar;
+        private _detailSplitView:SplitView;
+
+        /**
+         * Gets the details split view
+         *
+         * @returns {SplitView}
+         */
+        get detailSplitView():SplitView {
+            if (!this._detailSplitView) {
+                this._detailSplitView = new SplitView();
+                this._detailSplitView.side = Side.RIGHT;
+                this._detailSplitView.sideSize = 400;
+            }
+            return this._detailSplitView;
+        }
+
+        /**
+         * Field for detailViewToolbarView property
+         */
+        private _detailViewToolbarView:ToolbarView;
+
+        /**
+         * Gets the detail view toolbar view
+         *
+         * @returns {ToolbarView}
+         */
+        get detailViewToolbarView():ToolbarView {
+            if (!this._detailViewToolbarView) {
+                this._detailViewToolbarView = new ToolbarView();
+            }
+            return this._detailViewToolbarView;
+        }
+
 
         /**
          * Gets the toolbar of the detail zone
@@ -407,7 +435,7 @@ module latte {
          * @returns {Toolbar}
          */
         public get detailViewToolbar():Toolbar {
-            return this._detailViewToolbar;
+            return this.detailViewToolbarView.toolbar;
         }
 
         /**

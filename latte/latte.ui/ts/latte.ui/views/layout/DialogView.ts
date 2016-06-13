@@ -36,7 +36,7 @@ module latte{
                             modal // There's a modal
                             && modal.defaultButton  // Has a default button
                             && modal.defaultButton.enabled // Default button is enabled
-                            && document.activeElement.tagName != 'TEXTAREA' // And focused element is not a textarea (enter is for new lines)
+                            && document.activeElement['tagName'] != 'TEXTAREA' // And focused element is not a textarea (enter is for new lines)
                         ){
                             modal.defaultButton.onClick();
                         }

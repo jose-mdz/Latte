@@ -487,13 +487,17 @@ class DataLatteUa {
      */
     public static function recordSelect($name, $id = NULL, $module = NULL){
 
+        $connectionBuffer = null;
+
         if($module){
             if(!LatteModule::isLoaded($module)){
                 $mod = LatteModule::memoryLoad($module);
                 if($mod->hasConnection()){
+                    $connectionBuffer = DL::$current;
                     $mod->loadConnection();
                 }
             }else{
+                $connectionBuffer = DL::$current;
                 LatteModule::byName($module)->loadConnection();
             }
         }
@@ -503,10 +507,10 @@ class DataLatteUa {
         else
             $record = new $name();
 
+        if ($connectionBuffer){
+            DL::$current = $connectionBuffer;
+        }
 
-//        if(!DataRecordMetadata::canRead($record))
-//            throw new Exception("Cant read record");
-        
         return $record->pack();
     }
     

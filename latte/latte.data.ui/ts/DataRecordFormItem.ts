@@ -103,9 +103,10 @@ module latte{
                                         id: value
                                     };
 
-                                    if(_isString(record['_moduleName'])){
-                                        // log("Added module")
-                                        params['module'] = record['_moduleName'];
+                                    var dummy = new latte[params.name]();
+
+                                    if(_isString(dummy['_moduleName'])){
+                                        params['module'] = dummy['_moduleName'];
                                     }
 
                                     calls.push(new RemoteCall<DataRecord>('latte.data', 'DataLatteUa', 'recordSelect', params).withHandlers((r:DataRecord) => {

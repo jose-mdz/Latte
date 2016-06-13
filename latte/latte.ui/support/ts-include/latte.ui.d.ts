@@ -2581,72 +2581,6 @@ declare module latte {
 }
 declare module latte {
     /**
-     * Represents a view who presents items in columns
-     **/
-    class ColumnView extends View {
-        /**
-         *
-         **/
-        private _columnWeights;
-        /**
-         *
-         **/
-        private _columns;
-        /**
-         *
-         */
-        private _paddingColumns;
-        /**
-         * Collection of items inside the view's columns
-         **/
-        items: Collection<Item>;
-        /**
-         * Creates the View with the specified amount of columns.
-         **/
-        constructor(columns?: number);
-        /**
-         * Called when an item is added to the items collection
-         **/
-        onAddItem(item: Item): void;
-        /**
-         * Called when an item is removed to the items collection
-         **/
-        onRemoveItem(item: Item): void;
-        /**
-         * Returns the column at the specified index. First column is zero
-         **/
-        getColumnAt(index: number): JQuery;
-        /**
-         * Raises the <c>layout</c> event
-         **/
-        onLayout(): void;
-        /**
-         * Gets or sets the weights of columns for computing their width.
-         Weights must be numbers between 0 and 100.
-         **/
-        /**
-         * Gets or sets the weights of columns for computing their width.
-         Weights must be numbers between 0 and 100.
-         **/
-        columnWeights: Array<number>;
-        /**
-         * Gets or sets the number of columns in the view.
-         **/
-        /**
-         * Gets or sets the number of columns in the view.
-         **/
-        columns: number;
-        /**
-         * Gets or sets the column padding inside of columns
-         **/
-        /**
-         * Gets or sets the column  padding inside of columns
-         **/
-        columnPadding: number;
-    }
-}
-declare module latte {
-    /**
      * Shows a resizable dialog
      **/
     class DialogView extends View {
@@ -2814,6 +2748,72 @@ declare module latte {
          * Gets or sets the title of the dialog
          **/
         title: string;
+    }
+}
+declare module latte {
+    /**
+     * Represents a view who presents items in columns
+     **/
+    class ColumnView extends View {
+        /**
+         *
+         **/
+        private _columnWeights;
+        /**
+         *
+         **/
+        private _columns;
+        /**
+         *
+         */
+        private _paddingColumns;
+        /**
+         * Collection of items inside the view's columns
+         **/
+        items: Collection<Item>;
+        /**
+         * Creates the View with the specified amount of columns.
+         **/
+        constructor(columns?: number);
+        /**
+         * Called when an item is added to the items collection
+         **/
+        onAddItem(item: Item): void;
+        /**
+         * Called when an item is removed to the items collection
+         **/
+        onRemoveItem(item: Item): void;
+        /**
+         * Returns the column at the specified index. First column is zero
+         **/
+        getColumnAt(index: number): JQuery;
+        /**
+         * Raises the <c>layout</c> event
+         **/
+        onLayout(): void;
+        /**
+         * Gets or sets the weights of columns for computing their width.
+         Weights must be numbers between 0 and 100.
+         **/
+        /**
+         * Gets or sets the weights of columns for computing their width.
+         Weights must be numbers between 0 and 100.
+         **/
+        columnWeights: Array<number>;
+        /**
+         * Gets or sets the number of columns in the view.
+         **/
+        /**
+         * Gets or sets the number of columns in the view.
+         **/
+        columns: number;
+        /**
+         * Gets or sets the column padding inside of columns
+         **/
+        /**
+         * Gets or sets the column  padding inside of columns
+         **/
+        columnPadding: number;
     }
 }
 declare module latte {
@@ -3124,28 +3124,6 @@ declare module latte {
     }
 }
 declare module latte {
-    /**
-     * Renders a separator for various purposes.
-     **/
-    class SeparatorItem extends Item {
-        /**
-         *
-         **/
-        private _text;
-        /**
-         * Creates the separator
-         **/
-        constructor();
-        /**
-         * Gets or sets the text of the separator
-         **/
-        /**
-         * Gets or sets the text of the separator
-         **/
-        text: string;
-    }
-}
-declare module latte {
     class ImageItem extends Item {
         /**
          *
@@ -3181,47 +3159,24 @@ declare module latte {
 }
 declare module latte {
     /**
-     * Represents a selectable tab
+     * Renders a separator for various purposes.
      **/
-    class TabItem extends ButtonItem {
-        private _active;
-        private _contentSide;
+    class SeparatorItem extends Item {
         /**
-         * Raised when the value of the <c>active</c> property changes
-         */
-        activeChanged: LatteEvent;
-        /**
-         * Raised when the value of the <c>
-         */
-        contentSideChanged: LatteEvent;
-        /**
-         * Creates the tab
-         **/
-        constructor(text?: string, icon?: IconItem, click?: Function, tab?: any);
-        private _applyActiveProperties();
-        /**
-         * Raises the activeChanged event.
-         */
-        onActiveChanged(): void;
-        /**
-         * Gets a value indicating if the tab is currently active.
-         * @returns {boolean}
-         */
-        /**
-         * Sets a value indicating if the tab is currently active.
-         * @param value
-         */
-        active: boolean;
-        /**
-         * Gets the side where content is shown. So tab is drawn accordingly.
          *
-         * @returns {Side}
-         */
+         **/
+        private _text;
         /**
-         * Sets the side where content is shown. So tab is drawn accordingly.
-         * @param value
-         */
-        contentSide: Side;
+         * Creates the separator
+         **/
+        constructor();
+        /**
+         * Gets or sets the text of the separator
+         **/
+        /**
+         * Gets or sets the text of the separator
+         **/
+        text: string;
     }
 }
 declare module latte {
@@ -3322,6 +3277,176 @@ declare module latte {
          * Gets a value indicating
          */
         btnOverlay: ButtonItem;
+    }
+}
+declare module latte {
+    /**
+     * Represents a selectable tab
+     **/
+    class TabItem extends ButtonItem {
+        private _active;
+        private _contentSide;
+        /**
+         * Raised when the value of the <c>active</c> property changes
+         */
+        activeChanged: LatteEvent;
+        /**
+         * Raised when the value of the <c>
+         */
+        contentSideChanged: LatteEvent;
+        /**
+         * Creates the tab
+         **/
+        constructor(text?: string, icon?: IconItem, click?: Function, tab?: any);
+        private _applyActiveProperties();
+        /**
+         * Raises the activeChanged event.
+         */
+        onActiveChanged(): void;
+        /**
+         * Gets a value indicating if the tab is currently active.
+         * @returns {boolean}
+         */
+        /**
+         * Sets a value indicating if the tab is currently active.
+         * @param value
+         */
+        active: boolean;
+        /**
+         * Gets the side where content is shown. So tab is drawn accordingly.
+         *
+         * @returns {Side}
+         */
+        /**
+         * Sets the side where content is shown. So tab is drawn accordingly.
+         * @param value
+         */
+        contentSide: Side;
+    }
+}
+declare module latte {
+    /**
+     * Renders a conversation made of <c>CommentItem</c>s, allowing the user to add comments.
+     **/
+    class ConversationItem extends Item {
+        /**
+         *
+         **/
+        private _allowNewComments;
+        /**
+         *
+         **/
+        private _invisible;
+        /**
+         *
+         **/
+        private _pendentPages;
+        /**
+         * Collection of comments in conversation
+         **/
+        comments: Collection<CommentItem>;
+        /**
+         * Points to the DOM element where comments are stored.
+         **/
+        commentsElement: JQuery;
+        /**
+         * Points to the DOM element where the new comment textarea is placed.
+         **/
+        newCommentElement: JQuery;
+        /**
+         * Points to the DOM element where hidden comments text is placed.
+         **/
+        pendentPagesElement: JQuery;
+        /**
+         * Textbox for new comments
+         **/
+        textbox: TextboxItem;
+        /**
+         * Raised when a new comment is added. The text of the comment is passed as an argument.
+         **/
+        commentAdded: LatteEvent;
+        /**
+         * Raised when comments are added or removed from collection
+         **/
+        commentsChanged: LatteEvent;
+        /**
+         * Raised when the user asks for the hidden comments of conversation
+         **/
+        pendentPagesSolicited: LatteEvent;
+        /**
+         * Creates the conversation
+         **/
+        constructor();
+        /**
+         * Sets the textbox of the comment editor.
+         * This method is useful for replacing the default textbox for a custom one.
+         *
+         * @param t
+         */
+        setTextbox(t: TextboxItem): void;
+        /**
+         *
+         **/
+        _onAddComment(comment: CommentItem): void;
+        /**
+         *
+         **/
+        private _onRemoveComment(comment);
+        /**
+         * Raises the <c>commentAdded</c> event
+         **/
+        onCommentAdded(text: string): boolean;
+        /**
+         *
+         **/
+        onCommentsChanged(): void;
+        /**
+         * Raises the <c>pendentPagesRequested</c> event
+         **/
+        onHiddenCommentsRequested(): void;
+        /**
+         * Raises the <c>layout</c> event
+         **/
+        onLayout(): void;
+        /**
+         * Raises the <c>pendentPagesSolicited</c> event
+         **/
+        onPendentPagesSolicited(): void;
+        /**
+         * Prepends the specified comment
+         **/
+        prependComment(comment: CommentItem): void;
+        /**
+         * Gets or sets a value indicating if the user may add new comments
+         **/
+        /**
+         * Gets or sets a value indicating if the user may add new comments
+         **/
+        allowNewComments: boolean;
+        /**
+         * Property field
+         */
+        private _ignoreEnter;
+        /**
+         * Gets or sets a value indicating if the enter key should be ignored.
+         * Used for allowing user to hit enter on selecting users from auto-complete
+         *
+         * @returns {boolean}
+         */
+        /**
+         * Gets or sets a value indicating if the enter key should be ignored.
+         * Used for allowing user to hit enter on selecting users from auto-complete
+         *
+         * @param {boolean} value
+         */
+        ignoreEnter: boolean;
+        /**
+         * Gets or sets the number of hidden comments in conversation
+         **/
+        /**
+         * Gets or sets the number of hidden comments in conversation
+         **/
+        pendentPages: number;
     }
 }
 /**
@@ -3469,127 +3594,98 @@ declare module latte {
 }
 declare module latte {
     /**
-     * Renders a conversation made of <c>CommentItem</c>s, allowing the user to add comments.
+     *
      **/
-    class ConversationItem extends Item {
+    class FormItem extends ItemStack {
         /**
          *
          **/
-        private _allowNewComments;
+        private _faceVisible;
         /**
          *
          **/
-        private _invisible;
+        private _readOnly;
+        /**
+         * Input items of the form
+         **/
+        inputs: Collection<InputItem>;
+        /**
+         * Holds the title element of the form
+         **/
+        titleLabel: LabelItem;
         /**
          *
-         **/
-        private _pendentPages;
-        /**
-         * Collection of comments in conversation
-         **/
-        comments: Collection<CommentItem>;
-        /**
-         * Points to the DOM element where comments are stored.
-         **/
-        commentsElement: JQuery;
-        /**
-         * Points to the DOM element where the new comment textarea is placed.
-         **/
-        newCommentElement: JQuery;
-        /**
-         * Points to the DOM element where hidden comments text is placed.
-         **/
-        pendentPagesElement: JQuery;
-        /**
-         * Textbox for new comments
-         **/
-        textbox: TextboxItem;
-        /**
-         * Raised when a new comment is added. The text of the comment is passed as an argument.
-         **/
-        commentAdded: LatteEvent;
-        /**
-         * Raised when comments are added or removed from collection
-         **/
-        commentsChanged: LatteEvent;
-        /**
-         * Raised when the user asks for the hidden comments of conversation
-         **/
-        pendentPagesSolicited: LatteEvent;
-        /**
-         * Creates the conversation
          **/
         constructor();
         /**
-         * Sets the textbox of the comment editor.
-         * This method is useful for replacing the default textbox for a custom one.
          *
-         * @param t
+         **/
+        private _onAddInput(input);
+        /**
+         *
+         **/
+        private _onRemoveInput(input);
+        /**
+         * Returns an input by its assigned name
+         **/
+        byName(name: string): InputItem;
+        /**
+         * Gets an object with the values of fields
+         **/
+        getValues(): any;
+        /**
+         * Sets the direction of Inputs
+         * @param d
          */
-        setTextbox(t: TextboxItem): void;
+        setDirection(d: Direction): void;
         /**
+         * Gets or sets the with of the text parts.
+         * Value must be percent since it must be leveled with value part. Value size will be adjusted
+         * to 5% less large than it should to avoid edge collisions.
+         * Values lower than 1 accepted.
+         * Note that when horizontal input, layout may become affected.
          *
-         **/
-        _onAddComment(comment: CommentItem): void;
-        /**
-         *
-         **/
-        private _onRemoveComment(comment);
-        /**
-         * Raises the <c>commentAdded</c> event
-         **/
-        onCommentAdded(text: string): boolean;
-        /**
-         *
-         **/
-        onCommentsChanged(): void;
-        /**
-         * Raises the <c>pendentPagesRequested</c> event
-         **/
-        onHiddenCommentsRequested(): void;
-        /**
-         * Raises the <c>layout</c> event
-         **/
-        onLayout(): void;
-        /**
-         * Raises the <c>pendentPagesSolicited</c> event
-         **/
-        onPendentPagesSolicited(): void;
-        /**
-         * Prepends the specified comment
-         **/
-        prependComment(comment: CommentItem): void;
-        /**
-         * Gets or sets a value indicating if the user may add new comments
-         **/
-        /**
-         * Gets or sets a value indicating if the user may add new comments
-         **/
-        allowNewComments: boolean;
-        /**
-         * Property field
          */
-        private _ignoreEnter;
+        setTextWidth(value: number): void;
         /**
-         * Gets or sets a value indicating if the enter key should be ignored.
-         * Used for allowing user to hit enter on selecting users from auto-complete
-         *
-         * @returns {boolean}
+         * Back field for event
          */
+        private _valueChanged;
         /**
-         * Gets or sets a value indicating if the enter key should be ignored.
-         * Used for allowing user to hit enter on selecting users from auto-complete
+         * Gets an event raised when the value of an input is changed
          *
-         * @param {boolean} value
+         * @returns {LatteEvent}
          */
-        ignoreEnter: boolean;
+        valueChanged: LatteEvent;
         /**
-         * Gets or sets the number of hidden comments in conversation
+         * Raises the <c>valueChanged</c> event
+         */
+        onValueChanged(): void;
+        /**
+         * Gets or sets a value indicating if the form has a visible face style.
          **/
         /**
-         * Gets or sets the number of hidden comments in conversation
+         * Gets or sets a value indicating if the form has a visible face style.
          **/
-        pendentPages: number;
+        faceVisible: boolean;
+        /**
+         * Gets or sets a value indicating if the inputs in the form are read-only
+         **/
+        /**
+         * Gets or sets a value indicating if the inputs in the form are read-only
+         **/
+        readOnly: boolean;
+        /**
+         * Gets or sets the title of the form
+         **/
+        /**
+         * Gets or sets the title of the form
+         **/
+        title: string;
+        /**
+         * Gets a value of checking every input in <c>inputs</c> to be valid
+         **/
+        valid: boolean;
     }
 }
 declare module latte {
@@ -3784,102 +3880,6 @@ declare module latte {
     }
 }
 declare module latte {
-    /**
-     *
-     **/
-    class FormItem extends ItemStack {
-        /**
-         *
-         **/
-        private _faceVisible;
-        /**
-         *
-         **/
-        private _readOnly;
-        /**
-         * Input items of the form
-         **/
-        inputs: Collection<InputItem>;
-        /**
-         * Holds the title element of the form
-         **/
-        titleLabel: LabelItem;
-        /**
-         *
-         **/
-        constructor();
-        /**
-         *
-         **/
-        private _onAddInput(input);
-        /**
-         *
-         **/
-        private _onRemoveInput(input);
-        /**
-         * Returns an input by its assigned name
-         **/
-        byName(name: string): InputItem;
-        /**
-         * Gets an object with the values of fields
-         **/
-        getValues(): any;
-        /**
-         * Sets the direction of Inputs
-         * @param d
-         */
-        setDirection(d: Direction): void;
-        /**
-         * Gets or sets the with of the text parts.
-         * Value must be percent since it must be leveled with value part. Value size will be adjusted
-         * to 5% less large than it should to avoid edge collisions.
-         * Values lower than 1 accepted.
-         * Note that when horizontal input, layout may become affected.
-         *
-         */
-        setTextWidth(value: number): void;
-        /**
-         * Back field for event
-         */
-        private _valueChanged;
-        /**
-         * Gets an event raised when the value of an input is changed
-         *
-         * @returns {LatteEvent}
-         */
-        valueChanged: LatteEvent;
-        /**
-         * Raises the <c>valueChanged</c> event
-         */
-        onValueChanged(): void;
-        /**
-         * Gets or sets a value indicating if the form has a visible face style.
-         **/
-        /**
-         * Gets or sets a value indicating if the form has a visible face style.
-         **/
-        faceVisible: boolean;
-        /**
-         * Gets or sets a value indicating if the inputs in the form are read-only
-         **/
-        /**
-         * Gets or sets a value indicating if the inputs in the form are read-only
-         **/
-        readOnly: boolean;
-        /**
-         * Gets or sets the title of the form
-         **/
-        /**
-         * Gets or sets the title of the form
-         **/
-        title: string;
-        /**
-         * Gets a value of checking every input in <c>inputs</c> to be valid
-         **/
-        valid: boolean;
-    }
-}
-declare module latte {
     class HtmlEditorCommands {
         /**
          * Swaps selection boldness
@@ -3965,191 +3965,87 @@ declare module latte {
 }
 declare module latte {
     /**
-     * Html Editor. Loads the <c>rangy</c> plugin.
-
-     For specification of <c>rangy</c> objects refer to:
-     <a href="http://code.google.com/p/rangy/w/list" target=_blank>http://code.google.com/p/rangy/w/list</a>
-     **/
-    class HtmlEditorItem extends ValueItem {
-        static rangyPath: string;
-        static rangyLoaded: boolean;
+     * Stack of items. It unselects siblings when a selectable within is selected
+     */
+    class SelectableStack extends ItemStack {
+        private _selectedItem;
+        private _selectedItemChanged;
         /**
-         *
-         **/
-        private _ready;
-        /**
-         * Value is stored here while not ready.
-         **/
-        private _value;
-        /**
-         * Points to the iframe of the editor
-         **/
-        iframe: JQuery;
-        /**
-         * Toolbar of basic commands
-         **/
-        toolbar: Toolbar;
-        /**
-         * Raised when the editor gets focus
-         **/
-        focus: LatteEvent;
-        /**
-         * Raised when the selection of editor changes
-         **/
-        selectionChanged: LatteEvent;
-        /**
-         * Raised when an image in the editor is selected
-         **/
-        imageSelected: LatteEvent;
-        /**
-         * Creates the editor.
-         **/
+         * Creates the item
+         */
         constructor();
         /**
-         * Creates default buttons
-         **/
-        private _addToolbarButtons();
+         * Clears the current selection
+         */
+        clearSelection(): void;
+        /**
+         * Adds selection handlers
+         * @param item
+         */
+        onAddItem(item: Item): void;
+        /**
+         * Raises the <c>selectedItemChanged</c> event
+         */
+        onSelectedItemChanged(): void;
+        /**
+         * Gets the selected item of the stack
+         *
+         * @returns {SelectableItem}
+         */
+        selectedItem: SelectableItem;
+        /**
+         * Gets an event raised when
+         * @returns {LatteEvent}
+         */
+        selectedItemChanged: LatteEvent;
+    }
+}
+declare module latte {
+    class TabContainer extends ItemStack {
+        tabToolbar: TabToolbar;
+        tabs: Collection<TabItem>;
+        content: Collection<Item>;
+        selectedTabChanged: LatteEvent;
+        constructor();
+        private updateVisibility();
         /**
          *
          **/
-        private _assignElementHandlers();
-        /**
-         * Returns a value indicating if the editor can be initialized.
-         It can be initialized when its attached to the DOM.
-         **/
-        private _canInit();
-        /**
-         * Clears all formatting in editor
-         **/
-        private _clearFormatting();
-        /**
-         * Tries to convert the passed object to a node
-         **/
-        private _ensureNode(obj);
-        /**
-         * Tries to get the editor ready. Returns if control is ready after call.
-         **/
-        private _ensureReady();
-        /**
-         * Initializes the editor, if possible.
-         **/
-        private _initEditor();
-        /**
-         * Shows a dialog to insert HTML
-         **/
-        private _insertHTML();
-        /**
-         * Inserts an image, asking for the URL
-         **/
-        private _insertImage(value?);
-        /**
-         * Inserts a link, asking for the Url
-         **/
-        private _insertLink();
-        /**
-         * Shows a dialog to insert a YouTube video
-         **/
-        private _insertYouTube();
-        /**
-         * Returns a value indicating if editor must be initialized.
-         It happens every time its dettached from DOM.
-         **/
-        private _mustInit();
-        /**
-         * Gets the body of the iframe
-         **/
-        body(): JQuery;
-        /**
-         * Gets the JavaScript document's object of iframe.
-         **/
-        document(): Document;
-        /**
-         * Executes the specified command
-         **/
-        execCommand(command: string, value?: any): void;
+        onTabAdded(tab: TabItem): void;
         /**
          *
          **/
-        getValue(): string;
+        onTabRemoved(tab: TabItem): void;
         /**
-         * Inserts the specified node at the currently selected range.
-         Returns the inserted node, or <c>null</c> if not possible.
+         *
+         * @param item
+         */
+        onContentAdded(item: Item): void;
+        /**
+         *
+         * @param item
+         */
+        onContentRemoved(item: Item): void;
+        /**
+         * Raises the <c>selectedTabChanged</c> event
          **/
-        insertElement(element: any): JQuery;
+        onSelectedTabChanged(): void;
         /**
-         * Raises the <c>focus</c> event
+         * Gets or sets the selected tab of the view
          **/
-        onFocus(): void;
         /**
-         * Raises the <c>imageSelected</c> event
+         * Gets or sets the selected tab of the view
          **/
-        onImageSelected(image: JQuery): void;
+        selectedTab: TabItem;
         /**
-         * Overriden.
-         **/
-        onLayout(): void;
-        /**
-         * Raises the <c>selectionChanged</c> event.
-         **/
-        onSelectionChanged(): void;
-        /**
-         * Overriden.
-         **/
-        onValueChanged(): void;
-        /**
-         * Gets a value indicating if the editor is ready to be used as editor.
-         While the editor is not ready, all data will be displayed in a non-editable element.
-         **/
-        ready(): boolean;
-        /**
-         * Selects the specified element and returns it as a jQuery object.
-         **/
-        selectElement(element: any): JQuery;
-        /**
-         * Selects the contents of the specified node and returns the element as a jQuery object.
-         **/
-        selectElementContents(element: any): JQuery;
-        /**
-         * Gets the current selection
-         **/
-        selection: RangySelection;
-        /**
-         * Gets the element where selection ends.
-         **/
-        selectionEnd(): JQuery;
-        /**
-         * Returns the parent of selection, passing the specified <c>selector</c>
-         to the jQuery <c>parents()<c> method.
-         **/
-        selectionParents(selector?: string): JQuery;
-        /**
-         * Gets the element where selection starts.
-         **/
-        selectionStart(): JQuery;
-        /**
-         * Override.
-         **/
-        setValue(value: string): void;
-        /**
-         * Surrounds selected contents with specified element, and returns the
-         attached element as a jQuery object.
-         **/
-        surroundSelectionWith(element: any): JQuery;
-        /**
-         * Gets the range of selection. Returns <c>null</c> if no current selection.
-         **/
-        selectionRange: RangyRange;
-        /**
-         * Gets or sets the source html
+         * Gets the side where content should be relative to the tabs
+         * @returns {Side}
          */
         /**
-         * Gets or sets the source html
+         * Sets the side where content should be relative to the tabs
+         * @param value
          */
-        value: string;
-        /**
-         * Gets the Window of the iframe
-         **/
-        window: any;
+        contentSide: Side;
     }
 }
 declare module latte {
@@ -4301,91 +4197,6 @@ declare module latte {
 }
 declare module latte {
     /**
-     * Stack of items. It unselects siblings when a selectable within is selected
-     */
-    class SelectableStack extends ItemStack {
-        private _selectedItem;
-        private _selectedItemChanged;
-        /**
-         * Creates the item
-         */
-        constructor();
-        /**
-         * Clears the current selection
-         */
-        clearSelection(): void;
-        /**
-         * Adds selection handlers
-         * @param item
-         */
-        onAddItem(item: Item): void;
-        /**
-         * Raises the <c>selectedItemChanged</c> event
-         */
-        onSelectedItemChanged(): void;
-        /**
-         * Gets the selected item of the stack
-         *
-         * @returns {SelectableItem}
-         */
-        selectedItem: SelectableItem;
-        /**
-         * Gets an event raised when
-         * @returns {LatteEvent}
-         */
-        selectedItemChanged: LatteEvent;
-    }
-}
-declare module latte {
-    class TabContainer extends ItemStack {
-        tabToolbar: TabToolbar;
-        tabs: Collection<TabItem>;
-        content: Collection<Item>;
-        selectedTabChanged: LatteEvent;
-        constructor();
-        private updateVisibility();
-        /**
-         *
-         **/
-        onTabAdded(tab: TabItem): void;
-        /**
-         *
-         **/
-        onTabRemoved(tab: TabItem): void;
-        /**
-         *
-         * @param item
-         */
-        onContentAdded(item: Item): void;
-        /**
-         *
-         * @param item
-         */
-        onContentRemoved(item: Item): void;
-        /**
-         * Raises the <c>selectedTabChanged</c> event
-         **/
-        onSelectedTabChanged(): void;
-        /**
-         * Gets or sets the selected tab of the view
-         **/
-        /**
-         * Gets or sets the selected tab of the view
-         **/
-        selectedTab: TabItem;
-        /**
-         * Gets the side where content should be relative to the tabs
-         * @returns {Side}
-         */
-        /**
-         * Sets the side where content should be relative to the tabs
-         * @param value
-         */
-        contentSide: Side;
-    }
-}
-declare module latte {
-    /**
      * Toolbar specialized on showing tabs.
      *
      * This toolbar is necessary because of the rendering styles applied to tabs to make the
@@ -4484,6 +4295,28 @@ declare module latte {
          * Gets or sets the View inside this item
          **/
         view: View;
+    }
+}
+declare module latte {
+    /**
+     * Represents a column header
+     **/
+    class ColumnHeader extends LabelItem {
+        /**
+         *
+         **/
+        private _width;
+        /**
+         * Creates the Column Header
+         **/
+        constructor(text?: string, width?: number);
+        /**
+         * Gets or sets the width of the column
+         **/
+        /**
+         * Gets or sets the width of the column
+         **/
+        width: number;
     }
 }
 declare module latte {
@@ -4632,28 +4465,6 @@ declare module latte {
          * Gets or sets the title of the widget
          **/
         title: string;
-    }
-}
-declare module latte {
-    /**
-     * Represents a column header
-     **/
-    class ColumnHeader extends LabelItem {
-        /**
-         *
-         **/
-        private _width;
-        /**
-         * Creates the Column Header
-         **/
-        constructor(text?: string, width?: number);
-        /**
-         * Gets or sets the width of the column
-         **/
-        /**
-         * Gets or sets the width of the column
-         **/
-        width: number;
     }
 }
 declare module latte {
@@ -5036,6 +4847,39 @@ declare module latte {
 }
 declare module latte {
     /**
+     *
+     **/
+    class CheckboxItem extends ValueItem {
+        /**
+         *
+         **/
+        private _value;
+        /**
+         * Label for checkbox
+         **/
+        label: LabelItem;
+        /**
+         *
+         **/
+        constructor();
+        /**
+         * Gets or sets the text of the checkbox
+         **/
+        /**
+         * Gets or sets the text of the checkbox
+         **/
+        text: string;
+        /**
+         * Gets or sets the checked state of checkbox
+         **/
+        /**
+         * Gets or sets the checked state of checkbox
+         **/
+        value: boolean;
+    }
+}
+declare module latte {
+    /**
      * Renders an Item that may contains more <c>TreeItem</c>s and shows them as a tree.
      **/
     class TreeItem extends Item {
@@ -5232,82 +5076,6 @@ declare module latte {
         treeView: TreeView;
     }
 }
-declare module latte {
-    /**
-     *
-     **/
-    class CheckboxItem extends ValueItem {
-        /**
-         *
-         **/
-        private _value;
-        /**
-         * Label for checkbox
-         **/
-        label: LabelItem;
-        /**
-         *
-         **/
-        constructor();
-        /**
-         * Gets or sets the text of the checkbox
-         **/
-        /**
-         * Gets or sets the text of the checkbox
-         **/
-        text: string;
-        /**
-         * Gets or sets the checked state of checkbox
-         **/
-        /**
-         * Gets or sets the checked state of checkbox
-         **/
-        value: boolean;
-    }
-}
-declare module latte {
-    /**
-     * Presents a method for choosing options from a combobox.
-     Combo options are presented as the button's items.
-     The button's items tag value is assumed to be the value of the combobox.
-     **/
-    class ComboItem extends ValueItem {
-        /**
-         *
-         **/
-        private _options;
-        /**
-         *
-         **/
-        private _value;
-        /**
-         * Button who hosts the combo
-         **/
-        button: ButtonItem;
-        /**
-         *
-         **/
-        constructor();
-        /**
-         * Gets or sets the options of the combo
-         **/
-        /**
-         * Gets or sets the options of the combo
-         **/
-        options: any;
-        /**
-         * Gets or sets the selected value of the combo
-         **/
-        /**
-         * Gets or sets the selected value of the combo
-         **/
-        value: any;
-        /**
-         * Gets the value as a string for human reading
-         **/
-        valueString: any;
-    }
-}
 /**
  * Created by josemanuel on 7/1/14.
  */
@@ -5372,6 +5140,49 @@ declare module latte {
 }
 declare module latte {
     /**
+     * Presents a method for choosing options from a combobox.
+     Combo options are presented as the button's items.
+     The button's items tag value is assumed to be the value of the combobox.
+     **/
+    class ComboItem extends ValueItem {
+        /**
+         *
+         **/
+        private _options;
+        /**
+         *
+         **/
+        private _value;
+        /**
+         * Button who hosts the combo
+         **/
+        button: ButtonItem;
+        /**
+         *
+         **/
+        constructor();
+        /**
+         * Gets or sets the options of the combo
+         **/
+        /**
+         * Gets or sets the options of the combo
+         **/
+        options: any;
+        /**
+         * Gets or sets the selected value of the combo
+         **/
+        /**
+         * Gets or sets the selected value of the combo
+         **/
+        value: any;
+        /**
+         * Gets the value as a string for human reading
+         **/
+        valueString: any;
+    }
+}
+declare module latte {
+    /**
      * Value item for files. Value of item is an array of system File objects.
      */
     class FileValueItem extends ValueItem {
@@ -5393,6 +5204,28 @@ declare module latte {
          * @param value
          */
         setValue(value: Array<File>): void;
+    }
+}
+declare module latte {
+    /**
+     * Label with value property
+     **/
+    class LabelValueItem extends ValueItem {
+        /**
+         * Label for text displaying
+         **/
+        label: LabelItem;
+        /**
+         *
+         **/
+        constructor();
+        /**
+         * Gets or sets the value
+         **/
+        /**
+         * Gets or sets the value
+         **/
+        value: any;
     }
 }
 declare module latte {
@@ -5584,28 +5417,6 @@ declare module latte {
 }
 declare module latte {
     /**
-     * Label with value property
-     **/
-    class LabelValueItem extends ValueItem {
-        /**
-         * Label for text displaying
-         **/
-        label: LabelItem;
-        /**
-         *
-         **/
-        constructor();
-        /**
-         * Gets or sets the value
-         **/
-        /**
-         * Gets or sets the value
-         **/
-        value: any;
-    }
-}
-declare module latte {
-    /**
      * Represents a progress bar
      **/
     class ProgressItem extends ValueItem {
@@ -5731,6 +5542,22 @@ declare module latte {
          * Gets the value as a string for human reading
          **/
         valueString: any;
+    }
+}
+declare module latte {
+    /**
+     * Allows user to pick a time
+     **/
+    class TimePickerItem extends DatePickerItem {
+        /**
+         *
+         **/
+        constructor();
+        /**
+         * Gets or sets the value of the item
+         **/
+        getValue(): TimeSpan;
+        setValue(value: TimeSpan): void;
     }
 }
 /**
@@ -6076,22 +5903,6 @@ declare module latte {
          * Gets or sets the width of the textbox.
          **/
         width: number;
-    }
-}
-declare module latte {
-    /**
-     * Allows user to pick a time
-     **/
-    class TimePickerItem extends DatePickerItem {
-        /**
-         *
-         **/
-        constructor();
-        /**
-         * Gets or sets the value of the item
-         **/
-        getValue(): TimeSpan;
-        setValue(value: TimeSpan): void;
     }
 }
 /**
@@ -7336,6 +7147,32 @@ declare module latte {
 }
 declare module latte {
     /**
+     * A View containing an Item
+     **/
+    class ItemView extends View {
+        /**
+         *
+         **/
+        private _item;
+        /**
+         *
+         **/
+        constructor(item?: Item);
+        /**
+         * Overriden.
+         **/
+        onLayout(): void;
+        /**
+         * Gets or sets the item of the view
+         **/
+        /**
+         * Gets or sets the item of the view
+         **/
+        item: Item;
+    }
+}
+declare module latte {
+    /**
      * Shows a message with eye sugar to improve usability and design.
      **/
     class MessageView extends View {
@@ -7393,32 +7230,6 @@ declare module latte {
          * Gets or sets the message
          **/
         message: string;
-    }
-}
-declare module latte {
-    /**
-     * A View containing an Item
-     **/
-    class ItemView extends View {
-        /**
-         *
-         **/
-        private _item;
-        /**
-         *
-         **/
-        constructor(item?: Item);
-        /**
-         * Overriden.
-         **/
-        onLayout(): void;
-        /**
-         * Gets or sets the item of the view
-         **/
-        /**
-         * Gets or sets the item of the view
-         **/
-        item: Item;
     }
 }
 declare module latte {
@@ -7590,6 +7401,195 @@ declare module latte {
          * Raises the <c>selectedItem</c> event
          */
         onSelectedItemChanged(): void;
+    }
+}
+declare module latte {
+    /**
+     * Html Editor. Loads the <c>rangy</c> plugin.
+
+     For specification of <c>rangy</c> objects refer to:
+     <a href="http://code.google.com/p/rangy/w/list" target=_blank>http://code.google.com/p/rangy/w/list</a>
+     **/
+    class HtmlEditorItem extends ValueItem {
+        static rangyPath: string;
+        static rangyLoaded: boolean;
+        /**
+         *
+         **/
+        private _ready;
+        /**
+         * Value is stored here while not ready.
+         **/
+        private _value;
+        /**
+         * Points to the iframe of the editor
+         **/
+        iframe: JQuery;
+        /**
+         * Toolbar of basic commands
+         **/
+        toolbar: Toolbar;
+        /**
+         * Raised when the editor gets focus
+         **/
+        focus: LatteEvent;
+        /**
+         * Raised when the selection of editor changes
+         **/
+        selectionChanged: LatteEvent;
+        /**
+         * Raised when an image in the editor is selected
+         **/
+        imageSelected: LatteEvent;
+        /**
+         * Creates the editor.
+         **/
+        constructor();
+        /**
+         * Creates default buttons
+         **/
+        private _addToolbarButtons();
+        /**
+         *
+         **/
+        private _assignElementHandlers();
+        /**
+         * Returns a value indicating if the editor can be initialized.
+         It can be initialized when its attached to the DOM.
+         **/
+        private _canInit();
+        /**
+         * Clears all formatting in editor
+         **/
+        private _clearFormatting();
+        /**
+         * Tries to convert the passed object to a node
+         **/
+        private _ensureNode(obj);
+        /**
+         * Tries to get the editor ready. Returns if control is ready after call.
+         **/
+        private _ensureReady();
+        /**
+         * Initializes the editor, if possible.
+         **/
+        private _initEditor();
+        /**
+         * Shows a dialog to insert HTML
+         **/
+        private _insertHTML();
+        /**
+         * Inserts an image, asking for the URL
+         **/
+        private _insertImage(value?);
+        /**
+         * Inserts a link, asking for the Url
+         **/
+        private _insertLink();
+        /**
+         * Shows a dialog to insert a YouTube video
+         **/
+        private _insertYouTube();
+        /**
+         * Returns a value indicating if editor must be initialized.
+         It happens every time its dettached from DOM.
+         **/
+        private _mustInit();
+        /**
+         * Gets the body of the iframe
+         **/
+        body(): JQuery;
+        /**
+         * Gets the JavaScript document's object of iframe.
+         **/
+        document(): Document;
+        /**
+         * Executes the specified command
+         **/
+        execCommand(command: string, value?: any): void;
+        /**
+         *
+         **/
+        getValue(): string;
+        /**
+         * Inserts the specified node at the currently selected range.
+         Returns the inserted node, or <c>null</c> if not possible.
+         **/
+        insertElement(element: any): JQuery;
+        /**
+         * Raises the <c>focus</c> event
+         **/
+        onFocus(): void;
+        /**
+         * Raises the <c>imageSelected</c> event
+         **/
+        onImageSelected(image: JQuery): void;
+        /**
+         * Overriden.
+         **/
+        onLayout(): void;
+        /**
+         * Raises the <c>selectionChanged</c> event.
+         **/
+        onSelectionChanged(): void;
+        /**
+         * Overriden.
+         **/
+        onValueChanged(): void;
+        /**
+         * Gets a value indicating if the editor is ready to be used as editor.
+         While the editor is not ready, all data will be displayed in a non-editable element.
+         **/
+        ready(): boolean;
+        /**
+         * Selects the specified element and returns it as a jQuery object.
+         **/
+        selectElement(element: any): JQuery;
+        /**
+         * Selects the contents of the specified node and returns the element as a jQuery object.
+         **/
+        selectElementContents(element: any): JQuery;
+        /**
+         * Gets the current selection
+         **/
+        selection: RangySelection;
+        /**
+         * Gets the element where selection ends.
+         **/
+        selectionEnd(): JQuery;
+        /**
+         * Returns the parent of selection, passing the specified <c>selector</c>
+         to the jQuery <c>parents()<c> method.
+         **/
+        selectionParents(selector?: string): JQuery;
+        /**
+         * Gets the element where selection starts.
+         **/
+        selectionStart(): JQuery;
+        /**
+         * Override.
+         **/
+        setValue(value: string): void;
+        /**
+         * Surrounds selected contents with specified element, and returns the
+         attached element as a jQuery object.
+         **/
+        surroundSelectionWith(element: any): JQuery;
+        /**
+         * Gets the range of selection. Returns <c>null</c> if no current selection.
+         **/
+        selectionRange: RangyRange;
+        /**
+         * Gets or sets the source html
+         */
+        /**
+         * Gets or sets the source html
+         */
+        value: string;
+        /**
+         * Gets the Window of the iframe
+         **/
+        window: any;
     }
 }
 declare module latte {

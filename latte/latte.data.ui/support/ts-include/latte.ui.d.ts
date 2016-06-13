@@ -3124,28 +3124,6 @@ declare module latte {
     }
 }
 declare module latte {
-    /**
-     * Renders a separator for various purposes.
-     **/
-    class SeparatorItem extends Item {
-        /**
-         *
-         **/
-        private _text;
-        /**
-         * Creates the separator
-         **/
-        constructor();
-        /**
-         * Gets or sets the text of the separator
-         **/
-        /**
-         * Gets or sets the text of the separator
-         **/
-        text: string;
-    }
-}
-declare module latte {
     class ImageItem extends Item {
         /**
          *
@@ -3181,47 +3159,24 @@ declare module latte {
 }
 declare module latte {
     /**
-     * Represents a selectable tab
+     * Renders a separator for various purposes.
      **/
-    class TabItem extends ButtonItem {
-        private _active;
-        private _contentSide;
+    class SeparatorItem extends Item {
         /**
-         * Raised when the value of the <c>active</c> property changes
-         */
-        activeChanged: LatteEvent;
-        /**
-         * Raised when the value of the <c>
-         */
-        contentSideChanged: LatteEvent;
-        /**
-         * Creates the tab
-         **/
-        constructor(text?: string, icon?: IconItem, click?: Function, tab?: any);
-        private _applyActiveProperties();
-        /**
-         * Raises the activeChanged event.
-         */
-        onActiveChanged(): void;
-        /**
-         * Gets a value indicating if the tab is currently active.
-         * @returns {boolean}
-         */
-        /**
-         * Sets a value indicating if the tab is currently active.
-         * @param value
-         */
-        active: boolean;
-        /**
-         * Gets the side where content is shown. So tab is drawn accordingly.
          *
-         * @returns {Side}
-         */
+         **/
+        private _text;
         /**
-         * Sets the side where content is shown. So tab is drawn accordingly.
-         * @param value
-         */
-        contentSide: Side;
+         * Creates the separator
+         **/
+        constructor();
+        /**
+         * Gets or sets the text of the separator
+         **/
+        /**
+         * Gets or sets the text of the separator
+         **/
+        text: string;
     }
 }
 declare module latte {
@@ -3322,6 +3277,176 @@ declare module latte {
          * Gets a value indicating
          */
         btnOverlay: ButtonItem;
+    }
+}
+declare module latte {
+    /**
+     * Represents a selectable tab
+     **/
+    class TabItem extends ButtonItem {
+        private _active;
+        private _contentSide;
+        /**
+         * Raised when the value of the <c>active</c> property changes
+         */
+        activeChanged: LatteEvent;
+        /**
+         * Raised when the value of the <c>
+         */
+        contentSideChanged: LatteEvent;
+        /**
+         * Creates the tab
+         **/
+        constructor(text?: string, icon?: IconItem, click?: Function, tab?: any);
+        private _applyActiveProperties();
+        /**
+         * Raises the activeChanged event.
+         */
+        onActiveChanged(): void;
+        /**
+         * Gets a value indicating if the tab is currently active.
+         * @returns {boolean}
+         */
+        /**
+         * Sets a value indicating if the tab is currently active.
+         * @param value
+         */
+        active: boolean;
+        /**
+         * Gets the side where content is shown. So tab is drawn accordingly.
+         *
+         * @returns {Side}
+         */
+        /**
+         * Sets the side where content is shown. So tab is drawn accordingly.
+         * @param value
+         */
+        contentSide: Side;
+    }
+}
+declare module latte {
+    /**
+     * Renders a conversation made of <c>CommentItem</c>s, allowing the user to add comments.
+     **/
+    class ConversationItem extends Item {
+        /**
+         *
+         **/
+        private _allowNewComments;
+        /**
+         *
+         **/
+        private _invisible;
+        /**
+         *
+         **/
+        private _pendentPages;
+        /**
+         * Collection of comments in conversation
+         **/
+        comments: Collection<CommentItem>;
+        /**
+         * Points to the DOM element where comments are stored.
+         **/
+        commentsElement: JQuery;
+        /**
+         * Points to the DOM element where the new comment textarea is placed.
+         **/
+        newCommentElement: JQuery;
+        /**
+         * Points to the DOM element where hidden comments text is placed.
+         **/
+        pendentPagesElement: JQuery;
+        /**
+         * Textbox for new comments
+         **/
+        textbox: TextboxItem;
+        /**
+         * Raised when a new comment is added. The text of the comment is passed as an argument.
+         **/
+        commentAdded: LatteEvent;
+        /**
+         * Raised when comments are added or removed from collection
+         **/
+        commentsChanged: LatteEvent;
+        /**
+         * Raised when the user asks for the hidden comments of conversation
+         **/
+        pendentPagesSolicited: LatteEvent;
+        /**
+         * Creates the conversation
+         **/
+        constructor();
+        /**
+         * Sets the textbox of the comment editor.
+         * This method is useful for replacing the default textbox for a custom one.
+         *
+         * @param t
+         */
+        setTextbox(t: TextboxItem): void;
+        /**
+         *
+         **/
+        _onAddComment(comment: CommentItem): void;
+        /**
+         *
+         **/
+        private _onRemoveComment(comment);
+        /**
+         * Raises the <c>commentAdded</c> event
+         **/
+        onCommentAdded(text: string): boolean;
+        /**
+         *
+         **/
+        onCommentsChanged(): void;
+        /**
+         * Raises the <c>pendentPagesRequested</c> event
+         **/
+        onHiddenCommentsRequested(): void;
+        /**
+         * Raises the <c>layout</c> event
+         **/
+        onLayout(): void;
+        /**
+         * Raises the <c>pendentPagesSolicited</c> event
+         **/
+        onPendentPagesSolicited(): void;
+        /**
+         * Prepends the specified comment
+         **/
+        prependComment(comment: CommentItem): void;
+        /**
+         * Gets or sets a value indicating if the user may add new comments
+         **/
+        /**
+         * Gets or sets a value indicating if the user may add new comments
+         **/
+        allowNewComments: boolean;
+        /**
+         * Property field
+         */
+        private _ignoreEnter;
+        /**
+         * Gets or sets a value indicating if the enter key should be ignored.
+         * Used for allowing user to hit enter on selecting users from auto-complete
+         *
+         * @returns {boolean}
+         */
+        /**
+         * Gets or sets a value indicating if the enter key should be ignored.
+         * Used for allowing user to hit enter on selecting users from auto-complete
+         *
+         * @param {boolean} value
+         */
+        ignoreEnter: boolean;
+        /**
+         * Gets or sets the number of hidden comments in conversation
+         **/
+        /**
+         * Gets or sets the number of hidden comments in conversation
+         **/
+        pendentPages: number;
     }
 }
 /**
@@ -3465,131 +3590,6 @@ declare module latte {
          * @returns {ColorPickerSwatch[]}
          */
         swatches: ColorPickerSwatch[];
-    }
-}
-declare module latte {
-    /**
-     * Renders a conversation made of <c>CommentItem</c>s, allowing the user to add comments.
-     **/
-    class ConversationItem extends Item {
-        /**
-         *
-         **/
-        private _allowNewComments;
-        /**
-         *
-         **/
-        private _invisible;
-        /**
-         *
-         **/
-        private _pendentPages;
-        /**
-         * Collection of comments in conversation
-         **/
-        comments: Collection<CommentItem>;
-        /**
-         * Points to the DOM element where comments are stored.
-         **/
-        commentsElement: JQuery;
-        /**
-         * Points to the DOM element where the new comment textarea is placed.
-         **/
-        newCommentElement: JQuery;
-        /**
-         * Points to the DOM element where hidden comments text is placed.
-         **/
-        pendentPagesElement: JQuery;
-        /**
-         * Textbox for new comments
-         **/
-        textbox: TextboxItem;
-        /**
-         * Raised when a new comment is added. The text of the comment is passed as an argument.
-         **/
-        commentAdded: LatteEvent;
-        /**
-         * Raised when comments are added or removed from collection
-         **/
-        commentsChanged: LatteEvent;
-        /**
-         * Raised when the user asks for the hidden comments of conversation
-         **/
-        pendentPagesSolicited: LatteEvent;
-        /**
-         * Creates the conversation
-         **/
-        constructor();
-        /**
-         * Sets the textbox of the comment editor.
-         * This method is useful for replacing the default textbox for a custom one.
-         *
-         * @param t
-         */
-        setTextbox(t: TextboxItem): void;
-        /**
-         *
-         **/
-        _onAddComment(comment: CommentItem): void;
-        /**
-         *
-         **/
-        private _onRemoveComment(comment);
-        /**
-         * Raises the <c>commentAdded</c> event
-         **/
-        onCommentAdded(text: string): boolean;
-        /**
-         *
-         **/
-        onCommentsChanged(): void;
-        /**
-         * Raises the <c>pendentPagesRequested</c> event
-         **/
-        onHiddenCommentsRequested(): void;
-        /**
-         * Raises the <c>layout</c> event
-         **/
-        onLayout(): void;
-        /**
-         * Raises the <c>pendentPagesSolicited</c> event
-         **/
-        onPendentPagesSolicited(): void;
-        /**
-         * Prepends the specified comment
-         **/
-        prependComment(comment: CommentItem): void;
-        /**
-         * Gets or sets a value indicating if the user may add new comments
-         **/
-        /**
-         * Gets or sets a value indicating if the user may add new comments
-         **/
-        allowNewComments: boolean;
-        /**
-         * Property field
-         */
-        private _ignoreEnter;
-        /**
-         * Gets or sets a value indicating if the enter key should be ignored.
-         * Used for allowing user to hit enter on selecting users from auto-complete
-         *
-         * @returns {boolean}
-         */
-        /**
-         * Gets or sets a value indicating if the enter key should be ignored.
-         * Used for allowing user to hit enter on selecting users from auto-complete
-         *
-         * @param {boolean} value
-         */
-        ignoreEnter: boolean;
-        /**
-         * Gets or sets the number of hidden comments in conversation
-         **/
-        /**
-         * Gets or sets the number of hidden comments in conversation
-         **/
-        pendentPages: number;
     }
 }
 declare module latte {
@@ -3784,6 +3784,90 @@ declare module latte {
     }
 }
 declare module latte {
+    class HtmlEditorCommands {
+        /**
+         * Swaps selection boldness
+         */
+        static BOLD: string;
+        /**
+         * Wraps seletion into CODE tag
+         */
+        static CODE: string;
+        /**
+         * Clears all formatting on fonts and colors
+         */
+        static CLEAR_FORMAT: string;
+        /**
+         * Formats the block as something
+         */
+        static FORMAT_BLOCK: string;
+        /**
+         * Swaps selection italics
+         */
+        static ITALIC: string;
+        /**
+         * Makes selectikon super-script
+         */
+        static SUPER_SCRIPT: string;
+        /**
+         * Makes selection sub-script
+         */
+        static SUB_SCRIPT: string;
+        /**
+         * Aligns text to left
+         */
+        static JUSTIFY_LEFT: string;
+        /**
+         * Centers text
+         */
+        static JUSTIFY_CENTER: string;
+        /**
+         * Aligns text to right
+         */
+        static JUSTIFY_RIGHT: string;
+        /**
+         * Justifies text
+         */
+        static JUSTIFY_FULL: string;
+        /**
+         * Decreases indent
+         */
+        static OUTDENT: string;
+        /**
+         * Increases indent
+         */
+        static INDENT: string;
+        /**
+         * Shows a dialog to insert HTML
+         */
+        static INSERT_HTML: string;
+        /**
+         * Inserts an image
+         */
+        static INSERT_IMAGE: string;
+        /**
+         * Inserts a link
+         */
+        static INSERT_LINK: string;
+        /**
+         * Inserts an ordered list
+         */
+        static INSERT_ORDERED_LIST: string;
+        /**
+         * Inserts an unordered list
+         */
+        static INSERT_UNORDERED_LIST: string;
+        /**
+         * Shows a dialog to insert a YouTube video
+         */
+        static INSERT_YOUTUBE: string;
+        /**
+         * Unerlines selection
+         */
+        static UNDERLINE: string;
+    }
+}
+declare module latte {
     /**
      *
      **/
@@ -3877,90 +3961,6 @@ declare module latte {
          * Gets a value of checking every input in <c>inputs</c> to be valid
          **/
         valid: boolean;
-    }
-}
-declare module latte {
-    class HtmlEditorCommands {
-        /**
-         * Swaps selection boldness
-         */
-        static BOLD: string;
-        /**
-         * Wraps seletion into CODE tag
-         */
-        static CODE: string;
-        /**
-         * Clears all formatting on fonts and colors
-         */
-        static CLEAR_FORMAT: string;
-        /**
-         * Formats the block as something
-         */
-        static FORMAT_BLOCK: string;
-        /**
-         * Swaps selection italics
-         */
-        static ITALIC: string;
-        /**
-         * Makes selectikon super-script
-         */
-        static SUPER_SCRIPT: string;
-        /**
-         * Makes selection sub-script
-         */
-        static SUB_SCRIPT: string;
-        /**
-         * Aligns text to left
-         */
-        static JUSTIFY_LEFT: string;
-        /**
-         * Centers text
-         */
-        static JUSTIFY_CENTER: string;
-        /**
-         * Aligns text to right
-         */
-        static JUSTIFY_RIGHT: string;
-        /**
-         * Justifies text
-         */
-        static JUSTIFY_FULL: string;
-        /**
-         * Decreases indent
-         */
-        static OUTDENT: string;
-        /**
-         * Increases indent
-         */
-        static INDENT: string;
-        /**
-         * Shows a dialog to insert HTML
-         */
-        static INSERT_HTML: string;
-        /**
-         * Inserts an image
-         */
-        static INSERT_IMAGE: string;
-        /**
-         * Inserts a link
-         */
-        static INSERT_LINK: string;
-        /**
-         * Inserts an ordered list
-         */
-        static INSERT_ORDERED_LIST: string;
-        /**
-         * Inserts an unordered list
-         */
-        static INSERT_UNORDERED_LIST: string;
-        /**
-         * Shows a dialog to insert a YouTube video
-         */
-        static INSERT_YOUTUBE: string;
-        /**
-         * Unerlines selection
-         */
-        static UNDERLINE: string;
     }
 }
 declare module latte {
@@ -5036,6 +5036,39 @@ declare module latte {
 }
 declare module latte {
     /**
+     *
+     **/
+    class CheckboxItem extends ValueItem {
+        /**
+         *
+         **/
+        private _value;
+        /**
+         * Label for checkbox
+         **/
+        label: LabelItem;
+        /**
+         *
+         **/
+        constructor();
+        /**
+         * Gets or sets the text of the checkbox
+         **/
+        /**
+         * Gets or sets the text of the checkbox
+         **/
+        text: string;
+        /**
+         * Gets or sets the checked state of checkbox
+         **/
+        /**
+         * Gets or sets the checked state of checkbox
+         **/
+        value: boolean;
+    }
+}
+declare module latte {
+    /**
      * Renders an Item that may contains more <c>TreeItem</c>s and shows them as a tree.
      **/
     class TreeItem extends Item {
@@ -5232,82 +5265,6 @@ declare module latte {
         treeView: TreeView;
     }
 }
-declare module latte {
-    /**
-     *
-     **/
-    class CheckboxItem extends ValueItem {
-        /**
-         *
-         **/
-        private _value;
-        /**
-         * Label for checkbox
-         **/
-        label: LabelItem;
-        /**
-         *
-         **/
-        constructor();
-        /**
-         * Gets or sets the text of the checkbox
-         **/
-        /**
-         * Gets or sets the text of the checkbox
-         **/
-        text: string;
-        /**
-         * Gets or sets the checked state of checkbox
-         **/
-        /**
-         * Gets or sets the checked state of checkbox
-         **/
-        value: boolean;
-    }
-}
-declare module latte {
-    /**
-     * Presents a method for choosing options from a combobox.
-     Combo options are presented as the button's items.
-     The button's items tag value is assumed to be the value of the combobox.
-     **/
-    class ComboItem extends ValueItem {
-        /**
-         *
-         **/
-        private _options;
-        /**
-         *
-         **/
-        private _value;
-        /**
-         * Button who hosts the combo
-         **/
-        button: ButtonItem;
-        /**
-         *
-         **/
-        constructor();
-        /**
-         * Gets or sets the options of the combo
-         **/
-        /**
-         * Gets or sets the options of the combo
-         **/
-        options: any;
-        /**
-         * Gets or sets the selected value of the combo
-         **/
-        /**
-         * Gets or sets the selected value of the combo
-         **/
-        value: any;
-        /**
-         * Gets the value as a string for human reading
-         **/
-        valueString: any;
-    }
-}
 /**
  * Created by josemanuel on 7/1/14.
  */
@@ -5368,6 +5325,49 @@ declare module latte {
          * @returns {ColorIconItem}
          */
         icon: ColorIconItem;
+    }
+}
+declare module latte {
+    /**
+     * Presents a method for choosing options from a combobox.
+     Combo options are presented as the button's items.
+     The button's items tag value is assumed to be the value of the combobox.
+     **/
+    class ComboItem extends ValueItem {
+        /**
+         *
+         **/
+        private _options;
+        /**
+         *
+         **/
+        private _value;
+        /**
+         * Button who hosts the combo
+         **/
+        button: ButtonItem;
+        /**
+         *
+         **/
+        constructor();
+        /**
+         * Gets or sets the options of the combo
+         **/
+        /**
+         * Gets or sets the options of the combo
+         **/
+        options: any;
+        /**
+         * Gets or sets the selected value of the combo
+         **/
+        /**
+         * Gets or sets the selected value of the combo
+         **/
+        value: any;
+        /**
+         * Gets the value as a string for human reading
+         **/
+        valueString: any;
     }
 }
 declare module latte {
@@ -7336,6 +7336,32 @@ declare module latte {
 }
 declare module latte {
     /**
+     * A View containing an Item
+     **/
+    class ItemView extends View {
+        /**
+         *
+         **/
+        private _item;
+        /**
+         *
+         **/
+        constructor(item?: Item);
+        /**
+         * Overriden.
+         **/
+        onLayout(): void;
+        /**
+         * Gets or sets the item of the view
+         **/
+        /**
+         * Gets or sets the item of the view
+         **/
+        item: Item;
+    }
+}
+declare module latte {
+    /**
      * Shows a message with eye sugar to improve usability and design.
      **/
     class MessageView extends View {
@@ -7393,32 +7419,6 @@ declare module latte {
          * Gets or sets the message
          **/
         message: string;
-    }
-}
-declare module latte {
-    /**
-     * A View containing an Item
-     **/
-    class ItemView extends View {
-        /**
-         *
-         **/
-        private _item;
-        /**
-         *
-         **/
-        constructor(item?: Item);
-        /**
-         * Overriden.
-         **/
-        onLayout(): void;
-        /**
-         * Gets or sets the item of the view
-         **/
-        /**
-         * Gets or sets the item of the view
-         **/
-        item: Item;
     }
 }
 declare module latte {
