@@ -14,3 +14,4 @@ Latte ready to go.
 - Introduced xlatte.json
 - Default paths changed, for backwards compatibility change paths in xlatte.json
 
+-elo
