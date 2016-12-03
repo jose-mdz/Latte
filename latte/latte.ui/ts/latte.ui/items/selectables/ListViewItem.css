@@ -18,12 +18,93 @@
 .latte-item.list > .columns > div{
     float: left;
     overflow: hidden;
+    position: relative;
 }
 
 .latte-item.list > .columns > div{
     min-height: 5px;
 }
 
+/*.latte-item.list > .columns > div:not(:first-child){*/
+    /*padding-left: 5px;*/
+/*}*/
+
 .latte-item.list > .columns > div .latte-item.label{
     margin-top: 2px;
+}
+
+.latte-item.list > .columns > div:after{
+    display: block;
+    position: absolute;
+    content: '.';
+    top: 0;
+    width: 25px;
+    right: 0;
+    bottom: 0;
+    color: transparent;
+    border: none;
+
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,ffffff+100&0+1,1+100 */
+    background: -moz-linear-gradient(left,  rgba(255,255,255,0) 0%, rgba(255,255,255,0) 1%, rgba(255,255,255,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left,  rgba(255,255,255,0) 0%,rgba(255,255,255,0) 1%,rgba(255,255,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right,  rgba(255,255,255,0) 0%,rgba(255,255,255,0) 1%,rgba(255,255,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 */
+
+
+}
+
+.latte-item.list.hover > .columns > div:after{
+    display: block;
+    position: absolute;
+    content: '.';
+    top: 0;
+    width: 25px;
+    right: 0;
+    bottom: 0;
+    color: transparent;
+    border: none;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#efefef+0,efefef+100&0+1,1+100 */
+    background: -moz-linear-gradient(left,  rgba(239,239,239,0) 0%, rgba(239,239,239,0) 1%, rgba(239,239,239,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left,  rgba(239,239,239,0) 0%,rgba(239,239,239,0) 1%,rgba(239,239,239,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right,  rgba(239,239,239,0) 0%,rgba(239,239,239,0) 1%,rgba(239,239,239,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00efefef', endColorstr='#efefef',GradientType=1 ); /* IE6-9 */
+
+}
+
+.latte-item.list.selected > .columns > div:after{
+    display: block;
+    position: absolute;
+    content: '.';
+    top: 0;
+    width: 25px;
+    right: 0;
+    bottom: 0;
+    color: transparent;
+    border: none;
+
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#4285f4+0,4285f4+100&0+1,1+100 */
+    background: -moz-linear-gradient(left,  rgba(66,133,244,0) 0%, rgba(66,133,244,0) 1%, rgba(66,133,244,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left,  rgba(66,133,244,0) 0%,rgba(66,133,244,0) 1%,rgba(66,133,244,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right,  rgba(66,133,244,0) 0%,rgba(66,133,244,0) 1%,rgba(66,133,244,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#004285f4', endColorstr='#4285f4',GradientType=1 ); /* IE6-9 */
+
+}
+
+.latte-view.list.focusable:not(:focus) .latte-item.selectable.selected > .columns > div:after{
+    display: block;
+    position: absolute;
+    content: '.';
+    top: 0;
+    width: 25px;
+    right: 0;
+    bottom: 0;
+    color: transparent;
+    border: none;
+
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#808080+0,808080+100&0+1,1+100 */
+    background: -moz-linear-gradient(left,  rgba(128,128,128,0) 0%, rgba(128,128,128,0) 1%, rgba(128,128,128,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left,  rgba(128,128,128,0) 0%,rgba(128,128,128,0) 1%,rgba(128,128,128,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right,  rgba(128,128,128,0) 0%,rgba(128,128,128,0) 1%,rgba(128,128,128,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00808080', endColorstr='#808080',GradientType=1 ); /* IE6-9 */
+
 }

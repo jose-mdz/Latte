@@ -86,6 +86,17 @@ module latte {
         }
 
         /**
+         * Returns a value indicating if the specified element is contained in the collection
+         * @param element
+         */
+        contains(element: T): boolean{
+            for (let i = 0; i < this.length; i++) {
+                if(this[i] == element) return true;
+            }
+            return false;
+        }
+
+        /**
          * Iterates through the collection, executing the handler for each item
          * @param handler
          */

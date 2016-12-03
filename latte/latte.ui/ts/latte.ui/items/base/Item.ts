@@ -97,7 +97,7 @@ module latte{
         /**
          * Creates a new <c>Item</c>
          **/
-            constructor(){
+        constructor(){
 
 
             super();
@@ -111,7 +111,7 @@ module latte{
         /**
          * Brings the item to the front
          **/
-            bringToFront(){
+        bringToFront(){
 
             ZIndex.bringToFront(this.element);
 

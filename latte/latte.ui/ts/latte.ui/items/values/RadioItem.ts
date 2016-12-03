@@ -7,15 +7,21 @@ module latte{
     /**
      * Shows a selectable radio button
      */
-    export class RadioItem extends ValueItem{
+    export class RadioItem extends ValueItem<boolean>{
 
-        private _value: boolean = false;
+        //region Fields
 
         /**
          * Label for radio
          **/
         label: LabelItem;
+        //endregion
 
+        /**
+         * Creates the RadioItem
+         * @param text
+         * @param value
+         */
         constructor(text: string = null, value: boolean = null){
             super();
             this.element.addClass('radio');
@@ -24,26 +30,37 @@ module latte{
             this.label = new LabelItem();
             this.label.appendTo(this);
 
-            this.element.click(() => {
-                if(!this.value){
-                    this.value = true;
-                }
+            this.addEventListener('click', () => this.value = !this.value);
 
-            });
-
-            // Initially unselected
-            this.value = false;
+            // Initialize Value
+            if(_isBoolean(value)){
+                this.value = value;
+            }else {
+                this.value = false;
+            }
 
             if(text){
                 this.text = text;
             }
 
-            if(_isBoolean(value)){
-                this.value = value;
-            }
-
         }
 
+        //region Methods
+        /**
+         * Override.
+         */
+        onValueChanged(){
+            super.onValueChanged();
+
+            if(this.value){
+                this.label.icon = Glyph.checkedRadio;
+            }else{
+                this.label.icon = Glyph.uncheckedRadio;
+            }
+        }
+        //endregion
+
+        //region Properties
         /**
          * Gets or sets the text of the checkbox
          **/
@@ -60,38 +77,8 @@ module latte{
 
         }
 
-        /**
-         * Gets or sets the checked state of checkbox
-         **/
-        get value(): boolean{
-            return this._value;
-        }
+        //endregion
 
-        /**
-         * Gets or sets the checked state of checkbox
-         **/
-        set value(value: boolean){
-
-
-            if(!_isBoolean(value))
-                throw new InvalidArgumentEx('value', value);
-
-            var changed = value !== this._value;
-
-            if(value){
-                this.label.icon = Glyph.checkedRadio;
-            }else{
-                this.label.icon = Glyph.uncheckedRadio;
-            }
-
-            this._value = value;
-
-
-            if(changed){
-                this.onValueChanged();
-            }
-
-        }
 
     }
 

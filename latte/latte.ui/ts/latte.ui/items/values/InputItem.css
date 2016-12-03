@@ -11,6 +11,10 @@
     float: none;
 }
 
+.latte-item.input.invalid{
+    color: red;
+}
+
 .latte-item.input > .value > .read-only,
 .latte-item.input > .value > .label-value{
     margin-top: 7px;

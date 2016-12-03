@@ -2,7 +2,7 @@ module latte{
     /**
      * Presents an input method for picking a date
      **/
-    export class DatePickerItem extends ValueItem{
+    export class DatePickerItem extends ValueItem<DateTime>{
 
         //region Fields
         /**
@@ -24,6 +24,12 @@ module latte{
          *
          **/
         private _timeVisible: boolean = false;
+
+        /**
+         *
+         * @type {boolean}
+         */
+        private ignorePassToCombos = false;
         //endregion
 
         /**
@@ -61,12 +67,37 @@ module latte{
             return i < 10 ? '0' + i : i.toString();
         }
 
+        //endregion
+
+        //region Methods
+
         /**
-         *
-         **/
-        _updateTimeComponent(){
-            //this.onValueChanged();
+         * Override.
+         */
+        onValueChanged(){
+            super.onValueChanged();
+
+            if(this.value) {
+                this.date = this.value;
+            }
+
+            if(this.ignorePassToCombos) {
+                this.ignorePassToCombos = false;
+            }else {
+
+            }
+
         }
+
+        /**
+         * Sets the value of the item silently, without passing it to the combos
+         * @param date
+         */
+        setValueSilently(date: DateTime){
+            this.ignorePassToCombos = true;
+            this.value = date;
+        }
+
         //endregion
 
         //region Components
@@ -96,7 +127,8 @@ module latte{
                         this.date = this.dateItem.selectionStart;
                     }
 
-                    this.onValueChanged();
+                    this.setValueSilently(this.date);
+
 
                 });
             }
@@ -348,38 +380,6 @@ module latte{
 
         }
 
-        /**
-         * Gets or sets the date of the picker, as a string
-         **/
-        get value(): any{
-            if(this._checkbox){
-                if(!this.checkbox.value) {
-                    return '';
-                }
-            }
-
-            return this.date.toString();
-        }
-
-        /**
-         * Gets or sets the date of the picker, as a string
-         **/
-        set value(value: any){
-
-            if(value instanceof DateTime){
-                this.date = value;
-            }
-            else if(_isString(value)){
-                this.date = (value.length === 0 ? DateTime.now :  DateTime.fromString(value));
-            }
-            else if(value === null){
-                this.date = DateTime.now;
-            }
-            else{
-                throw new InvalidArgumentEx('value', value);
-            }
-
-        }
         //endregion
     }
 }

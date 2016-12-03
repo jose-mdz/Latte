@@ -39,7 +39,9 @@ module latte{
                 element = element.get(0);
 
             // Remove z-index
+            // debugger;
             $(element).css('zIndex', '');
+
 
             // Create new array
             for(var i = 0; i < this.elements.length; i++)

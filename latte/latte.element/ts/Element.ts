@@ -114,22 +114,6 @@ module latte {
         }
 
         /**
-         * Gets the scrollTop
-         * @returns {number}
-         */
-        static get windowScrollLeft(): number{
-            return window.pageXOffset;
-        }
-
-        /**
-         * Gets the scrollTop
-         * @returns {number}
-         */
-        static get windowScrollTop(): number{
-            return window.pageYOffset;
-        }
-
-        /**
          * Converts the value in css format to a number
          *
          * @param property
@@ -158,6 +142,43 @@ module latte {
 
         //endregion
 
+        //region Static Properties
+
+        /**
+         * Field for body property
+         */
+        private static _body: Element<HTMLBodyElement>;
+
+        /**
+         * Gets the body element
+         *
+         * @returns {Element<HTMLBodyElement>}
+         */
+        static get body(): Element<HTMLBodyElement> {
+            if (!Element._body && document.body) {
+                Element._body = new Element<HTMLBodyElement>(document.body);
+            }
+            return Element._body;
+        }
+
+        /**
+         * Gets the scrollTop
+         * @returns {number}
+         */
+        static get windowScrollLeft(): number{
+            return window.pageXOffset;
+        }
+
+        /**
+         * Gets the scrollTop
+         * @returns {number}
+         */
+        static get windowScrollTop(): number{
+            return window.pageYOffset;
+        }
+
+        //endregion
+
         //region Fields
         private dataElements: Element<HTMLElement>[] = [];
         //endregion
@@ -177,9 +198,9 @@ module latte {
         //region Private Methods
 
         private addBindedElement(e: Element<HTMLElement>, ebind: EventBind, dbind: DataBind){
-            for (var i = 0; i < this.bindedElements.length; i++) {
+            for (let i = 0; i < this.bindedElements.length; i++) {
                 if(this.bindedElements[i] === e) {
-                    return
+                    return;
                 }
             }
 
@@ -374,23 +395,23 @@ module latte {
          */
         bind(object: any, hide: boolean = false){
 
-            var list = this.element.querySelectorAll('[data-bind]');
+            let list = this.element.querySelectorAll('[data-bind]');
 
-            for (var i = 0; i < list.length; i++) {
+            for (let i = 0; i < list.length; i++) {
                 ((node:Node) => {
 
                     if(node.nodeType != 1) return;
 
-                    var e = new Element<HTMLElement>(<HTMLElement>node);
-                    var prop = e.element.getAttribute('data-bind');
-                    var dataBinds = prop.split(";");
+                    let e = new Element<HTMLElement>(<HTMLElement>node);
+                    let prop = e.element.getAttribute('data-bind');
+                    let dataBinds = prop.split(";");
 
-                    for (var j = 0; j < dataBinds.length; j++) {
-                        var parts = dataBinds[j].split(":");
-                        var elementProperty = parts.length == 2 ? parts[0] : 'text';
-                        var recordProperty = parts.length == 2 ? parts[1] : parts[0];
+                    for (let j = 0; j < dataBinds.length; j++) {
+                        let parts = dataBinds[j].split(":");
+                        let elementProperty = parts.length == 2 ? parts[0] : 'text';
+                        let recordProperty = parts.length == 2 ? parts[1] : parts[0];
 
-                        var bind = new DataBind(e,elementProperty, object, recordProperty, DataBindType.AUTO, null, 'input', sprintf('%sChanged', prop));
+                        let bind = new DataBind(e,elementProperty, object, recordProperty, DataBindType.AUTO, null, 'input', sprintf('%sChanged', prop));
 
                         if(!hide){
                             this.dataBinds.push(bind);
@@ -408,27 +429,24 @@ module latte {
                     //
                     //this.addBindedElement(e);
 
-
-
-
                 })(list[i]);
             }
 
 
-            var elist = this.element.querySelectorAll('[data-event]');
+            let elist = this.element.querySelectorAll('[data-event]');
 
-            for (var i = 0; i < elist.length; i++) {
+            for (let i = 0; i < elist.length; i++) {
                 ((node:Node) => {
 
-                    var e = new Element<HTMLElement>(<any>node);
-                    var prop = e.element.getAttribute('data-event');
-                    var binds = prop.split(';');
+                    let e = new Element<HTMLElement>(<any>node);
+                    let prop = e.element.getAttribute('data-event');
+                    let binds = prop.split(';');
 
-                    for (var j = 0; j < binds.length; j++) {
-                        var parts = binds[j].split(':');
+                    for (let j = 0; j < binds.length; j++) {
+                        let parts = binds[j].split(':');
 
                         if(parts.length == 2) {
-                            var bind = new EventBind(e, parts[0].trim(), object, parts[1].trim());
+                            let bind = new EventBind(e, parts[0].trim(), object, parts[1].trim());
 
                             e.eventBinds.push(bind);
                             this.addBindedElement(e, bind, null);
@@ -721,6 +739,24 @@ module latte {
         }
 
         /**
+         * Raises the <c>dataBindAdded</c> event
+         */
+        onDataBindAdded(b: DataBind){
+            if(this._dataBindAdded){
+                this._dataBindAdded.raise(b);
+            }
+        }
+
+        /**
+         * Raises the <c>eventBindAdded</c> event
+         */
+        onEventBindAdded(b: EventBind){
+            if(this._eventBindAdded){
+                this._eventBindAdded.raise(b);
+            }
+        }
+
+        /**
          * Raises the <c>tag</c> event
          */
         onTagChanged(){
@@ -763,6 +799,26 @@ module latte {
          */
         remove(e: Element<HTMLElement>){
             this.element.removeChild(e.element);
+        }
+
+        /**
+         * Removes the bind to the specified object
+         * @param object
+         */
+        removeBindedElement(object: any){
+
+            let dataCount = 0;
+
+            // Scan data bindings
+            this.dataBinds.forEach((bind: DataBind) => {
+                bind.uninstall();
+                dataCount++;
+            });
+
+
+            // Delete from BindedElements
+
+
         }
 
         /**
@@ -854,7 +910,7 @@ module latte {
         /**
          * Back field for event
          */
-        private _contentEditableChanged: LatteEvent
+        private _contentEditableChanged: LatteEvent;
 
         /**
          * Gets an event raised when the value of the contentEditable property changes
@@ -867,7 +923,6 @@ module latte {
             }
             return this._contentEditableChanged;
         }
-
 
         /**
          * Back field for event
@@ -887,16 +942,6 @@ module latte {
         }
 
         /**
-         * Raises the <c>dataBindAdded</c> event
-         */
-        onDataBindAdded(b: DataBind){
-            if(this._dataBindAdded){
-                this._dataBindAdded.raise(b);
-            }
-        }
-
-
-        /**
          * Back field for event
          */
         private _eventBindAdded: LatteEvent;
@@ -914,18 +959,9 @@ module latte {
         }
 
         /**
-         * Raises the <c>eventBindAdded</c> event
-         */
-        onEventBindAdded(b: EventBind){
-            if(this._eventBindAdded){
-                this._eventBindAdded.raise(b);
-            }
-        }
-
-        /**
          * Back field for event
          */
-        private _tagChanged: LatteEvent
+        private _tagChanged: LatteEvent;
 
         /**
          * Gets an event raised when the value of the tag property changes
@@ -942,7 +978,7 @@ module latte {
         /**
          * Back field for event
          */
-        private _visibleChanged: LatteEvent
+        private _visibleChanged: LatteEvent;
 
         /**
          * Gets an event raised when the value of the visible property changes
@@ -1330,7 +1366,6 @@ module latte {
         set width(value:number) {
             this.element.style.width = value + 'px';
         }
-
 
         /**
          * Gets or sets the tooltip of the elent

@@ -471,7 +471,7 @@ module latte{
             menu.show(this, side, edge);
 
             // When closed, remove zIndex
-            menu.closed.add(function(){
+            menu.closed.add(()=>{
                 ZIndex.removeElement(this.element);
 
                 if(this.split && !this.faceVisible){

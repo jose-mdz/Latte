@@ -2,36 +2,59 @@ module latte{
     /**
      *
      **/
-    export class CheckboxItem extends ValueItem{
+    export class CheckboxItem extends ValueItem<boolean>{
+
 
         /**
-         *
-         **/
-        private _value: boolean;
-
-        /**
-         * Label for checkbox
-         **/
-        label: LabelItem;
-
-        /**
-         *
+         * Creates the item
          **/
         constructor(){
 
             super();
+
             this.element.addClass('checkbox');
 
-            this.label = new LabelItem();
             this.label.appendTo(this);
 
-            this.element.click(() => {
-                this.value = !this.value;
-            });
-
-            this.value = false;
+            this.addEventListener('click', () => this.value = !this.value);
 
         }
+
+        //region Methods
+
+        /**
+         * Override.
+         */
+        onValueChanged(){
+            super.onValueChanged();
+
+            let value = this.value;
+
+            if(!_isBoolean(value) && _isString(value) && _isNumeric(value)) {
+                this.value = !!parseInt(<any>value);
+            }else {
+                this.label.icon = this.value ? Glyph.checked : Glyph.unchecked;
+            }
+        }
+
+        /**
+         * Override
+         */
+        serialize(): string{
+            return this.value ? "1" : "0";
+        }
+
+        /**
+         * Override
+         */
+        unserialize(value: string){
+            this.value = !!parseInt(value);
+        }
+
+
+        //endregion
+
+        //region Properties
 
         /**
          * Gets or sets the text of the checkbox
@@ -49,50 +72,32 @@ module latte{
 
         }
 
-        /**
-         * Gets or sets the checked state of checkbox
-         **/
-        get value(): boolean{
-            return this._value;
-        }
+        //endregion
+
+        //region Components
 
         /**
-         * Gets or sets the checked state of checkbox
-         **/
-        set value(value: boolean){
+         * Field for label property
+         */
+        private _label: LabelItem;
 
-
-            if(!_isBoolean(value)){
-
-                var t:any = value;
- 
-                if(t == 1) {
-                    value = true;
-
-                }else if(t == 0 || t == "" || t == null){
-                    value = false;
-                }else{
-                    throw new InvalidArgumentEx('value', value);
-                }
-
+        /**
+         * Gets the label of the checkbox
+         *
+         * @returns {LabelItem}
+         */
+        get label(): LabelItem {
+            if (!this._label) {
+                this._label = new LabelItem();
             }
-
-
-            var changed = value !== this._value;
-
-            if(value){
-                this.label.icon = Glyph.checked;
-            }else{
-                this.label.icon = Glyph.unchecked;
-            }
-
-            this._value = value;
-
-
-            if(changed){
-                this.onValueChanged();
-            }
-
+            return this._label;
         }
+
+
+        //endregion
+
+
+
+
     }
 }

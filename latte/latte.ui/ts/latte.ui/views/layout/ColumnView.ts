@@ -28,7 +28,7 @@ module latte{
         /**
          * Creates the View with the specified amount of columns.
          **/
-        constructor(columns: number = 0){
+        constructor(columns: number = 1){
 
             super();
 

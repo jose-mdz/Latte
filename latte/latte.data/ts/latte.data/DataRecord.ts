@@ -1,3 +1,4 @@
+
 module latte{
 
     export interface DataRecordArrayCallback { (records:Array<DataRecord>): void }
@@ -94,12 +95,13 @@ module latte{
                 throw new latte.Ex();
             }
 
-            for (i in obj.fields)
-                record[i] = obj.fields[i];
-
+            for (i in obj.fields){
+                let nativeType = type['nativeTypes'] ? type['nativeTypes'][i] || 'varchar' : 'varchar';
+                record[i] = DataRecord.unserializeNativeValue(obj.fields[i], nativeType);
+            }
 
             record.recordType = obj.recordType;
-            record.recordId = obj.recordId;
+            record.recordId = parseInt(obj.recordId);
 
             if (obj.metadata) {
                 // Metadata, if any
@@ -165,6 +167,112 @@ module latte{
                 && !_undef(object.recordType);
 
         }
+
+        /**
+         * Serializes the native value
+         * @param value
+         * @param nativeType
+         * @returns {any}
+         */
+        static serializeNativeValue(value: any, nativeType: string): string{
+            let parts = nativeType.split('(');
+            let name = parts[0].toLowerCase();
+            let size = parts.length > 1 ? parseInt(parts[1].replace(')', '')) : -1;
+            let dictionary = {
+                'bit': 'int',
+                'tinyint': 'int',
+                'bool': 'int',
+                'boolean': 'int',
+                'smallint': 'int',
+                'mediumint': 'int',
+                'int': 'int',
+                'integer': 'int',
+                'bigint': 'int',
+                'decimal': 'float',
+                'dec': 'float',
+                'double': 'float',
+                'double precision': 'float',
+                'float': 'float',
+                'year': 'int',
+                'date': 'DateTime',
+                'datetime': 'DateTime',
+                'timestamp': 'TimeSpan',
+                'time': 'TimeSpan',
+                'char': 'string',
+                'varchar': 'string',
+                'text': 'string',
+                'mediumtext': 'string',
+                'enum': 'string'
+            };
+
+            let t = dictionary[name] || 'string';
+
+            if(name == 'int' && size == 1) {
+                return value ? "1" : "0";
+            }
+
+            let v = value === null ? '' : String(value);
+            return v;
+        }
+
+        /**
+         * Unserializes the native value
+         * @param value
+         * @param nativeType
+         */
+        static unserializeNativeValue(value: string, nativeType: string): any{
+            if(value === null) {
+                return null;
+            }
+            let parts = nativeType.split('(');
+            let name = parts[0].toLowerCase();
+            let size = parts.length > 1 ? parseInt(parts[1].replace(')', '')) : -1;
+            let dictionary = {
+                'bit': 'int',
+                'tinyint': 'int',
+                'bool': 'int',
+                'boolean': 'int',
+                'smallint': 'int',
+                'mediumint': 'int',
+                'int': 'int',
+                'integer': 'int',
+                'bigint': 'int',
+                'decimal': 'float',
+                'dec': 'float',
+                'double': 'float',
+                'double precision': 'float',
+                'float': 'float',
+                'year': 'int',
+                'date': 'DateTime',
+                'datetime': 'DateTime',
+                'timestamp': 'TimeSpan',
+                'time': 'TimeSpan',
+                'char': 'string',
+                'varchar': 'string',
+                'text': 'string',
+                'mediumtext': 'string',
+                'enum': 'string'
+
+            };
+
+            let t = dictionary[name] || 'string';
+
+            if(name == 'int' && size == 1) {
+                t = 'boolean';
+            }
+
+            switch(t){
+                case 'boolean': return !!parseInt(value, 10);
+                case 'int': return parseInt(value, 10);
+                case 'float': return parseFloat(value);
+                case 'DateTime': return DateTime.fromString(value);
+                case 'TimeSpan': return TimeSpan.fromString(value);
+                case 'string': return String(value);
+            }
+
+            return String(value);
+        }
+
         //endregion
 
         //region Fields
@@ -191,7 +299,7 @@ module latte{
         /**
          * Metadata of record. Comes from server.
          **/
-        metadata:any;
+        metadata: IRecordMeta;
 
         //endregion
 
@@ -255,9 +363,41 @@ module latte{
         /**
          * Can be overriden to return dynamically generated metadata
          **/
-        getMetadata(): any {
+        getMetadata(): IRecordMeta {
 
             return this.metadata;
+
+        }
+
+        /**
+         * Gets the fields of the record, with values serialized.
+         */
+        getSerializedFields():Object {
+
+            var def = this.onGetFields();
+            var rt = latte[this._recordType];
+
+            if(def) {
+
+                for(var i in def){
+                    let nativeType = rt['nativeTypes'] ? rt['nativeTypes'][i] : 'varchar';
+                    def[i] = DataRecord.serializeNativeValue(def[i], nativeType) || null;
+                }
+
+                return def;
+            }else {
+                var f = {};
+                var metadata = this.getMetadata();
+
+                if (metadata && metadata.fields) {
+                    for (var i in metadata.fields) {
+                        let nativeType = rt['nativeTypes'] ? rt['nativeTypes'][i] : 'varchar';
+
+                        f[i] = DataRecord.serializeNativeValue(this[i], nativeType) || null;
+                    }
+                }
+                return f;
+            }
 
         }
 
@@ -281,8 +421,7 @@ module latte{
          */
         insertCall(): RemoteCall<string>{
 
-
-            var values = this.getFields();
+            var values = this.getSerializedFields();
 
             // Change null values to empty values
             for (var i in values){
@@ -401,7 +540,7 @@ module latte{
          */
         updateCall(): RemoteCall<string>{
 
-            var values = this.getFields();
+            var values = this.getSerializedFields();
 
             // Change null values to empty values
             for (var i in values){

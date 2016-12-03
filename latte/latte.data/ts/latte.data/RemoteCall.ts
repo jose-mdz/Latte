@@ -3,7 +3,7 @@ module latte{
     /**
      * Object who contains marshalled call data
      */
-    export interface IRemoteCall{
+    export interface IDataRemoteCall{
         moduleName: string;
         className: string;
         method: string;
@@ -14,7 +14,7 @@ module latte{
     /**
      * Represents a call to a remote procedure
      */
-    export class RemoteCall<T>{
+    export class RemoteCall<T> implements ICall{
 
         //region Fields
         private _className: string = null;
@@ -51,7 +51,7 @@ module latte{
         /**
          * Gets the marshalled call
          */
-        marshall(): IRemoteCall{
+        marshall(): IDataRemoteCall{
             return {
                 moduleName: this.moduleName,
                 className: this.className,

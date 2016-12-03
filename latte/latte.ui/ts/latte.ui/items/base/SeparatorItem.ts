@@ -4,6 +4,19 @@ module latte{
      **/
     export class SeparatorItem extends Item{
 
+        //region Static
+        /**
+         * Returns the separator with the specified tab pointer
+         * @param tab
+         * @returns {latte.SeparatorItem}
+         */
+        static withTab(tab: TabItem){
+            let s = new SeparatorItem();
+            s.tab = tab;
+            return s;
+        }
+        //endregion
+
         /**
          *
          **/
@@ -13,7 +26,7 @@ module latte{
         /**
          * Creates the separator
          **/
-            constructor(){
+        constructor(){
 
 
             // Init

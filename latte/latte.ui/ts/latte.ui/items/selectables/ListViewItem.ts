@@ -17,11 +17,6 @@ module latte{
         /**
          *
          **/
-        private _listView: ListView;
-
-        /**
-         *
-         **/
         private _text: string;
 
         /**
@@ -187,7 +182,11 @@ module latte{
                 var lv = this.listView;
 
                 // Inform tree view selection
-                if(lv) lv._informSelectedItem(this);
+                if(lv) {
+                    lv.informSelectedItem(this);
+                // }else{
+                //     log("wut? no listview?")
+                }
             }
 
             super.onSelectedChanged();
@@ -203,9 +202,7 @@ module latte{
          **/
         setColumnWidth(index: number, width: number){
 
-            if(!_isNumber(index) || index < 0 || index > this.columns.length)
-                throw new InvalidArgumentEx('index');
-
+            this._columns[index].width(width);
 
         }
 
@@ -214,10 +211,6 @@ module latte{
          * @param index
          */
         getItem(index: number): Item{
-            if(!_isNumber(index) || index < 0 || index > this.columns.length){
-                throw new InvalidArgumentEx('index');
-            }
-
             return this._items[index];
         }
 
@@ -302,7 +295,7 @@ module latte{
          *
          * @returns {Array<JQuery>}
          */
-        public get columns():Array<JQuery> {
+        get columns():JQuery[] {
             return this._columns;
         }
 
@@ -332,12 +325,26 @@ module latte{
         }
 
         /**
-         * Gets the listView of the item
-         **/
-        get listView(): ListView{
+         * Property field
+         */
+        private _listView: ListView = null;
 
+        /**
+         * Gets or sets the listview of the item
+         *
+         * @returns {ListView}
+         */
+        get listView(): ListView {
             return this._listView;
+        }
 
+        /**
+         * Gets or sets the listview of the item
+         *
+         * @param {ListView} value
+         */
+        set listView(value: ListView) {
+            this._listView = value;
         }
     }
 }

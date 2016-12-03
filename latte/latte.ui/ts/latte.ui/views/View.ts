@@ -4,7 +4,7 @@ module latte{
 
      The main feature of View is the fact that it can contains another View or Views.
      **/
-    export class View extends UiElement{
+    export class View extends UiElement implements ISaveContainer, ISave{
 
         //region Static
 
@@ -327,36 +327,6 @@ module latte{
         // **/
         //hidden: LatteEvent;
 
-        /**
-         * Raised when the view is loaded and about to be placed into its container
-         **/
-        load: LatteEvent;
-
-        /**
-         * Raised when the view is already visible
-         **/
-        shown: LatteEvent;
-
-        /**
-         * Raised when the view is unloaded. If result of event is <c>false</c> unload will be aborted.
-         **/
-        unload: LatteEvent;
-
-        /**
-         * Raised when the value of <c>unsavedChanges()</c> changes
-         **/
-        unsavedChangesChanged: LatteEvent;
-
-        /**
-         * Raised when <c>saveChanges()</c> is invoked.
-         It may return false to cancel furhter operation.
-         **/
-        savingChanges: LatteEvent;
-
-        /**
-         * Raised when <c>saveChanges()</c> has finalized.
-         **/
-        savedChanges: LatteEvent;
         //endregion
 
         /**
@@ -366,22 +336,118 @@ module latte{
 
             super();
 
-            // Initialize events
-            //this.hidden = new LatteEvent(this);
-            this.load = new LatteEvent(this);
-            this.shown = new LatteEvent(this);
-            this.unload = new LatteEvent(this);
-            this.unsavedChangesChanged = new LatteEvent(this);
-            this.savingChanges = new LatteEvent(this);
-            this.savedChanges = new LatteEvent(this);
-
             // Create base elements
             this.element.addClass('latte-view');
             this.container = $('<div>').appendTo(this.element).addClass('container');
 
-
-
         }
+
+        //region Events
+
+
+        /**
+         * Back field for event
+         */
+        private _load: LatteEvent;
+
+        /**
+         * Gets an event raised when the view is loaded
+         *
+         * @returns {LatteEvent}
+         */
+        get load(): LatteEvent{
+            if(!this._load){
+                this._load = new LatteEvent(this);
+            }
+            return this._load;
+        }
+
+        /**
+         * Back field for event
+         */
+        private _shown: LatteEvent;
+
+        /**
+         * Gets an event raised when the view is already visible
+         *
+         * @returns {LatteEvent}
+         */
+        get shown(): LatteEvent{
+            if(!this._shown){
+                this._shown = new LatteEvent(this);
+            }
+            return this._shown;
+        }
+
+        /**
+         * Back field for event
+         */
+        private _unload: LatteEvent;
+
+        /**
+         * Gets an event raised when the view is unloaded. If result of event is false, unload will be aborted
+         *
+         * @returns {LatteEvent}
+         */
+        get unload(): LatteEvent{
+            if(!this._unload){
+                this._unload = new LatteEvent(this);
+            }
+            return this._unload;
+        }
+
+        /**
+         * Back field for event
+         */
+        private _unsavedChangesChanged: LatteEvent;
+
+        /**
+         * Gets an event raised when the unsavedChanges variable value changes
+         *
+         * @returns {LatteEvent}
+         */
+        get unsavedChangesChanged(): LatteEvent{
+            if(!this._unsavedChangesChanged){
+                this._unsavedChangesChanged = new LatteEvent(this);
+            }
+            return this._unsavedChangesChanged;
+        }
+
+        /**
+         * Back field for event
+         */
+        private _savingChanges: LatteEvent;
+
+        /**
+         * Gets an event raised when the <c>saveChanges</c> method is called.
+         *
+         * @returns {LatteEvent}
+         */
+        get savingChanges(): LatteEvent{
+            if(!this._savingChanges){
+                this._savingChanges = new LatteEvent(this);
+            }
+            return this._savingChanges;
+        }
+
+        /**
+         * Back field for event
+         */
+        private _savedChanges: LatteEvent;
+
+        /**
+         * Gets an event raised when the changes have finalized saving
+         *
+         * @returns {LatteEvent}
+         */
+        get savedChanges(): LatteEvent{
+            if(!this._savedChanges){
+                this._savedChanges = new LatteEvent(this);
+            }
+            return this._savedChanges;
+        }
+
+        //endregion
 
         //region Methods
         /**
@@ -437,45 +503,38 @@ module latte{
 
         /**
          * Raises the <c>load</c> event
-         **/
+         */
         onLoad(){
-
-            this.load.raise();
-
+            if(this._load){
+                this._load.raise();
+            }
         }
 
         /**
          * Raises the <c>savedChanges</c> event
-         **/
-        onSavedChanges(){
-
-            this.savedChanges.raise();
-
-        }
-
-        /**
-         * Called to save changes
          */
-        onSaveChanges(){
-
+        onSavedChanges(){
+            if(this._savedChanges){
+                this._savedChanges.raise();
+            }
         }
 
         /**
          * Raises the <c>savingChanges</c> event
-         **/
-        onSavingChanges(){
-
-            return this.savingChanges.raise();
-
+         */
+        onSavingChanges(): boolean{
+            if(this._savingChanges){
+                return this._savingChanges.raise();
+            }
         }
 
         /**
          * Raises the <c>shown</c> event
-         **/
+         */
         onShown(){
-
-            this.shown.raise();
-
+            if(this._shown){
+                this._shown.raise();
+            }
         }
 
         /**
@@ -483,19 +542,18 @@ module latte{
          **/
         onUnload(){
 
-
-            var returner = null;
-            var response = this.unload.raise();
+            let response = this.unload.raise();
 
             if(response !== false){
 
                 // Check if unsaved changes
                 if(this.unsavedChanges){
 
-                    var btnSave = new ButtonItem();
+                    let btnSave = new ButtonItem();
                     btnSave.text = strings.yesSaveChanges;
                     btnSave.click.add( () => { this.saveChanges() });
-                    var btnIgnore = new ButtonItem();
+
+                    let btnIgnore = new ButtonItem();
                     btnIgnore.text = strings.noIgnoreChanges;
                     btnIgnore.click.add( () => { this.unsavedChanges = false; } );
 
@@ -516,11 +574,11 @@ module latte{
 
         /**
          * Raises the <c>unsavedChangesChanged</c> event
-         **/
+         */
         onUnsavedChangesChanged(){
-
-            this.unsavedChangesChanged.raise();
-
+            if(this._unsavedChangesChanged){
+                this._unsavedChangesChanged.raise();
+            }
         }
 
         /**
@@ -530,11 +588,25 @@ module latte{
         saveChanges(){
 
             if(this.onSavingChanges() != false){
-                this.unsavedChanges = false;
-                this.onSaveChanges();
-                this.onSavedChanges();
-            }
 
+                // Backwards compatibility
+                if (this['onSaveChanges']){
+                    debugger;
+                    warnDeprecated('View.onSaveChanges', 'ISave.getSaveCalls');
+                    this.unsavedChanges = false;
+                    this['onSaveChanges']();
+                    this.onSavedChanges();
+                }else{
+                    // Send using Message
+                    // HACK: This is invoking the Message Class
+                    //       creating a dependency on the latte.data class.
+                    //       A cleaner implementation should make correct use of
+                    //       ICall & IMessage classes on latte module.
+                    let m = latte['Message'].sendCalls(this.getSaveCalls());
+                    m.responseArrived.add(() => this.onSavedChanges());
+
+                }
+            }
         }
 
         /**
@@ -559,10 +631,12 @@ module latte{
                     return false;
                 }
 
+                this.saveItems.remove(this._view);
+
             }
 
             // States for animation of transition
-            var oldView = this._view, newView = view, oldStart: any = {}, oldEnd: any = {}, newStart: any = {}, newEnd: any = {};
+            let oldView = this._view, newView = view, oldStart: any = {}, oldEnd: any = {}, newStart: any = {}, newEnd: any = {};
 
             if(newView){
                 // Call load of view
@@ -573,6 +647,9 @@ module latte{
 
                 // Append view
                 this.container.append(view.element);
+
+                // Add to saveItems
+                this.saveItems.add(view);
 
                 newView._parentView = this;
             }
@@ -627,6 +704,18 @@ module latte{
         }
 
         /**
+         * Implementation. Gets the save calls of all its descendants.
+         */
+        getSaveCalls(): ICall[]{
+            let calls = [];
+
+            // Concat all calls
+            this.saveItems.each((item) => calls = calls.concat(item.getSaveCalls()));
+
+            return calls;
+        }
+
+        /**
          * SPECIAL SETTER
          Gets or sets a value indicating if the view contains elments with unsaved changes
          **/
@@ -646,16 +735,18 @@ module latte{
         }
 
         /**
-         * Sets this view as the view of the specified view.
-         **/
-        viewOf(view: View): View{
+         * Updates the changes based on saveItems
+         */
+        updateSavedChanges(){
+            let changes = false;
 
-            if(!(view instanceof View))
-                throw new InvalidArgumentEx('view');
-
-            view.view = this;
-            return this;
-
+            for (let i = 0; i < this.saveItems.length; i++) {
+                if (this.saveItems[i].unsavedChanges){
+                    changes = true;
+                    break;
+                }
+            }
+            this.unsavedChanges = changes;
         }
         //endregion
 
@@ -741,6 +832,35 @@ module latte{
 
             return this._parentView;
 
+        }
+
+        /**
+         * Field for saveItems property
+         */
+        private _saveItems:Collection<ISave>;
+
+        /**
+         * Gets the ISave items
+         *
+         * @returns {Collection<ISave>}
+         */
+        get saveItems():Collection<ISave> {
+            if (!this._saveItems) {
+                this._saveItems = new Collection<ISave>((item: ISave) => {
+
+
+                    item.unsavedChangesChanged.add(() => {
+
+                        if(this.saveItems.contains(item)){
+                            // log("unsavedChangesChanged! Checking")
+                            // log(item)
+                            this.updateSavedChanges()
+                        }
+                    });
+
+                });
+            }
+            return this._saveItems;
         }
 
         /**

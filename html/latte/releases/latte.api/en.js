@@ -1,1 +1,0 @@
-if(!this.strings) {this.strings = {}}

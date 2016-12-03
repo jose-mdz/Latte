@@ -1,122 +1,34 @@
 module latte{
+
+    export enum TextboxFilter{
+
+        NONE,
+
+        NUMBER,
+
+        INTEGER
+
+    }
+
     /**
      *
      **/
-    export class TextboxItem extends ValueItem{
+    export class TextboxItem extends ValueItem<string>{
 
-        /**
-         *
-         **/
-        private _autoGrow: boolean = true;
+        //region Static
 
-        /**
-         *
-         **/
-        private _inputContainer: JQuery;
+        //endregion
 
-        /**
-         *
-         **/
-        private _invisible: JQuery;
-
-        /**
-         *
-         **/
-        private _maxLength: number;
-
-        /**
-         *
-         **/
-        private _minHeight: number;
-
-        /**
-         *
-         **/
-        private _multiline: boolean;
-
-        /**
-         *
-         **/
-        private _password: boolean;
-
-        /**
-         *
-         */
-        private _minLenToSuggest: number = 4 - 1;
-
-        /**
-         *
-         */
-        private _suggestionOverlay: SuggestionOverlay = null;
-
-        /**
-         * Index of Currently selected suggestion
-         */
-        private selectedIndex = -1;
-
-        private _selectedSuggestion: Item;
-
-        private _suggestions: Collection<Item>;
-
-        private _loadingSuggestions: boolean = false;
+        //region Fields
 
         /**
          * Points to the element who receives input
          **/
         input: JQuery;
 
-        /**
-         * Points to the placeholder label
-         **/
-        placeholderLabel: LabelItem;
+        ignorePassToTextbox: boolean = false;
 
-        /**
-         * Points to the label on the side of textbox
-         **/
-        sideLabel: LabelItem;
-
-        /**
-         * Raised when user presses the enter key
-         **/
-        enterPressed: LatteEvent;
-
-        /**
-         * Raised when accessing the value of item.
-         Returning something will override the value returned by the method
-         **/
-        gettingValue: LatteEvent;
-
-        /**
-         * Raised when accessing the value string of item.
-         Returning something will override the value returned by the method
-         **/
-        gettingValueString: LatteEvent;
-
-        /**
-         * Raised when the user presses a key on the textbox
-         */
-        keyPress: LatteEvent;
-
-        /**
-         * Raised when a key goes down
-         */
-        keyDown: LatteEvent;
-
-        /**
-         * Raised when a key goes up
-         */
-        keyUp: LatteEvent;
-
-        /**
-         * Raised when changing the value of the item.
-         * Returning a string will override the value setted to the method
-         **/
-        settingValue: LatteEvent;
-
-        /**
-         * Raised when time to add suggestions.
-         */
-        filterSuggestions: LatteEvent;
+        //endregion
 
         /**
          * Initializes the item
@@ -127,37 +39,15 @@ module latte{
 
             this.element.addClass('textbox');
 
-            // Events
-            this.enterPressed = new LatteEvent(this);
-            this.gettingValue = new LatteEvent(this);
-            this.gettingValueString = new LatteEvent(this);
-            this.keyPress = new LatteEvent(this);
-            this.keyDown = new LatteEvent(this);
-            this.keyUp = new LatteEvent(this);
-            this.settingValue = new LatteEvent(this);
-            this.filterSuggestions = new LatteEvent(this);
-
             // Elements
             this._inputContainer = $('<div>').addClass('input').appendTo(this.element);
             this._invisible = $('<div>').addClass('invisible').appendTo(this.element);
-            this.placeholderLabel = new LabelItem();
-            this.placeholderLabel.addClass('placeholder');
-            this.placeholderLabel.appendTo(this);
-            this.sideLabel = new LabelItem();
-            this.sideLabel.addClass('side-label');
-            this.sideLabel.appendTo(this);
 
             this._updateInput();
 
-            UiElement.disableTextSelection(this.placeholderLabel.element);
-
-            // Pass click to textbox
-            this.placeholderLabel.element.click(() => {
-                this.input.focus();
-            });
-
         }
 
+        //region Methods
         /**
          * Updates the input element
          **/
@@ -184,10 +74,42 @@ module latte{
             });
 
             this.input.keydown((evt) => {
+
+                // Allowed keys filter
+                if(_isArray(this.allowedKeys)) {
+                    let found = false;
+
+                    if(!(evt.ctrlKey || evt.altKey || evt.metaKey || evt.shiftKey
+                            || evt.keyCode == Key.ENTER || evt.keyCode == Key.TAB
+                            || evt.keyCode == Key.ESCAPE || evt.keyCode == Key.ARROW_DOWN
+                            || evt.keyCode == Key.ARROW_LEFT || evt.keyCode == Key.ARROW_RIGHT
+                            || evt.keyCode == Key.ARROW_UP
+                        )) {
+                        // Search if key is in allowed keys
+                        for(let i in this.allowedKeys){
+                            if(evt.keyCode == this.allowedKeys[i]) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        // If not found, bye
+                        if(!found) {
+                            log("Preventing default")
+                            evt.preventDefault();
+                            evt.stopImmediatePropagation();
+                            return false;
+                        }
+                    }
+
+
+                }
+
+
                 if(evt.keyCode === Key.ENTER){
                     this.onEnterPressed();
                 }
-                this.setValue(this.input.val(), true);
+                this.setValueSilently(this.input.val());
 
                 if(this.onKeyDown(evt) === false){
                     return false;
@@ -196,34 +118,17 @@ module latte{
 
             this.input.keypress((e) => {
                 this.onLayout();
-                this.setValue(this.input.val(), true);
+                this.setValueSilently(this.input.val());
                 this.onKeyPress(e);
 
             });
 
             this.input.keyup((e) => {
                 this.onLayout();
-                this.setValue(this.input.val(), true);
-                if(this.onKeyUp(e) === false) return false;
-                return true;
+                this.setValueSilently(this.input.val());
+                return this.onKeyUp(e) !== false;
             });
 
-
-        }
-
-        /**
-         *
-         **/
-        getValue(): string{
-
-            var getter = this.onGettingValue(this.input.val());
-
-            if(_isString(getter) || _isNumber(getter)){
-                return getter;
-            }
-            else{
-                return this.input.val() || "";
-            }
 
         }
 
@@ -250,44 +155,20 @@ module latte{
 
         /**
          * Raises the <c>enterPressed</c> event
-         **/
+         */
         onEnterPressed(){
-
-            this.enterPressed.raise();
-
+            if(this._enterPressed){
+                this._enterPressed.raise();
+            }
         }
 
         /**
          * Raises the <c>filterSuggestions</c> event
          */
         onFilterSuggestions(){
-            this.filterSuggestions.raise();
-        }
-
-        /**
-         * Raises the <c>gettingValue</c> event
-         **/
-        onGettingValue(value: string): any{
-
-            return this.gettingValue.raise(value);
-
-        }
-
-        /**
-         * Raises the <c>gettingValueString</c> event
-         **/
-        onGettingValueString(value: string): any{
-
-            return this.gettingValueString.raise(value);
-
-        }
-
-        /**
-         * Raises the <c>keyPress</c> event
-         * @param e
-         */
-        onKeyPress(e: JQueryEventObject){
-            this.keyPress.raise(e);
+            if(this._filterSuggestions){
+                this._filterSuggestions.raise();
+            }
         }
 
         /**
@@ -349,7 +230,16 @@ module latte{
         }
 
         /**
-         * Overriden.
+         * Raises the <c>keyPress</c> event
+         */
+        onKeyPress(e){
+            if(this._keyPress){
+                return this._keyPress.raise(e);
+            }
+        }
+
+        /**
+         * Override.
          **/
         onLayout(){
 
@@ -376,28 +266,40 @@ module latte{
         }
 
         /**
-         * Raises the <c>settingValue</c> event
-         **/
-        onSettingValue(value: string): any{
-
-            return this.settingValue.raise(value);
-
+         * Raises the <c>valid</c> event
+         */
+        onValidChanged(){
+            if(this._validChanged){
+                return this._validChanged.raise();
+            }
+            this.ensureClass('invalid', !this.valid);
         }
 
         /**
-         * Raises the <c>valueChanged</c> event
+         * Override
          **/
         onValueChanged(){
 
-
             super.onValueChanged();
 
-            this.placeholderLabel.visible = this.value.length === 0;
+            // Pass value to textbox
+            if(this.ignorePassToTextbox) {
+                this.ignorePassToTextbox = false;
+            }else {
+                this.input.val(this.value);
+            }
+
+            if(this._placeholderLabel) {
+                this.placeholderLabel.visible = this.value.length === 0;
+            }
 
             if(this.value.length < this.minLengthToActivateSuggestions && this.suggestionsVisible){
                 this.hideSuggestions();
             }
 
+            if(this.validationRegex && String(this.value).length > 0) {
+                this.valid = this.validationRegex.test(this.value);
+            }
         }
 
         /**
@@ -410,7 +312,7 @@ module latte{
         /**
          * Selects the next suggestion (if possible)
          */
-         selectNextSuggestion(){
+        selectNextSuggestion(){
             if(this.suggestionsVisible && this.selectedIndex < this._suggestionOverlay.items.length){
                 this.selectSuggestion(this.selectedIndex + 1);
             }
@@ -419,7 +321,7 @@ module latte{
         /**
          * Selects the previous suggestion (if possible)
          */
-         selectPreviousSuggestion(){
+        selectPreviousSuggestion(){
             if(this.suggestionsVisible && this.selectedIndex > 0){
                 this.selectSuggestion(this.selectedIndex - 1);
             }
@@ -431,7 +333,6 @@ module latte{
          * @param index
          */
         selectSuggestion(index: number){
-
             if(this.suggestionsVisible){
                 if(index < 0 || index >= this._suggestionOverlay.items.length){
                     throw new Ex();
@@ -459,7 +360,6 @@ module latte{
 
         }
 
-
         /**
          * Sets the side label as a "clear text" button, with the specified button
          * @param icon
@@ -483,29 +383,210 @@ module latte{
         }
 
         /**
-         * Sets the value.
-         Optionally it sets the value silently whitout updating the INPUT value.
+         * Sets the value silently without updating the textbox
+         * @param value
+         */
+        setValueSilently(value: string){
+            this.ignorePassToTextbox = true;
+            this.value = value;
+        }
+
+        //endregion
+
+        //region Events
+
+        /**
+         * Back field for event
+         */
+        private _enterPressed: LatteEvent;
+
+        /**
+         * Gets an event raised when user presses the enter key
+         *
+         * @returns {LatteEvent}
+         */
+        get enterPressed(): LatteEvent{
+            if(!this._enterPressed){
+                this._enterPressed = new LatteEvent(this);
+            }
+            return this._enterPressed;
+        }
+
+        /**
+         * Back field for event
+         */
+        private _keyPress: LatteEvent;
+
+        /**
+         * Gets an event raised when the user presses a key on the input
+         *
+         * @returns {LatteEvent}
+         */
+        get keyPress(): LatteEvent{
+            if(!this._keyPress){
+                this._keyPress = new LatteEvent(this);
+            }
+            return this._keyPress;
+        }
+
+        /**
+         * Back field for event
+         */
+        private _keyDown: LatteEvent;
+
+        /**
+         * Gets an event raised when a key is pressed
+         *
+         * @returns {LatteEvent}
+         */
+        get keyDown(): LatteEvent{
+            if(!this._keyDown){
+                this._keyDown = new LatteEvent(this);
+            }
+            return this._keyDown;
+        }
+
+        /**
+         * Back field for event
+         */
+        private _keyUp: LatteEvent;
+
+        /**
+         * Gets an event raised when the key is released
+         *
+         * @returns {LatteEvent}
+         */
+        get keyUp(): LatteEvent{
+            if(!this._keyUp){
+                this._keyUp = new LatteEvent(this);
+            }
+            return this._keyUp;
+        }
+
+        /**
+         * Back field for event
+         */
+        private _filterSuggestions: LatteEvent;
+
+        /**
+         * Gets an event raised when its time to add suggestins
+         *
+         * @returns {LatteEvent}
+         */
+        get filterSuggestions(): LatteEvent{
+            if(!this._filterSuggestions){
+                this._filterSuggestions = new LatteEvent(this);
+            }
+            return this._filterSuggestions;
+        }
+
+        /**
+         * Back field for event
+         */
+        private _validChanged: LatteEvent;
+
+        /**
+         * Gets an event raised when the value of the valid property changes
+         *
+         * @returns {LatteEvent}
+         */
+        get validChanged(): LatteEvent{
+            if(!this._validChanged){
+                this._validChanged = new LatteEvent(this);
+            }
+            return this._validChanged;
+        }
+
+        //endregion
+
+        //region Properties
+
+        /**
+         *
          **/
-        setValue(value: string, silentOnInput: boolean = false){
+        private _autoGrow: boolean = true;
 
-            var changed = value != this.input.val();
-            var setter = this.onSettingValue(value);
+        /**
+         *
+         **/
+        private _inputContainer: JQuery;
 
-            if(silentOnInput !== true){
-                if(_isString(setter) || _isNumber(setter)){
-                    this.input.val(setter);
-                }
-                else{
-                    this.input.val(value);
-                }
-            }
+        /**
+         *
+         **/
+        private _invisible: JQuery;
 
-            if(changed || silentOnInput === true){
-                this.onValueChanged();
-            }
+        /**
+         *
+         **/
+        private _maxLength: number;
 
-            this.onLayout();
+        /**
+         *
+         **/
+        private _minHeight: number;
 
+        /**
+         *
+         **/
+        private _multiline: boolean;
+
+        /**
+         *
+         **/
+        private _password: boolean;
+
+        /**
+         *
+         */
+        private _minLenToSuggest: number = 4 - 1;
+
+        /**
+         *
+         */
+        private _suggestionOverlay: SuggestionOverlay = null;
+
+        /**
+         * Index of Currently selected suggestion
+         */
+        private selectedIndex = -1;
+
+        /**
+         *
+         */
+        private _selectedSuggestion: Item;
+
+        /**
+         *
+         */
+        private _suggestions: Collection<Item>;
+
+        /**
+         *
+         */
+        private _loadingSuggestions: boolean = false;
+
+        /**
+         * Property field
+         */
+        private _allowedKeys: Key[] = null;
+
+        /**
+         * Gets or sets the allowed keys of the keyboard
+         *
+         * @returns {Key[]}
+         */
+        get allowedKeys(): Key[] {
+            return this._allowedKeys;
+        }
+
+        /**
+         * Gets or sets the allowed keys of the keyboard
+         *
+         * @param {Key[]} value
+         */
+        set allowedKeys(value: Key[]) {
+            this._allowedKeys = value;
         }
 
         /**
@@ -525,6 +606,45 @@ module latte{
 
             this._autoGrow = value;
 
+
+        }
+
+        /**
+         * Property field
+         */
+        private _filter: TextboxFilter = null;
+
+        /**
+         * Gets or sets the filter for input
+         *
+         * @returns {TextboxFilter}
+         */
+        get filter(): TextboxFilter {
+            return this._filter;
+        }
+
+        /**
+         * Gets or sets the filter for input
+         *
+         * @param {TextboxFilter} value
+         */
+        set filter(value: TextboxFilter) {
+            this._filter = value;
+
+            let navs = [Key.ARROW_LEFT, Key.ARROW_RIGHT, Key.TAB,
+                Key.SHIFT, Key.ALT, Key.DELETE, Key.BACKSPACE];
+            let numbers = [Key.NUMBER_0, Key.NUMBER_1, Key.NUMBER_2, Key.NUMBER_3, Key.NUMBER_4, Key.NUMBER_5,
+                Key.NUMBER_6, Key.NUMBER_7, Key.NUMBER_8, Key.NUMBER_9, Key.NUMPAD_0, Key.NUMPAD_1, Key.NUMPAD_2,
+                Key.NUMPAD_3, Key.NUMPAD_4, Key.NUMPAD_5, Key.NUMPAD_6, Key.NUMPAD_7, Key.NUMPAD_8, Key.NUMPAD_9];
+            let period = [Key.PERIOD];
+            let comma = [Key.COMMA];
+
+            if(value && value == TextboxFilter.NUMBER) {
+                this.allowedKeys = navs.concat(numbers).concat(period).concat(comma);
+
+            }else if(value && value == TextboxFilter.INTEGER) {
+                this.allowedKeys = navs.concat(numbers);
+            }
 
         }
 
@@ -774,38 +894,59 @@ module latte{
         }
 
         /**
-         * Gets or sets the value.
-         Optionally it sets the value silently whitout updating the INPUT value.
-         **/
-        get value(): string{
-            return this.getValue();
+         * Property field
+         */
+        private _valid: boolean = true;
+
+        /**
+         * Gets or sets a value indicating if the control is valid
+         *
+         * @returns {boolean}
+         */
+        get valid(): boolean{
+            return this._valid;
         }
 
         /**
-         * Gets or sets the value.
-         Optionally it sets the value silently whitout updating the INPUT value.
-         **/
-        set value(value: string){
+         * Gets or sets a value indicating if the control is valid
+         *
+         * @param {boolean} value
+         */
+        set valid(value: boolean){
 
+            // Check if value changed
+            let changed: boolean = value !== this._valid;
 
-            this.setValue(value, false)
+            // Set value
+            this._valid = value;
 
-
-        }
-
-        /**
-         * Gets the value as a string
-         **/
-        get valueString(): string{
-
-            var getter = this.onGettingValueString(this.value);
-
-            if(_isString(getter) || _isNumber(getter)){
-                return getter;
-            }else{
-                return this.value;
+            // Trigger changed event
+            if(changed){
+                this.onValidChanged();
             }
+        }
 
+        /**
+         * Property field
+         */
+        private _validationRegex: RegExp = null;
+
+        /**
+         * Gets or sets the regular expression for validating content
+         *
+         * @returns {RegExp}
+         */
+        get validationRegex(): RegExp {
+            return this._validationRegex;
+        }
+
+        /**
+         * Gets or sets the regular expression for validating content
+         *
+         * @param {RegExp} value
+         */
+        set validationRegex(value: RegExp) {
+            this._validationRegex = value;
         }
 
         /**
@@ -824,5 +965,53 @@ module latte{
             this.input.width(value - Math.abs(this.input.width() - this.input.outerWidth()));
 
         }
+
+        //endregion
+
+        //region Components
+
+        /**
+         * Field for placeHolerLabel property
+         */
+        private _placeholderLabel: LabelItem;
+
+        /**
+         * Gets the placeholder label
+         *
+         * @returns {LabelItem}
+         */
+        get placeholderLabel(): LabelItem {
+            if (!this._placeholderLabel) {
+                this._placeholderLabel = new LabelItem();
+                this._placeholderLabel.addClass('placeholder');
+                this._placeholderLabel.appendTo(this);
+                this._placeholderLabel.addEventListener('click', () => this.input.focus());
+                UiElement.disableTextSelection(this.placeholderLabel.element);
+            }
+            return this._placeholderLabel;
+        }
+
+        /**
+         * Field for sideLabel property
+         */
+        private _sideLabel: LabelItem;
+
+        /**
+         * Gets the side label
+         *
+         * @returns {LabelItem}
+         */
+        get sideLabel(): LabelItem {
+            if (!this._sideLabel) {
+                this._sideLabel = new LabelItem();
+                this._sideLabel.addClass('side-label');
+                this._sideLabel.appendTo(this);
+            }
+            return this._sideLabel;
+        }
+
+
+        //endregion
+
     }
 }

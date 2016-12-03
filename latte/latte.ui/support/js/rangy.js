@@ -2,12 +2,11 @@
  * Rangy, a cross-browser JavaScript range and selection library
  * https://github.com/timdown/rangy
  *
- * Copyright 2014, Tim Down
+ * Copyright 2015, Tim Down
  * Licensed under the MIT license.
- * Version: 1.3.0-alpha.20140921
- * Build date: 21 September 2014
+ * Version: 1.3.1-dev
+ * Build date: 20 May 2015
  */
-
 (function(factory, root) {
     if (typeof define == "function" && define.amd) {
         // AMD. Register as an anonymous module.
@@ -82,6 +81,16 @@
         return isHostObject(doc, "body") ? doc.body : doc.getElementsByTagName("body")[0];
     }
 
+    var forEach = [].forEach ?
+        function(arr, func) {
+            arr.forEach(func);
+        } :
+        function(arr, func) {
+            for (var i = 0, len = arr.length; i < len; ++i) {
+                func(arr[i], i);
+            }
+        };
+
     var modules = {};
 
     var isBrowser = (typeof window != UNDEFINED && typeof document != UNDEFINED);
@@ -94,11 +103,12 @@
         areHostObjects: areHostObjects,
         areHostProperties: areHostProperties,
         isTextRange: isTextRange,
-        getBody: getBody
+        getBody: getBody,
+        forEach: forEach
     };
 
     var api = {
-        version: "1.3.0-alpha.20140921",
+        version: "1.3.1-dev",
         initialized: false,
         isBrowser: isBrowser,
         supported: true,
@@ -106,7 +116,7 @@
         features: {},
         modules: modules,
         config: {
-            alertOnFail: true,
+            alertOnFail: false,
             alertOnWarn: false,
             preferTextRange: false,
             autoInitialize: (typeof rangyAutoInitialize == UNDEFINED) ? true : rangyAutoInitialize
@@ -295,6 +305,24 @@
         }
     }
 
+    function deprecationNotice(deprecated, replacement, module) {
+        if (module) {
+            deprecated += " in module " + module.name;
+        }
+        api.warn("DEPRECATED: " + deprecated + " is deprecated. Please use " +
+            replacement + " instead.");
+    }
+
+    function createAliasForDeprecatedMethod(owner, deprecated, replacement, module) {
+        owner[deprecated] = function() {
+            deprecationNotice(deprecated, replacement, module);
+            return owner[replacement].apply(owner, util.toArray(arguments));
+        };
+    }
+
+    util.deprecationNotice = deprecationNotice;
+    util.createAliasForDeprecatedMethod = createAliasForDeprecatedMethod;
+
     // Allow external scripts to initialize this library in case it's loaded after the document has loaded
     api.init = init;
 
@@ -325,6 +353,7 @@
 
     if (isBrowser) {
         api.shim = api.createMissingNativeApi = shim;
+        createAliasForDeprecatedMethod(api, "createMissingNativeApi", "shim");
     }
 
     function Module(name, dependencies, initializer) {
@@ -360,7 +389,7 @@
         fail: function(reason) {
             this.initialized = true;
             this.supported = false;
-            throw new Error("Module '" + this.name + "' failed to load: " + reason);
+            throw new Error(reason);
         },
 
         warn: function(msg) {
@@ -368,8 +397,8 @@
         },
 
         deprecationNotice: function(deprecated, replacement) {
-            api.warn("DEPRECATED: " + deprecated + " in module " + this.name + "is deprecated. Please use " +
-            replacement + " instead");
+            api.warn("DEPRECATED: " + deprecated + " in module " + this.name + " is deprecated. Please use " +
+                replacement + " instead");
         },
 
         createError: function(msg) {
@@ -437,6 +466,7 @@
     api.createCoreModule("DomUtil", [], function(api, module) {
         var UNDEF = "undefined";
         var util = api.util;
+        var getBody = util.getBody;
 
         // Perform feature tests
         if (!util.areHostMethods(document, ["createDocumentFragment", "createElement", "createTextNode"])) {
@@ -449,7 +479,7 @@
 
         var el = document.createElement("div");
         if (!util.areHostMethods(el, ["insertBefore", "appendChild", "cloneNode"] ||
-            !util.areHostObjects(el, ["previousSibling", "nextSibling", "childNodes", "parentNode"]))) {
+                !util.areHostObjects(el, ["previousSibling", "nextSibling", "childNodes", "parentNode"]))) {
             module.fail("Incomplete Element implementation");
         }
 
@@ -460,8 +490,8 @@
 
         var textNode = document.createTextNode("test");
         if (!util.areHostMethods(textNode, ["splitText", "deleteData", "insertData", "appendData", "cloneNode"] ||
-            !util.areHostObjects(el, ["previousSibling", "nextSibling", "childNodes", "parentNode"]) ||
-            !util.areHostProperties(textNode, ["data"]))) {
+                !util.areHostObjects(el, ["previousSibling", "nextSibling", "childNodes", "parentNode"]) ||
+                !util.areHostProperties(textNode, ["data"]))) {
             module.fail("Incomplete Text Node implementation");
         }
 
@@ -748,7 +778,7 @@
             var el = document.createElement("b");
             el.innerHTML = "1";
             var textNode = el.firstChild;
-            el.innerHTML = "<br>";
+            el.innerHTML = "<br />";
             crashyTextNodes = isBrokenNode(textNode);
 
             api.features.crashyTextNodes = crashyTextNodes;
@@ -788,10 +818,33 @@
             };
         } else if (typeof document.documentElement.currentStyle != UNDEF) {
             getComputedStyleProperty = function(el, propName) {
-                return el.currentStyle[propName];
+                return el.currentStyle ? el.currentStyle[propName] : "";
             };
         } else {
             module.fail("No means of obtaining computed style properties found");
+        }
+
+        function createTestElement(doc, html, contentEditable) {
+            var body = getBody(doc);
+            var el = doc.createElement("div");
+            el.contentEditable = "" + !!contentEditable;
+            if (html) {
+                el.innerHTML = html;
+            }
+
+            // Insert the test element at the start of the body to prevent scrolling to the bottom in iOS (issue #292)
+            var bodyFirstChild = body.firstChild;
+            if (bodyFirstChild) {
+                body.insertBefore(el, bodyFirstChild);
+            } else {
+                body.appendChild(el);
+            }
+
+            return el;
+        }
+
+        function removeNode(node) {
+            return node.parentNode.removeChild(node);
         }
 
         function NodeIterator(root) {
@@ -891,7 +944,7 @@
             getWindow: getWindow,
             getIframeWindow: getIframeWindow,
             getIframeDocument: getIframeDocument,
-            getBody: util.getBody,
+            getBody: getBody,
             isWindow: isWindow,
             getContentDocument: getContentDocument,
             getRootContainer: getRootContainer,
@@ -899,6 +952,8 @@
             isBrokenNode: isBrokenNode,
             inspectNode: inspectNode,
             getComputedStyleProperty: getComputedStyleProperty,
+            createTestElement: createTestElement,
+            removeNode: removeNode,
             fragmentFromNodeChildren: fragmentFromNodeChildren,
             createIterator: createIterator,
             DomPosition: DomPosition
@@ -928,6 +983,8 @@
         var getRootContainer = dom.getRootContainer;
         var crashyTextNodes = api.features.crashyTextNodes;
 
+        var removeNode = dom.removeNode;
+
         /*----------------------------------------------------------------------------------------------------------------*/
 
         // Utility functions
@@ -939,6 +996,10 @@
 
         function getRangeDocument(range) {
             return range.document || getDocument(range.startContainer);
+        }
+
+        function getRangeRoot(range) {
+            return getRootContainer(range.startContainer);
         }
 
         function getBoundaryBeforeNode(node) {
@@ -1175,7 +1236,7 @@
                     }
                 } else {
                     if (current.parentNode) {
-                        current.parentNode.removeChild(current);
+                        removeNode(current);
                     } else {
                     }
                 }
@@ -1278,26 +1339,21 @@
             }
         }
 
-        function isOrphan(node) {
-            return (crashyTextNodes && dom.isBrokenNode(node)) ||
-                !arrayContains(rootContainerNodeTypes, node.nodeType) && !getDocumentOrFragmentContainer(node, true);
-        }
-
         function isValidOffset(node, offset) {
             return offset <= (isCharacterDataNode(node) ? node.length : node.childNodes.length);
         }
 
         function isRangeValid(range) {
             return (!!range.startContainer && !!range.endContainer &&
-            !isOrphan(range.startContainer) &&
-            !isOrphan(range.endContainer) &&
+            !(crashyTextNodes && (dom.isBrokenNode(range.startContainer) || dom.isBrokenNode(range.endContainer))) &&
+            getRootContainer(range.startContainer) == getRootContainer(range.endContainer) &&
             isValidOffset(range.startContainer, range.startOffset) &&
             isValidOffset(range.endContainer, range.endOffset));
         }
 
         function assertRangeValid(range) {
             if (!isRangeValid(range)) {
-                throw new Error("Range error: Range is no longer valid after DOM mutation (" + range.inspect() + ")");
+                throw new Error("Range error: Range is not valid. This usually happens after DOM mutation. Range: (" + range.inspect() + ")");
             }
         }
 
@@ -1349,9 +1405,9 @@
                 // and element's local name is "html" and element's namespace is the HTML
                 // namespace"
                 if (el === null || (
-                    el.nodeName == "HTML" &&
-                    dom.isHtmlNamespace(getDocument(el).documentElement) &&
-                    dom.isHtmlNamespace(el)
+                        el.nodeName == "HTML" &&
+                        dom.isHtmlNamespace(getDocument(el).documentElement) &&
+                        dom.isHtmlNamespace(el)
                     )) {
 
                     // "let element be a new Element with "body" as its local name and the HTML
@@ -1591,13 +1647,14 @@
             // with it (as in WebKit) or not (as in Gecko pre-1.9, and the default)
             intersectsNode: function(node, touchingIsIntersecting) {
                 assertRangeValid(this);
-                assertNode(node, "NOT_FOUND_ERR");
-                if (getDocument(node) !== getRangeDocument(this)) {
+                if (getRootContainer(node) != getRangeRoot(this)) {
                     return false;
                 }
 
                 var parent = node.parentNode, offset = getNodeIndex(node);
-                assertNode(parent, "NOT_FOUND_ERR");
+                if (!parent) {
+                    return true;
+                }
 
                 var startComparison = comparePoints(parent, offset, this.endContainer, this.endOffset),
                     endComparison = comparePoints(parent, offset + 1, this.startContainer, this.startOffset);
@@ -1980,7 +2037,7 @@
                             ec = node;
                             eo = node.length;
                             node.appendData(sibling.data);
-                            sibling.parentNode.removeChild(sibling);
+                            removeNode(sibling);
                         }
                     };
 
@@ -1991,7 +2048,7 @@
                             var nodeLength = node.length;
                             so = sibling.length;
                             node.insertData(0, sibling.data);
-                            sibling.parentNode.removeChild(sibling);
+                            removeNode(sibling);
                             if (sc == ec) {
                                 eo += so;
                                 ec = sc;
@@ -2008,10 +2065,22 @@
                     };
 
                     var normalizeStart = true;
+                    var sibling;
 
                     if (isCharacterDataNode(ec)) {
-                        if (ec.length == eo) {
+                        if (eo == ec.length) {
                             mergeForward(ec);
+                        } else if (eo == 0) {
+                            sibling = ec.previousSibling;
+                            if (sibling && sibling.nodeType == ec.nodeType) {
+                                eo = sibling.length;
+                                if (sc == ec) {
+                                    normalizeStart = false;
+                                }
+                                sibling.appendData(ec.data);
+                                removeNode(ec);
+                                ec = sibling;
+                            }
                         }
                     } else {
                         if (eo > 0) {
@@ -2027,6 +2096,16 @@
                         if (isCharacterDataNode(sc)) {
                             if (so == 0) {
                                 mergeBackward(sc);
+                            } else if (so == sc.length) {
+                                sibling = sc.nextSibling;
+                                if (sibling && sibling.nodeType == sc.nodeType) {
+                                    if (ec == sibling) {
+                                        ec = sc;
+                                        eo += sc.length;
+                                    }
+                                    sc.appendData(sibling.data);
+                                    removeNode(sibling);
+                                }
                             }
                         } else {
                             if (so < sc.childNodes.length) {
@@ -2105,7 +2184,7 @@
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    // Wrappers for the browser's native DOM Range and/or TextRange implementation 
+    // Wrappers for the browser's native DOM Range and/or TextRange implementation
     api.createCoreModule("WrappedRange", ["DomRange"], function(api, module) {
         var WrappedRange, WrappedTextRange;
         var dom = api.dom;
@@ -2376,12 +2455,9 @@
             /*
              This is a workaround for a bug where IE returns the wrong container element from the TextRange's parentElement()
              method. For example, in the following (where pipes denote the selection boundaries):
-
              <ul id="ul"><li id="a">| a </li><li id="b"> b |</li></ul>
-
              var range = document.selection.createRange();
              alert(range.parentElement().id); // Should alert "ul" but alerts "b"
-
              This method returns the common ancestor node of the following:
              - the parentElement() of the textRange
              - the parentElement() of the textRange after calling collapse(true)
@@ -2438,7 +2514,7 @@
                 // Workaround for HTML5 Shiv's insane violation of document.createElement(). See Rangy issue 104 and HTML5
                 // Shiv issue 64: https://github.com/aFarkas/html5shiv/issues/64
                 if (workingNode.parentNode) {
-                    workingNode.parentNode.removeChild(workingNode);
+                    dom.removeNode(workingNode);
                 }
 
                 var comparison, workingComparisonType = isStart ? "StartToStart" : "StartToEnd";
@@ -2493,11 +2569,9 @@
                          For the particular case of a boundary within a text node containing rendered line breaks (within a
                          <pre> element, for example), we need a slightly complicated approach to get the boundary's offset in
                          IE. The facts:
-
                          - Each line break is represented as \r in the text node's data/nodeValue properties
                          - Each line break is represented as \r\n in the TextRange's 'text' property
                          - The 'text' property of the TextRange does not contain trailing line breaks
-
                          To get round the problem presented by the final fact above, we can use the fact that TextRange's
                          moveStart() and moveEnd() methods return the actual number of characters moved, which is not
                          necessarily the same as the number of characters it was instructed to move. The simplest approach is
@@ -2506,13 +2580,11 @@
                          "move-negative-gazillion" method). However, this is extremely slow when the document is large and
                          the range is near the end of it. Clearly doing the mirror image (i.e. moving the range boundaries to
                          the end of the document) has the same problem.
-
                          Another approach that works is to use moveStart() to move the start boundary of the range up to the
                          end boundary one character at a time and incrementing a counter with the value returned by the
                          moveStart() call. However, the check for whether the start boundary has reached the end boundary is
                          expensive, so this method is slow (although unlike "move-negative-gazillion" is largely unaffected
                          by the location of the range within the document).
-
                          The approach used below is a hybrid of the two methods above. It uses the fact that a string
                          containing the TextRange's 'text' property with each \r\n converted to a single \r character cannot
                          be longer than the text of the TextRange, so the start of the range is moved that length initially
@@ -2547,7 +2619,7 @@
                 }
 
                 // Clean up
-                workingNode.parentNode.removeChild(workingNode);
+                dom.removeNode(workingNode);
 
                 return {
                     boundaryPosition: boundaryPosition,
@@ -2696,15 +2768,8 @@
             return new DomRange(doc);
         };
 
-        api.createIframeRange = function(iframeEl) {
-            module.deprecationNotice("createIframeRange()", "createRange(iframeEl)");
-            return api.createRange(iframeEl);
-        };
-
-        api.createIframeRangyRange = function(iframeEl) {
-            module.deprecationNotice("createIframeRangyRange()", "createRangyRange(iframeEl)");
-            return api.createRangyRange(iframeEl);
-        };
+        util.createAliasForDeprecatedMethod(api, "createIframeRange", "createRange");
+        util.createAliasForDeprecatedMethod(api, "createIframeRangyRange", "createRangyRange");
 
         api.addShimListener(function(win) {
             var doc = win.document;
@@ -2742,8 +2807,8 @@
         var rangesEqual = DomRange.rangesEqual;
 
 
-        // Utility function to support direction parameters in the API that may be a string ("backward" or "forward") or a
-        // Boolean (true for backwards).
+        // Utility function to support direction parameters in the API that may be a string ("backward", "backwards",
+        // "forward" or "forwards") or a Boolean (true for backwards).
         function isDirectionBackward(dir) {
             return (typeof dir == "string") ? /^backward(s)?$/i.test(dir) : !!dir;
         }
@@ -2802,11 +2867,19 @@
             };
         } else {
             module.fail("Neither document.selection or window.getSelection() detected.");
+            return false;
         }
 
         api.getNativeSelection = getNativeSelection;
 
         var testSelection = getNativeSelection();
+
+        // In Firefox, the selection is null in an iframe with display: none. See issue #138.
+        if (!testSelection) {
+            module.fail("Native selection was null (possibly issue 138?)");
+            return false;
+        }
+
         var testRange = api.createNativeRange(document);
         var body = getBody(document);
 
@@ -2843,10 +2916,9 @@
                 // Previously an iframe was used but this caused problems in some circumstances in IE, so tests are
                 // performed on the current document's selection. See issue 109.
 
-                // Note also that if a selection previously existed, it is wiped by these tests. This should usually be fine
-                // because initialization usually happens when the document loads, but could be a problem for a script that
-                // loads and initializes Rangy later. If anyone complains, code could be added to save and restore the
-                // selection.
+                // Note also that if a selection previously existed, it is wiped and later restored by these tests. This
+                // will result in the selection direction begin reversed if the original selection was backwards and the
+                // browser does not support setting backwards selections (Internet Explorer, I'm looking at you).
                 var sel = window.getSelection();
                 if (sel) {
                     // Store the current selection
@@ -2859,9 +2931,7 @@
                     }
 
                     // Create some test elements
-                    var body = getBody(document);
-                    var testEl = body.appendChild( document.createElement("div") );
-                    testEl.contentEditable = "false";
+                    var testEl = dom.createTestElement(document, "", false);
                     var textNode = testEl.appendChild( document.createTextNode("\u00a0\u00a0\u00a0") );
 
                     // Test whether the native selection will allow a collapsed selection within a non-editable element
@@ -2869,6 +2939,7 @@
 
                     r1.setStart(textNode, 1);
                     r1.collapse(true);
+                    sel.removeAllRanges();
                     sel.addRange(r1);
                     collapsedNonEditableSelectionsSupported = (sel.rangeCount == 1);
                     sel.removeAllRanges();
@@ -2895,7 +2966,7 @@
                     }
 
                     // Clean up
-                    body.removeChild(testEl);
+                    dom.removeNode(testEl);
                     sel.removeAllRanges();
 
                     for (i = 0; i < originalSelectionRangeCount; ++i) {
@@ -3153,10 +3224,7 @@
 
         api.getSelection = getSelection;
 
-        api.getIframeSelection = function(iframeEl) {
-            module.deprecationNotice("getIframeSelection()", "getSelection(iframeEl)");
-            return api.getSelection(dom.getIframeWindow(iframeEl));
-        };
+        util.createAliasForDeprecatedMethod(api, "getIframeSelection", "getSelection");
 
         var selProto = WrappedSelection.prototype;
 
@@ -3517,8 +3585,8 @@
             }
         };
 
-        // The spec is very specific on how selectAllChildren should be implemented so the native implementation is
-        // never used by Rangy.
+        // The spec is very specific on how selectAllChildren should be implemented and not all browsers implement it as
+        // specified so the native implementation is never used by Rangy.
         selProto.selectAllChildren = function(node) {
             assertNodeInSameDocument(this, node);
             var range = api.createRange(node);
@@ -3534,7 +3602,7 @@
                 while (controlRange.length) {
                     element = controlRange.item(0);
                     controlRange.remove(element);
-                    element.parentNode.removeChild(element);
+                    dom.removeNode(element);
                 }
                 this.refresh();
             } else if (this.rangeCount) {
@@ -3576,7 +3644,7 @@
         selProto.callMethodOnEachRange = function(methodName, params) {
             var results = [];
             this.eachRange( function(range) {
-                results.push( range[methodName].apply(range, params) );
+                results.push( range[methodName].apply(range, params || []) );
             } );
             return results;
         };
@@ -3644,6 +3712,20 @@
                 this.setSingleRange(selRanges[0], "backward");
             } else {
                 this.setRanges(selRanges);
+            }
+        };
+
+        selProto.saveRanges = function() {
+            return {
+                backward: this.isBackward(),
+                ranges: this.callMethodOnEachRange("cloneRange")
+            };
+        };
+
+        selProto.restoreRanges = function(selRanges) {
+            this.removeAllRanges();
+            for (var i = 0, range; range = selRanges.ranges[i]; ++i) {
+                this.addRange(range, (selRanges.backward && i == 0));
             }
         };
 
@@ -3764,10 +3846,10 @@
  *
  * Depends on Rangy core.
  *
- * Copyright 2014, Tim Down
+ * Copyright 2015, Tim Down
  * Licensed under the MIT license.
- * Version: 1.3.0-alpha.20140921
- * Build date: 21 September 2014
+ * Version: 1.3.1-dev
+ * Build date: 20 May 2015
  */
 (function(factory, root) {
     if (typeof define == "function" && define.amd) {
@@ -3783,7 +3865,8 @@
 })(function(rangy) {
     rangy.createModule("SaveRestore", ["WrappedRange"], function(api, module) {
         var dom = api.dom;
-
+        var removeNode = dom.removeNode;
+        var isDirectionBackward = api.Selection.isDirectionBackward;
         var markerTextChar = "\ufeff";
 
         function gEBI(id, doc) {
@@ -3815,7 +3898,7 @@
             var markerEl = gEBI(markerId, doc);
             if (markerEl) {
                 range[atStart ? "setStartBefore" : "setEndBefore"](markerEl);
-                markerEl.parentNode.removeChild(markerEl);
+                removeNode(markerEl);
             } else {
                 module.warn("Marker element has been removed. Cannot restore selection.");
             }
@@ -3825,8 +3908,9 @@
             return r2.compareBoundaryPoints(r1.START_TO_START, r1);
         }
 
-        function saveRange(range, backward) {
+        function saveRange(range, direction) {
             var startEl, endEl, doc = api.DomRange.getRangeDocument(range), text = range.toString();
+            var backward = isDirectionBackward(direction);
 
             if (range.collapsed) {
                 endEl = insertRangeBoundaryMarker(range, false);
@@ -3866,11 +3950,11 @@
 
                     // Workaround for issue 17
                     if (previousNode && previousNode.nodeType == 3) {
-                        markerEl.parentNode.removeChild(markerEl);
+                        removeNode(markerEl);
                         range.collapseToPoint(previousNode, previousNode.length);
                     } else {
                         range.collapseBefore(markerEl);
-                        markerEl.parentNode.removeChild(markerEl);
+                        removeNode(markerEl);
                     }
                 } else {
                     module.warn("Marker element has been removed. Cannot restore selection.");
@@ -3887,8 +3971,9 @@
             return range;
         }
 
-        function saveRanges(ranges, backward) {
+        function saveRanges(ranges, direction) {
             var rangeInfos = [], range, doc;
+            var backward = isDirectionBackward(direction);
 
             // Order the ranges by position within the DOM, latest first, cloning the array to leave the original untouched
             ranges = ranges.slice(0);
@@ -3927,7 +4012,7 @@
 
             // Ensure current selection is unaffected
             if (backward) {
-                sel.setSingleRange(ranges[0], "backward");
+                sel.setSingleRange(ranges[0], backward);
             } else {
                 sel.setRanges(ranges);
             }
@@ -3973,7 +4058,7 @@
         function removeMarkerElement(doc, markerId) {
             var markerEl = gEBI(markerId, doc);
             if (markerEl) {
-                markerEl.parentNode.removeChild(markerEl);
+                removeNode(markerEl);
             }
         }
 
@@ -4002,4 +4087,5 @@
         });
     });
 
+    return rangy;
 }, this);

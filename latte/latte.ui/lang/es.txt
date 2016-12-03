@@ -51,7 +51,7 @@ api API
 datalatte DataLatte
 dbConnection Conexión
 updateRecords Actualizar registros
-settings Settings
+settings Ajustes
 cantConnectToServer No se puede conectar al servidor %s (Usuario %s)
 cantSelectDbS No se puede seleccionar la base de datos: %s
 errorOnQueryS Error al ejecutar el query: %s <sql>%s</sql>
@@ -141,3 +141,6 @@ cantBeUndone Esta acción no se puede deshacer
 yesDeleteS Sí, eliminar %s
 goToPage Ir a página
 refresh Actualizar
+switchOn Sí
+switchOff No
+flagsNone (Ninguno)

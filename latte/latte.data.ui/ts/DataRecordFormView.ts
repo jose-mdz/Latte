@@ -21,8 +21,6 @@ module latte{
 
         }
 
-
-
         //region Methods
         /**
          * Applies the values on form to the record. Optionally specifies which record
@@ -34,11 +32,21 @@ module latte{
 
         }
 
-        onSaveChanges(){
-            super.onSaveChanges();
 
+        getSaveCalls(): ICall[]{
+            //HACK: I don't think the call to applyValues should be here.
             this.applyValues(this.record);
-            this.record.save(() => { this.unsavedChanges = false })
+
+            // Return save call
+            return [this.record.saveCall().withHandlers(() => {
+                this.unsavedChanges = false;
+            })];
+        }
+
+        printSaveStack(view: View){
+            log(sprintf("Unsaved changes = %s of view:", view.unsavedChanges))
+            log(view)
+            if(view.parentView) this.printSaveStack(view.parentView);
         }
 
         //endregion

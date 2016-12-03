@@ -3,7 +3,7 @@ module latte{
     /**
      * Value item for files. Value of item is an array of system File objects.
      */
-    export class FileValueItem extends ValueItem{
+    export class FileValueItem extends ValueItem<string>{
 
         fileInput: JQuery;
 

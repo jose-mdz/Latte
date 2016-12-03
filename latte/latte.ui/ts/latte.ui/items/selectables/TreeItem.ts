@@ -4,6 +4,20 @@ module latte{
      **/
     export class TreeItem extends Item{
 
+        //region Static
+        /**
+         * Global level expand glyph loader
+         * @type {any}
+         */
+        static globalExpandGlyph: (item: TreeItem) => IconItem = null;
+
+        /**
+         * Global level collapse glyph loader
+         * @type {any}
+         */
+        static globalCollapseGlyph: (item: TreeItem) => IconItem = null;
+        //endregion
+
         /**
          *
          **/
@@ -115,7 +129,10 @@ module latte{
             this.selectedChanged = new LatteEvent(this);
 
             // Update glyph when loadItems handler is added
-            this.loadItems.handlerAdded.add( () => { this.glyph = Glyph.expand; });
+            this.loadItems.handlerAdded.add( () => {
+                //this.glyph = Glyph.expand;
+                this._updateGlyph();
+                });
 
             this.element.addClass('tree-item');
 
@@ -179,25 +196,39 @@ module latte{
             if(this.hasItems){
                 if(this.expanded){
 
-                    if(this.treeView && this.treeView.defaultGlyphCollapse){
-                        if(this.selected && this.treeView.defaultGlyphCollapseSelected)
-                            this.glyph = this.treeView.defaultGlyphCollapseSelected.clone();
-                        else
-                            this.glyph = this.treeView.defaultGlyphCollapse.clone();
-                    }else{
-                        this.glyph = Glyph.collapse;
+                    if(TreeItem.globalCollapseGlyph) {
+                        this.glyph = TreeItem.globalCollapseGlyph(this);
+                    }else {
+                        if(this.treeView && this.treeView.defaultGlyphCollapse){
+                            if(this.selected && this.treeView.defaultGlyphCollapseSelected)
+                                this.glyph = this.treeView.defaultGlyphCollapseSelected.clone();
+                            else
+                                this.glyph = this.treeView.defaultGlyphCollapse.clone();
+                        }else{
+                            this.glyph = Glyph.collapse;
+                        }
                     }
+
+
 
                 }else{
 
-                    if(this.treeView && this.treeView.defaultGlyphExpand){
-                        if(this.selected && this.treeView.defaultGlyphExpandSelected)
-                            this.glyph = this.treeView.defaultGlyphExpandSelected.clone();
-                        else
+                    if(TreeItem.globalExpandGlyph) {
+                        this.glyph = TreeItem.globalExpandGlyph(this);
+                    }else {
+                        if(this.treeView && this.treeView.defaultGlyphExpand){
+                            if(this.selected && this.treeView.defaultGlyphExpandSelected)
+                                this.glyph = this.treeView.defaultGlyphExpandSelected.clone();
+                            else
+                                debugger;
                             this.glyph = this.treeView.defaultGlyphExpand.clone();
-                    }else{
-                        this.glyph = Glyph.expand;
+                        }else{
+                            // debugger;
+                            this.glyph = Glyph.expand;
+                        }
                     }
+
+
                 }
             }
 
@@ -506,7 +537,7 @@ module latte{
 
                 // Inform tree view selection
                 if(tv){
-                    tv._informSelectedItem(this);
+                    tv.informSelectedItem(this);
                 }
             }else{
                 this.faceElement.removeClass('selected');

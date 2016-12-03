@@ -4,17 +4,13 @@ module latte{
      Combo options are presented as the button's items.
      The button's items tag value is assumed to be the value of the combobox.
      **/
-    export class RadioGroup extends ValueItem{
+    export class RadioGroup extends ValueItem<string>{
 
+        //region Fields
         /**
          *
          **/
         private _options: any;
-
-        /**
-         *
-         **/
-        private _value: any;
 
         /**
          *
@@ -25,9 +21,10 @@ module latte{
          *
          */
         private stack: ItemStack;
+        //endregion
 
         /**
-         * Creates t
+         * Creates the radio group
          **/
         constructor(options: any = null){
 
@@ -42,6 +39,37 @@ module latte{
             }
         }
 
+        //region Methods
+        /**
+         * Gets the value as a string for human reading
+         **/
+        onGetValueString(): any{
+
+            for(var i = 0; i < this.radios.length; i++){
+                if(this.radios[i].tag == this.value){
+                    return this.radios[i].text;
+                }
+            }
+
+            return '';
+        }
+
+        /**
+         * Override.
+         */
+        onValueChanged(){
+            super.onValueChanged();
+
+            for(var i = 0; i < this.radios.length; i++){
+                if(this.radios[i].tag == this.value){
+                    this.radios[i].value = true;
+                }
+            }
+
+        }
+        //endregion
+
+        //region Properties
         /**
          * Gets or sets the options of the combo
          **/
@@ -110,48 +138,6 @@ module latte{
             return this._radios;
         }
 
-        /**
-         * Gets or sets the selected value of the combo
-         **/
-        get value(): any{
-            return this._value;
-        }
-
-        /**
-         * Gets or sets the selected value of the combo
-         **/
-        set value(value: any){
-
-
-            var changed = this._value !== value;
-
-            for(var i = 0; i < this.radios.length; i++){
-                if(this.radios[i].tag == value){
-                    this.radios[i].value = true;
-                }
-            }
-
-            this._value = value;
-
-            if(changed){
-                this.onValueChanged();
-            }
-
-        }
-
-        /**
-         * Gets the value as a string for human reading
-         **/
-        get valueString(): any{
-
-            for(var i = 0; i < this.radios.length; i++){
-                if(this.radios[i].tag == this.value){
-                    return this.radios[i].text;
-                }
-            }
-
-            return '';
-
-        }
+        //endregion
     }
 }

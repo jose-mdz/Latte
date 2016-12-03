@@ -7,13 +7,13 @@ module latte{
      *
      */
     export interface DataRecordSuggestionLoader{
-        (d: DataRecordValueItem, callback:(items:Array<Item>) => any): Message;
+        (d: DataRecordValueItem, callback:(items: Item[]) => any): Message;
     }
 
     /**
      * Value item for representing data records as value item.
      */
-    export class DataRecordValueItem extends ValueItem{
+    export class DataRecordValueItem extends ValueItem<number>{
 
         /**
          * Creates the value item
@@ -120,7 +120,7 @@ module latte{
                 this.textbox.appendTo(this);
                 this.textbox.filterSuggestions.add(() => {
                     if(this.loaderFunction){
-                        this.loaderFunction(this, (items: Array<Item>) => {
+                        (<any>this.loaderFunction)(<any>this, (items: Item[]) => {
                             this.textbox.suggestions.clear();
                             this.textbox.suggestions.addArray(items);
                         });

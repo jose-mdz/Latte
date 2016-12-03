@@ -94,7 +94,7 @@ module latte{
         /**
          *
          **/
-        public _informSelectedItem(item: TreeItem){
+        public informSelectedItem(item: TreeItem){
 
             if(!(item instanceof TreeItem))
                 throw new InvalidArgumentEx('item');

@@ -2,7 +2,7 @@ module latte{
     /**
      * Renders an item to input data from user.
      **/
-    export class InputItem extends ValueItem{
+    export class InputItem extends ValueItem<any>{
 
 
         //region Static
@@ -12,6 +12,9 @@ module latte{
         static format(value: any, type: string, options: any = null): string{
 
             switch(type){
+                case 'switch':
+                    return value === true || value === 1 ? strings.switchOn : strings.switchOff;
+
                 case 'boolean':
                     return value === true || value === 1 ? strings.yes : strings.no;
 
@@ -30,9 +33,21 @@ module latte{
                     if(r) return r.getMetadata().name;
                     return value;
                 case 'combo':
-                    if((_isArray(options) ||  (typeof options === 'object'))&& !_undef(options[value]))
+                    if((_isArray(options) ||  (typeof options === 'object')) && !_undef(options[value]))
                         return options[value];
                     return value;
+
+                case 'flags':
+                    let list = [];
+                    let flags = parseInt(value);
+                    for(let i in options){
+                        let flag = parseInt(i);
+                        if( (flags & flag) == flag){
+                            list.push(options[i]);
+                        }
+                    }
+                    return list.join(', ') || strings.flagsNone;
+
                 default:
                     return value;
             }
@@ -45,7 +60,7 @@ module latte{
          * @param text
          * @param item
          */
-        static fromItem(text: string, item: ValueItem): InputItem{
+        static fromItem(text: string, item: ValueItem<any>): InputItem{
 
             var input = new InputItem(text, 'custom');
 
@@ -54,8 +69,42 @@ module latte{
             return input;
 
         }
+
+        /**
+         * Gets an input from the specified IInput
+         * @param input
+         * @param name
+         */
+        static fromIInput(input: IInput, name: string = null, value: any = null){
+
+            let item = new InputItem(
+                input.text || '(no text)',
+                input.type || 'string',
+                (input.options) ? null : value || input.defaultValue || null,
+                input.readOnly || null,
+                name
+            );
+
+            item.name = name;
+
+            if(input.options) {
+                item.options = input.options;
+
+                if(input.defaultValue){
+                    item.value = input.defaultValue;
+                }
+            }
+
+            if(input.hint) {
+                item.setHint(input.hint);
+            }
+
+            return item;
+        }
+
         //endregion
 
+        //region Fields
         /**
          * Stores options
          */
@@ -74,7 +123,7 @@ module latte{
         /**
          *
          **/
-        private _readOnly: boolean;
+        private _readOnly: boolean = null;
 
         /**
          *
@@ -94,7 +143,7 @@ module latte{
         /**
          *
          **/
-        private _valueItem: ValueItem;
+        private _valueItem: ValueItem<any>;
 
         /**
          * Points to the label where text is stored
@@ -120,11 +169,12 @@ module latte{
          * Points to the DOM element where the value is shown, i.e. the value side
          **/
         valueElement: JQuery;
+        //endregion
 
         /**
          * Creates the input element
          **/
-        constructor(text: string = '', type: string = '', value: any = null, readOnly: boolean = false, name: string = null){
+        constructor(text: string = '', type: string = '', value: any = null, readOnly: boolean = null, name: string = null){
 
 
             super();
@@ -203,6 +253,18 @@ module latte{
         }
 
         /**
+         * Override.
+         * @returns {string}
+         */
+        onGetValueString(): string{
+            if(this.valueItem) {
+                return this.valueItem.valueString;
+            }else {
+                return super.onGetValueString();
+            }
+        }
+
+        /**
          * Override
          * @returns {string}
          */
@@ -210,8 +272,56 @@ module latte{
             if(this.valueItem){
                 return this.valueItem.valueString;
             }else{
-                return super.getValueString();
+                return super.onGetValueString();
             }
+        }
+
+        /**
+         * Raises the <c>valid</c> event
+         */
+        onValidChanged(){
+            if(this._validChanged){
+                this._validChanged.raise();
+            }
+
+            if(this.valid) {
+                this.removeClass('invalid');
+            }else {
+                this.addClass('invalid');
+            }
+        }
+
+        /**
+         * Sets the hint as a string in a label
+         * @param hint
+         */
+        setHint(hint: string){
+            if(hint) {
+                let l = new LabelItem(hint);
+                this.hintItem = l;
+            }else {
+                this.hintItem = null;
+            }
+        }
+
+        //endregion
+
+        //region Events
+        /**
+         * Back field for event
+         */
+        private _validChanged: LatteEvent;
+
+        /**
+         * Gets an event raised when the value of the valid property changes
+         *
+         * @returns {LatteEvent}
+         */
+        get validChanged(): LatteEvent{
+            if(!this._validChanged){
+                this._validChanged = new LatteEvent(this);
+            }
+            return this._validChanged;
         }
 
         //endregion
@@ -246,6 +356,38 @@ module latte{
         }
 
         /**
+         * Property field
+         */
+        private _hintItem: Item = null;
+
+        /**
+         * Gets or sets the hint item
+         *
+         * @returns {Item}
+         */
+        get hintItem(): Item {
+            return this._hintItem;
+        }
+
+        /**
+         * Gets or sets the hint item
+         *
+         * @param {Item} value
+         */
+        set hintItem(value: Item) {
+
+            if(this._hintItem) {
+                this._hintItem.element.remove();
+            }
+
+            this._hintItem = value;
+
+            if (value) {
+                this.valueElement.append(value.element);
+            }
+        }
+
+        /**
          * Gets or sets the name of the input
          **/
         get name(): string{
@@ -277,11 +419,15 @@ module latte{
 
 
             if(this.valueItem instanceof ComboItem){
-                (<ComboItem>this.valueItem).options = (value);
+                (<ComboItem>this.valueItem).options = value;
             }
 
             if(this.valueItem instanceof RadioGroup){
-                (<RadioGroup>this.valueItem).options = (value);
+                (<any>this.valueItem).options = value;
+            }
+
+            if(this.valueItem instanceof FlagsValueItem) {
+                (<FlagsValueItem>this.valueItem).options = value;
             }
 
             this._options = value;
@@ -301,19 +447,12 @@ module latte{
          **/
         set readOnly(value: boolean){
 
-
-            if(!_isBoolean(value))
-                throw new InvalidArgumentEx('value', value);
-
             this._readOnly = value;
 
             // Switch visibility
             this.readOnlyLabel.value = (this.valueItem.valueString);
             this.readOnlyLabel.visible = (value);
             this.valueItem.visible = (!value);
-
-
-
         }
 
         /**
@@ -485,18 +624,28 @@ module latte{
 
                     case "number":
                         item = new TextboxItem();
+                        (<TextboxItem>item).filter = TextboxFilter.NUMBER;
+                        (<TextboxItem>item).validationRegex = Culture.current.floatValidator;
                         break;
 
                     case "integer":
                         item = new TextboxItem();
+                        (<TextboxItem>item).filter = TextboxFilter.INTEGER;
+                        (<TextboxItem>item).validationRegex = Culture.current.intValidator;
                         break;
 
                     case "float":
                         item = new TextboxItem();
+                        (<TextboxItem>item).filter = TextboxFilter.NUMBER;
+                        (<TextboxItem>item).validationRegex = Culture.current.floatValidator;
                         break;
 
                     case "boolean":
                         item = new CheckboxItem();
+                        break;
+
+                    case "switch":
+                        item = new SwitchItem();
                         break;
 
                     case "password":
@@ -539,7 +688,7 @@ module latte{
                         break;
 
                     case "flags":
-                        item = new LabelValueItem();
+                        item = new FlagsValueItem();
                         break;
 
                     case "color":
@@ -596,14 +745,14 @@ module latte{
         /**
          * Gets or sets the valueItem of the input
          **/
-        get valueItem(): ValueItem{
+        get valueItem(): ValueItem<any>{
             return this._valueItem;
         }
 
         /**
          * Gets or sets the valueItem of the input
          **/
-        set valueItem(value: ValueItem){
+        set valueItem(value: ValueItem<any>){
 
 
             if(!(value instanceof ValueItem))
@@ -620,7 +769,40 @@ module latte{
 
 
         }
-        
+
+        /**
+         * Property field
+         */
+        private _valid: boolean = true;
+
+        /**
+         * Gets or sets a value indicating if the value of the item is currently valid
+         *
+         * @returns {boolean}
+         */
+        get valid(): boolean{
+            return this._valid;
+        }
+
+        /**
+         * Gets or sets a value indicating if the value of the item is currently valid
+         *
+         * @param {boolean} value
+         */
+        set valid(value: boolean){
+
+            // Check if value changed
+            let changed: boolean = value !== this._valid;
+
+            // Set value
+            this._valid = value;
+
+            // Trigger changed event
+            if(changed){
+                this.onValidChanged();
+            }
+        }
+
         //endregion
 
     }

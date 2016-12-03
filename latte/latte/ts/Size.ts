@@ -48,6 +48,14 @@ module latte {
 
         //region Methods
         /**
+         * Gets a value indicating if the size contains the specified size.
+         * @param size
+         */
+        contains(size: Size): boolean{
+            return this.width >= size.width && this.height >= size.height;
+        }
+
+        /**
          * Inflates the size on the specified width and height
          *
          * @param width
@@ -64,6 +72,34 @@ module latte {
          */
         inflateUniform(wide: number){
             return new Size(this.width + wide, this.height + wide);
+        }
+
+        /**
+         * Gets a scaled Size that fits in the specified target.
+         * @param target
+         */
+        scaleToFit(target: Size): Size{
+            let dh = target.width * this.height / this.width;
+
+            if(dh > target.height) {
+                return new Size( target.height * this.width / this.height, target.height);
+            }
+
+            return new Size(target.width, dh);
+        }
+
+        /**
+         * Gets a scaled Size that fills the specified target.
+         * @param target
+         */
+        scaleToFill(target: Size): Size{
+            let dh = target.width * this.height / this.width;
+
+            if(dh <= target.height) {
+                return new Size( target.height * this.width / this.height, target.height);
+            }
+
+            return new Size(target.width, dh);
         }
 
         /**
@@ -99,6 +135,34 @@ module latte {
             return this._height == null && this._width == null;
         }
 
+        /**
+         * Gets a value indicating if the size is horizontal
+         *
+         * @returns {boolean}
+         */
+        get isHorizontal(): boolean {
+            return this.width > this.height;
+        }
+
+        /**
+         * Gets a value indicating if the size is a square
+         *
+         * @returns {boolean}
+         */
+        get isSquare(): boolean {
+            return this.width == this.height;
+        }
+
+
+        /**
+         * Gets a value indicating if the size is vertical
+         *
+         * @returns {boolean}
+         */
+        get isVertical(): boolean {
+            return this.height > this.width;
+        }
+
 
         /**
          * Property field
@@ -113,7 +177,6 @@ module latte {
         public get height():number {
             return this._height;
         }
-
 
         /**
          * Property field

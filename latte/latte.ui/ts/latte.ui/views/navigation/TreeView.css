@@ -19,3 +19,12 @@
 .latte-view.tree > .container  .latte-item.tree-item > .selectable{
     display: block;
 }
+
+.latte-view.tree.focusable:focus{
+
+}
+
+.latte-view.tree.focusable:not(:focus)  .latte-item.tree-item > .selectable.selected{
+    background: gray;
+    border-color: gray;
+}

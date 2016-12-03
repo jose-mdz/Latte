@@ -2,7 +2,7 @@ module latte{
     /**
      * Creates a form for a specific <c>DataRecord</c>
      **/
-    export class DataRecordFormItem extends FormItem{
+    export class DataRecordFormItem extends FormItem implements ISave{
 
 
         /**
@@ -39,6 +39,62 @@ module latte{
         }
 
         /**
+         * Property field
+         */
+        private _category: string = null;
+
+        /**
+         * Gets or sets the category of fields to show
+         *
+         * @returns {string}
+         */
+        get category(): string{
+            return this._category;
+        }
+
+        /**
+         * Gets or sets the category of fields to show
+         *
+         * @param {string} value
+         */
+        set category(value: string){
+
+            // Check if value changed
+            let changed: boolean = value !== this._category;
+
+            // Set value
+            this._category = value;
+
+            // Trigger changed event
+            if(changed){
+                this.onCategoryChanged();
+            }
+        }
+
+        /**
+         * Override.
+         */
+        getSaveCalls(): RemoteCall<any>[]{
+            if(this.record){
+                this.applyValues(this.record);
+            }
+            return [this.record.saveCall().withHandlers(() => this.unsavedChanges = false)];
+        }
+
+        /**
+         * Raises the <c>category</c> event
+         */
+        onCategoryChanged(){
+            if(this._categoryChanged){
+                this._categoryChanged.raise();
+            }
+
+            if(this.record) {
+                this.onRecordChanged();
+            }
+        }
+
+        /**
          * Raises the <c>record</c> event
          */
         onRecordChanged(){
@@ -67,17 +123,37 @@ module latte{
                     for (var i in metadata.fields) {
 
                         var field = metadata.fields[i];
-                        var input:InputItem = new InputItem();
+
+                        if(_isString(this.category) && this.category.length == 0 && !field['category']) {
+                            // All good
+                            // debugger;
+                        }else if(_isString(this.category) && (field['category'] != this.category)) {
+                            // debugger;
+                            continue;
+                        }
+
+
+
+                        var input:InputItem = InputItem.fromIInput(field, i);
                         var value = _undef(record[i]) ? null : record[i];
 
-                        input.text = field.text ? field.text : i;
-                        input.type = field.type ? field.type : 'string';
-                        input.name = i;
+                        // input.text = field.text ? field.text : i;
+                        // input.type = field.type ? field.type : 'string';
+                        // input.name = i;
+                        // input.readOnly = field['readonly'] === true || field['readOnly'] === true;
+                        // input.options = field['options'];
                         input.tag = i;
-                        input.readOnly = field['readonly'] === true || field['readOnly'] === true;
                         input.visible = field['visible'] !== false;
-                        input.options = field['options'];
                         input.separator = field['separator'] === true;
+
+                        if(_isString(field['visible'])) {
+                            if(field['visible'] === 'if-inserted') {
+                                input.visible = record.inserted();
+
+                            }else if(field['visible'] === 'if-not-inserted') {
+                                input.visible = !record.inserted();
+                            }
+                        }
 
                         // Check for fieldString declaration when read-only
                         if(input.readOnly && record[i + 'String']) {
@@ -147,6 +223,23 @@ module latte{
         //endregion
 
         //region Events
+
+        /**
+         * Back field for event
+         */
+        private _categoryChanged: LatteEvent;
+
+        /**
+         * Gets an event raised when the value of the category property changes
+         *
+         * @returns {LatteEvent}
+         */
+        get categoryChanged(): LatteEvent{
+            if(!this._categoryChanged){
+                this._categoryChanged = new LatteEvent(this);
+            }
+            return this._categoryChanged;
+        }
 
         /**
          * Back field for event

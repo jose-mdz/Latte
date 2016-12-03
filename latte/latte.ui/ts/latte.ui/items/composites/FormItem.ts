@@ -2,27 +2,16 @@ module latte{
     /**
      *
      **/
-    export class FormItem extends ItemStack{
+    export class FormItem extends ItemStack implements ISave{
 
-        /**
-         *
-         **/
-        private _faceVisible: boolean;
 
-        /**
-         *
-         **/
-        private _readOnly: boolean;
+        //region Static
 
-        /**
-         * Input items of the form
-         **/
-        inputs: Collection<InputItem>;
+        //endregion
 
-        /**
-         * Holds the title element of the form
-         **/
-        titleLabel: LabelItem;
+        //region Fields
+
+        //endregion
 
         /**
          *
@@ -32,44 +21,16 @@ module latte{
             super();
             this.element.addClass('form');
 
-            // Init collection
-            this.inputs = new Collection<InputItem>(this._onAddInput, this._onRemoveInput, this);
-
             // Init me
             this.faceVisible = true;
 
-            /**
-             * Add label item
-             */
-            this.titleLabel = new LabelItem();
-            this.titleLabel.visible = false;
-            this.titleLabel.title = 1;
+            // Add label item
             this.items.add(this.titleLabel);
 
         }
 
         //region Private
-        /**
-         *
-         **/
-        private _onAddInput(input: InputItem){
 
-            this.items.add(input);
-
-            input.valueChanged.add(this.onValueChanged, this);
-
-            input.textVisible = true;
-
-        }
-
-        /**
-         *
-         **/
-        private _onRemoveInput(input: InputItem){
-
-            this.items.remove(input);
-
-        }
         //endregion
 
         //region Methods
@@ -93,6 +54,14 @@ module latte{
         }
 
         /**
+         * Implementation. Gets an empty array since the form class itself has no way of knowing what calls should make
+         * the save itself.
+         */
+        getSaveCalls(): ICall[]{
+            return [];
+        }
+
+        /**
          * Gets an object with the values of fields
          **/
         getValues(): any{
@@ -108,13 +77,62 @@ module latte{
         }
 
         /**
+         * Raises the <c>direction</c> event
+         */
+        onDirectionChanged(){
+            if(this._directionChanged){
+                this._directionChanged.raise();
+            }
+
+            for(var i = 0; i < this.inputs.length; i++){
+                this.inputs.item(i).direction = this.direction;
+            }
+        }
+
+        /**
+         * Raises the <c>readOnly</c> event
+         */
+        onReadOnlyChanged(){
+            if(this._readOnlyChanged){
+                this._readOnlyChanged.raise();
+            }
+
+            for (let i = 0; i < this.inputs.length; i++) {
+                let input = this.inputs[i];
+
+                if(input.readOnly === null && this.readOnly !== null) {
+                    input.readOnly = this.readOnly;
+                }
+
+            }
+        }
+
+        /**
+         * Raises the <c>unsavedChanges</c> event
+         */
+        onUnsavedChangesChanged(){
+            if(this._unsavedChangesChanged){
+                this._unsavedChangesChanged.raise();
+            }
+        }
+
+        /**
+         * Raises the <c>valueChanged</c> event
+         */
+        onValueChanged(){
+            if(this._valueChanged){
+                this._valueChanged.raise();
+            }
+            this.unsavedChanges = true;
+        }
+
+        /**
          * Sets the direction of Inputs
          * @param d
          */
         setDirection(d: Direction){
-            for(var i = 0; i < this.inputs.length; i++){
-                this.inputs.item(i).direction = d;
-            }
+            warnDeprecated('FormItem.setDirection', 'FormItem.direction');
+            this.direction = d;
         }
 
         /**
@@ -130,9 +148,61 @@ module latte{
                 this.inputs[i].textWidth = value;
             }
         }
+
         //endregion
 
         //region Events
+
+        /**
+         * Back field for event
+         */
+        private _directionChanged: LatteEvent;
+
+        /**
+         * Gets an event raised when the value of the direction property changes
+         *
+         * @returns {LatteEvent}
+         */
+        get directionChanged(): LatteEvent{
+            if(!this._directionChanged){
+                this._directionChanged = new LatteEvent(this);
+            }
+            return this._directionChanged;
+        }
+
+        /**
+         * Back field for event
+         */
+        private _readOnlyChanged: LatteEvent;
+
+        /**
+         * Gets an event raised when the value of the readOnly property changes
+         *
+         * @returns {LatteEvent}
+         */
+        get readOnlyChanged(): LatteEvent{
+            if(!this._readOnlyChanged){
+                this._readOnlyChanged = new LatteEvent(this);
+            }
+            return this._readOnlyChanged;
+        }
+
+        /**
+         * Back field for event
+         */
+        private _unsavedChangesChanged: LatteEvent;
+
+        /**
+         * Gets an event raised when the value of the unsavedChanges property changes
+         *
+         * @returns {LatteEvent}
+         */
+        get unsavedChangesChanged(): LatteEvent{
+            if(!this._unsavedChangesChanged){
+                this._unsavedChangesChanged = new LatteEvent(this);
+            }
+            return this._unsavedChangesChanged;
+        }
 
         /**
          * Back field for event
@@ -151,17 +221,47 @@ module latte{
             return this._valueChanged;
         }
 
-        /**
-         * Raises the <c>valueChanged</c> event
-         */
-        public onValueChanged(){
-            if(this._valueChanged){
-                this._valueChanged.raise();
-            }
-        }
         //endregion
 
         //region Properties
+
+        /**
+         * Property field
+         */
+        private _direction: Direction = null;
+
+        /**
+         * Gets or sets the direction of the inputs in the form
+         *
+         * @returns {Direction}
+         */
+        get direction(): Direction{
+            return this._direction;
+        }
+
+        /**
+         * Gets or sets the direction of the inputs in the form
+         *
+         * @param {Direction} value
+         */
+        set direction(value: Direction){
+
+            // Check if value changed
+            let changed: boolean = value !== this._direction;
+
+            // Set value
+            this._direction = value;
+
+            // Trigger changed event
+            if(changed){
+                this.onDirectionChanged();
+            }
+        }
+
+        /**
+         *
+         **/
+        private _faceVisible: boolean;
 
         /**
          * Gets or sets a value indicating if the form has a visible face style.
@@ -192,29 +292,88 @@ module latte{
         }
 
         /**
-         * Gets or sets a value indicating if the inputs in the form are read-only
-         **/
+         * Field for inputs property
+         */
+        private _inputs:Collection<InputItem>;
+
+        /**
+         * Gets the inputs of the form
+         *
+         * @returns {Collection<Input>}
+         */
+        get inputs():Collection<InputItem> {
+            if (!this._inputs) {
+                this._inputs = new Collection<InputItem>(
+                    (input: InputItem) => {
+                        this.items.add(input);
+
+                        input.valueChanged.add(() => this.onValueChanged());
+
+                        if(this.direction){
+                            input.direction = this.direction;
+                        }
+
+                        if(input.readOnly === null && this.readOnly !== null) {
+                            input.readOnly = this.readOnly;
+                        }
+
+                        input.textVisible = true;
+                    },
+                    (input: InputItem) => {
+                        this.items.remove(input);
+                    }
+                );
+            }
+            return this._inputs;
+        }
+
+        /**
+         * Gets a value indicating if the form is currently valid
+         *
+         * @returns {boolean}
+         */
+        get isValid(): boolean {
+
+            for (let i = 0; i < this.inputs.length; i++) {
+                if(!this.inputs[i].valid) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /**
+         * Property field
+         */
+        private _readOnly: boolean = null;
+
+        /**
+         * Gets or sets a value indicating if the inputs should be read-only.
+         *
+         * @returns {boolean}
+         */
         get readOnly(): boolean{
             return this._readOnly;
         }
 
         /**
-         * Gets or sets a value indicating if the inputs in the form are read-only
-         **/
+         * Gets or sets a value indicating if the inputs should be read-only.
+         *
+         * @param {boolean} value
+         */
         set readOnly(value: boolean){
 
+            // Check if value changed
+            let changed: boolean = value !== this._readOnly;
 
-            if(!_isBoolean(value))
-                throw new InvalidArgumentEx('value');
-
-            var i = 0;
-
-            for(i = 0; i < this.inputs.count; i++)
-                this.inputs.item(i).readOnly = value;
-
+            // Set value
             this._readOnly = value;
 
-
+            // Trigger changed event
+            if(changed){
+                this.onReadOnlyChanged();
+            }
         }
 
         /**
@@ -240,6 +399,39 @@ module latte{
         }
 
         /**
+         * Property field
+         */
+        private _unsavedChanges: boolean = false;
+
+        /**
+         * Gets or sets a value indicating if the form has changes
+         *
+         * @returns {boolean}
+         */
+        get unsavedChanges(): boolean{
+            return this._unsavedChanges;
+        }
+
+        /**
+         * Gets or sets a value indicating if the form has changes
+         *
+         * @param {boolean} value
+         */
+        set unsavedChanges(value: boolean){
+
+            // Check if value changed
+            let changed: boolean = value !== this._unsavedChanges;
+
+            // Set value
+            this._unsavedChanges = value;
+
+            // Trigger changed event
+            if(changed){
+                this.onUnsavedChangesChanged();
+            }
+        }
+
+        /**
          * Gets a value of checking every input in <c>inputs</c> to be valid
          **/
         get valid(): boolean{
@@ -254,7 +446,31 @@ module latte{
             return true;
 
         }
+
         //endregion
 
+        //region Components
+
+        /**
+         * Field for titleLabel property
+         */
+        private _titleLabel:LabelItem;
+
+        /**
+         * Gets the title label
+         *
+         * @returns {LabelItem}
+         */
+        get titleLabel():LabelItem {
+            if (!this._titleLabel) {
+                this._titleLabel = new LabelItem();
+                this._titleLabel.visible = false;
+                this._titleLabel.title = 1;
+            }
+            return this._titleLabel;
+        }
+
+
+        //endregion
     }
 }

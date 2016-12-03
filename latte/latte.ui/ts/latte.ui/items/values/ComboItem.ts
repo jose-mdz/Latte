@@ -4,17 +4,12 @@ module latte{
      Combo options are presented as the button's items.
      The button's items tag value is assumed to be the value of the combobox.
      **/
-    export class ComboItem extends ValueItem{
+    export class ComboItem extends ValueItem<any>{
 
         /**
          *
          **/
         private _options: any;
-
-        /**
-         *
-         **/
-        private _value: any;
 
         /**
          * Button who hosts the combo
@@ -34,6 +29,31 @@ module latte{
             this.button.appendTo(this.element);
 
 
+        }
+
+        /**
+         * Override
+         * @returns {any}
+         */
+        onGetValueString(): string{
+            var item: Item;
+
+            while((item = this.button.items.next())){
+                if(item.tag == this.value){
+                    return (<ButtonItem>item).text;
+                }
+            }
+
+            return '';
+        }
+
+        /**
+         * Override.
+         */
+        onValueChanged(){
+            super.onValueChanged();
+
+            this.button.text = this.value === null ? strings.pleaseSelect : this.valueString;
         }
 
         /**
@@ -72,45 +92,5 @@ module latte{
 
         }
 
-        /**
-         * Gets or sets the selected value of the combo
-         **/
-        get value(): any{
-            return this._value;
-        }
-
-        /**
-         * Gets or sets the selected value of the combo
-         **/
-        set value(value: any){
-
-
-            var changed = this._value !== value;
-
-            this._value = value;
-            this.button.text = value === null ? strings.pleaseSelect : this.valueString;
-
-            if(changed){
-                this.onValueChanged();
-            }
-
-        }
-
-        /**
-         * Gets the value as a string for human reading
-         **/
-        get valueString(): any{
-
-            var item: Item;
-
-            while((item = this.button.items.next())){
-                if(item.tag == this.value){
-                    return (<ButtonItem>item).text;
-                }
-            }
-
-            return '';
-
-        }
     }
 }

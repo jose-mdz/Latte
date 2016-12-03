@@ -26,6 +26,12 @@
     margin: 0;
 }
 
+.latte-item.textbox.invalid input,
+.latte-item.textbox.invalid textarea{
+    background-color: #FFF0F0;
+    color: #FF0000;
+}
+
 .latte-item.textbox > .input{
     font-family: inherit;
     font-size: inherit;

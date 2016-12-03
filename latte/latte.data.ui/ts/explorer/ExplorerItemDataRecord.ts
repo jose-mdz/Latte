@@ -31,17 +31,19 @@ module latte {
          */
         createListViewItem(): ListViewItem{
 
-            var item = new ListViewItem();
-            var columns: string[] = this.getColumns();
+            var item = super.createListViewItem();
 
-            item.icon = this.getIcon();
-
-            for (var i = 0; i < columns.length; i++) {
-                var s:string = columns[i];
-
-                item.addColumn(this.getColumnWithFor(s));
-                item.setItem(i, this.getItemForColumn(s));
-            }
+            // // var item = new ListViewItem();
+            // var columns: string[] = this.getColumns();
+            //
+            // item.icon = this.getIcon();
+            //
+            // for (var i = 0; i < columns.length; i++) {
+            //     var s:string = columns[i];
+            //
+            //     item.addColumn(this.getColumnWithFor(s));
+            //     item.setItem(i, this.getItemForColumn(s));
+            // }
 
             return item;
         }
@@ -112,6 +114,32 @@ module latte {
             var d = new DataRecordFormView(this.record);
 
             return d;
+        }
+
+        /**
+         * Synchronizes UI Items to reflect possible changes
+         */
+        syncUI(){
+
+            super.syncUI();
+
+            if(this.listViewItem) {
+
+                var item: ListViewItem = this.listViewItem;
+                var columns: string[] = this.getColumns();
+
+                for (var i = 0; i < columns.length; i++) {
+
+                    var s:string = columns[i];
+
+                    if(!item.columns[i]){
+                        item.addColumn(this.getColumnWithFor(s));
+                    }
+
+                    item.setItem(i, this.getItemForColumn(s));
+                }
+            }
+
         }
 
         //endregion

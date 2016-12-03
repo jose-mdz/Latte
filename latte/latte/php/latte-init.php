@@ -7,18 +7,26 @@
  */
 
 
-
-@session_start();
-
-
+if (session_status() == PHP_SESSION_NONE){
+    @session_start();
+}
 
 // Load configuration
+$ON_RELEASE = isset($ON_RELEASE) ? $ON_RELEASE : false;
 
-$project_path = __DIR__ . '/../../../';
-$config_path = $project_path . 'xlatte.json';
+$offset_path = isset($PROJECT_OFFSET) ? str_repeat('../', $PROJECT_OFFSET) : '';
+$project_path = __DIR__ . '/../../../' . ($ON_RELEASE ? $offset_path : '');
+$config_path = $project_path  . 'xlatte.json';
+$config_path_release = __DIR__ . '/../../xlatte.json';
 
-if(file_exists($config_path)){
+//echo "[$project_path]";
+
+if(file_exists($config_path_release)){
+    $GLOBALS['xlatte_config'] = json_decode(file_get_contents($config_path_release), true);
+
+}elseif(file_exists($config_path)){
     $GLOBALS['xlatte_config'] = json_decode(file_get_contents($config_path), true);
+
 }else{
     $GLOBALS['xlatte_config'] = array(
         'modules' => 'latte',
@@ -29,10 +37,14 @@ if(file_exists($config_path)){
 
 /// Create constant with directories
 define('DATALATTE_MODULES', $project_path . $GLOBALS['xlatte_config']['modules']);
+define('DATALATTE_MODULES_RELEASE', $project_path . '../' . $GLOBALS['xlatte_config']['output'] . "/releases");
 define('DATALATTE_CORE', DATALATTE_MODULES . '/latte');
 define('DATALATTE_APP', DATALATTE_MODULES . "/app");
 define('DATALATTE_FILES', $project_path . $GLOBALS['xlatte_config']['output']);
+define('DATALATTE_FILES_RELEASE', $project_path . '../' . $GLOBALS['xlatte_config']['output']);
 define('DATALATTE_FILES_URL', '/' . $GLOBALS['xlatte_config']['output-url'] . '/');
+
+//echo "[DATALATTE_MODULES_RELEASE " . DATALATTE_MODULES_RELEASE . "]";
 
 /// Declare autoload
 function dataLatte_Autoloader($className){
@@ -88,3 +100,4 @@ function errorHandler($errno, $errstr, $errfile, $errline){
 }
 
 set_error_handler("errorHandler");
+

@@ -35,6 +35,39 @@ module latte {
             this._current = value;
         }
 
+        /**
+         * Field for esMX property
+         */
+        private static _esEs:Culture;
+
+        /**
+         * Gets the Español-Mexico Culture
+         *
+         * @returns {Culture}
+         */
+        public static get esEs():Culture {
+            if (!Culture._esEs) {
+
+                var _zeroPad = (n: number): string => { return n <= 9 ? '0' + n.toString() : n.toString() };
+
+                Culture._esEs = new Culture();
+                Culture._esEs.currencyDecimals = 2;
+                Culture._esEs.numberDecimalsSeparator = ',';
+                Culture._esEs.numberThousandsSeparator = '.';
+                Culture._esEs.currencySymbol = '$';
+                Culture._esEs.shortDateFormat = 'dd/MMM/yyyy';
+                Culture._esEs.longDateFormat = 'dddd, d de MMMM de yyyy';
+                Culture._esEs.floatValidator = /^[\d.]+([,][\d]+)?$/;
+                Culture._esEs.intValidator = /^[\d.]+$/;
+                Culture._esEs.onFormatShortDate = (d: DateTime): string => {
+                    return sprintf("%s/%s/%s", _zeroPad(d.day), d.monthStringShort, d.year);
+                };
+                Culture._esEs.onFormatLongDate = (d: DateTime): string => {
+                    return sprintf("%s, %s de %s de %s", d.dayOfWeekString, d.day, d.monthString, d.year);
+                };
+            }
+            return Culture._esEs;
+        }
 
         /**
          * Field for esMX property
@@ -169,6 +202,18 @@ module latte {
          * Symbol to use in currency
          */
         currencySymbol: string = '$';
+
+        /**
+         * Regular expression for validating floating point numbers
+         * @type {RegExp}
+         */
+        floatValidator: RegExp = /^[\d,]+([.][\d]+)?$/;
+
+        /**
+         * Regular expression for validating integer numbers
+         * @type {RegExp}
+         */
+        intValidator: RegExp = /^[\d,]+$/;
 
         //endregion
 

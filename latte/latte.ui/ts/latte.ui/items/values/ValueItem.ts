@@ -5,86 +5,105 @@ module latte{
      Classes who inherits from ValueItem must implement <c>value</c> method
      and initialize the <c>input</c> property to the focusable.
      **/
-    export class ValueItem extends Item{
-
-        /**
-         * Raised when value changes.
-         **/
-        valueChanged: LatteEvent;
+    export class ValueItem<T> extends Item{
 
         /**
          * Every ValueItem must create its own <c>input</c> element
          **/
         constructor(){
 
-
             super();
+
             this.element.addClass('value');
 
-            // Events
-            this.valueChanged = new LatteEvent(this);
+        }
 
+        //region Methods
 
+        /**
+         * Override
+         * @returns {String}
+         */
+        onGetValueString(): string{
+            return String(this.value);
         }
 
         /**
+         * Raises the <c>value</c> event
+         */
+        onValueChanged(){
+            if(this._valueChanged){
+                this._valueChanged.raise();
+            }
+        }
+
+        //endregion
+
+        //region Events
+
+        /**
+         * Back field for event
+         */
+        private _valueChanged: LatteEvent;
+
+        /**
+         * Gets an event raised when the value of the value property changes
          *
-         **/
-        getValue(): any{
-            throw new Ex();
+         * @returns {LatteEvent}
+         */
+        get valueChanged(): LatteEvent{
+            if(!this._valueChanged){
+                this._valueChanged = new LatteEvent(this);
+            }
+            return this._valueChanged;
+        }
+
+        //endregion
+
+        //region Properties
+        /**
+         * Property field
+         */
+        private _value: T = null;
+
+        /**
+         * Gets or sets the value this item represents
+         *
+         * @returns {T}
+         */
+        get value(): T{
+            return this._value;
+        }
+
+        /**
+         * Gets or sets the value this item represents
+         *
+         * @param {T} value
+         */
+        set value(value: T){
+
+            // Check if value changed
+            let changed: boolean = value !== this._value;
+
+            // Set value
+            this._value = value;
+
+            // Trigger changed event
+            if(changed){
+                this.onValueChanged();
+            }
         }
 
         /**
          * Gets the value as a string
+         *
          * @returns {string}
          */
-        getValueString(): string{
-            return this.value !== null ? this.value.toString() : '';
+        get valueString(): string {
+            return this.onGetValueString();
         }
 
-        /**
-         * Raises the <c>valueChanged</c> event
-         **/
-        onValueChanged(){
+        //endregion
 
-            this.valueChanged.raise();
-
-        }
-
-        /**
-         *
-         **/
-        setValue(value: any){
-            throw new Ex();
-        }
-
-        /**
-         * Gets or sets the value of the item
-         <b>Must be overriden</b>
-         **/
-        get value(): any{
-            return this.getValue();
-        }
-
-        /**
-         * Gets or sets the value of the item
-         <b>Must be overriden</b>
-         **/
-        set value(value: any){
-
-
-            this.setValue(value);
-
-
-        }
-
-        /**
-         * Gets the value as a string
-         **/
-        get valueString(): any{
-
-            return this.getValueString();
-
-        }
     }
 }

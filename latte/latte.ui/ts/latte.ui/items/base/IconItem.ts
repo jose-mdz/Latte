@@ -11,7 +11,9 @@ module latte{
         /**
          * Default URL of sprite used if coordinates are specified, and no <c>url</c> is provided.
          **/
-        static defaultUrl: string = '/latte/releases/latte.ui/support/imgs/std-icons.png';
+        static get defaultUrl(): string {
+            return _latteUrl() + '/releases/latte.ui/support/imgs/std-icons.png';
+        }
 
         /**
          * Creates an empty icon of the specified size
@@ -101,17 +103,6 @@ module latte{
         }
 
         //endregion
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -206,6 +197,7 @@ module latte{
             if(_isNumber(this.u)) this.u = this.u;
             if(_isNumber(this.v)) this.v = this.v;
 
+            this.addClass('size-' + value);
 
         }
 

@@ -2,8 +2,9 @@ module latte{
     /**
      * Represents a progress bar
      **/
-    export class ProgressItem extends ValueItem{
+    export class ProgressItem extends ValueItem<number>{
 
+        //region Fields
         /**
          *
          **/
@@ -15,11 +16,6 @@ module latte{
         private _minValue: number = 0;
 
         /**
-         *
-         **/
-        private _value: number = 0;
-
-        /**
          * Points to the DOM element of bar
          **/
         bar: JQuery;
@@ -28,6 +24,7 @@ module latte{
          * Points to the DOM element where progress bar is contained
          **/
         container: JQuery;
+        //endregion
 
         /**
          * Creates the progress item
@@ -46,29 +43,7 @@ module latte{
 
         }
 
-        /**
-         * Property field
-         */
-        private _animated:boolean = true;
-
-        /**
-         * Gets or sets a value indicating if the progress should be animated
-         *
-         * @returns {boolean}
-         */
-        get animated():boolean {
-            return this._animated;
-        }
-
-        /**
-         * Gets or sets a value indicating if the progress should be animated
-         *
-         * @param {boolean} value
-         */
-        set animated(value:boolean) {
-            this._animated = value;
-        }
-
+        //region Methods
         /**
          * Gets the percentage represented by min, max and value values.
          Value ranges from 0 to 100
@@ -94,6 +69,58 @@ module latte{
             else
                 this.bar.css('width', w + '%');
 
+        }
+
+        /**
+         * Override.
+         */
+        onValueChanged(){
+            super.onValueChanged();
+
+            let value = this.value;
+
+            if(value > this.maxValue){
+                value = this.maxValue;
+                this.bar.css('backgroundColor', 'red');
+
+            }else {
+                this.bar.css('backgroundColor', '');
+            }
+
+            if(value < this.minValue){
+                value = this.minValue;
+                this.container.css('borderColor', 'red');
+
+            }else {
+                this.container.css('borderColor', '');
+            }
+
+            this.onLayout();
+        }
+        //endregion
+
+        //region Properties
+        /**
+         * Property field
+         */
+        private _animated:boolean = true;
+
+        /**
+         * Gets or sets a value indicating if the progress should be animated
+         *
+         * @returns {boolean}
+         */
+        get animated():boolean {
+            return this._animated;
+        }
+
+        /**
+         * Gets or sets a value indicating if the progress should be animated
+         *
+         * @param {boolean} value
+         */
+        set animated(value:boolean) {
+            this._animated = value;
         }
 
         /**
@@ -145,44 +172,10 @@ module latte{
 
         }
 
-        /**
-         * Gets or sets the current value of the progress bar
-         **/
-        get value(): number{
-            return this._value;
-        }
+        //endregion
 
-        /**
-         * Gets or sets the current value of the progress bar
-         **/
-        set value(value: number){
+        //region Components
 
-
-            if(!_isNumber(value))
-                throw new InvalidArgumentEx('value', value);
-
-            if(value > this.maxValue){
-                value = this.maxValue;
-                this.bar.css('backgroundColor', 'red');
-
-            }else {
-                this.bar.css('backgroundColor', '');
-            }
-
-            if(value < this.minValue){
-                value = this.minValue;
-                this.container.css('borderColor', 'red');
-
-            }else {
-                this.container.css('borderColor', '');
-            }
-
-            var changed = value != this._value;
-
-            this._value = value;
-            if(changed) this.onLayout();
-
-
-        }
+        //endregion
     }
 }

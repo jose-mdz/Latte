@@ -131,6 +131,16 @@ module latte{
         }
 
         /**
+         * Gets a value indicating if the values in the form are valid
+         *
+         * @returns {boolean}
+         */
+        get isValid(): boolean {
+            return this.form.isValid;
+        }
+
+
+        /**
          * Gets or sets a value indicating if the inputs in the form are read-only
          **/
         get readOnly(): boolean{

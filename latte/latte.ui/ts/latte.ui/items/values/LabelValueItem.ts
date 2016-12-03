@@ -2,7 +2,7 @@ module latte{
     /**
      * Label with value property
      **/
-    export class LabelValueItem extends ValueItem{
+    export class LabelValueItem extends ValueItem<string>{
 
         /**
          * Label for text displaying
@@ -10,7 +10,7 @@ module latte{
         label: LabelItem;
 
         /**
-         *
+         * Creates the item
          **/
         constructor(){
 
@@ -24,21 +24,13 @@ module latte{
         }
 
         /**
-         * Gets or sets the value
-         **/
-        get value(): any{
-            return this.label.text;
+         * Override.
+         */
+        onValueChanged(){
+            super.onValueChanged();
+
+            this.label.text = this.value;
         }
 
-        /**
-         * Gets or sets the value
-         **/
-        set value(value: any){
-
-
-            this.label.text = value;
-
-
-        }
     }
 }

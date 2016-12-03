@@ -29,7 +29,7 @@ module latte {
         /**
          * Sets up the bind
          * @param element
-         * @param elementEvethis.bindedElements.push(e);nt
+         * @param elementEvent
          * @param record
          * @param recordMethod
          */

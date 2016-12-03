@@ -157,6 +157,94 @@ module latte{
         }
 
         /**
+         * Presents the specified inputs and presents them
+         * @param title
+         * @param inputs
+         * @param save
+         * @param validate Return false in case validation is incorrect
+         */
+        static input(
+                    title: string,
+                    inputs: IInputList,
+                    validate: (values: {[index: string]: any}, items: {[index: string]: InputItem}) => any = null,
+                    save: (values: {[index: string]: any}) => any = null){
+
+            let d = new DialogView();
+            let f = new FormView();
+            let items: {[index: string]: InputItem} = {};
+            let values = () => {
+                let r = {};
+                for(let i in items){
+                    r[i] = items[i].value;
+                }
+                return r;
+            };
+            let cancelled = false;
+
+            d.closeButton.visible = false;
+
+            for(let i in inputs){
+                items[i] = InputItem.fromIInput(inputs[i], i, null);
+                f.inputs.add(items[i]);
+            }
+
+            d.items.addArray([
+                new ButtonItem(strings.ok),
+            ]);
+
+            d.addCancelButton(() => {
+                cancelled = true
+            });
+
+            d.closing.add(() => {
+                if(cancelled) {
+                    return true;
+                }
+
+                let valid = null;
+
+                if(validate) {
+                    valid = validate(values(), items);
+                }
+
+                if(_isFunction(valid)) {
+
+                    // Execute validation
+                    d.enabled = false;
+                    valid((validationResult: boolean) => {
+                        d.enabled = true;
+
+                        if((_isBoolean(validationResult) && validationResult) || f.isValid){
+                            cancelled = true;
+                            d.close();
+                            save(values());
+                        }
+                    });
+                    return false;
+                }
+
+                if(!_isBoolean(valid)) {
+                    valid = f.isValid;
+                }
+
+                // Check for validation
+                if(valid) {
+                    // Save callback
+                    save(values());
+                }else {
+
+                    return false;
+                }
+            });
+
+            d.title = title;
+            d.view = f;
+            d.show();
+
+            return d;
+        }
+
+        /**
          * Shows the specified <c>message</c> within a DialogView. Optionally specifies <c>items</c> for the dialog.
          **/
         static showMessage(message:MessageView, items:Array<Item> = null):DialogView {
@@ -390,7 +478,7 @@ module latte{
 
             View.modalView = null;
 
-            this.onClosed()
+            this.onClosed();
 
             return true;
 
@@ -419,6 +507,22 @@ module latte{
 
             return this.closing.raise();
 
+        }
+
+        onEnabledChanged(){
+            super.onEnabledChanged();
+
+            // TODO: Disabling the dialog should disable every single click on it.
+
+            if(this.enabled) {
+                this.removeClass('disabled');
+            }else{
+                this.addClass('disabled');
+            }
+
+            for (let i = 0; i < this.items.length; i++) {
+                this.items[i].enabled = this.enabled;
+            }
         }
 
         /**

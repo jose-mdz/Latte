@@ -20,7 +20,7 @@ module latte{
      *
      * @type {Array<string>}
      */
-    export var includedPlugins : Object = {};
+    export var includedPlugins : string[] = [];
 
     /**
      * Tells if the passed objects are equal in its properties
@@ -71,6 +71,43 @@ module latte{
 
         return true;
     };
+
+    /**
+     * Includes the specified library and calls back when loaded
+     * @param src
+     * @param callback
+     * @private
+     */
+    export function _include(src: string|string[], callback: () => any = null, errorcallback: () => any = null){
+
+        let sources: string[] = _isArray(<any>src) ? <any>src : [src];
+        let loaded = 0;
+        let loadCheck = (src) => {
+            loaded++;
+            if(loaded == sources.length){
+                if(_isFunction(callback)) callback();
+            }
+        };
+
+        sources.forEach((src) => {
+            if(includedPlugins.indexOf(src) >= 0) {
+                if(_isFunction(callback)) {
+                    callback();
+                }
+            }else {
+                let tag = document.createElement('script');
+                tag.onload = () => loadCheck(src);
+                tag.src = src;
+                tag.addEventListener('error', () => {
+                    log("Error loading " + src);
+                    if(_isFunction(errorcallback)) errorcallback();
+                });
+                document.body.appendChild(tag);
+                includedPlugins.push(src);
+            }
+        });
+
+    }
 
     /**
      * Returns a value indicating if the parameter is a number
@@ -135,6 +172,33 @@ module latte{
             return true;
         }
     };
+
+    /**
+     * Gets or sets the latte Url. By default: /latte
+     * @private
+     */
+    export function _latteUrl(value?: string){
+        if(_undef(value)) {
+            return window['-vendor-latte-url'] || '/latte';
+        }else{
+            window['-vendor-latte-url'] = value;
+        }
+    }
+
+    /**
+     * Returns a value indicating if the specified object is empty of properties
+     * @param object
+     * @returns {boolean}
+     * @private
+     */
+    export function _empty(object){
+        if(!object) return true;
+
+        for(let i in object){
+            return false;
+        }
+        return true;
+    }
 
     /**
      * Returns a value indicating if the parameter is undefined

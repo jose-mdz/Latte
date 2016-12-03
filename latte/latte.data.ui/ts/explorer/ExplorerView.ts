@@ -14,6 +14,21 @@ module latte {
         //region Fields
 
         private ignorePageChange: boolean = false;
+
+        private detailViewItem: ExplorerItem = null;
+
+        /**
+         * Saves the milliseconds that the last 100 times lasted
+         * @type {Array}
+         */
+        private loadTimes: number[] = [];
+
+        /**
+         * Stores the prediction (in milliseconds) of next load
+         * @type {number}
+         */
+        private nextLoadTimePrediction: number = 800;
+
         //endregion
 
         /**
@@ -21,6 +36,8 @@ module latte {
          */
         constructor(rootItem: ExplorerItem = null) {
             super();
+
+            this.addClass('explorer');
 
             //region Structure
 
@@ -41,9 +58,13 @@ module latte {
             var listSide = new ToolbarView();
             this._listViewToolbar = listSide.toolbar;
             listSide.view = this.listView;
+            this.listView.element.append(this.loadBar);
 
             this.listViewToolbar.sideItems.add(this.paginator);
             this.listViewToolbar.sideItems.add(this.btnRefresh);
+
+            // Hide paginator by default
+            this.paginator.visible = false;
 
             // Second split view
             this.detailSplitView.sideView = this.detailViewToolbarView;
@@ -68,6 +89,27 @@ module latte {
         //region Private Methods
 
         /**
+         * Adds a loading time for criteria enrichment
+         * @param time
+         */
+        private addLoadingTime(time: TimeSpan){
+
+            this.loadTimes.push(time.totalMilliseconds);
+
+
+            if(this.loadTimes.length > 100){
+                this.loadTimes.pop();
+            }
+            let sum = 0;
+
+            this.loadTimes.forEach((t) => sum += t );
+            this.nextLoadTimePrediction = Math.round(sum / this.loadTimes.length);
+
+
+            // log(sprintf("New Time: %s \t Next Prediction: %s", time.totalMilliseconds, this.nextLoadTimePrediction));
+        }
+
+        /**
          * Adds handlers to the item
          */
         private addTreeItemHandlers(treeItem: TreeItem){
@@ -78,7 +120,7 @@ module latte {
             if (item.loadsChildrenFolders) {
                 treeItem.loadItems.add(() => {
 
-                    item.loadChildren(() => {
+                    this.loadChildrenOf(item, () => {
 
                         this.treeViewChildrenOf(item, treeItem);
 
@@ -97,17 +139,18 @@ module latte {
 
                     this._treeSelectedItem = item;
 
-
                     this.detailViewOf(item);
 
                     if (item.childrenLoaded) {
+                        this.paginator.visible = item.childrenPages > 1;
                         this.listViewChildrenOf(item);
 
                     }else if(!item.loadsChildrenFolders) {
 
-                        item.loadChildren(() => {
+                        this.loadChildrenOf(item, () => {
 
                             if(treeItem.selected) {
+                                this.paginator.visible = item.childrenPages > 1;
                                 this.listViewChildrenOf(item);
                             }
 
@@ -122,7 +165,8 @@ module latte {
             // Children change reaction
             //item.childrenChanged.handlers = [];
             item.childrenChanged.add(() => {
-                item.loadChildren(() => {
+
+                this.loadChildrenOf(item, () => {
 
                     this.treeViewChildrenOf(item, treeItem);
 
@@ -147,12 +191,16 @@ module latte {
          */
         private listViewChildrenOf(item: ExplorerItem){
 
-            this.listView.items.clear();
+            // Column headers
+            this.listView.columnHeaders.clear();
+            this.listView.columnHeaders.addArray(item.getColumnHeaders());
 
             this.ignorePageChange = true;
             this.paginator.page = item.childrenPage;
             this.paginator.pages = item.childrenPages;
             this.ignorePageChange = false;
+
+            this.listView.items.clear();
 
             // Load items into listview
             for (var i = 0; i < item.children.length; i++) {
@@ -160,6 +208,7 @@ module latte {
 
                 // Create listview item
                 var litem:ListViewItem = gitem.createListViewItem();
+                litem.listView = this.listView;
                 litem.tag = gitem;
 
                 // Add handlers to the item
@@ -173,8 +222,63 @@ module latte {
             this.listViewToolbar.items.clear();
             this.listViewToolbar.items.addArray(item.getItems());
 
+        }
 
+        /**
+         * Loads the children of the specified item, and passes the callback when done
+         * This method does not place the children into the list.
+         * @param item
+         * @param callback
+         */
+        private loadChildrenOf(item: ExplorerItem, callback: () => any){
 
+            let loaded = false;
+            let preventiveAnimationFinished = false;
+            let barFinihsed = false;
+
+            let finishBar = () => {
+                bar.animate({
+                    width: '100%'
+                }, 50, null, () => {
+                    barFinihsed = true;
+                    bar.fadeOut();
+                });
+            };
+
+            // Clear items off list
+            this.listView.items.clear();
+
+            // Show load bar
+            let bar = $(this.loadBar);
+            let started = DateTime.now;
+            bar.addClass('visible');
+            bar.show();
+            bar.css('width', '1px');
+            bar.animate({
+                width: '90%'
+            }, this.nextLoadTimePrediction, null, () => {
+                preventiveAnimationFinished = true;
+
+                if(loaded) {
+                    finishBar();
+                }
+            });
+
+            item.loadChildren(() => {
+
+                // Data has been loaded
+                loaded = true;
+
+                // Register the loading time
+                this.addLoadingTime(DateTime.now.subtractDate(started));
+
+                // If preventive animation finished
+                if(preventiveAnimationFinished) {
+                    finishBar();
+                }
+
+                callback();
+            });
         }
 
         /**
@@ -209,6 +313,7 @@ module latte {
 
             listItem.selectedChanged.add(() => {
                 if(listItem.selected) {
+                    this._listSelectedItem = item;
                     this.detailViewOf(item);
                 }
             });
@@ -244,14 +349,21 @@ module latte {
 
                     this.btnSaveDetail.enabled = view.unsavedChanges;
 
+                    if(!view.unsavedChanges) {
+                        item.syncUI();
+                    }
+
                 });
             }
 
             if(item) {
-                this.btnRemoveDetail.enabled = item.getCanBeDeleted();
+                // TODO: Temproarily removed delete button
+                this.btnRemoveDetail.visible = false;
+                // this.btnRemoveDetail.enabled = item.getCanBeDeleted();
             }
 
-            this._listSelectedItem = item;
+            this.detailViewItem = item;
+            // this._listSelectedItem = item;
 
         }
 
@@ -285,8 +397,8 @@ module latte {
          */
         refreshList(){
 
-            var item = this.listSelectedItem;
             var treeItem = this.treeView.selectedItem;
+            var item:ExplorerItem = <any>treeItem.tag;
 
             item.childrenPage = this.paginator.page;
             item.onChildrenChanged();
@@ -302,6 +414,7 @@ module latte {
             //    treeItem.reportItemsLoaded();
             //});
         }
+
         //endregion
 
         //region Events
@@ -324,7 +437,6 @@ module latte {
                 this._btnSaveDetail = new ButtonItem(strings.save, IconItem.standard(4, 2), () =>{
                     if(this.detailView.view) {
                         this.detailView.view.saveChanges();
-                        //this.detailView.view.onSaveChanges();
                     }
                 });
                 this._btnSaveDetail.enabled = false;
@@ -428,7 +540,6 @@ module latte {
             return this._detailViewToolbarView;
         }
 
-
         /**
          * Gets the toolbar of the detail zone
          *
@@ -481,6 +592,25 @@ module latte {
         }
 
         /**
+         * Field for loadBar property
+         */
+        private _loadBar: HTMLDivElement;
+
+        /**
+         * Gets the load bar
+         *
+         * @returns {HTMLDivElement}
+         */
+        get loadBar(): HTMLDivElement {
+            if (!this._loadBar) {
+                this._loadBar = document.createElement('div');
+                this._loadBar.className = 'load-bar';
+            }
+            return this._loadBar;
+        }
+
+
+        /**
          * Field for detailView property
          */
         private _detailView:View;
@@ -493,6 +623,7 @@ module latte {
         public get detailView():View {
             if (!this._detailView) {
                 this._detailView = new View();
+                this._detailView.addClass('explorer-detail-view');
             }
             return this._detailView;
         }
@@ -510,7 +641,13 @@ module latte {
         public get listView():ListView {
             if (!this._listView) {
                 this._listView = new ListView();
-                this._listView.columnHeaders.add(new ColumnHeader(''))
+                this._listView.columnHeaders.add(new ColumnHeader(''));
+                this._listView.focusable = true;
+                this._listView.focused.add(() => {
+                    if(this._listSelectedItem && this._listSelectedItem != this.detailViewItem) {
+                        this.detailViewOf(this._listSelectedItem);
+                    }
+                });
             }
             return this._listView;
         }
@@ -564,6 +701,12 @@ module latte {
         public get treeView():TreeView {
             if (!this._treeView) {
                 this._treeView = new TreeView();
+                this._treeView.focusable = true;
+                this._treeView.focused.add(() => {
+                    if(this._treeSelectedItem && this._treeSelectedItem != this.detailViewItem) {
+                        this.detailViewOf(this._treeSelectedItem);
+                    }
+                });
             }
             return this._treeView;
         }

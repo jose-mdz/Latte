@@ -291,10 +291,21 @@ module latte{
             this.element = $('<div>');
             this.element.addClass('latte-uielement');
             this.element.data('instance', this);
-            this.element.mousedown((e) => {return this._mouseDown(e)});
-            this.element.click((e) => {return this._click(e)});
             this.element.bind('contextmenu', (e) => { return this._contextMenu(e); });
 
+            this.addEventListener('click', (e: MouseEvent) => {
+                if(!this.enabled) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            this.addEventListener('mousedown', (e: MouseEvent) => {
+                if(!this.enabled) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
 
             // Disable text selection
             //UiElement.disableTextSelection(this.element);
@@ -307,39 +318,24 @@ module latte{
         /**
          *
          **/
-        private _click(e: JQueryEventObject){
-
-            if(!this.enabled){
-                e.stopPropagation();
-                return false;
-            }
-
-        }
-
-        /**
-         *
-         **/
         private _contextMenu(e: JQueryEventObject){
 
             var menu = this.showContextMenu(e.pageX, e.pageY);
             return !(menu instanceof MenuOverlay);
 
         }
-
-        /**
-         *
-         **/
-        private _mouseDown(e: JQueryEventObject){
-
-            if(!this.enabled){
-                e.stopPropagation();
-                return false;
-            }
-
-        }
         //endregion
 
         //region Methods
+        /**
+         * Shorthand for the addEventListener of the element
+         * @param event
+         * @param f
+         * @param useCapture
+         */
+        addEventListener(event: string, f: (...any) => any, useCapture = false){
+            this.node.addEventListener(event, f, useCapture);
+        }
 
         /**
          * Adds classes to the element
@@ -379,6 +375,19 @@ module latte{
         }
 
         /**
+         * Ensures the class is present on the element, depending on the specified condition.
+         * @param className
+         * @param condition
+         */
+        ensureClass(className: string, condition: boolean){
+            if(condition){
+                this.addClass(className);
+            }else {
+                this.removeClass(className);
+            }
+        }
+
+        /**
          * Finalizes the element
          */
         finalize(){
@@ -387,6 +396,15 @@ module latte{
             }
 
             this.element.remove();
+        }
+
+        /**
+         * Raises the <c>blur</c> event
+         */
+        onBlur(){
+            if(this._blur){
+                this._blur.raise();
+            }
         }
 
         /**
@@ -422,11 +440,29 @@ module latte{
         }
 
         /**
+         * Raises the <c>dragOver</c> event
+         */
+        onDragOver(): boolean{
+            if(this._dragOver){
+                return <boolean>this._dragOver.raise();
+            }
+        }
+
+        /**
          * Raises the <c>dropped</c> event
          */
         onDropped(){
             if(this._dropped){
                 this.dropped.raise();
+            }
+        }
+
+        /**
+         * Raises the <c>dropElement</c> event.
+         */
+        onDropElement(){
+            if(this._dropElement){
+                this._dropElement.raise();
             }
         }
 
@@ -437,6 +473,50 @@ module latte{
 
             this.enabledChanged.raise();
 
+        }
+
+        /**
+         * Raises the <c>focusable</c> event
+         */
+        onFocusableChanged(){
+            if(this._focusableChanged){
+                this._focusableChanged.raise();
+            }
+
+            if(this.focusable){
+                this.addClass('focusable');
+                this.node.setAttribute('tabindex', "0");// TabIndexManager.subscribe(this));
+
+                this.addEventListener('focus', () => {
+                    this.onFocused();
+                });
+
+                this.addEventListener('blur', () => {
+                    this.onBlur();
+                });
+
+            }else{
+                this.removeClass('focusable');
+                this.node.removeAttribute('tabindex');
+            }
+        }
+
+        /**
+         * Raises the <c>finalizing</c> event
+         */
+        onFinalizing(){
+            if(this._finalizing){
+                return this._finalizing.raise();
+            }
+        }
+
+        /**
+         * Raises the <c>focused</c> event
+         */
+        onFocused(){
+            if(this._focused){
+                this._focused.raise();
+            }
         }
 
         /**
@@ -531,7 +611,6 @@ module latte{
 
         //region Events
 
-
         /**
          * Back field for event
          */
@@ -550,15 +629,6 @@ module latte{
         }
 
         /**
-         * Raises the <c>blur</c> event
-         */
-        onBlur(){
-            if(this._blur){
-                this._blur.raise();
-            }
-        }
-
-        /**
          * Back field for event
          */
         private _dragOver: LatteEvent
@@ -569,7 +639,7 @@ module latte{
          *
          * @returns {LatteEvent}
          */
-        public get dragOver(): LatteEvent{
+        get dragOver(): LatteEvent{
             if(!this._dragOver){
                 this._dragOver = new LatteEvent(this);
                 this._dragOver.handlerAdded.add(() => {
@@ -588,40 +658,21 @@ module latte{
         }
 
         /**
-         * Raises the <c>dragOver</c> event
-         */
-        public onDragOver(): boolean{
-            if(this._dragOver){
-                return <boolean>this._dragOver.raise();
-            }
-        }
-
-        /**
          * Back field for event
          */
-         private _finalizing: LatteEvent
+        private _finalizing: LatteEvent
 
         /**
          * Gets an event raised when the element is being finalized
          *
          * @returns {LatteEvent}
          */
-        public get finalizing(): LatteEvent{
+        get finalizing(): LatteEvent{
             if(!this._finalizing){
                 this._finalizing = new LatteEvent(this);
             }
             return this._finalizing;
         }
-
-        /**
-         * Raises the <c>finalizing</c> event
-         */
-        public onFinalizing(){
-            if(this._finalizing){
-                return this._finalizing.raise();
-            }
-        }
-
 
         /**
          * Back field for event
@@ -638,15 +689,6 @@ module latte{
                 this._focused = new LatteEvent(this);
             }
             return this._focused;
-        }
-
-        /**
-         * Raises the <c>focused</c> event
-         */
-        onFocused(){
-            if(this._focused){
-                this._focused.raise();
-            }
         }
 
         /**
@@ -669,7 +711,7 @@ module latte{
         /**
          * Back field for event
          */
-         private _dropElement: LatteEvent
+        private _dropElement: LatteEvent
 
         /**
          * Gets an event raised when an element is dropped over this element.
@@ -678,20 +720,11 @@ module latte{
          *
          * @returns {LatteEvent}
          */
-        public get dropElement(): LatteEvent{
+        get dropElement(): LatteEvent{
             if(!this._dropElement){
                 this._dropElement = new LatteEvent(this);
             }
             return this._dropElement;
-        }
-
-        /**
-         * Raises the <c>dropElement</c> event.
-         */
-        public onDropElement(){
-            if(this._dropElement){
-                this._dropElement.raise();
-            }
         }
 
         //endregion
@@ -829,7 +862,7 @@ module latte{
         }
 
         /**
-         * Gets or sets a value indicating if the element should be focusable
+         * Gets or sets a value
          **/
         get focusable(): boolean{
             return this._focusable;
@@ -840,25 +873,43 @@ module latte{
          **/
         set focusable(value: boolean){
 
-
             if(value){
+                this.addClass('focusable');
                 this.element.attr('tabindex', 0);// TabIndexManager.subscribe(this));
 
-                this.element.get(0).addEventListener('focus', () => {
+                this.node.addEventListener('focus', () => {
                     this.onFocused();
-                })
+                });
 
-                this.element.get(0).addEventListener('blur', () => {
+                this.node.addEventListener('blur', () => {
                     this.onBlur();
-                })
+                });
 
             }else{
+                this.removeClass('focusable');
                 this.element.removeAttr('tabindex');
             }
 
             this._focusable = value;
 
 
+        }
+
+        /**
+         * Back field for event
+         */
+        private _focusableChanged: LatteEvent;
+
+        /**
+         * Gets an event raised when the value of the focusable property changes
+         *
+         * @returns {LatteEvent}
+         */
+        get focusableChanged(): LatteEvent{
+            if(!this._focusableChanged){
+                this._focusableChanged = new LatteEvent(this);
+            }
+            return this._focusableChanged;
         }
 
         /**
@@ -925,6 +976,15 @@ module latte{
          */
         set hideWhileDragging(value: boolean){
             this._hideWhileDragging = value;
+        }
+
+        /**
+         * Gets the raw HTML element
+         *
+         * @returns {HTMLDivElement}
+         */
+        get node(): HTMLDivElement{
+            return this.element.get(0);
         }
 
         /**

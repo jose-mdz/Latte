@@ -6,7 +6,7 @@ module latte {
     /**
      *
      */
-    export class ColorValueItem extends ValueItem {
+    export class ColorValueItem extends ValueItem<string> {
 
         //region Static
         //endregion

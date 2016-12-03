@@ -141,3 +141,6 @@ cantBeUndone This action can't be undone.
 yesDeleteS Yes, delete %s
 goToPage Go to page
 refresh Refresh
+switchOn On
+switchOff Off
+flagsNone (None)

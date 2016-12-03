@@ -50,18 +50,59 @@ module latte{
             var word = function(){ return lipsum[Math.round(Math.random() * (lipsum.length - 1))]; };
             var words = function(){ var r =''; for(var i = 0; i < Math.random() * 8; i++) r+= word() + ' '; return r;  }
 
+            this.element.get(0).addEventListener('keydown', (e) => {
+                if(e.keyCode == Key.ARROW_DOWN || e.keyCode == Key.ARROW_LEFT){
+                    this.selectNextItem();
+
+                }else if(e.keyCode == Key.ARROW_UP || e.keyCode == Key.ARROW_RIGHT) {
+                    this.selectPreviousItem();
+                }
+            });
+        }
+
+        //region Methods
+
+        selectNextItem(){
+            let index = this.selectedItem ? this.items.indexOf(this.selectedItem) : -1;
+
+            index++;
+
+            if(index >= this.items.length) {
+                return;
+            }
+
+            if(index >= 0) {
+                log(index)
+                this.items[index].selected = true;
+            }
+        }
+
+        selectPreviousItem(){
+
+            let index = this.selectedItem ? this.items.indexOf(this.selectedItem) : -1;
+
+            index--;
+
+
+            if(index < 0){
+                return;
+            }
+
+            if(index < this.items.length ) {
+                this.items[index].selected = true;
+            }
+
         }
 
         /**
          *
          **/
-        public _informSelectedItem(item: ListViewItem){
+        informSelectedItem(item: ListViewItem){
 
-            if(!(item instanceof ListViewItem))
-                throw new InvalidArgumentEx('item');
-
+            // log("Informed!")
             var changed = item !== this._selectedItem;
             this._selectedItem = item;
+            // log("Selected item set")
 
             if(changed) {
                 this.onSelectedItemChanged();
@@ -92,6 +133,14 @@ module latte{
             for(var i = 0; i < this.items.count; i++){
                 this.items.item(i).addColumn(column.width);
             }
+
+            let index = this.columnHeaders.length - 1;
+
+            // Handle width change
+            column.widthChanged.add(() => this.updateWidthOfColumn(index, column));
+            column.autoResize.add(() => this.autoSizeColumn(index));
+            column.autoResizeAll.add(() => this.autoSizeAllColumns());
+            column.sortRequested.add(() => this.sortByColumn(index));
 
             this.onLayout();
 
@@ -136,11 +185,33 @@ module latte{
 
         }
 
-        //region Events
+        /**
+         * Auto sizes all columns
+         */
+        autoSizeAllColumns(){
+            for (let i = 0; i < this.columnHeaders.length; i++) {
+                this.autoSizeColumn(i);
+            }
+        }
 
-        //endregion
+        /**
+         * Auto sizes the specified column
+         * @param index
+         */
+        autoSizeColumn(index: number){
 
-        //region Methods
+            let max = 50;
+
+            // Collect maximum
+            this.items.each((item: ListViewItem) => max = Math.max(max, item.getItem(index).element.width()));
+
+            this.columnHeaders[index].width = max + 20; // 20 because of gradient transparency
+        }
+
+        private updateWidthOfColumn(index: number, column: ColumnHeader){
+            this.items.each((item: ListViewItem) => item.setColumnWidth(index, column.width));
+            this.onLayout();
+        }
 
         /**
          * Overriden. Raises the <c>layout</c> event
@@ -183,6 +254,20 @@ module latte{
 
 
         }
+
+        /**
+         * Sorts by the specified column
+         * @param index
+         */
+        sortByColumn(index: number){
+
+            //TODO: Implement this
+        }
+
+        //endregion
+
+        //region Events
+
         //endregion
 
         //region Properties
