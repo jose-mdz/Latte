@@ -1,0 +1,40 @@
+/* 
+    Document   : HtmlEditorItem
+    Created on : Feb 6, 2013, 3:34:32 PM
+    Author     : josemanuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.latte-item.html-editor {
+    float: none;
+    overflow: hidden;
+    min-height: 50px;
+    
+    box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1);
+    border: solid 1px #D2D5D9;
+    background: white;
+}
+
+.latte-item.html-editor > .latte-item.toolbar > .face{
+    padding: 2px;
+    border-radius: 0;
+    border-bottom: solid 1px silver;
+}
+
+.latte-item.html-editor > iframe{
+    width: 100%;
+    background: white;
+    color: black;
+    overflow: hidden;
+}
+
+body.html-editor table{
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+body.html-editor td{
+    border: solid 1px silver;
+    padding: 8px;
+}

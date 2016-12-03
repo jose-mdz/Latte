@@ -1,0 +1,24 @@
+.latte-item.switch{
+    background-color: #CCC;
+    width: 40px;
+    height: 20px;
+    border-radius: 11px;
+    padding: 1px;
+}
+
+.latte-item.switch.on{
+    background-color: #01CC68;
+}
+
+.latte-item.switch > .orb{
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    background-color: white;
+    box-shadow: 3px 0 5px rgba(0, 0, 0, 0.2)
+}
+
+.latte-item.switch.on > .orb{
+    margin-left: 20px;
+    box-shadow: -3px 0 5px rgba(0, 0, 0, 0.2)
+}
