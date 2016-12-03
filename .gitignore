@@ -9,7 +9,7 @@
 /html/latte/releases/*
 
 # Necessary for latte module
-!/latte/latte/support/ts-include/datalatte.d.ts
+#!/latte/latte/support/ts-include/datalatte.d.ts
 
 # Necessary for latte.ui module
 #!/latte/latte.ui/support/ts-include/jquery.d.ts
