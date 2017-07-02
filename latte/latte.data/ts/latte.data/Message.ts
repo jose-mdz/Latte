@@ -207,46 +207,6 @@ module latte{
 
         }
 
-        //region Events
-
-        /**
-         * Back field for event
-         */
-        private _workingChanged: LatteEvent;
-
-        /**
-         * Gets an event raised when the working property changes
-         *
-         * @returns {LatteEvent}
-         */
-        get workingChanged(): LatteEvent{
-            if(!this._workingChanged){
-                this._workingChanged = new LatteEvent(this);
-            }
-            return this._workingChanged;
-        }
-
-        /**
-         * Raises the <c>workingChanged</c> event
-         */
-        onWorkingChanged(){
-            if(this._workingChanged){
-                this._workingChanged.raise();
-            }
-        }
-        //endregion
-
-        //region Private Methods
-        private setWorking(w: boolean){
-            var changed = this._working != !!w;
-            this._working = !!w;
-
-            if(changed) {
-                this.onWorkingChanged();
-            }
-        }
-        //endregion
-
         //region Methods
         /**
          * Adds calls to the calls array
@@ -273,7 +233,7 @@ module latte{
             var parsed = false;
             var result: Array<IRemoteResponse> = null;
 
-            this.setWorking(false);
+            this._working = false;
 
             /// Assign response
             this.response = data;
@@ -464,7 +424,7 @@ module latte{
                 }
             }
 
-            this.setWorking(true);
+            this._working = true;
 
             // Gather calls
             var calls: Array<IDataRemoteCall> = [];
@@ -496,13 +456,48 @@ module latte{
                 this.dataArrived(data);
 
             }, (error: string) => {
-                this.setWorking(false);
+                this._working = false;
 
                 //log("Message.send() [Error]: " + error);
 
                 this.onNetworkFailed();
             });
 
+            //$.ajax({
+            //
+            //    /// Use URL for DataLatte requests
+            //    url: Message.pathToRequest,
+            //
+            //    /// Use the message as context
+            //    context: this,
+            //
+            //    /// Mix data with headers
+            //    data: {
+            //        action:     'ajax-rpc',
+            //        calls:  JSON.stringify(calls)
+            //    },
+            //
+            //    /// Interpret as text to make it JSON by ourselves
+            //    dataType: 'text',
+            //
+            //    /// Send request as POST
+            //    type: 'POST',
+            //
+            //    /// Handle success
+            //    success: function(data){
+            //        this.dataArrived(data);
+            //    },
+            //
+            //    /// Handle ajax error
+            //    error: function(jqXHR, textStatus, errorThrown){
+            //        this._working = false;
+            //
+            //        this.errorDescription = "Network error: " + textStatus;
+            //        this.errorCode = 1;
+            //
+            //        this.onNetworkFailed();
+            //    }
+            //});
 
             this.onSent();
 

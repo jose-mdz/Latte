@@ -30,18 +30,18 @@ if(file_exists($config_path_release)){
 }else{
     $GLOBALS['xlatte_config'] = array(
         'modules' => 'latte',
-        'output' => 'html/latte'
+        'output'  => 'html/latte',
+        'output-url' => 'latte'
     );
 }
 
-
 /// Create constant with directories
 define('DATALATTE_MODULES', $project_path . $GLOBALS['xlatte_config']['modules']);
-define('DATALATTE_MODULES_RELEASE', $project_path . '../' . $GLOBALS['xlatte_config']['output'] . "/releases");
+define('DATALATTE_MODULES_RELEASE', $project_path . $GLOBALS['xlatte_config']['output-url'] . "/releases");
 define('DATALATTE_CORE', DATALATTE_MODULES . '/latte');
 define('DATALATTE_APP', DATALATTE_MODULES . "/app");
 define('DATALATTE_FILES', $project_path . $GLOBALS['xlatte_config']['output']);
-define('DATALATTE_FILES_RELEASE', $project_path . '../' . $GLOBALS['xlatte_config']['output']);
+define('DATALATTE_FILES_RELEASE', $project_path . $GLOBALS['xlatte_config']['output-url']);
 define('DATALATTE_FILES_URL', '/' . $GLOBALS['xlatte_config']['output-url'] . '/');
 
 //echo "[DATALATTE_MODULES_RELEASE " . DATALATTE_MODULES_RELEASE . "]";
