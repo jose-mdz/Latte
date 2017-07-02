@@ -3,7 +3,7 @@ Latte
 
 Latte ready to go.
 
-#ChangeLog#
+# ChangeLog
 - Introduced LatteDocument, who renders the whole document without specifying tags
 - Introduced "Main Module" concept, use LatteModule::loadMain
 - Main module may declare a "ua-main" attribute in module.json, LatteDocument will automatically add JS initialization of main
