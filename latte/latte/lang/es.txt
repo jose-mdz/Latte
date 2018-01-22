@@ -90,3 +90,7 @@ oneWeekShort 1w
 SweeksShort %sw
 tomorrow Mañana
 today Hoy
+nextWeekDayS Próximo %s
+SWeeksFromNow En %s semanas
+SYearsFromNow En %s años
+oneYearFromNow En un año

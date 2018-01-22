@@ -1,5 +1,9 @@
 module latte {
 
+    export interface CollectionEventHanler<T>{
+        (item: T, e: CollectionEvent<T>)
+    }
+
     /**
      *
      */
@@ -13,9 +17,9 @@ module latte {
         //endregion
 
         /**
-         *
+         * Initializes the collection
          */
-        constructor(addCallback: (T, number) => void = null, removeCallback: (T, number) => any = null, context: any = null ) {
+        constructor(addCallback: (e: T, index: number) => void = null, removeCallback: (e: T, index: number) => void = null, context: any = null ) {
 
             if(addCallback) {
                 this.addItem.add(addCallback, context);
@@ -40,7 +44,14 @@ module latte {
          * @param element
          * @param raiseEvent
          */
-        add(element: T, raiseEvent: boolean = true){
+        add(element: T, raiseEvent: boolean = true): T{
+
+            let e = new CollectionEvent<T>(element, this.length, true);
+
+            // Check for cancellation
+            if(e.cancel) {
+                return null;
+            }
 
             this[this._length++] = element;
 
@@ -48,6 +59,7 @@ module latte {
                 this.onAddItem(element, this.length);
             }
 
+            return element;
         }
 
         /**
@@ -56,10 +68,13 @@ module latte {
          * @param elements
          * @param raiseEvent
          */
-        addArray(elements: Array<T>, raiseEvent: boolean = true){
-            for (var i = 0; i < elements.length; i++) {
-                this.add(elements[i]);
+        addArray(elements: T[], raiseEvent: boolean = true): T[]{
+
+            if(_isArray(elements)) {
+                elements.forEach(e => this.add(e));
             }
+
+            return elements;
         }
 
         /**
@@ -97,6 +112,21 @@ module latte {
         }
 
         /**
+         * Corrects the collection to be the specified on the arguments, without raising events.
+         *
+         * @param {T[]} elements
+         */
+        correctItems(elements: T[]){
+            for(let i = 0; i < this.length; i++)
+                delete this[i];
+
+            for(let i = 0; i < elements.length; i++)
+                this[i] = elements[i];
+
+            this._length = elements.length;
+        }
+
+        /**
          * Iterates through the collection, executing the handler for each item
          * @param handler
          */
@@ -107,12 +137,23 @@ module latte {
         }
 
         /**
+         * Iterates through the collection, executing the handler for each item
+         * @param handler
+         */
+        eachBut(exclude: T, handler: (item: T, index: number) => any){
+            for(var i: number = 0; i < this.count; i++){
+                if(this[i] != exclude)
+                    handler.call(this.context, this[i], i);
+            }
+        }
+
+        /**
          * Gets the index of the specified element if found. -1 if not found.
          * @param item
          * @returns {number}
          */
         indexOf(item: T){
-            for(var i = 0; i < this.length; i++){
+            for(let i = 0; i < this.length; i++){
                 if(this[i] === item){
                     return i;
                 }
@@ -166,23 +207,44 @@ module latte {
         }
 
         /**
+         * Raises the <c>removingItem</c> event
+         */
+        onRemovingItem(e: CollectionEvent<T>){
+            if(this._removingItem){
+                this._removingItem.raise(e);
+            }
+        }
+
+        /**
          * Removes the specified item from the collection
          * @param item
          * @param raiseEvent
          */
-        remove(item: T, raiseEvent: boolean = true){
+        remove(item: T, raiseEvent: boolean = true): T{
 
-            var buffer: T[] = [];
-            var index: number = -1;
+            let e = new CollectionEvent<T>(item, -1, true);
+
+            // Trigger cancellation item
+            this.onRemovingItem(e);
+
+            // Check for cancellation
+            if(e.cancel) {
+                return null;
+            }
+
+            let buffer: T[] = [];
+            let index: number = -1;
+            let result: T;
 
             //region Clear this
 
-            for (var i = 0; i < this.length; i++) {
-                var t: T = this[i];
+            for (let i = 0; i < this.length; i++) {
+                let t: T = this[i];
 
                 delete this[i];
 
                 if(t === item) {
+                    result = item;
                     index = i;
 
                 }else{
@@ -196,7 +258,7 @@ module latte {
 
             //region Apply buffer
 
-            for (var i = 0; i < buffer.length; i++) {
+            for (let i = 0; i < buffer.length; i++) {
                 this[i] = buffer[i];
             }
 
@@ -210,7 +272,7 @@ module latte {
                 }
             }
 
-            return this;
+            return result;
 
         }
 
@@ -230,6 +292,16 @@ module latte {
             this.pointer = 0;
         }
 
+        /**
+         * Returns an array representation of the collection
+         * @returns {T[]}
+         */
+        toArray(): T[]{
+            let a: T[] = [];
+            this.each(i => a.push(i));
+            return a;
+        }
+
         //endregion
 
         //region Events
@@ -237,14 +309,40 @@ module latte {
         /**
          * Back field for event
          */
-         private _addItem: LatteEvent;
+        private _addingItem: LatteEvent;
+
+        /**
+         * Gets an event raised when the collection is about to add an item. Its cancellable
+         *
+         * @returns {LatteEvent}
+         */
+        get addingItem(): LatteEvent{
+            if(!this._addingItem){
+                this._addingItem = new LatteEvent(this);
+            }
+            return this._addingItem;
+        }
+
+        /**
+         * Raises the <c>addingItem</c> event
+         */
+        onAddingItem(e: CollectionEvent<T>){
+            if(this._addingItem){
+                this._addingItem.raise(e);
+            }
+        }
+
+        /**
+         * Back field for event
+         */
+        private _addItem: LatteEvent;
 
         /**
          * Gets an event raised when an item is added
          *
          * @returns {LatteEvent}
          */
-        public get addItem(): LatteEvent{
+        get addItem(): LatteEvent{
             if(!this._addItem){
                 this._addItem = new LatteEvent(this);
                 this._addItem.context = this.context;
@@ -255,14 +353,14 @@ module latte {
         /**
          * Back field for event
          */
-         private _removeItem: LatteEvent;
+        private _removeItem: LatteEvent;
 
         /**
          * Gets an event raised when an item is removed
          *
          * @returns {LatteEvent}
          */
-        public get removeItem(): LatteEvent{
+        get removeItem(): LatteEvent{
             if(!this._removeItem){
                 this._removeItem = new LatteEvent(this);
                 this._addItem.context = this.context;
@@ -270,6 +368,23 @@ module latte {
             return this._removeItem;
         }
 
+
+        /**
+         * Back field for event
+         */
+        private _removingItem: LatteEvent;
+
+        /**
+         * Gets an event raised when the item is about to be removed
+         *
+         * @returns {LatteEvent}
+         */
+        get removingItem(): LatteEvent{
+            if(!this._removingItem){
+                this._removingItem = new LatteEvent(this);
+            }
+            return this._removingItem;
+        }
 
         //endregion
 

@@ -15,6 +15,10 @@ module latte{
      */
     export class DataRecordValueItem extends ValueItem<number>{
 
+        //region Fields
+        private buttonGroup: ButtonGroupItem;
+        //endregion
+
         /**
          * Creates the value item
          * @param loader
@@ -48,27 +52,65 @@ module latte{
         //region Methods
 
         /**
-         * Override.
-         * @returns {number}
-         */
-        getValue(): number{
-            if(this.record){
-                return this.record.recordId;
-            }else{
-                return 0;
-            }
-        }
-
-        /**
          * Override
          * @returns {string}
          */
-        getValueString(): string{
+        get valueString(): string{
             if(this.record){
                 return this.record.toString();
             }else{
                 return '';
             }
+        }
+
+        /**
+         * Override
+         */
+        onLayout(){
+            super.onLayout();
+
+            if(this.buttonGroup) {
+                setTimeout(() => {
+                    let w = Rectangle.fromElement(this.raw).width;
+                    let bw = Rectangle.fromElement(this.buttonGroup.buttons[1].raw).width;
+                    // log(`w - bw =  ${w} - ${bw}`);
+                    this.buttonGroup.buttons[0].element.css('max-width', w - bw - 35)
+                });
+            }
+        }
+
+        /**
+         * Raises the <c>record</c> event
+         */
+        onRecordChanged(){
+            if(this._recordChanged){
+                this._recordChanged.raise();
+            }
+
+            this.updateItem();
+
+            if(this.record) {
+
+                this.value = this.record.recordId;
+
+                this.record.recordIdChanged.add(() => this.value = this.record.recordId);
+
+            }else{
+                this.value = null;
+            }
+        }
+
+        /**
+         * Raises the <c>textboxCreated</c> event
+         */
+        onTextboxCreated(){
+            if(this._textboxCreated){
+                this._textboxCreated.raise(this.textbox);
+            }
+            if(_isString(this.placeholder) && this.placeholder.length > 0) {
+                this.textbox.placeholder = this.placeholder;
+            }
+            this.textbox.minLengthToActivateSuggestions = 0;
         }
 
         /**
@@ -98,16 +140,17 @@ module latte{
 
             if(this.record){
 
+                // Why is this line new?
+                if (this._textbox) this._textbox.hideSuggestions();
+
                 this._textbox = null;
 
-                var icon = _isFunction(this.record['icon16']) ? (<any>this.record['icon16']()) : null;
+                let icon = _isFunction(this.record['icon16']) ? (<any>this.record['icon16']()) : null;
 
-                var bg = new ButtonGroupItem([
+                let bg = new ButtonGroupItem([
                     new ButtonItem(this.record.toString(), icon),
-                    new ButtonItem(null, Glyph.dismiss, () => {
-                        var txt = this.text;
+                    new ButtonItem(null, LinearIcon.cross, () => {
                         this.record = null;
-//                        this.textbox.value = txt;
                         this.textbox.input.select();
                         this.textbox.input.focus();
                     })
@@ -115,14 +158,25 @@ module latte{
 
                 bg.appendTo(this);
 
+                this.buttonGroup = bg;
+
+                bg.buttons[0].addClass('no-front-padding');
+                bg.buttons[0].faceVisible = bg.buttons[1].faceVisible = false;
+
+                this.onLayout();
+
             }else{
+                this.buttonGroup = null;
                 this._textbox = new TextboxItem();
                 this.textbox.appendTo(this);
                 this.textbox.filterSuggestions.add(() => {
                     if(this.loaderFunction){
                         (<any>this.loaderFunction)(<any>this, (items: Item[]) => {
-                            this.textbox.suggestions.clear();
-                            this.textbox.suggestions.addArray(items);
+                            if(this.textbox) {
+                                this.textbox.suggestions.clear();
+                                this.textbox.suggestions.addArray(items);
+                            }
+
                         });
                     }
                 });
@@ -140,30 +194,35 @@ module latte{
         /**
          * Back field for event
          */
-         private _textboxCreated: LatteEvent
+        private _recordChanged: LatteEvent;
+
+        /**
+         * Gets an event raised when the value of the record property changes
+         *
+         * @returns {LatteEvent}
+         */
+        get recordChanged(): LatteEvent{
+            if(!this._recordChanged){
+                this._recordChanged = new LatteEvent(this);
+            }
+            return this._recordChanged;
+        }
+
+        /**
+         * Back field for event
+         */
+        private _textboxCreated: LatteEvent
 
         /**
          * Gets an event raised when the textbox has been created
          *
          * @returns {LatteEvent}
          */
-        public get textboxCreated(): LatteEvent{
+        get textboxCreated(): LatteEvent{
             if(!this._textboxCreated){
                 this._textboxCreated = new LatteEvent(this);
             }
             return this._textboxCreated;
-        }
-
-        /**
-         * Raises the <c>textboxCreated</c> event
-         */
-        public onTextboxCreated(){
-            if(this._textboxCreated){
-                this._textboxCreated.raise(this.textbox);
-            }
-            if(_isString(this.placeholder) && this.placeholder.length > 0) {
-                this.textbox.placeholder = this.placeholder;
-            }
         }
         //endregion
 
@@ -179,7 +238,7 @@ module latte{
          *
          * @returns {(text:string, callback:(items:Array<Item>) => any) => Message}
          */
-        public get loaderFunction():DataRecordSuggestionLoader {
+        get loaderFunction():DataRecordSuggestionLoader {
             return this._loaderFunction;
         }
 
@@ -188,7 +247,7 @@ module latte{
          *
          * @param {(text:string, callback:(items:Array<Item>) => any) => Message} value
          */
-        public set loaderFunction(value:DataRecordSuggestionLoader) {
+        set loaderFunction(value:DataRecordSuggestionLoader) {
             this._loaderFunction = value;
         }
 
@@ -218,35 +277,34 @@ module latte{
         /**
          * Property field
          */
-        private _record:DataRecord = null;
+        private _record: DataRecord = null;
 
         /**
          * Gets or sets the record of the item
          *
          * @returns {DataRecord}
          */
-        public get record():DataRecord {
+        get record(): DataRecord{
             return this._record;
         }
 
         /**
-         * Gets or sets the record of the item
+         * Gets or sets
          *
          * @param {DataRecord} value
          */
-        public set record(value:DataRecord) {
+        set record(value: DataRecord){
 
-            var changed = value !== this._record;
+            // Check if value changed
+            let changed: boolean = value !== this._record;
 
+            // Set value
             this._record = value;
 
-            this.updateItem();
-
-            if(changed) {
-                this.onValueChanged();
+            // Trigger changed event
+            if(changed){
+                this.onRecordChanged();
             }
-
-
         }
 
         /**
@@ -259,7 +317,7 @@ module latte{
          *
          * @returns {TextboxItem}
          */
-        public get textbox():TextboxItem {
+        get textbox():TextboxItem {
             return this._textbox;
         }
 
@@ -268,7 +326,7 @@ module latte{
          *
          * @returns {string}
          */
-        public get text():string {
+        get text():string {
 
             if(this._textbox){
                 return this._textbox.value;
@@ -278,7 +336,6 @@ module latte{
             }
             return null;
         }
-
 
         //endregion
 

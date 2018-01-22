@@ -244,24 +244,24 @@ module latte {
          * @returns {string}
          */
         onFormatNumber(n: number, decimals: number = 0, symbol: string = ''){
-            var point: string = this.numberDecimalsSeparator; //if no decimal separator is passed we use the dot as default decimal separator (we MUST use a decimal separator)
+            let point: string = this.numberDecimalsSeparator; //if no decimal separator is passed we use the dot as default decimal separator (we MUST use a decimal separator)
 
             //if you don't want to use a thousands separator you can pass empty string as thousands_sep value
-            var separator: string = this.numberThousandsSeparator;
+            let separator: string = this.numberThousandsSeparator;
 
-            var sign: string = (n < 0) ? '-' : '';
+            let sign: string = (n < 0) ? '-' : '';
 
             //extracting the absolute value of the integer part of the number and converting to string
-            var round: string = parseInt(Math.abs(n).toFixed(decimals)) + '';
-            var length: number = round.length;
-            var offset: number = ((length) > 3) ? length % 3 : 0;
+            let round: string = parseInt(Math.abs(n).toFixed(decimals)) + '';
+            let length: number = round.length;
+            let offset: number = ((length) > 3) ? length % 3 : 0;
 
-            var a = sign;
-            var b = symbol;
-            var c = (offset ? round.substr(0, offset) + separator : '');
-            var d = round.substr(offset).replace(/(\d{3})(?=\d)/g, "$1" + separator);
+            let a = sign;
+            let b = symbol;
+            let c = (offset ? round.substr(0, offset) + separator : '');
+            let d = round.substr(offset).replace(/(\d{3})(?=\d)/g, "$1" + separator);
             //[Hack]
-            var e = (decimals ? point + (Math.abs(n) - parseInt(round)).toFixed(decimals).slice(2) : '');
+            let e = (decimals ? point + (Math.abs(n) - parseInt(round)).toFixed(decimals).slice(2) : '');
 
             return a + b + c + d + e;
         }

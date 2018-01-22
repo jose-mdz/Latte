@@ -715,6 +715,7 @@ module latte{
             var btnOk = new ButtonItem();
             btnOk.text = strings.ok;
 
+
             var d = new DialogView(
                 txtView,
                 [btnOk]
@@ -756,7 +757,7 @@ module latte{
             td.addClass('editing');
 
             var input = new InputItem()
-            input.type = col.type;
+            input.type = <any>col.type;
             input.options = col.options;
             input.value = val;
             input.textVisible = false;

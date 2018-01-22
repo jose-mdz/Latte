@@ -9,6 +9,7 @@ module latte {
     export interface IMessage {
 
 
+        responseArrived: LatteEvent;
 
     }
 

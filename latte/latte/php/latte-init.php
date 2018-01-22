@@ -65,7 +65,7 @@ function dataLatte_Autoloader($className){
         foreach(LatteModule::$loadedModules as $module){
 
             // Possible path of file
-            $path = String::combinePath($module->pathPhp, "$className.php");
+            $path = DLString::combinePath($module->pathPhp, "$className.php");
 
             // Check if exists
             if(file_exists($path)){

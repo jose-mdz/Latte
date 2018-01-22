@@ -20,6 +20,13 @@ module latte{
             d.saved.add(onSaved);
             d.show();
 
+            // let input = d.raw.querySelector('input');
+            //
+            // if(input) {
+            //     setTimeout(() => (<any>input).focus());
+            //
+            // }
+
             return d;
 
         }
@@ -99,7 +106,7 @@ module latte{
          **/
         onSaving(){
 
-            var ptr = this;
+            let ptr = this;
             this.formView.applyValues();
             this.record.save(function(){
                 ptr.onSaved();

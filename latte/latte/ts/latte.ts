@@ -94,11 +94,12 @@ module latte{
     export function _isString(param){ return typeof param == 'string'; };
 
     /**
-     * Returns a value indicating if the parameter is an Array
+     * Returns a value indicating if the parameter is an Array, optionally specifies
+     * the minimum length required to return a true value
      *
      * @returns {boolean}
      */
-    export function _isArray(param){ return param instanceof Array; };
+    export function _isArray(param, minLength = 0){ return (param instanceof Array) && param.length >= minLength; };
 
     /**
      * Returns a value indicating if the parameter is a Function

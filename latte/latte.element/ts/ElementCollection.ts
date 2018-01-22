@@ -16,9 +16,9 @@ module latte {
          * @returns {latte.ElementCollection}
          */
         static fromNodeList(list: NodeList): ElementCollection{
-            var collection = new ElementCollection();
+            let collection = new ElementCollection();
 
-            for (var i = 0; i < list.length; i++) {
+            for (let i = 0; i < list.length; i++) {
                 ((node:any) => {
                     if(node['latte-element-instance'] instanceof Element) {
                         collection.add(<Element<HTMLElement>>node['latte-element-instance']);

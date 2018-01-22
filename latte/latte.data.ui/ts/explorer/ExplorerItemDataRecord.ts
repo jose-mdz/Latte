@@ -17,8 +17,12 @@ module latte {
         /**
          *
          */
-        constructor() {
+        constructor(r: DataRecord = null) {
             super();
+
+            if(r) {
+                this.record = <T>r;
+            }
         }
 
         //region Private Methods

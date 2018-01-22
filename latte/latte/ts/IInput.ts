@@ -16,20 +16,36 @@ module latte {
     }
 
     /**
+     * Boolean that resolves based on criteria
+     */
+    export type InputResolvedBoolean = boolean | 'if-inserted' | 'if-not-inserted' | 'if-value' | 'if-readonly-and-value';
+
+    /**
+     * Types of input
+     */
+    export type InputType = 'string' | 'text' | 'html' | 'number' | 'integer' |
+        'float' | 'boolean' | 'switch' | 'password' |
+        'date' | 'time' | 'datetime' | 'enumeration' | 'combo' |
+        'radio' | 'flags' | 'file' | 'image' | 'record' |
+        'record-combo' | 'color' | 'custom'
+
+    /**
      * Specifies an input description
      */
     export interface IInput{
-        type?: 'string' | 'text' | 'html' | 'number' | 'integer' | 'float' | 'boolean' | 'switch' | 'password' |
-            'date' | 'time' | 'datetime' | 'enumeration' | 'combo' | 'radio' | 'flags' | 'file' | 'image' | 'record' |
-            'record-combo' | 'custom';
+        type?: InputType;
         options?: IInputOptions | IInputFlagOptions | String[];
-        visible?: boolean | 'if-inserted' | 'if-not-inserted';
+        visible?: InputResolvedBoolean;
         loaderFunction?: (...any) => any;
-        readOnly?: boolean;
+        readOnly?: InputResolvedBoolean;
         recordType?: string;
         text?: string;
         defaultValue?: any;
         category?: string;
         hint?: string;
+        separator?: InputResolvedBoolean;
+        nullable?: InputResolvedBoolean;
+        updatesForm?: InputResolvedBoolean;
+        customFunction?: () => any; // Should return a ValueItem
     }
 }

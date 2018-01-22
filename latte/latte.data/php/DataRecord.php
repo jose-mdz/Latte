@@ -44,6 +44,32 @@ abstract class DataRecord {
     }
 
     /**
+     * Loads the record from the database by the specified $guid
+     *
+     * @param mixed $guid
+     * @return DataRecord
+     * @throws Exception
+     */
+    public static function byGUID($guid = false) {
+
+        $name = get_called_class();
+        $obj = new $name();
+        $table = $obj->gettable();
+
+        return DataLatte::oneOf($name, "SELECT * FROM `$table` WHERE guid = '$guid'");
+    }
+
+    /**
+     * Returns a value indicating if the passed array represents a packed record
+     *
+     * @param $array
+     * @return boolean
+     */
+    public static function isPackedRecord($array){
+        return (isset($array['type'])) && ($array['type'] === 'DataRecord');
+    }
+
+    /**
      * Packs the passed array of records
      *
      * @param array $array
@@ -55,6 +81,51 @@ abstract class DataRecord {
                 $array[$i] = self::packArray($record);
             }elseif($record instanceof DataRecord){
                 $array[$i] = $record->pack();
+            }
+        }
+        return $array;
+    }
+
+    /**
+     * Unmarshalls a packed DataRecord
+     *
+     * @throws ErrorException
+     * @param $array
+     * @return DataRecord
+     */
+    public static function unpack($array){
+        if(!DataRecord::isPackedRecord($array)){
+            throw new ErrorException("Invalid DataRecord");
+        }
+        $class = $array['recordType'];
+        $id = $array['recordId'];
+        $record = new $class();
+        foreach($array['fields'] as $key => $value){
+            $record->{$key} = $value;
+        }
+        foreach($array['properties'] as $key => $value){
+            if(self::isPackedRecord($value)){
+                $value = self::unpack($value);
+            }
+            $record->{$key} = $value;
+        }
+        $record->setIdValue($id);
+        return $record;
+    }
+
+    /**
+     * Unpacks a whole array
+     * @param array $array
+     * @return array
+     */
+    public static function unpackArray(&$array){
+        foreach($array as $key => $value){
+            if(is_array($value)){
+                if(self::isPackedRecord($value)){
+                    $array[$key] = self::unpack($value);
+                }else{
+                    $array[$key] = self::unpackArray($value);
+                }
             }
         }
         return $array;
@@ -298,7 +369,7 @@ abstract class DataRecord {
      */
     public function getDeleteQuery() {
         return sprintf(
-            "DELETE FROM `%s` WHERE %s", $this->gettable(), $this->createwhere($this->getallkeys())
+            "DELETE FROM `%s` WHERE %s", ($this->gettable()), $this->createwhere($this->getallkeys())
         );
     }
 
@@ -336,12 +407,12 @@ abstract class DataRecord {
      */
     public function getInsertQuery() {
 
-        $all = array_merge($this->getkeys(), $this->getfields());
+        $all = array_merge($this->getKeys(), $this->getFields());
 
         $all = DataLatte::escape($all);
 
         return str_replace("'NULL'", "NULL", sprintf(
-            "INSERT INTO `%s`(`%s`) VALUES('%s')", $this->gettable(), implode("`, `", array_keys($all)), implode("', '", array_values($all))
+            "INSERT INTO `%s`(`%s`) VALUES('%s')", ($this->gettable()), implode("`, `", array_keys($all)), implode("', '", array_values($all))
         ));
     }
 
@@ -355,11 +426,11 @@ abstract class DataRecord {
 
         if (strlen($field) == 0) {
             return sprintf(
-                "UPDATE `%s` SET %s WHERE %s", $this->gettable(), implode(", ", $this->equalize(array_merge($this->getfields(), ((sizeof($this->getautokey()) ? $this->getkeys() : array()))))), $this->createwhere((sizeof($this->getautokey()) ? $this->getautokey() : $this->getallkeys()))
+                "UPDATE `%s` SET %s WHERE %s", ($this->gettable()), implode(", ", $this->equalize(array_merge($this->getfields(), ((sizeof($this->getautokey()) ? $this->getkeys() : array()))))), $this->createwhere((sizeof($this->getautokey()) ? $this->getautokey() : $this->getallkeys()))
             );
         } else {
             return sprintf(
-                "UPDATE `%s` SET `%s` = '%s' WHERE %s", $this->gettable(), $field, $this->${field}, $this->createwhere((sizeof($this->getautokey()) ? $this->getautokey() : $this->getallkeys()))
+                "UPDATE `%s` SET `%s` = '%s' WHERE %s", ($this->gettable()), $field, $this->${field}, $this->createwhere((sizeof($this->getautokey()) ? $this->getautokey() : $this->getallkeys()))
             );
         }
     }
@@ -481,6 +552,18 @@ abstract class DataRecord {
     }
 
     /**
+     * Sets the id of the record
+     *
+     * @param $value
+     */
+    public function setIdValue($value){
+        $auto = $this->getAutoKey();
+        $keys = array_keys($auto);
+        $idField = $keys[0];
+        $this->{$idField} = $value;
+    }
+
+    /**
      * Updates this record on the database
      *
      * @param DataConnection $connection
@@ -516,10 +599,6 @@ abstract class DataRecord {
     }
 
 
-
-
-
-    
 
     //endregion
     

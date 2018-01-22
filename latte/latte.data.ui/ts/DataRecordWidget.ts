@@ -20,13 +20,10 @@ module latte {
         constructor(record: DataRecord = null) {
             super();
 
-            this.allowMaximize = this.allowClose = false;
 
             this.topToolbar.sideItems.add(this.btnSave);
 
             this.items.add(this.form);
-
-            this.optionsButton.visible = false;
 
             if(record) {
                 this.record = record;
@@ -41,7 +38,7 @@ module latte {
         /**
          * Raises the <c>record</c> event
          */
-        public onRecordChanged(){
+        onRecordChanged(){
 
             this.form.record = this.record;
             this.btnSave.enabled = false;

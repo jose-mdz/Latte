@@ -10,10 +10,36 @@ module latte{
          **/
         static fromLRTB(left: number, right: number, top: number, bottom: number): Rectangle{
 
-            var r = new Rectangle(left, top);
-            r.right = right;r.bottom = bottom;
+            let r = new Rectangle(left, top);
+            r.right = right;
+            r.bottom = bottom;
             return r;
 
+        }
+
+        /**
+         * Creates a rectangle from the specified object (top, left, width, height)
+         * @param obj
+         */
+        static fromObject(obj: any): Rectangle{
+           return new Rectangle(obj.left, obj.top, obj.width, obj.height);
+        }
+
+        /**
+         * Creates a rectangle from the specified object (top, left, width, height)
+         * @param obj
+         */
+        static fromObjectLFTB(obj: any): Rectangle{
+           return Rectangle.fromLRTB(obj.left, obj.right, obj.top, obj.bottom);
+        }
+
+        /**
+         * Creates a rectangle of the specified rectangle
+         * @param {HTMLElement} e
+         * @returns {latte.Rectangle}
+         */
+        static fromElement(e: HTMLElement): Rectangle{
+            return Rectangle.fromObject(e.getBoundingClientRect());
         }
 
         /**
@@ -67,9 +93,9 @@ module latte{
         /**
          * Returns the result of centering this into the specified container
          **/
-        center(container: Rectangle): Rectangle{
+        centerOn(container: Rectangle): Rectangle{
 
-            var c = new Rectangle( container.left + (container.width - this.width) / 2,
+            let c = new Rectangle( container.left + (container.width - this.width) / 2,
                 container.top + (container.height - this.height) / 2, this.width, this.height );
             return c;
 
@@ -80,8 +106,7 @@ module latte{
          **/
         contains(x: number, y: number): boolean{
 
-            return this._left <= x && this.right >= x
-                && this._top <= y && this.bottom >= y
+            return this.left <= x && x <= this.right && this.top <= y && y <= this.bottom;
 
         }
 
@@ -90,8 +115,7 @@ module latte{
          **/
         containsRectangle(rectangle: Rectangle): boolean{
 
-            return this.contains( rectangle.left, rectangle.top)
-                && this.contains( rectangle.right, rectangle.bottom);
+            return this.contains( rectangle.left, rectangle.top) && this.contains( rectangle.right, rectangle.bottom);
 
         }
 
@@ -125,12 +149,18 @@ module latte{
          **/
         intersection(rectangle: Rectangle): Rectangle{
 
-            return Rectangle.fromLRTB(
-                Math.max(this.left, rectangle.left),
-                Math.min(this.right, rectangle.right),
-                Math.max(this.top, rectangle.top),
-                Math.min(this.bottom, rectangle.bottom)
-            );
+            let a = this;
+            let b = rectangle;
+            let x1 = Math.max(a.left, b.left);
+            let x2 = Math.min(a.right, b.right);
+            let y1 = Math.max(a.top, b.top);
+            let y2 = Math.min(a.bottom, b.bottom);
+
+            if(x2 => x1 && y2 >= y1) {
+                return new Rectangle(x1, y1, x2 - x1, y2 - y1);
+            }
+
+            return new Rectangle();
 
         }
 
@@ -138,12 +168,15 @@ module latte{
          * Gets a value indicating if the rectangle intersects specified rectangle
          **/
         intersects(rectangle: Rectangle): boolean{
-
-            return this.contains(rectangle.left, rectangle.top)
-                || this.contains(rectangle.right, rectangle.top)
-                || this.contains(rectangle.right, rectangle.bottom)
-                || this.contains(rectangle.left, rectangle.bottom);
-
+            let thisX = this.left;
+            let thisY = this.top;
+            let thisW = this.width;
+            let thisH = this.height;
+            let rectX = rectangle.left;
+            let rectY = rectangle.top;
+            let rectW = rectangle.width;
+            let rectH = rectangle.height;
+            return (rectX < thisX + thisW) && (thisX < (rectX + rectW)) && (rectY < thisY + thisH) && (thisY < rectY + rectH);
         }
 
         /**
@@ -186,6 +219,16 @@ module latte{
         }
 
         /**
+         * Gets the area of the rectangle
+         *
+         * @returns {number}
+         */
+        get area(): number {
+            return this.width * this.height;
+        }
+
+
+        /**
          * Gets or sets the right side of the rectangle
          **/
         get bottom(): number{
@@ -201,6 +244,23 @@ module latte{
 
 
 
+        }
+
+        /**
+         * Gets or sets the center of the rectangle
+         * @returns {latte.Point}
+         */
+        get center(): Point{
+            return new Point(this.left + this.width / 2, this.top + this.height / 2);
+        }
+
+        /**
+         * Gets or sets the center of the rectangle
+         * @param value
+         */
+        set center(value: Point){
+            this.left = value.x - this.width / 2;
+            this.top = value.y - this.height / 2;
         }
 
         /**
@@ -222,6 +282,16 @@ module latte{
         }
 
         /**
+         * Gets a value indicating if the rectangle is empty
+         *
+         * @returns {boolean}
+         */
+        get isEmpty(): boolean {
+            return this.area == 0 && this.left == 0 && this.top == 0;
+        }
+
+
+        /**
          * Gets or sets the left of the rectangle
          **/
         get left(): number{
@@ -236,6 +306,15 @@ module latte{
             this._left = value;
 
 
+        }
+
+        /**
+         * Gets the location of the rectangle
+         *
+         * @returns {Point}
+         */
+        get location(): Point {
+            return new Point(this.left, this.top);
         }
 
         /**
@@ -265,11 +344,18 @@ module latte{
             return new Size(this.width, this.height);
         }
 
-
+        /**
+         * Gets or sets a tag
+         * @returns {any}
+         */
         get tag(): any{
             return this._tag;
         }
 
+        /**
+         * Gets or sets a tag
+         * @param value
+         */
         set tag(value: any){
             this._tag = value;
         }

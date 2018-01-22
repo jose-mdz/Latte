@@ -90,3 +90,7 @@ oneWeekShort 1w
 SweeksShort %sw
 tomorrow Tomorrow
 today Today
+nextWeekDayS Next %s
+SWeeksFromNow %s weeks from now
+SYearsFromNow %s years from now
+oneYearFromNow One year from now

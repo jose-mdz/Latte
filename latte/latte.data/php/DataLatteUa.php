@@ -68,18 +68,17 @@ class DataLatteUa {
         
         // Root files
         foreach(LatteReflection::getFileList($path, 'js') as $file){
-            $response .= file_get_contents(String::combinePath($path, $file));
+            $response .= file_get_contents(DLString::combinePath($path, $file));
         }
-        
         
         foreach($folders as $folder){
             
             // Compose folder path
-            $folderPath = String::combinePath($path, $folder);
+            $folderPath = DLString::combinePath($path, $folder);
             
             // Scan files in folder
             foreach(LatteReflection::getFileList($folderPath, 'js') as $file){
-                $files[] = String::combinePath($folderPath, $file);
+                $files[] = DLString::combinePath($folderPath, $file);
             }
         }
         
@@ -166,7 +165,7 @@ class DataLatteUa {
                         str_repeat(' ', 30) . $file . PHP_EOL .
                         str_repeat('*', 80) . '/';
              
-                $response .= file_get_contents( String::combinePath($path, $file));
+                $response .= file_get_contents( DLString::combinePath($path, $file));
             }
             
             
@@ -193,11 +192,11 @@ class DataLatteUa {
         foreach($folders as $folder){
             
             // Compose folder path
-            $folderPath = String::combinePath($path, $folder);
+            $folderPath = DLString::combinePath($path, $folder);
             
             // Scan files in folder
             foreach(LatteReflection::getFileList($folderPath, 'css') as $file){
-                $files[] = String::combinePath($folderPath, $file);
+                $files[] = DLString::combinePath($folderPath, $file);
             }
         }
         
@@ -270,7 +269,7 @@ class DataLatteUa {
         
         // Create files array into a full path files array
         foreach($files as $i => $file)
-            $files[$i] = String::combinePath($path, $file);
+            $files[$i] = DLString::combinePath($path, $file);
         
         return $files;
     }
@@ -416,7 +415,7 @@ class DataLatteUa {
      */
     public static function dumpRuntimeJs(){
 
-        readfile(String::combinePath(DATALATTE_CORE, 'support/js/datalatte-runtime.js'));
+        readfile(DLString::combinePath(DATALATTE_CORE, 'support/js/datalatte-runtime.js'));
 
     }
     
@@ -639,8 +638,8 @@ class DataLatteUa {
         
         /// Get path
         foreach(self::$namespaceDirectories as $dir){
-            $possible = String::combinePath($dir, $namespace);
-            $check = String::combinePath($possible, '.');
+            $possible = DLString::combinePath($dir, $namespace);
+            $check = DLString::combinePath($possible, '.');
             $checked[] = $dir;
             if(file_exists($check)){
                 $path = $possible;
@@ -671,7 +670,7 @@ class DataLatteUa {
         return array(
             tag("script")
             ->attr("type", "text/javascript")
-            ->attr("src", String::combinePath(self::$path , '_core/support/js/jquery-1.7.2.min.js')),
+            ->attr("src", DLString::combinePath(self::$path , '_core/support/js/jquery-1.7.2.min.js')),
             
             tag("script")->attr("type", "text/javascript")->attr("src", self::$requestPath . '?action=full-js&app='. $app),
             
@@ -726,7 +725,7 @@ class DataLatteUa {
         return array(
             tag("script")
             ->attr("type", "text/javascript")
-            ->attr("src", String::combinePath(self::$path , 'support/js/jquery-1.7.2.min.js')),
+            ->attr("src", DLString::combinePath(self::$path , 'support/js/jquery-1.7.2.min.js')),
             
             tag("script")
             ->attr("type", "text/javascript")

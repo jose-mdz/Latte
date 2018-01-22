@@ -79,9 +79,28 @@ module latte{
 
                 var result: any = evh.handler.apply(evh.context || this.context, args);
 
-                if(typeof result !== 'undefined'){
+                if(typeof result == 'boolean'){
                     return result;
                 }
+            }
+        }
+
+        /**
+         * Removes the specified handler
+         * @param {Function} handler
+         */
+        remove(handler: Function){
+
+            let index = -1;
+
+            this.handlers.forEach((h, i) => {
+                if(h.handler == handler){
+                    index = i;
+                }
+            });
+
+            if(index >= 0) {
+                this.handlers.splice(index, 1);
             }
         }
 

@@ -60,6 +60,24 @@ module latte {
         //region Methods
 
         /**
+         * Gets the distance to the specified point
+         * @param {latte.Point} p
+         * @returns {number}
+         */
+        distanceTo(p: Point): number{
+            return Point.distance(this, p);
+        }
+
+        /**
+         * Gets a value indicating if the passed point is equals to this one
+         * @param {latte.Point} p
+         * @returns {boolean}
+         */
+        equals(p: Point): boolean{
+            return this.x == p.x && p.y == this.y;
+        }
+
+        /**
          * Returns the offset operation of the point
          *
          * @param x
@@ -99,29 +117,47 @@ module latte {
         /**
          * Property field
          */
-        private _x:number = null;
+        private _x: number = null;
 
         /**
-         * Gets or sets the X of the point
+         * Gets or sets the x coordinate
          *
          * @returns {number}
          */
-        public get x():number {
-            return this._x || 0;
+        get x(): number {
+            return this._x;
+        }
+
+        /**
+         * Gets or sets the x coordinate
+         *
+         * @param {number} value
+         */
+        set x(value: number) {
+            this._x = value;
         }
 
         /**
          * Property field
          */
-        private _y:number = null;
+        private _y: number = null;
 
         /**
-         * Gets the Y coordinate of the point
+         * Gets or sets the y coordinate
          *
          * @returns {number}
          */
-        public get y():number {
-            return this._y || 0;
+        get y(): number {
+            return this._y;
+        }
+
+        /**
+         * Gets or sets the y coordinate
+         *
+         * @param {number} value
+         */
+        set y(value: number) {
+            this._y = value;
         }
 
         //endregion

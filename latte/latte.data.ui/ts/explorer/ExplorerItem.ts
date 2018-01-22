@@ -93,6 +93,13 @@ module latte {
         getChildrenLoader(): RemoteCall<any>{
             return null;
         }
+
+        /**
+         * Gets the view who renders children. Return null to use the standard ListView
+         */
+        getChildrenView(): ExplorerChildrenView{
+            return null;
+        }
         
         /**
          * Gets the detail view of the item
@@ -128,7 +135,7 @@ module latte {
          * @returns {IconItem}
          */
         getIcon(): IconItem{
-            return IconItem.standard(2, 1);
+            return IconItem.fileIcon();
         }
 
         /**
@@ -169,7 +176,7 @@ module latte {
                 this.onChildrenLoadStarted();
 
                 // Retrieve loader
-                var call = this.getChildrenLoader();
+                let call = this.getChildrenLoader();
 
                 if (call) {
 

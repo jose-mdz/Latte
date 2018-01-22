@@ -4,6 +4,8 @@ module latte{
      **/
     export class DateTime{
 
+        //region Static
+        
         /**
          * Amount of days in months of a non-leap year
          **/
@@ -14,19 +16,18 @@ module latte{
          **/
         static monthDaysLeapYear: Array<number> = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-
         /**
          * Returns the absolute number of days on the specified day-month-year
          **/
         static absoluteDays(year: number, month: number, day: number): number{
 
 
-            var div = function(a, b) { return Math.floor(a / b); };
-            var arr = DateTime.isLeapYear(year) ?
+            let div = function(a, b) { return Math.floor(a / b); };
+            let arr = DateTime.isLeapYear(year) ?
                 [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366] :
                 [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
-            var num = year - 1;
-            var num2 = ((((((num * 365) + div(num, 4)) - div(num, 100)) + div(num,400)) + arr[month - 1]) + day) - 1;
+            let num = year - 1;
+            let num2 = ((((((num * 365) + div(num, 4)) - div(num, 100)) + div(num,400)) + arr[month - 1]) + day) - 1;
             return num2;
 
         }
@@ -66,7 +67,7 @@ module latte{
          **/
         static fromMilliseconds(milliseconds: number): DateTime{
 
-            var d = new DateTime();
+            let d = new DateTime();
             d._span = TimeSpan.fromMilliseconds(milliseconds);
             return d;
 
@@ -85,10 +86,10 @@ module latte{
             if(dateTimeString.length === 0)
                 return new DateTime();
 
-            var year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
-            var parts = dateTimeString.split(' ');
-            var dateParts = parts.length > 0 ? parts[0].split('-') : [];
-            var timeParts = parts.length > 1 ? parts[1].split(':') : [];
+            let year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
+            let parts = dateTimeString.split(' ');
+            let dateParts = parts.length > 0 ? parts[0].split('-') : [];
+            let timeParts = parts.length > 1 ? parts[1].split(':') : [];
 
             if(dateParts.length === 3){
                 year = parseInt(dateParts[0], 10);
@@ -128,7 +129,7 @@ module latte{
          **/
         static get now(): DateTime{
 
-            var d = new Date();
+            let d = new Date();
             return new DateTime(d.getFullYear(), d.getMonth() + 1, d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
 
         }
@@ -138,7 +139,7 @@ module latte{
          **/
         static get today(): DateTime{
 
-            var d = new Date();
+            let d = new Date();
             return new DateTime(d.getFullYear(), d.getMonth() + 1, d.getDate());
 
         }
@@ -148,9 +149,17 @@ module latte{
          **/
         static get tomorrow(): DateTime{
 
-            var d = new Date();
+            let d = new Date();
             return (new DateTime(d.getFullYear(), d.getMonth() + 1, d.getDate())).addDays(1);
 
+        }
+
+        /**
+         * Gets the unix epoch
+         * @returns {latte.DateTime}
+         */
+        static get epoch(): DateTime{
+            return new DateTime(1970, 1, 1);
         }
 
         /**
@@ -158,12 +167,15 @@ module latte{
          **/
         static get yesterday(): DateTime{
 
-            var d = new Date();
+            let d = new Date();
             return (new DateTime(d.getFullYear(), d.getMonth() + 1, d.getDate())).addDays(-1);
 
         }
+        //endregion
 
+        //region Fields
         _span: TimeSpan;
+        //endregion
 
         /**
          * Creates the DateTime object
@@ -171,13 +183,14 @@ module latte{
         constructor(year: number = 1, month: number = 1, day: number = 1, hour: number = 0, minute: number = null, second: number = null, millisecond: number = null){
 
             // Calculate days
-            var days = DateTime.absoluteDays(year, month, day);
+            let days = DateTime.absoluteDays(year, month, day);
 
             // Calculate TimeSpan
             this._span = new TimeSpan(days, hour, minute, second, millisecond);
 
         }
 
+        //region Private Methods
         /**
          * Prepends a zero to the number if lower than 10
          **/
@@ -194,13 +207,13 @@ module latte{
         private fromTimeSpan(what: string): number{
 
 
-            var div = function(a, b){ return Math.floor(a/b); };
-            var num2: number = this._span.days;
-            var num3: number = div(num2, 146097);
+            let div = function(a, b){ return Math.floor(a/b); };
+            let num2: number = this._span.days;
+            let num3: number = div(num2, 146097);
 
             num2 -= num3 * 146097;
 
-            var num4 = div(num2, 36524);
+            let num4 = div(num2, 36524);
 
             if(num4 == 4){
                 num4 = 3;
@@ -208,11 +221,11 @@ module latte{
 
             num2 -= num4 * 36524;
 
-            var num5 = div(num2, 1461);
+            let num5 = div(num2, 1461);
 
             num2 -= num5 * 1461;
 
-            var num6 = div(num2, 365);
+            let num6 = div(num2, 365);
 
             if(num6 == 4){
                 num6 = 3;
@@ -228,11 +241,11 @@ module latte{
                 return (num2 + 1);
             }
 
-            var arr = ((num6 == 3) && ((num5 != 24) || (num4 ==3))) ?
+            let arr = ((num6 == 3) && ((num5 != 24) || (num4 ==3))) ?
                 [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366] :
                 [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
 
-            var index = num2 >> 6;
+            let index = num2 >> 6;
 
             while(num2 >= arr[index]){
                 index++;
@@ -246,11 +259,14 @@ module latte{
 
 
         }
+        //endregion
 
+        //region Methods
+        
         /**
          * Returns the result of adding the specified timespan to this date
          **/
-            add(timespan: TimeSpan): DateTime{
+        add(timespan: TimeSpan): DateTime{
 
             return DateTime.fromMilliseconds(this._span.millis + timespan.millis);
 
@@ -259,7 +275,7 @@ module latte{
         /**
          * Returns the result of adding the specified amount of days to this date
          **/
-            addDays(days: number): DateTime{
+        addDays(days: number): DateTime{
 
             return DateTime.fromMilliseconds(this._span.millis + days * 86400000);
 
@@ -268,7 +284,7 @@ module latte{
         /**
          * Returns the result of adding the specified amount of hours to this date
          **/
-            addHours(hours: number): DateTime{
+        addHours(hours: number): DateTime{
 
             return DateTime.fromMilliseconds(this._span.millis + hours * 3600000);
 
@@ -277,7 +293,7 @@ module latte{
         /**
          * Returns the result of adding the specified amount of milliseconds to this date
          **/
-            addMilliseconds(milliseconds: number): DateTime{
+        addMilliseconds(milliseconds: number): DateTime{
 
             return DateTime.fromMilliseconds(this._span.millis + milliseconds);
 
@@ -286,7 +302,7 @@ module latte{
         /**
          * Returns the result of adding the specified amount of minutes to this date
          **/
-            addMinutes(minutes: number): DateTime{
+        addMinutes(minutes: number): DateTime{
 
             return DateTime.fromMilliseconds(this._span.millis + minutes * 60000);
 
@@ -295,13 +311,13 @@ module latte{
         /**
          * Returns the result of adding the specified amount of months to this date
          **/
-            addMonths(months: number): DateTime{
+        addMonths(months: number): DateTime{
 
 
-            var year = this.year;
-            var month = this.month;
-            var day = this.day;
-            var newMonth = month - 1 + months;
+            let year = this.year;
+            let month = this.month;
+            let day = this.day;
+            let newMonth = month - 1 + months;
 
             if(newMonth < 0){
                 month = 12 + (newMonth + 1) % 12;
@@ -315,7 +331,7 @@ module latte{
                 throw new InvalidArgumentEx('months');
             }else{
 
-                var daysInMonth = DateTime.daysInMonth(year, month);
+                let daysInMonth = DateTime.daysInMonth(year, month);
 
                 if(day > daysInMonth) day = daysInMonth;
 
@@ -327,7 +343,7 @@ module latte{
         /**
          * Returns the result of adding the specified amount of seconds to this date
          **/
-            addSeconds(seconds: number): DateTime{
+        addSeconds(seconds: number): DateTime{
 
             return new DateTime(this._span.millis + seconds * 1000);
 
@@ -336,7 +352,7 @@ module latte{
         /**
          * Returns the result of adding the specified amount of years to this date
          **/
-            addYears(years: number): DateTime{
+        addYears(years: number): DateTime{
 
             return this.addMonths(years * 12);
 
@@ -345,35 +361,16 @@ module latte{
         /**
          * Returns the result of comparing this datetime to the specified datetime
          **/
-            compareTo(datetime: DateTime): number{
+        compareTo(datetime: DateTime): number{
 
             return this._span.compareTo(datetime._span);
 
         }
 
         /**
-         * Gets the comparer value of the date
-         *
-         * @returns {number}
-         */
-        get comparer():number {
-            return this._span.totalMilliseconds;
-        }
-
-
-        /**
-         * Returns just the date component of this datetime
-         **/
-        get date(): DateTime{
-
-            return new DateTime(this.year, this.month, this.day);
-
-        }
-
-        /**
          * Gets a value indicating if the specified datetime is equals to this datetime
          **/
-            equals(datetime: DateTime): boolean{
+        equals(datetime: DateTime): boolean{
 
             return this._span.equals(datetime._span);
 
@@ -382,7 +379,7 @@ module latte{
         /**
          * Returns a value indicating if the date is contained in the range specified by the arguments
          **/
-            onRange(start: DateTime, end: DateTime): boolean{
+        onRange(start: DateTime, end: DateTime): boolean{
 
             return this.compareTo(start) >= 0 && this.compareTo(end) <= 0;
 
@@ -391,7 +388,7 @@ module latte{
         /**
          * Returns the result of subtracting the specified datetime to this datetime
          **/
-            subtractDate(datetime: DateTime): TimeSpan{
+        subtractDate(datetime: DateTime): TimeSpan{
 
             if(!(datetime instanceof DateTime)) throw new InvalidArgumentEx('datetime');
             return TimeSpan.fromMilliseconds(this._span.millis - datetime._span.millis);
@@ -401,7 +398,7 @@ module latte{
         /**
          * Returns the result of subtracting the specified timespan to this datetime
          **/
-            subtractTime(timespan: TimeSpan): DateTime{
+        subtractTime(timespan: TimeSpan): DateTime{
 
             if(!(timespan instanceof TimeSpan)) throw new InvalidArgumentEx('timespan');
             return DateTime.fromMilliseconds(this._span.millis - timespan.millis);
@@ -411,24 +408,24 @@ module latte{
         /**
          * Returns a relative representatio of the date, like "Yesterday 10:00AM"
          **/
-        toRelativeString(){
+        toRelativeString(withTime: boolean = false){
 
 
-            var now = DateTime.now;
-            var today = DateTime.today;
-            var yesterday = DateTime.yesterday;
-            var tomorrow = DateTime.tomorrow;
-            var timePart = this._zeroPad(this.hour) + ':' + this._zeroPad(this.minute);
-            var datePart = "";
-            var d = this.date;
-            var t = this.timeOfDay;
-            var diff;
+            let now = DateTime.now;
+            let today = DateTime.today;
+            let yesterday = DateTime.yesterday;
+            let tomorrow = DateTime.tomorrow;
+            let timePart = this._zeroPad(this.hour) + ':' + this._zeroPad(this.minute);
+            let datePart = "";
+            let d = this.date;
+            let t = this.timeOfDay;
+            let diff;
 
             if(this.date.equals(today)) {
                 diff = now.timeOfDay.subtract(t);
 
-                var hours = Math.ceil(diff.totalHours);
-                var minutes = Math.ceil(diff.totalMinutes);
+                let hours = Math.ceil(diff.totalHours);
+                let minutes = Math.ceil(diff.totalMinutes);
 
                 if (diff.totalSeconds < 60) {
                     return strings.justNow;
@@ -451,35 +448,56 @@ module latte{
             }else if(d.equals(yesterday)){
                 datePart = strings.yesterday;
 
-            }else if(this.compareTo(today) < 0){
+            }else if(this.compareTo(today) < 0) {
                 timePart = '';
                 diff = today.subtractDate(this);
 
-                var days = Math.ceil(diff.totalDays);
-                var weeks = Math.ceil(days / 7);
-                var years = Math.ceil(weeks / 51);
+                let days = Math.ceil(diff.totalDays);
+                let weeks = Math.ceil(days / 7);
+                let years = Math.ceil(weeks / 51);
 
-                if(days < 7){
+                if (days < 7) {
                     datePart = sprintf(strings.SDaysAgo, days);
 
-                }else if(weeks == 1){
+                } else if (weeks == 1) {
                     datePart = strings.oneWeekAgo;
 
-                }else if(weeks < 51){
+                } else if (weeks < 51) {
                     datePart = sprintf(strings.SWeeksAgo, weeks);
 
-                }else if(years == 1){
+                } else if (years == 1) {
                     datePart = strings.oneYearAgo;
 
-                }else{
+                } else {
                     datePart = sprintf(strings.SYearsAgo, years);
+                }
+            }else if(this.compareTo(today) > 0){
+                timePart = '';
+                diff = today.subtractDate(this);
+
+                let weekd = this.dayOfWeekString;
+                let days = Math.abs(Math.ceil(diff.totalDays));
+                let weeks = Math.ceil(days / 7);
+                let years = Math.ceil(weeks / 51);
+
+                if(days < 8) {
+                    datePart = sprintf(strings.nextWeekDayS, weekd);
+
+                }else if (weeks < 51) {
+                    datePart = sprintf(strings.SWeeksFromNow, weeks);
+
+                }else if (years == 1){
+                    datePart = strings.oneYearFromNow;
+
+                }else{
+                    datePart = sprintf(strings.SYearsFromNow, years);
                 }
 
             }else{
                 return this.toString();
             }
 
-            if(this.minute == 0 && this.hour == 0) {
+            if((this.minute == 0 && this.hour == 0) || withTime === false) {
                 timePart = '';
             }
 
@@ -488,6 +506,48 @@ module latte{
 
         }
 
+        /**
+         * Returns a formatted string
+         **/
+        toFormattedString(format: string = null): string{
+            return Culture.formatShortDate(this);
+        }
+
+        /**
+         * Gets the DateTime as a string
+         **/
+        toString(includeTime = true): string{
+
+
+            if(isNaN(this.year)) return '';
+
+            let t = this.timeOfDay;
+            let r = this.year + '-' + this._zeroPad(this.month) + '-' + this._zeroPad(this.day);
+
+            if(includeTime){
+                r += ' ' + this._zeroPad(t.hours) + ":" + this._zeroPad(t.minutes) + ':'
+                    + this._zeroPad(t.seconds);
+            }
+
+            return r;
+
+        }
+
+        /**
+         * Gets a value of the object
+         * @returns {number}
+         */
+        valueOf(): number{
+            if(!this.thisEpoch) {
+                return 0;
+            }else {
+                return this._span.millis;
+            }
+        }
+        //endregion
+
+        //region Properties
+        
         /**
          * Gets the day of this datetime
          **/
@@ -511,7 +571,7 @@ module latte{
          * @returns {*}
          */
         get dayOfWeekString(): string{
-            var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            let days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
             return strings[days[this.dayOfWeek]];
         }
 
@@ -520,7 +580,7 @@ module latte{
          * @returns {*}
          */
         get dayOfWeekStringShort(): string{
-            var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            let days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
             return strings[days[this.dayOfWeek] + 'Short'];
         }
 
@@ -529,7 +589,7 @@ module latte{
          * @returns {*}
          */
         get dayOfWeekStringInitial(): string{
-            var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            let days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
             return strings[days[this.dayOfWeek] + 'Initial'];
         }
 
@@ -539,6 +599,24 @@ module latte{
         get dayOfYear(): number{
 
             return this.fromTimeSpan("dayyear");
+
+        }
+
+        /**
+         * Gets the comparer value of the date
+         *
+         * @returns {number}
+         */
+        get comparer():number {
+            return this._span.totalMilliseconds;
+        }
+
+        /**
+         * Returns just the date component of this datetime
+         **/
+        get date(): DateTime{
+
+            return new DateTime(this.year, this.month, this.day);
 
         }
 
@@ -624,30 +702,12 @@ module latte{
         }
 
         /**
-         * Returns a formatted string
-         **/
-        toFormattedString(format: string = null): string{
-            return Culture.formatShortDate(this);
-        }
-
-        /**
-         * Gets the DateTime as a string
-         **/
-        toString(includeTime = true): string{
-
-
-            if(isNaN(this.year)) return '';
-
-            var t = this.timeOfDay;
-            var r = this.year + '-' + this._zeroPad(this.month) + '-' + this._zeroPad(this.day);
-
-            if(includeTime){
-                r += ' ' + this._zeroPad(t.hours) + ":" + this._zeroPad(t.minutes) + ':'
-                    + this._zeroPad(t.seconds);
-            }
-
-            return r;
-
+         * Gets a value indicating if the date is after the unix epoch
+         *
+         * @returns {boolean}
+         */
+        get thisEpoch(): boolean {
+            return this.compareTo(new DateTime(2, 1, 1)) > 0;
         }
 
         /**
@@ -656,7 +716,7 @@ module latte{
         get weekOfYear(): number{
 
 
-            var oneJan = new DateTime(this.year, 1, 1);
+            let oneJan = new DateTime(this.year, 1, 1);
 
             return Math.ceil((this.dayOfYear + oneJan.dayOfWeek) / 7);
 
@@ -670,5 +730,6 @@ module latte{
             return this.fromTimeSpan("year");
 
         }
+        //endregion
     }
 }

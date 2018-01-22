@@ -246,6 +246,14 @@ module latte{
         }
 
         /**
+         * Gets the timespan as a number
+         * @returns {number}
+         */
+        valueOf(): number{
+            return this.millis;
+        }
+
+        /**
          * Gets the days component of the time interval represented by this object
          **/
         get days(): number{

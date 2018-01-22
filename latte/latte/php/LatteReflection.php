@@ -63,7 +63,7 @@ class LatteReflection {
         
         // Prepend path to all files
         foreach($files as $i => $file){
-            $files[$i] = String::combinePath($path, $file);
+            $files[$i] = DLString::combinePath($path, $file);
         }
         
         foreach($files as $file){
@@ -143,7 +143,7 @@ class LatteReflection {
 
             // if file isn't this directory or its parent, add it to the results
             if ($file != "." && $file != "..") {
-                if(is_dir(String::combinePath($directory_path, $file)))
+                if(is_dir(DLString::combinePath($directory_path, $file)))
                     $results[] = $file;
             }
 

@@ -15,17 +15,15 @@ module latte {
          * @param tagName
          * @returns {latte.Element<HTMLElement>}
          */
-        static create(tagName: string = 'div'){
-            var parts = tagName.split('.');
+        static create(tagName: string = 'div'): Element<HTMLElement>{
 
-            var tagName = parts[0];
+            let parts = tagName.split('.');
 
-            var element =new Element<HTMLElement>(document.createElement(tagName));
+            tagName = parts.shift();
 
+            let element =new Element<HTMLElement>(document.createElement(tagName));
 
-            for (var i = 1; i < parts.length; i++) {
-                element.addClass(parts[i]);
-            }
+            parts.forEach((p) => element.addClass(p));
 
             return element;
         }
@@ -68,8 +66,8 @@ module latte {
          * @param d
          * @returns {number}
          */
-        static getDocumentHeight(d: Document): number{
-            var doc = d.documentElement;
+        static getDocumentHeight(d: Document = null): number{
+            let doc = (d || document).documentElement;
             return Math.max(
                 d.body.scrollWidth,
                 doc.scrollWidth,
@@ -84,8 +82,8 @@ module latte {
          * @param d
          * @returns {number}
          */
-        static getDocumentWidth(d: Document): number{
-            var doc = d.documentElement;
+        static getDocumentWidth(d: Document = null): number{
+            let doc = (d || document).documentElement;
             return Math.max(
                 d.body.scrollHeight,
                 doc.scrollHeight,
@@ -100,8 +98,8 @@ module latte {
          *
          * @returns {number}
          */
-        static getViewportWidth(d: Document):number {
-            return d.documentElement.clientWidth;
+        static getViewportWidth(d: Document = null):number {
+            return (d || document).documentElement.clientWidth;
         }
 
         /**
@@ -109,8 +107,8 @@ module latte {
          *
          * @returns {number}
          */
-        static getViewportHeight(d: Document):number {
-            return d.documentElement.clientHeight;
+        static getViewportHeight(d: Document = null):number {
+            return (d || document).documentElement.clientHeight;
         }
 
         /**
@@ -139,6 +137,7 @@ module latte {
             }
 
         }
+
 
         //endregion
 
@@ -186,10 +185,10 @@ module latte {
         /**
          * Creates an element
          */
-        constructor(element: HTMLElement) {
+        constructor(element: HTMLElement = null) {
 
-            if(!(element instanceof HTMLElement))
-                throw "Element Required";
+            if(!element)
+                element = document.createElement('div');
 
             this._element = <T>element;
             this._element['latte-element-instance'] = this;
@@ -256,9 +255,21 @@ module latte {
          * @param className
          */
         addClass(className: string){
-            if(className.indexOf(' ') >= 0) throw "Only one class can be added.";
+            let parts = [className];
 
-            this.element.classList.add(className);
+            if(className.indexOf(' ') >= 0){
+                parts = className.split(' ');
+
+            }else if(className.indexOf('.') >= 0) {
+                parts = className.split('.');
+            }
+
+            // Add all classes
+            parts.forEach(p => {
+                if(String(p || '').length > 0)
+                    this.element.classList.add(p)
+            });
+
         }
 
         /**
@@ -395,6 +406,25 @@ module latte {
          */
         bind(object: any, hide: boolean = false){
 
+            let plist = <any>this.raw.querySelectorAll('[data-property]');
+
+            plist.forEach(node => {
+
+                if(node instanceof HTMLElement) {
+                   let pname =  node.getAttribute('data-property');
+
+                   let props = Object.getOwnPropertyNames(Object.getPrototypeOf(this));
+                   props.forEach(inner => {
+                       if(inner.indexOf(pname + '_') === 0){
+                           let eventName = inner.substr(pname.length + 1);
+                           node.addEventListener(eventName, e => this[inner](e))
+                       }
+                   });
+
+                }
+
+            });
+
             let list = this.element.querySelectorAll('[data-bind]');
 
             for (let i = 0; i < list.length; i++) {
@@ -515,10 +545,11 @@ module latte {
         /**
          * Clears all the children of the element
          */
-        clear(){
+        clear(): Element<HTMLElement>{
             while(this.element.firstChild){
                 this.element.removeChild(this.element.firstChild);
             }
+            return this;
         }
 
         /**
@@ -827,9 +858,18 @@ module latte {
          * @param className
          */
         removeClass(className: string){
-            if(className.indexOf(' ') >= 0) throw "Only one class can be removed.";
+            let parts = [className];
 
-            this.element.classList.remove(className);
+            if(className.indexOf(' ') >= 0){
+                parts = className.split(' ');
+
+            }else if(className.indexOf('.') >= 0) {
+                parts = className.split('.');
+            }
+
+            // Add all classes
+            parts.forEach(p => this.element.classList.remove(p));
+
         }
 
         /**
@@ -1204,6 +1244,16 @@ module latte {
         }
 
         /**
+         * Gets the raw HTMLElement
+         *
+         * @returns {T}
+         */
+        get raw(): T {
+            return this.element;
+        }
+
+
+        /**
          * Gets the style of the element
          *
          * @returns {CSSStyleDeclaration}
@@ -1278,6 +1328,24 @@ module latte {
                 this.element['innerHTML'] = value;
             }
 
+        }
+
+        /**
+         * Gets or sets the tooltip of the elent
+         *
+         * @returns {string}
+         */
+        get tooltip():string {
+            return this.element.title;
+        }
+
+        /**
+         * Gets or sets the tooltip of the elent
+         *
+         * @param {string} value
+         */
+        set tooltip(value:string) {
+            this.element['title'] = value;
         }
 
         /**
@@ -1365,24 +1433,6 @@ module latte {
          */
         set width(value:number) {
             this.element.style.width = value + 'px';
-        }
-
-        /**
-         * Gets or sets the tooltip of the elent
-         *
-         * @returns {string}
-         */
-        get tooltip():string {
-            return this.element.title;
-        }
-
-        /**
-         * Gets or sets the tooltip of the elent
-         *
-         * @param {string} value
-         */
-        set tooltip(value:string) {
-            this.element['title'] = value;
         }
 
         //endregion

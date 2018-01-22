@@ -15,6 +15,21 @@ module latte {
     export interface ISave {
 
         /**
+         * Gets or sets a value indicating if changes were reported while saving
+         */
+        changesWhileSaving: boolean;
+
+        /**
+         * Event raised when the value of <c>changesWhileSaving</c> property changes.
+         */
+        changesWhileSavingChanged: LatteEvent;
+
+        /**
+         * Gets a value indicating if changes are currently being saved.
+         */
+        isSavingChanges: boolean;
+
+        /**
          * Gets or sets a value indicating if the object has an unsaved state.
          */
         unsavedChanges: boolean;

@@ -22,7 +22,6 @@ module latte {
         constructor(loadChildren: () => any = null, childAdd: () => any = null, childEdit: () => any = null, childRemove: () => any = null) {
             super();
 
-            this.allowClose = this.allowMaximize = false;
 
             this.topToolbar.sideItems.addArray([
                 this.btnRemove,
@@ -34,7 +33,9 @@ module latte {
 
             this.items.add(this.stackChildren);
 
-            this.optionsButton.visible = false;
+            this.topToolbar.raw.addEventListener('click', e => {
+                this.stackChildren.clearSelection();
+            });
 
             if(loadChildren) {
                 this.loadChildren.add(loadChildren);
@@ -223,7 +224,7 @@ module latte {
          */
         get btnAdd():ButtonItem {
             if (!this._btnAdd) {
-                this._btnAdd = new ButtonItem(null, IconItem.standard(3, 3), () => { this.onChildrenAdd() });
+                this._btnAdd = new ButtonItem(null, LinearIcon.plus_circle, () => { this.onChildrenAdd() });
                 this._btnAdd.tooltip = strings.add;
                 this._btnAdd.visible = false;
             }
@@ -242,7 +243,7 @@ module latte {
          */
         get btnEdit():ButtonItem {
             if (!this._btnEdit) {
-                this._btnEdit = new ButtonItem(null, IconItem.standard(14, 8), () => { this.onChildEdit() });
+                this._btnEdit = new ButtonItem(null, LinearIcon.pencil, () => { this.onChildEdit() });
                 this._btnEdit.tooltip = strings.edit;
                 this._btnEdit.visible = false;
                 this._btnEdit.enabled = false;
@@ -262,7 +263,7 @@ module latte {
          */
         get btnRefresh():ButtonItem {
             if (!this._btnRefresh) {
-                this._btnRefresh = new ButtonItem(null, IconItem.standard(1, 4), () => { this.onLoadChildren() });
+                this._btnRefresh = new ButtonItem(null, LinearIcon.sync, () => { this.onLoadChildren() });
             }
             return this._btnRefresh;
         }
@@ -279,7 +280,7 @@ module latte {
          */
         get btnRemove():ButtonItem {
             if (!this._btnRemove) {
-                this._btnRemove = new ButtonItem(null, IconItem.standard(9, 1), () => {
+                this._btnRemove = new ButtonItem(null, LinearIcon.trash, () => {
 
                     var name = this.selectedChild.tag ? this.selectedChild.tag.toString() : this.selectedChild.toString();
 
@@ -370,7 +371,6 @@ module latte {
         get selectedChild():SelectableItem {
             return this.stackChildren.selectedItem;
         }
-
 
         //endregion
 

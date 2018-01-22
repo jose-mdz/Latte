@@ -44,7 +44,7 @@ module latte {
             this.sideSize = 300;
 
             // Tree View Side
-            var treeSide = new ToolbarView();
+            let treeSide = new ToolbarView();
             this._treeViewToolbar = treeSide.toolbar;
             treeSide.view = this.treeView;
 
@@ -55,11 +55,12 @@ module latte {
             this.detailViewToolbar.sideItems.add(this.btnRemoveDetail);
 
             // ListView Side
-            var listSide = new ToolbarView();
+            let listSide = this.childrenSide;
             this._listViewToolbar = listSide.toolbar;
             listSide.view = this.listView;
             this.listView.element.append(this.loadBar);
 
+            this.listViewToolbar.sideItems.add(this.btnHideDetailBar);
             this.listViewToolbar.sideItems.add(this.paginator);
             this.listViewToolbar.sideItems.add(this.btnRefresh);
 
@@ -77,7 +78,7 @@ module latte {
 
             //endregion
 
-            // TODO: Use it for something
+            // TODO: Use it for something?
             this.treeViewToolbar.visible = false;
 
             if(rootItem) {
@@ -125,7 +126,7 @@ module latte {
                         this.treeViewChildrenOf(item, treeItem);
 
                         if (treeItem.selected) {
-                            this.listViewChildrenOf(item);
+                            this.childrenViewOf(item);
                         }
 
                         treeItem.reportItemsLoaded();
@@ -143,7 +144,7 @@ module latte {
 
                     if (item.childrenLoaded) {
                         this.paginator.visible = item.childrenPages > 1;
-                        this.listViewChildrenOf(item);
+                        this.childrenViewOf(item);
 
                     }else if(!item.loadsChildrenFolders) {
 
@@ -151,7 +152,7 @@ module latte {
 
                             if(treeItem.selected) {
                                 this.paginator.visible = item.childrenPages > 1;
-                                this.listViewChildrenOf(item);
+                                this.childrenViewOf(item);
                             }
 
                         });
@@ -171,7 +172,7 @@ module latte {
                     this.treeViewChildrenOf(item, treeItem);
 
                     if(treeItem.selected) {
-                        this.listViewChildrenOf(item);
+                        this.childrenViewOf(item);
                     }
 
                     treeItem.reportItemsLoaded();
@@ -182,6 +183,29 @@ module latte {
             item.childrenPagesChanged.add(() => {
                 this.paginator.pages = item.childrenPages;
             });
+
+        }
+
+        /**
+         * Loads the children of the specified item into the children view
+         * @param item
+         */
+        private childrenViewOf(item: ExplorerItem){
+
+            let view = item.getChildrenView();
+
+            // Load items into the toolbar
+            this.listViewToolbar.items.clear();
+            this.listViewToolbar.items.addArray(item.getItems());
+
+            if(view) {
+                view.explorerItem = item;
+                this.childrenSide.view = view;
+                view.onShowChildren();
+            }else{
+                this.childrenSide.view = this.listView;
+                this.listViewChildrenOf(item);
+            }
 
         }
 
@@ -203,11 +227,11 @@ module latte {
             this.listView.items.clear();
 
             // Load items into listview
-            for (var i = 0; i < item.children.length; i++) {
-                var gitem:ExplorerItem = item.children[i];
+            for (let i = 0; i < item.children.length; i++) {
+                let gitem:ExplorerItem = item.children[i];
 
                 // Create listview item
-                var litem:ListViewItem = gitem.createListViewItem();
+                let litem:ListViewItem = gitem.createListViewItem();
                 litem.listView = this.listView;
                 litem.tag = gitem;
 
@@ -217,10 +241,6 @@ module latte {
                 // Add to the listview
                 this.listView.items.add(litem);
             }
-
-            // Load items into the toolbar
-            this.listViewToolbar.items.clear();
-            this.listViewToolbar.items.addArray(item.getItems());
 
         }
 
@@ -237,11 +257,16 @@ module latte {
             let barFinihsed = false;
 
             let finishBar = () => {
+
                 bar.animate({
                     width: '100%'
                 }, 50, null, () => {
+
                     barFinihsed = true;
-                    bar.fadeOut();
+                    bar.fadeOut(() => {
+                        bar.css('display', 'none');
+                        bar.removeClass('visible')
+                    });
                 });
             };
 
@@ -327,27 +352,10 @@ module latte {
          */
         private detailViewOf(item: ExplorerItem){
 
-            var view = item ? item.getDetailView() : null;
+            let view = item ? item.getDetailView() : null;
 
-            //region Get rid of old view
-            if(this.detailView.view) {
-                var old = this.detailView.view;
-                this.detailView.view = null;
-                old.element.remove();
-            }
-            //endregion
-
-            if(view) {
-                this.detailView.view = view;
-
-                this.btnSaveDetail.enabled = false;
-
+            if(view){
                 view.unsavedChangesChanged.add(() => {
-
-                    //log("Unsaved changes changed")
-                    //log("Unsaved changes " + view.unsavedChanges)
-
-                    this.btnSaveDetail.enabled = view.unsavedChanges;
 
                     if(!view.unsavedChanges) {
                         item.syncUI();
@@ -356,6 +364,8 @@ module latte {
                 });
             }
 
+            this.setDetailView(view);
+
             if(item) {
                 // TODO: Temproarily removed delete button
                 this.btnRemoveDetail.visible = false;
@@ -363,7 +373,6 @@ module latte {
             }
 
             this.detailViewItem = item;
-            // this._listSelectedItem = item;
 
         }
 
@@ -415,12 +424,75 @@ module latte {
             //});
         }
 
+        /**
+         * Sets the detail view
+         * @param {latte.View} view
+         */
+        setDetailView(view: View){
+
+            //region Get rid of old view
+            if(this.detailView.view) {
+                let old = this.detailView.view;
+                this.detailView.view = null;
+                old.element.remove();
+            }
+            //endregion
+
+            if(view) {
+                this.detailView.view = view;
+
+                this.btnSaveDetail.enabled = false;
+
+                view.unsavedChangesChanged.add(() => {
+
+                    //log("Unsaved changes changed")
+                    //log("Unsaved changes " + view.unsavedChanges)
+
+                    this.btnSaveDetail.enabled = view.unsavedChanges;
+
+                });
+
+                view.isSavingChangesChanged.add(() => {
+
+                    // log(`Saving Changes Changed`);
+                    // debugger;
+
+                    this.btnSaveDetail.text = view.isSavingChanges ? strings.saving : strings.save;
+                    this.btnSaveDetail.enabled = !view.isSavingChanges && view.unsavedChanges;
+
+                });
+
+                // log(`Adding handler`);
+
+            }
+
+        }
+
         //endregion
 
         //region Events
         //endregion
 
         //region Components
+
+        /**
+         * Field for btnHideDetailBar property
+         */
+        private _btnHideDetailBar: ButtonItem;
+
+        /**
+         * Gets the hide sidebar button
+         *
+         * @returns {ButtonItem}
+         */
+        get btnHideDetailBar(): ButtonItem {
+            if (!this._btnHideDetailBar) {
+                let lazy: ButtonItem = this._btnHideDetailBar = new ButtonItem(null, IconItem.sidebarRight(),
+                    () => this.detailVisible = !this.detailVisible);
+                lazy.visible = false;
+            }
+            return this._btnHideDetailBar;
+        }
 
         /**
          * Field for btnSaveDetail property
@@ -432,9 +504,9 @@ module latte {
          *
          * @returns {boolean}
          */
-        public get btnSaveDetail():ButtonItem {
+        get btnSaveDetail():ButtonItem {
             if (!this._btnSaveDetail) {
-                this._btnSaveDetail = new ButtonItem(strings.save, IconItem.standard(4, 2), () =>{
+                this._btnSaveDetail = new ButtonItem(strings.save, IconItem.saveIcon(), () =>{
                     if(this.detailView.view) {
                         this.detailView.view.saveChanges();
                     }
@@ -473,7 +545,7 @@ module latte {
          *
          * @returns {ButtonItem}
          */
-        public get btnRemoveDetail():ButtonItem {
+        get btnRemoveDetail():ButtonItem {
             if (!this._btnRemoveDetail) {
                 this._btnRemoveDetail = new ButtonItem(null, IconItem.standard(9, 1), () => {
 
@@ -502,6 +574,23 @@ module latte {
                 });
             }
             return this._btnRemoveDetail;
+        }
+
+        /**
+         * Field for childrenSide property
+         */
+        private _childrenSide: ToolbarView;
+
+        /**
+         * Gets the children side view
+         *
+         * @returns {ToolbarView}
+         */
+        get childrenSide(): ToolbarView {
+            if (!this._childrenSide) {
+                this._childrenSide = new ToolbarView();
+            }
+            return this._childrenSide;
         }
 
         /**
@@ -545,7 +634,7 @@ module latte {
          *
          * @returns {Toolbar}
          */
-        public get detailViewToolbar():Toolbar {
+        get detailViewToolbar():Toolbar {
             return this.detailViewToolbarView.toolbar;
         }
 
@@ -559,7 +648,7 @@ module latte {
          *
          * @returns {Toolbar}
          */
-        public get treeViewToolbar():Toolbar {
+        get treeViewToolbar():Toolbar {
             return this._treeViewToolbar;
         }
 
@@ -573,7 +662,7 @@ module latte {
          *
          * @returns {ExplorerItem}
          */
-        public get listSelectedItem():ExplorerItem {
+        get listSelectedItem():ExplorerItem {
             return this._listSelectedItem;
         }
 
@@ -587,7 +676,7 @@ module latte {
          *
          * @returns {Toolbar}
          */
-        public get listViewToolbar():Toolbar {
+        get listViewToolbar():Toolbar {
             return this._listViewToolbar;
         }
 
@@ -609,7 +698,6 @@ module latte {
             return this._loadBar;
         }
 
-
         /**
          * Field for detailView property
          */
@@ -620,7 +708,7 @@ module latte {
          *
          * @returns {View}
          */
-        public get detailView():View {
+        get detailView():View {
             if (!this._detailView) {
                 this._detailView = new View();
                 this._detailView.addClass('explorer-detail-view');
@@ -638,7 +726,7 @@ module latte {
          *
          * @returns {ListView}
          */
-        public get listView():ListView {
+        get listView():ListView {
             if (!this._listView) {
                 this._listView = new ListView();
                 this._listView.columnHeaders.add(new ColumnHeader(''));
@@ -662,7 +750,7 @@ module latte {
          *
          * @returns {PaginationItem}
          */
-        public get paginator():PaginationItem {
+        get paginator():PaginationItem {
             if (!this._paginator) {
                 this._paginator = new PaginationItem();
                 this._paginator.pageChanged.add(() => {
@@ -684,7 +772,7 @@ module latte {
          *
          * @returns {ExplorerItem}
          */
-        public get treeSelectedItem():ExplorerItem {
+        get treeSelectedItem():ExplorerItem {
             return this._treeSelectedItem;
         }
 
@@ -698,7 +786,7 @@ module latte {
          *
          * @returns {TreeView}
          */
-        public get treeView():TreeView {
+        get treeView():TreeView {
             if (!this._treeView) {
                 this._treeView = new TreeView();
                 this._treeView.focusable = true;
@@ -715,6 +803,23 @@ module latte {
 
         //region Properties
 
+        /**
+         * Gets or sets a value indicating if the detail view is currently visible
+         *
+         * @returns {boolean}
+         */
+        get detailVisible(): boolean {
+            return this.detailSplitView.sideVisible;
+        }
+
+        /**
+         * Gets or sets a value indicating if the detail view is currently visible
+         *
+         * @param {boolean} value
+         */
+        set detailVisible(value: boolean) {
+            this.detailSplitView.sideVisible = value;
+        }
 
 
         //endregion

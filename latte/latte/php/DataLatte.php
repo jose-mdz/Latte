@@ -155,7 +155,7 @@
                 $r[] = implode(", ", call_user_func(array($arg, 'all')));
             }
         }
-        return implode(", ", $r);
+        return (implode(", ", $r));
     }
 
      /**
@@ -192,18 +192,40 @@
 
     /**
      * Queries the database and returns the entire result as an array of arrays
-     * 
+     *
+     * @param $query
+     * @param $mode
      * @returns array
      */
-    public static function getCache($query) {
+    public static function getCache($query, $mode = DataReader::MODE_BOTH) {
 
         $a = array();
         $reader = self::getreader($query);
 
-        while ($r = $reader->read())
+        while ($r = $reader->read($mode))
             $a[] = $r;
 
         return $a;
+    }
+
+    /**
+     * Queries the database and returns an array with the first value of each row
+     *
+     * @returns array
+     */
+    public static function getSingleArray($query) {
+
+        $cache = self::getCache($query);
+
+        $result = array();
+
+        foreach($cache as $row){
+            $result[] = $row[0];
+        }
+
+
+        return $result;
+
     }
 
     /**
@@ -214,7 +236,7 @@
      */
     public static function getReader($query) {
         self::init();
-        return self::$current->getreader($query);
+        return self::$current->getReader($query);
     }
 
     /**
@@ -227,6 +249,17 @@
         self::init();
         return self::$current->getsingle($query);
     }
+
+     /**
+      * Executes multiple queries
+      *
+      * @param string $query
+      * @returns boolean
+      */
+     public static function multiQuery($query) {
+         self::init();
+         return self::$current->multiQuery($query);
+     }
 
     /**
      * Executes an UPDATE query on the current connection
@@ -463,10 +496,10 @@
             foreach($classes as $i => $class){
                 $columns = array_merge($columns, $class::all( isset($aliases[$i]) ? $aliases[$i] : $class::gettable() ));
             }
-            $query = str_replace("#COLUMNS", implode(", ", $columns), $query);
+            $query = str_replace("#COLUMNS", (implode(", ", $columns)), $query);
         }
         
-        $arr = self::getcache($query);
+        $arr = self::getCache($query);
 
         foreach ($arr as $row) {
             $owner = NULL;
@@ -502,10 +535,31 @@
             }
             return $array;
         } elseif(!is_object($array)) {
-            return mysql_real_escape_string($array);
+            return self::$current->connection->real_escape_string($array);
+//            return mysql_real_escape_string($array);
         } else {
             return $array;
         }
     }
+
+     /**
+      * Generates a unique GUID of the specified length.
+      * If table is specified, it will check the table for its uniqueness.
+      *
+      * @param string $table
+      * @param int $length
+      * @return string
+      */
+      public static function generateGUID($table = null, $length = 12){
+          $chars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890_-";
+          $max = strlen($chars) - 1;
+          $guid = "";
+          do{
+              while(strlen($guid) != $length){
+                  $guid .= substr($chars, rand(0, $max), 1);
+              }
+          }while($table && DL::getSingle("SELECT COUNT(*) FROM $table WHERE guid = '$guid'") > 0);
+          return $guid;
+      }
 
 }

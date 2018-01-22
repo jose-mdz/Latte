@@ -32,7 +32,10 @@ module latte{
 
         }
 
-
+        /**
+         * Override
+         * @returns {latte.ICall[]}
+         */
         getSaveCalls(): ICall[]{
             //HACK: I don't think the call to applyValues should be here.
             this.applyValues(this.record);

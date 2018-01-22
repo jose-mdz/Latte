@@ -14,17 +14,25 @@
  */
 class DataReader {
 
+    const MODE_ASSOC_ARRAY = MYSQLI_ASSOC;
+
+    const MODE_NUM = MYSQLI_NUM;
+
+    const MODE_BOTH = MYSQLI_BOTH;
+
     /**
      * MySQL result handle
      * 
-     * @var resource
+     * @var mysqli_result
      */
     public $result = 0;
+
+    private $_fields;
 
     /**
      * Creates a new DataReader from the specified MySQL result
      * 
-     * @param resource $result
+     * @param mysqli_result $result
      */
     function __construct($result) {
         $this->result = $result;
@@ -34,11 +42,11 @@ class DataReader {
      * Advances one row in the result, and returns the row as an array.
      * Possible values for <c>$mode</c>: <c>MYSQL_ASSOC</c> | <c>MYSQL_NUM</c> | <c>MYSQL_BOTH</c>
      * 
-     * @param number $mode
+     * @param int $mode
      * @return array
      */
-    function read($mode = MYSQL_BOTH) {
-        return mysql_fetch_array($this->result, $mode);
+    function read($mode = DataReader::MODE_BOTH) {
+        return $this->result->fetch_array($mode);
     }
 
     /**
@@ -47,7 +55,7 @@ class DataReader {
      * @return integer
      */
     function getRows() {
-        return mysql_num_rows($this->result);
+        return $this->result->num_rows;
     }
 
     /**
@@ -56,7 +64,17 @@ class DataReader {
      * @return integer
      */
     function getColumns() {
-        return mysql_num_fields($this->result);
+        return $this->result->field_count;
+    }
+
+    /**
+     * Gets
+     */
+    function getFields(){
+        if(!$this->_fields){
+            $this->_fields = $this->result->fetch_fields();
+        }
+        return $this->_fields;
     }
     
     /**
@@ -66,7 +84,7 @@ class DataReader {
      * @return string
      */
     function getFieldName($field){
-        return mysql_field_name($this->result, $field);
+        return $this->getFields()[$field]->name;
     }
     
     /**
@@ -76,7 +94,7 @@ class DataReader {
      * @return string
      */
     function getFieldType($field){
-        return mysql_field_type($this->result, $field);
+        return $this->getFields()[$field]->type;
     }
     
     /**
@@ -86,7 +104,7 @@ class DataReader {
      * @return string
      */
     function getFieldTable($field){
-        return mysql_field_table($this->result, $field);
+        return $this->getFields()[$field]->table;
     }
     
     /**
@@ -96,7 +114,7 @@ class DataReader {
      * @return int
      */
     function getFieldLength($field){
-        return mysql_field_len($this->result, $field);
+        return $this->getFields()[$field]->length;
     }
 
 }

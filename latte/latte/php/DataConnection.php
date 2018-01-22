@@ -16,14 +16,19 @@
   class DataConnection {
 
     /**
-         * Holds the pointer to the server connection
-         * @var resource 
-         */
-	public $connection = 0;
-        
+     * Holds the pointer to the server connection
+     * @var MySQLi
+     */
+	public $connection;
+
+      /**
+       * @var mysqli_result
+       */
+	public $result;
+
     /**
      *
-     * @var type
+     * @var MySQLi
      */
     public $debug = false;
 	
@@ -47,16 +52,11 @@
             error_reporting(0);
 
             // Connect to server
-            $this->connection = mysql_connect($host, $user, $pass);
+            $this->connection = new MySQLi($host, $user, $pass, $db);
 
-            if(!$this->connection){
+            if($this->connection->connect_errno > 0){
                 error_reporting($level); // Reset error level
-                throw new Exception(sprintf($strings['cantConnectToServer'], $host, $user));
-            }
-
-            if(!mysql_select_db($db)){
-                error_reporting($level); // Reset error level
-                throw new Exception(sprintf($strings['cantSelectDbS'], $db));
+                throw new Exception(sprintf($strings['cantConnectToServer'] . "::ERROR (" . $this->connection->connect_errno . ")::" . $this->getErrorDescription(), $host, $user));
             }
 
             error_reporting($level);
@@ -67,7 +67,10 @@
          * Closes the connection.
          */
 	function __destruct(){
-		$this->close();
+	    if ($this->result){
+            $this->result->free();
+        }
+
 	}
         
     /**
@@ -76,7 +79,7 @@
      * @return integer
      */
     function affectedRows(){
-            return mysql_affected_rows($this->connection);
+            return $this->result->num_rows;
         }
 	
     /**
@@ -107,6 +110,27 @@
         return $query;
 		return $this->debug ? $query : "(Hidden SQL)";
 	}
+
+      /**
+       * Executes a Query
+       *
+       * @param string $query
+       * @return boolean
+       * @throws Exception If query fails
+       */
+      public function multiQuery($query){
+          global $strings;
+
+          $result = $this->connection->multi_query($query);
+
+          if(!$result) {
+              throw new Exception(sprintf($strings['errorOnQueryS'], $this->getErrorDescription(), $this->queryornot($query)));
+          }
+
+          while(mysqli_next_result($this->connection));
+
+          return $result;
+      }
         
     /**
      * Gets the last error description
@@ -114,7 +138,7 @@
      * @return string
      */
     public function getErrorDescription(){
-            return mysql_error();
+            return $this->connection->error;
         }
 	
     /**
@@ -127,45 +151,45 @@
 	public function getReader($query){
 		global $strings;
 
-		$result = $this->query($query);
+		$this->result = $this->query($query);
 		
-		if(!$result)
-			throw new Exception(sprintf($strings['errorOnQueryS'], $this->getErrorDescription(), $this->queryornot($query)));
+		if(!$this->result)
+			throw new Exception(sprintf($strings['errorOnQueryS'], "[rdr]" .  $this->getErrorDescription(), $this->queryornot($query)));
 		
-		return new DataReader($result);
+		return new DataReader($this->result);
 	}
-	
-	/**
-         * Executes a SELECT statement and gets the first field of the first row of result
-         * 
-         * @param string $query
-         * @return mixed
-         * @throws Exception If query falis
-         */
-	public function getSingle($query){
-		global $strings;
 
-		$result = $this->query($query);
-		
-		if(!$result)
-			throw new Exception(sprintf($strings['errorOnQueryS'], $this->getErrorDescription(), $this->queryornot($query)));
-		
-		$row = mysql_fetch_row($result);
-		
-		return $row[0];
-	}
-        
+    /**
+       * Executes a SELECT statement and gets the first field of the first row of result
+       *
+       * @param string $query
+       * @return mixed
+       * @throws Exception If query falis
+       */
+    public function getSingle($query){
+          global $strings;
+
+          $this->result = $this->query($query);
+
+          if(!$this->result)
+              throw new Exception(sprintf($strings['errorOnQueryS'], $this->getErrorDescription(), $this->queryornot($query)));
+
+          $row = $this->result->fetch_row();
+
+          return $row[0];
+      }
+
     /**
      * Executes a query on database and returns the resource pointer
      *
      * @param string $query
-     * @return resource
+     * @return mysqli_result
      */
     public function query($query){
-            return mysql_query($query, $this->connection);
+        return $this->connection->query($query);
     }
 	
-        /**
+    /**
          * Executes an UPDATE query
          * 
          * @param string $query
@@ -183,11 +207,11 @@
 		return $this->affectedRows();
 	}
 	
-        /**
+    /**
          * Closes the connection with the server
          */
 	public function close(){
-		mysql_close($this->connection);
+		$this->connection->close();
 	}
 	
  }
