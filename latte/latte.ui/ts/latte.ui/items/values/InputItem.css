@@ -17,7 +17,7 @@
 
 .latte-item.input > .value > .read-only,
 .latte-item.input > .value > .label-value{
-    margin-top: 7px;
+    margin-top: 4px;
     color: #777;
 }
 
@@ -28,6 +28,10 @@
     border-bottom: dotted 1px silver;
 }
 
+.latte-item.input > .separator.visible{
+    display: block;
+}
+
 .latte-item.input > .text > .label{
     /*font-weight: bold;*/
 }
@@ -36,7 +40,7 @@
  * HORIZONTAL
  */
 .latte-item.horizontal.input > .text{
-    width: 20%;
+    width: calc(30% - 10px);
     float: left;
     padding-top: 4px;
     padding-right: 10px;
@@ -49,8 +53,18 @@
 }
 
 .latte-item.horizontal.input > .value{
-    width: 75%;  
+    width: 70%;
     float: left;
+}
+
+.latte-item.input > .value > .input-hint.label{
+    clear: both;
+    opacity: 0.5;
+    font-size: 80%;
+}
+
+.latte-item.input > .value > .input-hint.label .label-content{
+    white-space: normal !important;
 }
 
 .latte-item.horizontal.input.no-text > .value{

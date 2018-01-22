@@ -144,3 +144,5 @@ refresh Actualizar
 switchOn Sí
 switchOff No
 flagsNone (Ninguno)
+nothingToShow Nada que mostrar
+jumpToYear Ir al año

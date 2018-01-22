@@ -8,6 +8,23 @@ module latte{
     export class HtmlEditorItem extends ValueItem<string>{
 
         /**
+         *
+         * @param {string} s
+         * @returns {string}
+         */
+        static clearFormattingOf(e: HTMLElement){
+
+            let $e = $(e);
+
+            // Remove all style
+            $e.find('*').removeAttr('style');
+
+            // By God.
+            $e.find('font').removeAttr('face');
+
+        }
+
+        /**
          * Gets the path to rangy library
          * @returns {string}
          */
@@ -59,7 +76,7 @@ module latte{
             this._addToolbarButtons();
 
             if(!HtmlEditorItem.rangyLoaded){
-                var script = document.createElement('script');
+                let script = document.createElement('script');
                 script.type = 'text/javascript';
                 script.src = HtmlEditorItem.rangyPath;
                 document.body.appendChild(script);
@@ -74,37 +91,35 @@ module latte{
          * Creates default buttons
          **/
         private _addToolbarButtons(){
-
-
-            var btn = (u, v, tooltip, cmd): Item =>{
-                var b = new ButtonItem();
-                b.icon = IconItem.standard(u, v);
+            let btn = (icon, tooltip, cmd): Item =>{
+                let b = new ButtonItem();
+                b.icon = icon;
                 b.tooltip = tooltip;
                 b.click.add(() => { this.execCommand(cmd)});
                 return b;
             };
 
-            var sep = function(): Item{ return new SeparatorItem(); };
+            let sep = function(): Item{ return new SeparatorItem(); };
 
             this.toolbar.items.addArray([
-                btn(5, 2, strings.bold, HtmlEditorCommands.BOLD),
-                btn(6, 2, strings.italics, HtmlEditorCommands.ITALIC),
+                btn(LinearIcon.bold, strings.bold, HtmlEditorCommands.BOLD),
+                btn(LinearIcon.italic, strings.italics, HtmlEditorCommands.ITALIC),
                 sep(),
-                btn(8, 2, strings.alignLeft, HtmlEditorCommands.JUSTIFY_LEFT),
-                btn(10, 2, strings.alignCenter, HtmlEditorCommands.JUSTIFY_CENTER),
-                btn(9, 2, strings.alignRight, HtmlEditorCommands.JUSTIFY_RIGHT),
-                btn(11, 2, strings.alignJustify, HtmlEditorCommands.JUSTIFY_FULL),
+                btn(LinearIcon.text_align_left, strings.alignLeft, HtmlEditorCommands.JUSTIFY_LEFT),
+                btn(LinearIcon.text_align_center, strings.alignCenter, HtmlEditorCommands.JUSTIFY_CENTER),
+                btn(LinearIcon.text_align_right, strings.alignRight, HtmlEditorCommands.JUSTIFY_RIGHT),
+                btn(LinearIcon.text_align_justify, strings.alignJustify, HtmlEditorCommands.JUSTIFY_FULL),
                 sep(),
-                btn(15, 2, strings.indent, HtmlEditorCommands.INDENT),
-                btn(14, 2, strings.outdent, HtmlEditorCommands.OUTDENT),
+                btn(LinearIcon.indent_increase, strings.indent, HtmlEditorCommands.INDENT),
+                btn(LinearIcon.indent_decrease, strings.outdent, HtmlEditorCommands.OUTDENT),
                 sep(),
-                btn(18, 1, strings.numberedList, HtmlEditorCommands.INSERT_ORDERED_LIST),
-                btn(19, 1, strings.bulletList, HtmlEditorCommands.INSERT_UNORDERED_LIST),
+                btn(LinearIcon.menu, strings.numberedList, HtmlEditorCommands.INSERT_ORDERED_LIST),
+                btn(LinearIcon.list, strings.bulletList, HtmlEditorCommands.INSERT_UNORDERED_LIST),
                 sep(),
-                btn(16, 2, strings.eraseFormat, HtmlEditorCommands.CLEAR_FORMAT),
+                btn(LinearIcon.highlight, strings.eraseFormat, HtmlEditorCommands.CLEAR_FORMAT),
                 sep(),
-                btn(12, 3, strings.insertLink, HtmlEditorCommands.INSERT_LINK),
-                btn(9, 3, strings.insertImage, HtmlEditorCommands.INSERT_IMAGE)
+                btn(LinearIcon.text_format, strings.insertLink, HtmlEditorCommands.INSERT_LINK),
+                btn(LinearIcon.picture, strings.insertImage, HtmlEditorCommands.INSERT_IMAGE)
             ]);
 
         }
@@ -155,24 +170,14 @@ module latte{
         /**
          * Clears all formatting in editor
          **/
-        private _clearFormatting(){
+        _clearFormatting(){
 
-            this.body().find('*')
-                .css({
-                    font: '',
-                    fontSize: '',
-                    fontFamily: '',
-                    color: '',
-                    margin: '',
-                    padding: '',
-                    wordSpacing: '',
-                    letterSpacing: '',
-                    background: '',
-                    backgroundColor: '',
-                    border: ''
-                });
-            // Ugly <font> tags
-            this.body().find('font').removeAttr('face');
+            HtmlEditorItem.clearFormattingOf(this.body().get(0));
+
+            // this.body().find('*').removeAttr('style');
+            //
+            // // Ugly <font> tags
+            // this.body().find('font').removeAttr('face');
 
         }
 
@@ -279,6 +284,9 @@ module latte{
                 .keyup(function(){__this._valueHtml = $(this).html(); __this.onSelectionChanged(); __this.onValueChanged()})
                 .change(function(){__this._valueHtml = $(this).html(); __this.onValueChanged()});
 
+            this.body().get(0).addEventListener('paste', e =>{
+                setTimeout(() => this._clearFormatting(), 100);
+            })
 
         }
 
@@ -545,6 +553,12 @@ module latte{
 
 //            if(this.iframe.height() < shouldHeight){
                 this.iframe.css('height', this.body().get(0).scrollHeight);
+
+                //log(`scrollHeight ${ this.body().get(0).scrollHeight}`);
+                //log(this.body().get(0));
+
+                if(!window['b'])
+                window['b'] = this.body().get(0)
 //            }
             }
 
@@ -702,8 +716,7 @@ module latte{
          **/
         setValue(value: string){
 
-            if(!_isString(value))
-                throw new InvalidArgumentEx('value', value);
+            value = value || '';
 
             this._valueHtml = value;
 

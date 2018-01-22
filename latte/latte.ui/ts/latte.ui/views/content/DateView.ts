@@ -128,7 +128,7 @@ module latte{
                 this.dateItem.rows = rows;
 
             if(this.dateItem.table)
-                elem.rectangle( this.dateItem.table.rectangle().center(cont) );
+                elem.rectangle( this.dateItem.table.rectangle().centerOn(cont) );
 
             this.onLayoutButtons();
 

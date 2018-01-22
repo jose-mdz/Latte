@@ -90,6 +90,45 @@ module latte{
         }
 
         /**
+         * Called when an input has been added
+         * @param {latte.InputItem} item
+         */
+        onInputAdded(input: InputItem){
+            this.items.add(input);
+
+            input.valueChanged.add(() => {
+                // log(`Input item value changed: ${input.value}`);
+                // if(input.value == 2) {
+                //     debugger;
+                // }
+                // log(`[${this.localId}] Value: ${input.value}`);
+                this.onValueChanged();
+            });
+
+            if(this.direction){
+                input.direction = this.direction;
+            }
+
+            // if(input.readOnly === null && this.readOnly !== null) {
+            //     input.readOnly = this.readOnly;
+            // }
+
+            if(this.readOnly === true) {
+                input.readOnly = true;
+            }
+
+            input.textVisible = true;
+        }
+
+        /**
+         * Called when an input has been removed
+         * @param {latte.InputItem} input
+         */
+        onInputRemoved(input: InputItem){
+            this.items.remove(input);
+        }
+
+        /**
          * Raises the <c>readOnly</c> event
          */
         onReadOnlyChanged(){
@@ -97,23 +136,24 @@ module latte{
                 this._readOnlyChanged.raise();
             }
 
-            for (let i = 0; i < this.inputs.length; i++) {
-                let input = this.inputs[i];
+            // for (let i = 0; i < this.inputs.length; i++) {
+            //     let input = this.inputs[i];
+            //
+            //     if(input.readOnly === null && this.readOnly !== null) {
+            //         input.readOnly = this.readOnly;
+            //     }
+            //
+            // }
 
-                if(input.readOnly === null && this.readOnly !== null) {
-                    input.readOnly = this.readOnly;
+            this.inputs.each(input => {
+                if(this.readOnly) {
+                    input.readOnly = true;
+                }else{
+                    if(input.meta && _isBoolean(input.meta.readOnly)) {
+                        input.readOnly = input.meta.readOnly as boolean;
+                    }
                 }
-
-            }
-        }
-
-        /**
-         * Raises the <c>unsavedChanges</c> event
-         */
-        onUnsavedChangesChanged(){
-            if(this._unsavedChangesChanged){
-                this._unsavedChangesChanged.raise();
-            }
+            });
         }
 
         /**
@@ -123,6 +163,7 @@ module latte{
             if(this._valueChanged){
                 this._valueChanged.raise();
             }
+            // log(`Sending unsaved changes. Current: ${this.unsavedChanges}`);
             this.unsavedChanges = true;
         }
 
@@ -133,6 +174,29 @@ module latte{
         setDirection(d: Direction){
             warnDeprecated('FormItem.setDirection', 'FormItem.direction');
             this.direction = d;
+        }
+
+        /**
+         * Returns an input by its assigned name
+         **/
+        valueItemByName(name: string, baseClass: Function = null): ValueItem<any>{
+
+
+            let input = this.byName(name);
+
+            if(input){
+                if(baseClass) {
+                    if(input.valueItem instanceof baseClass) {
+                        return input.valueItem;
+                    }else {
+                        return null;
+                    }
+                }else {
+                    return input.valueItem;
+                }
+            }
+
+            return null;
         }
 
         /**
@@ -185,23 +249,6 @@ module latte{
                 this._readOnlyChanged = new LatteEvent(this);
             }
             return this._readOnlyChanged;
-        }
-
-        /**
-         * Back field for event
-         */
-        private _unsavedChangesChanged: LatteEvent;
-
-        /**
-         * Gets an event raised when the value of the unsavedChanges property changes
-         *
-         * @returns {LatteEvent}
-         */
-        get unsavedChangesChanged(): LatteEvent{
-            if(!this._unsavedChangesChanged){
-                this._unsavedChangesChanged = new LatteEvent(this);
-            }
-            return this._unsavedChangesChanged;
         }
 
         /**
@@ -304,24 +351,8 @@ module latte{
         get inputs():Collection<InputItem> {
             if (!this._inputs) {
                 this._inputs = new Collection<InputItem>(
-                    (input: InputItem) => {
-                        this.items.add(input);
-
-                        input.valueChanged.add(() => this.onValueChanged());
-
-                        if(this.direction){
-                            input.direction = this.direction;
-                        }
-
-                        if(input.readOnly === null && this.readOnly !== null) {
-                            input.readOnly = this.readOnly;
-                        }
-
-                        input.textVisible = true;
-                    },
-                    (input: InputItem) => {
-                        this.items.remove(input);
-                    }
+                    input => this.onInputAdded(input),
+                    input => this.onInputRemoved(input)
                 );
             }
             return this._inputs;
@@ -396,39 +427,6 @@ module latte{
             this.titleLabel.text = value;
 
 
-        }
-
-        /**
-         * Property field
-         */
-        private _unsavedChanges: boolean = false;
-
-        /**
-         * Gets or sets a value indicating if the form has changes
-         *
-         * @returns {boolean}
-         */
-        get unsavedChanges(): boolean{
-            return this._unsavedChanges;
-        }
-
-        /**
-         * Gets or sets a value indicating if the form has changes
-         *
-         * @param {boolean} value
-         */
-        set unsavedChanges(value: boolean){
-
-            // Check if value changed
-            let changed: boolean = value !== this._unsavedChanges;
-
-            // Set value
-            this._unsavedChanges = value;
-
-            // Trigger changed event
-            if(changed){
-                this.onUnsavedChangesChanged();
-            }
         }
 
         /**

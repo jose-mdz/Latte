@@ -47,6 +47,27 @@ module latte{
 
         }
 
+        //region Methods
+
+        /**
+         * Corrects the item collection by checking the DOM items
+         */
+        correctCollection(){
+            let children = this.container.get(0).childNodes;
+            let correct = [];
+
+            for(let i = 0; i < children.length; i++){
+                let instance = $(children[i]).data('instance');
+
+                if(instance) {
+                    correct.push(instance);
+                }
+            }
+
+            this.items.correctItems(correct);
+
+        }
+
         /**
          *
          **/
@@ -121,6 +142,7 @@ module latte{
             this.items.remove(item);
 
         }
+        //endregion
 
         /**
          * Gets the count of <c>items</c> collection

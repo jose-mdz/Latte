@@ -2,9 +2,11 @@ module latte{
     /**
      * Represents a basic element of the DOM, on which latte UI objects are constructed.
      **/
-    export class UiElement{
+    export class UiElement implements ISaveContainer, ISave{
 
         //region Static
+
+        private static reminderId: number = 0;
 
         /**
          * Collection of context items
@@ -187,12 +189,9 @@ module latte{
 
         //endregion
 
-        //region Fields
-        /**
-         *
-         */
-        private _beingDragged: boolean;
+        protected localId: number = 0;
 
+        //region Fields
         /**
          *
          **/
@@ -234,6 +233,11 @@ module latte{
         private _visible: boolean;
 
         /**
+         * Queue of changes saving
+         */
+        private saveChangesQueue: IMessage[];
+
+        /**
          * Collection of items in contextual menu.
          **/
         contextItems: Collection<Item>;
@@ -269,6 +273,8 @@ module latte{
          **/
         constructor(){
 
+            this.localId = UiElement.reminderId++;
+
             if(!UiElement._staticInited){
                 UiElement.staticInit();
             }
@@ -284,8 +290,7 @@ module latte{
 
             // Initialize static collection
             if(!UiElement._contextItemsCollect)
-                UiElement._contextItemsCollect =
-                    new Collection<Item>();
+                UiElement._contextItemsCollect = new Collection<Item>();
 
             // Create base element
             this.element = $('<div>');
@@ -327,6 +332,7 @@ module latte{
         //endregion
 
         //region Methods
+
         /**
          * Shorthand for the addEventListener of the element
          * @param event
@@ -399,11 +405,58 @@ module latte{
         }
 
         /**
+         * Implementation. Gets the save calls of all its descendants.
+         */
+        getSaveCalls(): ICall[]{
+            let calls = [];
+
+            // Concat all calls
+            this.saveItems.each((item) => calls = calls.concat(item.getSaveCalls()));
+
+            return calls;
+        }
+
+        /**
+         * SPECIAL GETTER
+         Gets or sets a value indicating if the view contains elments with unsaved changes
+         **/
+        getUnsavedChanges(): boolean{
+            return this._unsavedChanges;
+        }
+
+        /**
+         * Raises the <c>beingDragged</c> event
+         */
+        onBeingDraggedChanged(){
+            if(this._beingDraggedChanged){
+                this._beingDraggedChanged.raise();
+            }
+
+            if(this.hideWhileDragging === true){
+                this.visible = !this.beingDragged;
+            }
+        }
+
+        /**
          * Raises the <c>blur</c> event
          */
         onBlur(){
             if(this._blur){
                 this._blur.raise();
+            }
+        }
+
+        /**
+         * Raises the <c>changesWhileSaving</c> event
+         */
+        onChangesWhileSavingChanged(){
+            if(this._changesWhileSavingChanged){
+                this._changesWhileSavingChanged.raise();
+            }
+
+            if(!this.changesWhileSaving) {
+                // Cascade to saveItems
+                this.saveItems.each(item => item.changesWhileSaving = false);
             }
         }
 
@@ -421,15 +474,16 @@ module latte{
          */
         onCreateDragElement(): JQuery{
 
-            var copy = this.element.clone();
+            let copy = this.element.clone();
+            let bounds = Rectangle.fromElement(this.raw);
 
             copy.addClass('active-drag-element');
 
             copy.css({
                 position: 'fixed',
                 opacity: 0.5,
-                width: this.element.width(),
-                height: this.element.height(),
+                width: bounds.width,
+                height: bounds.height,
                 left: UiElement._dragStart.x,
                 top: UiElement._dragStart.y
             });
@@ -442,7 +496,7 @@ module latte{
         /**
          * Raises the <c>dragOver</c> event
          */
-        onDragOver(): boolean{
+        onDragOver(e: MouseEvent): boolean{
             if(this._dragOver){
                 return <boolean>this._dragOver.raise();
             }
@@ -536,6 +590,18 @@ module latte{
         }
 
         /**
+         * Raises the <c>isSavingChanges</c> event
+         */
+        onIsSavingChangesChanged(){
+            if(this._isSavingChangesChanged){
+                this._isSavingChangesChanged.raise();
+            }
+
+            this.saveItems.each(item => item.isSavingChanges = this.isSavingChanges);
+
+        }
+
+        /**
          * Raises the <c>layout</c> event.
          **/
         onLayout(){
@@ -554,12 +620,129 @@ module latte{
         }
 
         /**
+         * Raises the <c>savedChanges</c> event
+         */
+        onSavedChanges(){
+            if(this._savedChanges){
+                this._savedChanges.raise();
+            }
+        }
+
+        /**
+         * Raises the <c>savingChanges</c> event
+         */
+        onSavingChanges(): boolean{
+            if(this._savingChanges){
+                return this._savingChanges.raise();
+            }
+        }
+
+        /**
+         * Raises the <c>unsavedChangesChanged</c> event
+         */
+        onUnsavedChangesChanged(){
+            if(this._unsavedChangesChanged){
+                this._unsavedChangesChanged.raise();
+            }
+
+            if(!this.unsavedChanges) {
+                // Cascade unsaved changes to saveItems
+                this.saveItems.each(item => item.unsavedChanges = false);
+            }
+        }
+
+        /**
          * Removes classes to the element
          **/
         removeClass(classString: string){
 
             this.element.removeClass(classString);
             return this;
+
+        }
+
+        /**
+         * Saves changes on view.
+         Override <c>onSavingChanges</c> to custom save your data.
+         **/
+        saveChanges(callback: () => any = null): IMessage{
+
+            if(this.onSavingChanges() !== false){
+
+
+                // Prepare Queue
+                if(!this.saveChangesQueue) this.saveChangesQueue = [];
+
+                // Mark as saving changes
+                this.isSavingChanges = true;
+
+                let iMessage = latte['Message'].sendCalls(this.getSaveCalls(), () => {
+                    this.onSavedChanges();
+
+                    this.saveChangesQueue.pop();
+
+                    // log(`[${this.localId}] Queue ${this.saveChangesQueue.length}`);
+
+
+                    if(this.saveChangesQueue.length == 0) {
+
+
+                        if(this.changesWhileSaving) {
+                            // log(`[${this.localId}] Re-saving...`);
+                            this.changesWhileSaving = false;
+                            this.saveChanges(callback);
+                        }else{
+
+                            this.unsavedChanges = false;
+                            this.isSavingChanges = false;
+
+                            if(callback) {
+                                callback();
+                            }
+                        }
+                    }
+
+
+
+
+                }) as IMessage;
+
+                this.saveChangesQueue.push(iMessage);
+                // log(`[${this.localId}] Pushed ${this.saveChangesQueue.length}`);
+
+
+                // Send using Message
+                // HACK: This is invoking the Message Class
+                //       creating a dependency on the latte.data class.
+                //       A cleaner implementation should make correct use of
+                //       ICall & IMessage classes on latte module.
+                return iMessage;
+
+
+            }else {
+                log(`CANCELLED`);
+            }
+        }
+
+        /**
+         * SPECIAL SETTER
+         Gets or sets a value indicating if the view contains elments with unsaved changes
+         **/
+        setUnsavedChanges(value: boolean = false, silent: boolean = false){
+
+            let changed = value != this._unsavedChanges;
+
+            this._unsavedChanges = value;
+
+            // log(`[${this.localId}] unsavedChanges = ${value} savingChanges: ${this.isSavingChanges}`);
+
+            if(value && this.isSavingChanges) {
+                // log(`[${this.localId}] SETTING CHANGES WHILE SAVING`);
+                this.changesWhileSaving = true;
+            }
+
+            if(changed && silent !== true)
+                this.onUnsavedChangesChanged();
 
         }
 
@@ -607,9 +790,41 @@ module latte{
 
 
         }
+
+        /**
+         * Updates the changes based on saveItems
+         */
+        updateSavedChanges(){
+            let changes = false;
+
+            for (let i = 0; i < this.saveItems.length; i++) {
+                if (this.saveItems[i].unsavedChanges){
+                    changes = true;
+                    break;
+                }
+            }
+            this.unsavedChanges = changes;
+        }
         //endregion
 
         //region Events
+
+        /**
+         * Back field for event
+         */
+        private _beingDraggedChanged: LatteEvent;
+
+        /**
+         * Gets an event raised when the value of the beingDragged property changes
+         *
+         * @returns {LatteEvent}
+         */
+        get beingDraggedChanged(): LatteEvent{
+            if(!this._beingDraggedChanged){
+                this._beingDraggedChanged = new LatteEvent(this);
+            }
+            return this._beingDraggedChanged;
+        }
 
         /**
          * Back field for event
@@ -631,7 +846,24 @@ module latte{
         /**
          * Back field for event
          */
-        private _dragOver: LatteEvent
+        private _dragOver: LatteEvent;
+
+        /**
+         * Back field for event
+         */
+        private _changesWhileSavingChanged: LatteEvent;
+
+        /**
+         * Gets an event raised when the value of the changesWhileSaving property changes
+         *
+         * @returns {LatteEvent}
+         */
+        get changesWhileSavingChanged(): LatteEvent{
+            if(!this._changesWhileSavingChanged){
+                this._changesWhileSavingChanged = new LatteEvent(this);
+            }
+            return this._changesWhileSavingChanged;
+        }
 
         /**
          * Gets an event raised when an element is dragged over this element.
@@ -643,9 +875,9 @@ module latte{
             if(!this._dragOver){
                 this._dragOver = new LatteEvent(this);
                 this._dragOver.handlerAdded.add(() => {
-                    this.element.mouseover(() => {
+                    this.element.mouseover(e => {
                         if(UiElement.dragging){
-                            if(this.onDragOver()){
+                            if(this.onDragOver(<any>e)){
                                 UiElement.dropTarget = this;
                             }else{
                                 UiElement.dropTarget = null;
@@ -660,7 +892,26 @@ module latte{
         /**
          * Back field for event
          */
-        private _finalizing: LatteEvent
+        private _dropElement: LatteEvent;
+
+        /**
+         * Gets an event raised when an element is dropped over this element.
+         * For an element to be allowed to be dropped over,
+         *  the <c>dragOver</c> event handler must return true before the drop operation.
+         *
+         * @returns {LatteEvent}
+         */
+        get dropElement(): LatteEvent{
+            if(!this._dropElement){
+                this._dropElement = new LatteEvent(this);
+            }
+            return this._dropElement;
+        }
+
+        /**
+         * Back field for event
+         */
+        private _finalizing: LatteEvent;
 
         /**
          * Gets an event raised when the element is being finalized
@@ -694,7 +945,7 @@ module latte{
         /**
          * Back field for event
          */
-        private _hiddenChanged: LatteEvent
+        private _hiddenChanged: LatteEvent;
 
         /**
          * Gets an event raised when the value of the hidden property changes
@@ -711,20 +962,69 @@ module latte{
         /**
          * Back field for event
          */
-        private _dropElement: LatteEvent
+        private _isSavingChangesChanged: LatteEvent;
 
         /**
-         * Gets an event raised when an element is dropped over this element.
-         * For an element to be allowed to be dropped over,
-         *  the <c>dragOver</c> event handler must return true before the drop operation.
+         * Gets an event raised when the value of the isSavingChanges property changes
          *
          * @returns {LatteEvent}
          */
-        get dropElement(): LatteEvent{
-            if(!this._dropElement){
-                this._dropElement = new LatteEvent(this);
+        get isSavingChangesChanged(): LatteEvent{
+            if(!this._isSavingChangesChanged){
+                this._isSavingChangesChanged = new LatteEvent(this);
             }
-            return this._dropElement;
+            return this._isSavingChangesChanged;
+        }
+
+        /**
+         * Back field for event
+         */
+        private _savedChanges: LatteEvent;
+
+        /**
+         * Gets an event raised when the changes have finalized saving
+         *
+         * @returns {LatteEvent}
+         */
+        get savedChanges(): LatteEvent{
+            if(!this._savedChanges){
+                this._savedChanges = new LatteEvent(this);
+            }
+            return this._savedChanges;
+        }
+
+        /**
+         * Back field for event
+         */
+        private _savingChanges: LatteEvent;
+
+        /**
+         * Gets an event raised when the <c>saveChanges</c> method is called.
+         *
+         * @returns {LatteEvent}
+         */
+        get savingChanges(): LatteEvent{
+            if(!this._savingChanges){
+                this._savingChanges = new LatteEvent(this);
+            }
+            return this._savingChanges;
+        }
+
+        /**
+         * Back field for event
+         */
+        private _unsavedChangesChanged: LatteEvent;
+
+        /**
+         * Gets an event raised when the unsavedChanges variable value changes
+         *
+         * @returns {LatteEvent}
+         */
+        get unsavedChangesChanged(): LatteEvent{
+            if(!this._unsavedChangesChanged){
+                this._unsavedChangesChanged = new LatteEvent(this);
+            }
+            return this._unsavedChangesChanged;
         }
 
         //endregion
@@ -732,7 +1032,13 @@ module latte{
         //region Properties
 
         /**
-         * Gets or sets a value indicating if the element is curerntly being dragged.
+         * Property field
+         */
+        private _beingDragged: boolean = false;
+
+        /**
+         * Gets or sets a value indicating if the element is being dragged
+         *
          * @returns {boolean}
          */
         get beingDragged(): boolean{
@@ -740,14 +1046,54 @@ module latte{
         }
 
         /**
-         * Gets or sets a value indicating if the element is curerntly being dragged.
-         * @param value
+         * Gets or sets a value indicating if the element is being dragged
+         *
+         * @param {boolean} value
          */
         set beingDragged(value: boolean){
+
+            // Check if value changed
+            let changed: boolean = value !== this._beingDragged;
+
+            // Set value
             this._beingDragged = value;
 
-            if(this.hideWhileDragging === true){
-                this.visible = !value;
+            // Trigger changed event
+            if(changed){
+                this.onBeingDraggedChanged();
+            }
+        }
+
+        /**
+         * Property field
+         */
+        private _changesWhileSaving: boolean = false;
+
+        /**
+         * Gets or sets a value indicating if changes were made while saving
+         *
+         * @returns {boolean}
+         */
+        get changesWhileSaving(): boolean{
+            return this._changesWhileSaving;
+        }
+
+        /**
+         * Gets or sets a value indicating if changes were made while saving
+         *
+         * @param {boolean} value
+         */
+        set changesWhileSaving(value: boolean){
+
+            // Check if value changed
+            let changed: boolean = value !== this._changesWhileSaving;
+
+            // Set value
+            this._changesWhileSaving = value;
+
+            // Trigger changed event
+            if(changed){
+                this.onChangesWhileSavingChanged();
             }
         }
 
@@ -771,7 +1117,7 @@ module latte{
 
             this._dragSource = value;
 
-            var hTimeout: number = 0;
+            let hTimeout: number = 0;
 
             this._dragSource
                 .mousedown((e: JQueryEventObject) => {
@@ -979,12 +1325,96 @@ module latte{
         }
 
         /**
+         * Property field
+         */
+        private _isSavingChanges: boolean = false;
+
+        /**
+         * Gets or sets a value indicating if the element is saving its changes
+         *
+         * @returns {boolean}
+         */
+        get isSavingChanges(): boolean{
+            return this._isSavingChanges;
+        }
+
+        /**
+         * Gets or sets a value indicating if the element is saving its changes
+         *
+         * @param {boolean} value
+         */
+        set isSavingChanges(value: boolean){
+
+            // Check if value changed
+            let changed: boolean = value !== this._isSavingChanges;
+
+
+            // log(`[${this.localId}] SAVING CHANGES:  ${value}`);
+
+            // Set value
+            this._isSavingChanges = value;
+
+            // Trigger changed event
+            if(changed){
+                this.onIsSavingChangesChanged();
+            }
+        }
+
+        /**
          * Gets the raw HTML element
          *
          * @returns {HTMLDivElement}
          */
         get node(): HTMLDivElement{
             return this.element.get(0);
+        }
+
+        /**
+         * Gets the HTML element of this element
+         * @returns {HTMLElement}
+         */
+        get raw(): HTMLElement{
+            return this.element.get(0);
+        }
+
+        /**
+         * Field for saveItems property
+         */
+        private _saveItems:Collection<ISave>;
+
+        /**
+         * Gets the ISave items
+         *
+         * @returns {Collection<ISave>}
+         */
+        get saveItems():Collection<ISave> {
+            if (!this._saveItems) {
+                this._saveItems = new Collection<ISave>(item => {
+
+                    // Handle unsavedChangesChanged
+                    item.unsavedChangesChanged.add(() => {
+
+                        if(this.saveItems.contains(item)){
+                            // log("unsavedChangesChanged! Checking")
+                            // log(item)
+                            this.updateSavedChanges();
+                        }
+                    });
+
+                    // Handle changesWhileSaving
+                    item.changesWhileSavingChanged.add(() => {
+
+                        if(this.saveItems.contains(item)) {
+                            if(item.changesWhileSaving) {
+                                this.changesWhileSaving = true;
+                            }
+                        }
+
+                    });
+
+                });
+            }
+            return this._saveItems;
         }
 
         /**
@@ -1021,6 +1451,25 @@ module latte{
             this.element.attr('title', value);
             this._tooltip = value;
 
+        }
+
+        /**
+         *
+         **/
+        private _unsavedChanges: boolean = false;
+
+        /**
+         * Gets or sets a value indicating if the view contains elments with unsaved changes
+         **/
+        get unsavedChanges(): boolean{
+            return this.getUnsavedChanges();
+        }
+
+        /**
+         * Gets or sets a value indicating if the view contains elments with unsaved changes
+         **/
+        set unsavedChanges(value: boolean){
+            this.setUnsavedChanges(value);
         }
 
         /**

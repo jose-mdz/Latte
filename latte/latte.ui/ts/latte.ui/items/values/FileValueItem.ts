@@ -39,7 +39,7 @@ module latte{
          *
          * @param value
          */
-        setValue(value: Array<File>){
+        setValue(value: string, silently: boolean = false){
             // Ignore. Files cannot be set
         }
 

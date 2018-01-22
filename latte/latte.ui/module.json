@@ -10,9 +10,16 @@
     ],
 
     "release-export" :[
-        "js/rangy.js",
-        "imgs/glyphs.png",
-        "imgs/std-icons.png"
+        "js/rangy.js"
+        , "imgs/glyphs.png"
+        , "imgs/std-icons.png"
+        , "fonts/Linearicons.ttf"
+        , "fonts/Linearicons-Free.eot"
+        , "fonts/Linearicons-Free.svg"
+        , "fonts/Linearicons-Free.ttf"
+        , "fonts/Linearicons-Free.woff"
+        , "fonts/Linearicons-Free.woff2"
+
     ],
 
     "module-include":[

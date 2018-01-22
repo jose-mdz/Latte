@@ -4,35 +4,11 @@ module latte{
      **/
     export class SplitView extends View{
 
+        //region Fields
         /**
          *
          **/
         private _draggingSplit: Direction = Direction.NONE;
-
-        /**
-         *
-         **/
-        private _sensitivity: number = 5;
-
-        /**
-         *
-         **/
-        private _side: Side;
-
-        /**
-         *
-         **/
-        private _sideSize: number = 200;
-
-        /**
-         *
-         **/
-        private _splitterSize: number = 1;
-
-        /**
-         *
-         */
-        private _sideVisible: boolean = true;
 
         /**
          * View where side view is contained
@@ -43,6 +19,7 @@ module latte{
          * Splitter between <c>side</c> and <c>view</c>
          **/
         splitterElement: JQuery;
+        //endregion
 
         /**
          * Creates the View
@@ -69,6 +46,8 @@ module latte{
 
 
         }
+
+        //region Private Methods
 
         /**
          *
@@ -149,6 +128,9 @@ module latte{
             this._draggingSplit = Direction.NONE;
 
         }
+        //endregion
+
+        //region Methods
 
         /**
          * Updates the layout of View
@@ -158,7 +140,7 @@ module latte{
             super.onLayout();
 
             var side = this.side;
-            var sp = this.splitterSize;
+            var sp = this.sideVisible ? this.splitterSize : 0;
             var size = this.sideSize > 1 ?
                 this.sideSize :
                 (
@@ -251,6 +233,55 @@ module latte{
         }
 
         /**
+         * Raises the <c>sideVisible</c> event
+         */
+        onSideVisibleChanged(){
+            if(this._sideVisibleChanged){
+                this._sideVisibleChanged.raise();
+            }
+
+            if(this.sideVisible){
+                this.sideWrap.element.show();
+                this.splitterElement.show();
+            }else{
+                this.sideWrap.element.hide();
+                this.splitterElement.hide();
+            }
+
+            this.onLayout();
+        }
+
+        //endregion
+
+        //region Events
+
+        /**
+         * Back field for event
+         */
+        private _sideVisibleChanged: LatteEvent;
+
+        /**
+         * Gets an event raised when the value of the sideVisible property changes
+         *
+         * @returns {LatteEvent}
+         */
+        get sideVisibleChanged(): LatteEvent{
+            if(!this._sideVisibleChanged){
+                this._sideVisibleChanged = new LatteEvent(this);
+            }
+            return this._sideVisibleChanged;
+        }
+
+        //endregion
+
+        //region Properties
+
+        /**
+         *
+         **/
+        private _sensitivity: number = 5;
+
+        /**
          * Gets or sets the sensitivity radius for dragging the splitter
          **/
         get sensitivity(): number{
@@ -266,6 +297,11 @@ module latte{
 
 
         }
+
+        /**
+         *
+         **/
+        private _side: Side;
 
         /**
          * Gets or sets the side of the side view
@@ -285,6 +321,11 @@ module latte{
 
 
         }
+
+        /**
+         *
+         **/
+        private _sideSize: number = 200;
 
         /**
          * Gets or sets the wide of the side view.
@@ -325,7 +366,13 @@ module latte{
         }
 
         /**
-         * Sets a value indicating if side is currently visible
+         * Property field
+         */
+        private _sideVisible: boolean = true;
+
+        /**
+         * Gets or sets a value indicating if the side view is visible
+         *
          * @returns {boolean}
          */
         get sideVisible(): boolean{
@@ -333,20 +380,28 @@ module latte{
         }
 
         /**
-         * Gets a value indicating if side is currently visible
-         * @param value
+         * Gets or sets a value indicating if the side view is visible
+         *
+         * @param {boolean} value
          */
         set sideVisible(value: boolean){
+
+            // Check if value changed
+            let changed: boolean = value !== this._sideVisible;
+
+            // Set value
             this._sideVisible = value;
 
-            if(value){
-                this.sideWrap.element.show();
-            }else{
-                this.sideWrap.element.hide();
+            // Trigger changed event
+            if(changed){
+                this.onSideVisibleChanged();
             }
-
-            this.onLayout();
         }
+
+        /**
+         *
+         **/
+        private _splitterSize: number = 1;
 
         /**
          * Gets or sets the wide of the splitterElement
@@ -366,5 +421,6 @@ module latte{
 
 
         }
+        //endregion
     }
 }

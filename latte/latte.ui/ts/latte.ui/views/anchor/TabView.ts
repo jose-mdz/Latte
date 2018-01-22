@@ -9,7 +9,7 @@ module latte{
         /**
          * Toolbar where tabs are stored
          */
-        private tabToolbar: TabToolbar;
+        tabToolbar: TabToolbar;
 
         /**
          * Collection of tabs

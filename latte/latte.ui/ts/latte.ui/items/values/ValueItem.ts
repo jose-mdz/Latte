@@ -37,6 +37,19 @@ module latte{
             }
         }
 
+        /**
+         * Sets the value of the item, optionally silently.
+         * @param {T} value
+         * @param {boolean} silently
+         */
+        setValue(value: T, silently: boolean = false){
+            if(silently) {
+                this._value = value;
+            }else {
+                this.value = value;
+            }
+        }
+
         //endregion
 
         //region Events

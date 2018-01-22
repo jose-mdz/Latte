@@ -50,9 +50,9 @@ module latte{
             // Elements
             this.btnCurrent = new ButtonItem();
             this.btnNext = new ButtonItem();
-            this.btnNext.icon = Glyph.right;
+            this.btnNext.icon = LinearIcon.chevron_right;
             this.btnPrevious = new ButtonItem();
-            this.btnPrevious.icon = Glyph.left;
+            this.btnPrevious.icon = LinearIcon.chevron_left;
 
             // Tag CSS
             this.btnPrevious.addClass('previous');
@@ -60,10 +60,13 @@ module latte{
             this.btnNext.addClass('next');
 
             this.btnCurrent.items.add(this.btnOverlay);
+            this.btnCurrent.dropdownVisible = false;
 
             this.buttons.addArray([
                 this.btnPrevious, this.btnCurrent, this.btnNext
             ]);
+
+            this.btnNext.faceVisible = this.btnPrevious.faceVisible = this.btnCurrent.faceVisible = false;
 
             // Wire events
             this.btnNext.click.add(() => {this.nextPage()});

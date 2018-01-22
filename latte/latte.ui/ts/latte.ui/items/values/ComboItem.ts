@@ -36,11 +36,10 @@ module latte{
          * @returns {any}
          */
         onGetValueString(): string{
-            var item: Item;
 
-            while((item = this.button.items.next())){
-                if(item.tag == this.value){
-                    return (<ButtonItem>item).text;
+            for(let i = 0; i < this.button.items.length; i++){
+                if(this.button.items[i].tag == this.value) {
+                    return this.button.items[i].text;
                 }
             }
 
@@ -71,14 +70,11 @@ module latte{
 
             var __this = this;
 
-            if(!_isArray(options) && !_isObject(options))
-                throw new InvalidArgumentEx('options', options);
-
             this.button.items.clear();
 
-            for(var i in options){
-                var b = new ButtonItem();
-                b.text = options[i].toString();
+            for(let i in options){
+                let b = new ButtonItem();
+                b.text = String(options[i]);
                 b.tag = i;
                 b.click.add(function(){
                     __this.value = this.tag;

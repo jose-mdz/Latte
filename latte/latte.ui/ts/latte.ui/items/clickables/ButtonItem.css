@@ -18,6 +18,10 @@
     padding: 4px 15px;
 }
 
+.latte-item.button.horizontal.no-front-padding{
+    padding-left: 0;
+}
+
 .latte-item.button.horizontal > .latte-item.label > .label-content{
     overflow: hidden;
 }
@@ -70,4 +74,31 @@
     left: 50%;
     margin-top: -8px;
     margin-left: -8px;
+}
+
+.latte-item.button.with-face.ghost:not(.selected){
+    border-color: gray;
+    color: gray;
+    background: none;
+}
+
+.latte-item.button.with-face.ghost.silver:not(.selected){
+    border-color: silver;
+    color: silver;
+    background: none;
+
+}
+
+.latte-item.button.with-face.ghost.green:not(.selected){
+    border-color: #5bbf19;
+    color: green;
+    background: none;
+
+}
+
+.latte-item.button.with-face.ghost.red:not(.selected){
+    border-color: red;
+    color: red;
+    background: none;
+
 }

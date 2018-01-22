@@ -23,6 +23,11 @@
     background: transparent;
 }
 
+.latte-view.column .column .column-content > .latte-item.ghost{
+    text-align: center;
+    padding: 10px;
+}
+
 .latte-view.column .column .column-content > .latte-item{
     float: none;
 }

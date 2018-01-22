@@ -25,6 +25,9 @@
 }
 
 .latte-view.tree.focusable:not(:focus)  .latte-item.tree-item > .selectable.selected{
-    background: gray;
-    border-color: gray;
+    /*background: gray;*/
+    /*border-color: gray;*/
+    background-color: #f5f5f5;
+    border-color: #f5f5f5;
+    color: black;
 }

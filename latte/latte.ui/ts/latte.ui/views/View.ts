@@ -4,7 +4,7 @@ module latte{
 
      The main feature of View is the fact that it can contains another View or Views.
      **/
-    export class View extends UiElement implements ISaveContainer, ISave{
+    export class View extends UiElement{
 
         //region Static
 
@@ -38,7 +38,7 @@ module latte{
         /**
          *
          **/
-        private static _modalView: View;
+        private static _modalView: DialogView;
 
         /**
          *
@@ -76,7 +76,7 @@ module latte{
          * SPECIAL GETTER
          Gets or sets the modalView of the User Agent Viewport
          **/
-        static getModalView(): View{
+        static getModalView(): DialogView{
             return this._modalView;
         }
 
@@ -102,79 +102,82 @@ module latte{
          * SPECIAL SETTER
          Gets or sets the modalView of the User Agent Viewport
          **/
-        static setModalView(view: View = null, itemsArray: Array<Item> = null){
+        static setModalView(view: DialogView = null, itemsArray: Array<Item> = null){
 
-            var items: Collection<Item> = new Collection<Item>();
+            // let items: Collection<Item> = new Collection<Item>();
+            //
+            // if(itemsArray){
+            //     items.addArray(itemsArray);
+            // }
 
-            if(itemsArray){
-                items.addArray(itemsArray);
-            }
 
             // Hide previous modal
-            if(this._modalView instanceof View && this._modalView !== view){
-                if(this._layer){
-                    this._layer.fadeOut(function(){ $(this).remove() });
-                    this._layer = null;
-                }
+            // if(this._modalView instanceof View && this._modalView !== view){
+            //     if(this._layer){
+            //         this._layer.fadeOut(function(){ $(this).remove() });
+            //         this._layer = null;
+            //     }
+            //
+            //     if(this._modalView){
+            //         let parentsParent = this._modalView.element.parent().parent();
+            //
+            //         parentsParent.animate({
+            //             top: $(window).height()
+            //         }, 'fast', 'swing', () => { parentsParent.remove() });
+            //     }
+            // }
 
-                if(this._modalView){
-                    var parentsParent = this._modalView.element.parent().parent();
-
-                    parentsParent.animate({
-                        top: $(window).height()
-                    }, 'fast', 'swing', () => { parentsParent.remove() });
-                }
-            }
-
-            if(view instanceof View){
-
-                var layer = $('<div>').addClass('latte-modal-view-layer').appendTo('body');
-                var dialog = $('<div>').addClass('latte-modal-view').appendTo('body');
-                var eInner = $('<div>').addClass('inner-view').appendTo(dialog);
-                var eItems = $('<div>').addClass('items').appendTo(dialog);
+            let layer = $('<div>').addClass('latte-modal-view-layer').appendTo('body');
+            let dialog = $('<div>').addClass('latte-modal-view').appendTo('body');
+            let eInner = $('<div>').addClass('inner-view').appendTo(dialog);
 
 
-                // Adapt & append view
-                view.parentIsModal = true;
+            view.subLayer = layer.get(0);
+            view.containmentLayer = dialog.get(0);
 
-                eInner.append(view.element);
+            // Adapt & append view
+            view.parentIsModal = true;
 
-                // Items
-                var its = new Collection<Item>();
-                its.addCollection(items)
+            eInner.append(view.element);
 
-                var item;
-
-                while( (item = its.next()) )
-                    eItems.append(item.element);
-
+            if(itemsArray && itemsArray.length > 0){
+                let eItems = $('<div>').addClass('items').appendTo(dialog);
+                itemsArray.forEach((item) => eItems.append(item.element));
                 eItems.clear();
 
-                if(its.count == 0) eItems.detach();
-
-                // Center dialog
-                var centerRect = dialog.rectangle().center(layer.rectangle());
-                dialog.rectangle(centerRect);
-                dialog.css('height', '');
-
-                var start = {
-                    top: -dialog.height(),
-                    opacity: 0
-                };
-
-                var end = {
-                    top: centerRect.top,
-                    opacity: 1
-                };
-
-                view.onLayout();
-
-                // Show now
-                layer.css({opacity:0}).animate({opacity:1}, 'fast');
-                dialog.css(start).animate(end, 'fast', 'swing', function(){ view.focusInput(); });
-                this._layer = layer;
+                if(itemsArray.length == 0) eItems.detach();
             }
 
+            // // Items
+            // let its = new Collection<Item>();
+            // its.addCollection(items);
+            //
+            // let item;
+            //
+            // while( (item = its.next()) )
+            //     eItems.append(item.element);
+
+            // Center dialog
+            let centerRect = dialog.rectangle().centerOn(layer.rectangle());
+            dialog.rectangle(centerRect);
+            dialog.css('height', '');
+
+            let start = {
+                top: -dialog.height(),
+                opacity: 0
+            };
+
+            let end = {
+                top: centerRect.top,
+                opacity: 1
+            };
+
+            view.onLayout();
+
+            // Show now
+            layer.css({opacity:0}).animate({opacity:1}, 'fast');
+            dialog.css(start).animate(end, 'fast', 'swing', function(){ view.focusInput(); });
+            this._layer = layer;
 
             this._modalView = view;
 
@@ -252,14 +255,14 @@ module latte{
         /**
          * Gets or sets the modalView of the User Agent Viewport
          **/
-        static get modalView(): View{
+        static get modalView(): DialogView{
             return this.getModalView();
         }
 
         /**
          * Gets or sets the modalView of the User Agent Viewport
          **/
-        static set modalView(value: View){
+        static set modalView(value: DialogView){
             this.setModalView(value);
         }
 
@@ -310,11 +313,6 @@ module latte{
         /**
          *
          **/
-        private _unsavedChanges: boolean = false;
-
-        /**
-         *
-         **/
         private _view: View;
 
         /**
@@ -341,113 +339,6 @@ module latte{
             this.container = $('<div>').appendTo(this.element).addClass('container');
 
         }
-
-        //region Events
-
-
-        /**
-         * Back field for event
-         */
-        private _load: LatteEvent;
-
-        /**
-         * Gets an event raised when the view is loaded
-         *
-         * @returns {LatteEvent}
-         */
-        get load(): LatteEvent{
-            if(!this._load){
-                this._load = new LatteEvent(this);
-            }
-            return this._load;
-        }
-
-        /**
-         * Back field for event
-         */
-        private _shown: LatteEvent;
-
-        /**
-         * Gets an event raised when the view is already visible
-         *
-         * @returns {LatteEvent}
-         */
-        get shown(): LatteEvent{
-            if(!this._shown){
-                this._shown = new LatteEvent(this);
-            }
-            return this._shown;
-        }
-
-        /**
-         * Back field for event
-         */
-        private _unload: LatteEvent;
-
-        /**
-         * Gets an event raised when the view is unloaded. If result of event is false, unload will be aborted
-         *
-         * @returns {LatteEvent}
-         */
-        get unload(): LatteEvent{
-            if(!this._unload){
-                this._unload = new LatteEvent(this);
-            }
-            return this._unload;
-        }
-
-        /**
-         * Back field for event
-         */
-        private _unsavedChangesChanged: LatteEvent;
-
-        /**
-         * Gets an event raised when the unsavedChanges variable value changes
-         *
-         * @returns {LatteEvent}
-         */
-        get unsavedChangesChanged(): LatteEvent{
-            if(!this._unsavedChangesChanged){
-                this._unsavedChangesChanged = new LatteEvent(this);
-            }
-            return this._unsavedChangesChanged;
-        }
-
-        /**
-         * Back field for event
-         */
-        private _savingChanges: LatteEvent;
-
-        /**
-         * Gets an event raised when the <c>saveChanges</c> method is called.
-         *
-         * @returns {LatteEvent}
-         */
-        get savingChanges(): LatteEvent{
-            if(!this._savingChanges){
-                this._savingChanges = new LatteEvent(this);
-            }
-            return this._savingChanges;
-        }
-
-        /**
-         * Back field for event
-         */
-        private _savedChanges: LatteEvent;
-
-        /**
-         * Gets an event raised when the changes have finalized saving
-         *
-         * @returns {LatteEvent}
-         */
-        get savedChanges(): LatteEvent{
-            if(!this._savedChanges){
-                this._savedChanges = new LatteEvent(this);
-            }
-            return this._savedChanges;
-        }
-
-        //endregion
 
         //region Methods
         /**
@@ -493,7 +384,7 @@ module latte{
                 viewRect.left = 0;
 
                 var itemRect = this._infoItem.element.rectangle();
-                this._infoItem.element.css('position', 'absolute').rectangle(itemRect.center(viewRect));
+                this._infoItem.element.css('position', 'absolute').rectangle(itemRect.centerOn(viewRect));
             }
 
             if(this._view instanceof View)
@@ -507,24 +398,6 @@ module latte{
         onLoad(){
             if(this._load){
                 this._load.raise();
-            }
-        }
-
-        /**
-         * Raises the <c>savedChanges</c> event
-         */
-        onSavedChanges(){
-            if(this._savedChanges){
-                this._savedChanges.raise();
-            }
-        }
-
-        /**
-         * Raises the <c>savingChanges</c> event
-         */
-        onSavingChanges(): boolean{
-            if(this._savingChanges){
-                return this._savingChanges.raise();
             }
         }
 
@@ -570,43 +443,6 @@ module latte{
 
             return response;
 
-        }
-
-        /**
-         * Raises the <c>unsavedChangesChanged</c> event
-         */
-        onUnsavedChangesChanged(){
-            if(this._unsavedChangesChanged){
-                this._unsavedChangesChanged.raise();
-            }
-        }
-
-        /**
-         * Saves changes on view.
-         Override <c>onSavingChanges</c> to custom save your data.
-         **/
-        saveChanges(){
-
-            if(this.onSavingChanges() != false){
-
-                // Backwards compatibility
-                if (this['onSaveChanges']){
-                    debugger;
-                    warnDeprecated('View.onSaveChanges', 'ISave.getSaveCalls');
-                    this.unsavedChanges = false;
-                    this['onSaveChanges']();
-                    this.onSavedChanges();
-                }else{
-                    // Send using Message
-                    // HACK: This is invoking the Message Class
-                    //       creating a dependency on the latte.data class.
-                    //       A cleaner implementation should make correct use of
-                    //       ICall & IMessage classes on latte module.
-                    let m = latte['Message'].sendCalls(this.getSaveCalls());
-                    m.responseArrived.add(() => this.onSavedChanges());
-
-                }
-            }
         }
 
         /**
@@ -694,60 +530,61 @@ module latte{
             this._view = newView;
 
         }
+        //endregion
+
+        //region Events
 
         /**
-         * SPECIAL GETTER
-         Gets or sets a value indicating if the view contains elments with unsaved changes
-         **/
-        getUnsavedChanges(): boolean{
-            return this._unsavedChanges;
-        }
-
-        /**
-         * Implementation. Gets the save calls of all its descendants.
+         * Back field for event
          */
-        getSaveCalls(): ICall[]{
-            let calls = [];
-
-            // Concat all calls
-            this.saveItems.each((item) => calls = calls.concat(item.getSaveCalls()));
-
-            return calls;
-        }
+        private _load: LatteEvent;
 
         /**
-         * SPECIAL SETTER
-         Gets or sets a value indicating if the view contains elments with unsaved changes
-         **/
-        setUnsavedChanges(value: boolean = false, silent: boolean = false){
-
-
-            if(!_isBoolean(value))
-                throw new InvalidArgumentEx('value', value);
-
-            var changed = value != this._unsavedChanges;
-
-            this._unsavedChanges = value;
-
-            if(changed && silent !== true)
-                this.onUnsavedChangesChanged();
-
-        }
-
-        /**
-         * Updates the changes based on saveItems
+         * Gets an event raised when the view is loaded
+         *
+         * @returns {LatteEvent}
          */
-        updateSavedChanges(){
-            let changes = false;
-
-            for (let i = 0; i < this.saveItems.length; i++) {
-                if (this.saveItems[i].unsavedChanges){
-                    changes = true;
-                    break;
-                }
+        get load(): LatteEvent{
+            if(!this._load){
+                this._load = new LatteEvent(this);
             }
-            this.unsavedChanges = changes;
+            return this._load;
         }
+
+        /**
+         * Back field for event
+         */
+        private _shown: LatteEvent;
+
+        /**
+         * Gets an event raised when the view is already visible
+         *
+         * @returns {LatteEvent}
+         */
+        get shown(): LatteEvent{
+            if(!this._shown){
+                this._shown = new LatteEvent(this);
+            }
+            return this._shown;
+        }
+
+        /**
+         * Back field for event
+         */
+        private _unload: LatteEvent;
+
+        /**
+         * Gets an event raised when the view is unloaded. If result of event is false, unload will be aborted
+         *
+         * @returns {LatteEvent}
+         */
+        get unload(): LatteEvent{
+            if(!this._unload){
+                this._unload = new LatteEvent(this);
+            }
+            return this._unload;
+        }
+
         //endregion
 
         //region Properties
@@ -832,49 +669,6 @@ module latte{
 
             return this._parentView;
 
-        }
-
-        /**
-         * Field for saveItems property
-         */
-        private _saveItems:Collection<ISave>;
-
-        /**
-         * Gets the ISave items
-         *
-         * @returns {Collection<ISave>}
-         */
-        get saveItems():Collection<ISave> {
-            if (!this._saveItems) {
-                this._saveItems = new Collection<ISave>((item: ISave) => {
-
-
-                    item.unsavedChangesChanged.add(() => {
-
-                        if(this.saveItems.contains(item)){
-                            // log("unsavedChangesChanged! Checking")
-                            // log(item)
-                            this.updateSavedChanges()
-                        }
-                    });
-
-                });
-            }
-            return this._saveItems;
-        }
-
-        /**
-         * Gets or sets a value indicating if the view contains elments with unsaved changes
-         **/
-        get unsavedChanges(): boolean{
-            return this.getUnsavedChanges();
-        }
-
-        /**
-         * Gets or sets a value indicating if the view contains elments with unsaved changes
-         **/
-        set unsavedChanges(value: boolean){
-            this.setUnsavedChanges(value);
         }
 
         /**

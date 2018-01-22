@@ -29,6 +29,10 @@
     padding-left: 3px;
 }
 
+.latte-item.toolbar.tab.horizontal > .face > .holder > .items-container > .latte-item:not(.value):not(.tab){
+    padding: 9px;
+}
+
 /*  */
 .latte-view.toolbar.tab > .latte-item.toolbar {
     background: #f0f0f0;

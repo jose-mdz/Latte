@@ -38,8 +38,8 @@ module latte {
             this.color = Color.fromHex(value);
         }
 
-        getValue(): string{
-            return this.color.toHexString()
+        get value(): string{
+            return this.color.toHexString();
         }
 
         onLayout(){
@@ -71,8 +71,6 @@ module latte {
                 this._colorPicker.colorChanged.add(() => {
                     this.color = this._colorPicker.color;
                     this.onValueChanged();
-                    //MenuOverlay.closeAll();
-
                 });
             }
             return this._colorPicker;

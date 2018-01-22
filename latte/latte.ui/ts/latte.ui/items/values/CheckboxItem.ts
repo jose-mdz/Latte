@@ -5,6 +5,28 @@ module latte{
     export class CheckboxItem extends ValueItem<boolean>{
 
 
+        //region Static
+
+        /**
+         * Global checked icon getter
+         */
+        static globalCheckedIconGetter: () => IconItem  = () => Glyph.checked;
+
+        /**
+         * Global unchecked icon getter
+         */
+        static globalUncheckedIconGetter: () => IconItem = () => Glyph.unchecked;
+
+
+        //endregion
+
+        //region Fields
+
+        checkedIconGetter: () => IconItem  = null;
+        uncheckedIconGetter: () => IconItem  = null;
+
+        //endregion
+
         /**
          * Creates the item
          **/
@@ -16,11 +38,25 @@ module latte{
 
             this.label.appendTo(this);
 
+            this.value = false;
+
             this.addEventListener('click', () => this.value = !this.value);
 
         }
 
         //region Methods
+
+
+        /**
+         * Gets the icon for the specified value
+         * @returns {latte.IconItem}
+         */
+        getIconForValue(value: boolean): IconItem{
+            if(value) {
+                return this.checkedIconGetter ? this.checkedIconGetter() : CheckboxItem.globalCheckedIconGetter();
+            }
+            return this.uncheckedIconGetter ? this.uncheckedIconGetter() : CheckboxItem.globalUncheckedIconGetter();
+        }
 
         /**
          * Override.
@@ -32,9 +68,10 @@ module latte{
 
             if(!_isBoolean(value) && _isString(value) && _isNumeric(value)) {
                 this.value = !!parseInt(<any>value);
-            }else {
-                this.label.icon = this.value ? Glyph.checked : Glyph.unchecked;
             }
+
+            this.label.icon = this.getIconForValue(this.value);
+
         }
 
         /**
@@ -50,7 +87,6 @@ module latte{
         unserialize(value: string){
             this.value = !!parseInt(value);
         }
-
 
         //endregion
 
@@ -93,11 +129,7 @@ module latte{
             return this._label;
         }
 
-
         //endregion
-
-
-
 
     }
 }

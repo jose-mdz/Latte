@@ -48,7 +48,6 @@ module latte{
          **/
         private _willLoadItems: boolean;
 
-
         /**
          * Clickable element where dropdown is shown
          **/
@@ -74,7 +73,6 @@ module latte{
          * Raised when the items are shown
          **/
         itemsShown: LatteEvent;
-
 
         /**
          * Creates the button
@@ -308,10 +306,10 @@ module latte{
         /**
          * Overriden.
          **/
-        onClick(){
+        onClick(e: MouseEvent = null){
 
             if(!(this.hasItems && !this.split)){
-                super.onClick();
+                super.onClick(e);
             }
 
             if(!this.split && this.hasItems){
@@ -319,6 +317,17 @@ module latte{
             }
 
 
+        }
+
+        /**
+         * Override.
+         */
+        onEnabledChanged(){
+            super.onEnabledChanged();
+
+            if(this._dropdown) {
+                this.dropdown.enabled = this.enabled;
+            }
         }
 
         /**
@@ -468,7 +477,7 @@ module latte{
             }
 
             // Show relative to the control
-            menu.show(this, side, edge);
+            menu.showByItem(this, side, edge);
 
             // When closed, remove zIndex
             menu.closed.add(()=>{

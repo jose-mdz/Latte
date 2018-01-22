@@ -75,11 +75,6 @@ module latte{
         iconChanged: LatteEvent;
 
         /**
-         * Raised when text() value changes
-         **/
-        textChanged: LatteEvent;
-
-        /**
          *
          **/
         constructor(text: string = '', description: string = '', icon: IconItem = null, title: number = 0){
@@ -90,7 +85,6 @@ module latte{
             // Init events
             this.descriptionChanged = new LatteEvent(this);
             this.iconChanged = new LatteEvent(this);
-            this.textChanged = new LatteEvent(this);
             this.navigate = new LatteEvent(this);
 
             // Init elements
@@ -115,6 +109,30 @@ module latte{
             this.title = title;
         }
 
+        //region Private Methods
+        /**
+         * Updates the <c>white-space</c> CSS property
+         **/
+        private _updateWhitespace(){
+
+            var p = this.preformatted;
+            var w = this.textWrap;
+
+            if(p){
+                if(w){
+                    this.contentElement.css('white-space', 'pre-wrap');
+                }else{
+                    this.contentElement.css('white-space', 'pre');
+                }
+            }else{
+                this.contentElement.css('whiteSpace', 'normal');
+            }
+
+
+        }
+        //endregion
+
+        //region Methods
         /**
          * Updates the <c>.icon-and-text</c> flag.
          Also updates margin of label-cotent
@@ -136,30 +154,9 @@ module latte{
         }
 
         /**
-         * Updates the <c>white-space</c> CSS property
-         **/
-        private _updateWhitespace(){
-
-            var p = this.preformatted;
-            var w = this.textWrap;
-
-            if(p){
-                if(w){
-                    this.contentElement.css('white-space', 'pre-wrap');
-                }else{
-                    this.contentElement.css('white-space', 'pre');
-                }
-            }else{
-                this.contentElement.css('whiteSpace', 'normal');
-            }
-
-
-        }
-
-        /**
          * Raises the <c>descriptionChanged</c> event
          **/
-            onDescriptionChanged(){
+        onDescriptionChanged(){
 
             this.descriptionChanged;
 
@@ -168,7 +165,7 @@ module latte{
         /**
          * Raises the <c>iconChanged</c> event
          **/
-            onIconChanged(){
+        onIconChanged(){
 
             this.iconChanged.raise();
 
@@ -177,20 +174,47 @@ module latte{
         /**
          * Raises the <c>navigate</c> event
          **/
-            onNavigate(){
+        onNavigate(){
 
             this.navigate.raise();
 
         }
 
         /**
-         * Raises the <c>textChanged</c> event
-         **/
-            onTextChanged(){
+         * Raises the <c>text</c> event
+         */
+        onTextChanged(){
+            if(this._textChanged){
+                this._textChanged.raise();
+            }
 
-            this.textChanged.raise();
-
+            this.textElement.html(this.text || '');
+            this.updateIconAndTextFlag();
         }
+        //endregion
+
+        //region Events
+
+        /**
+         * Back field for event
+         */
+        private _textChanged: LatteEvent;
+
+        /**
+         * Gets an event raised when the value of the text property changes
+         *
+         * @returns {LatteEvent}
+         */
+        get textChanged(): LatteEvent{
+            if(!this._textChanged){
+                this._textChanged = new LatteEvent(this);
+            }
+            return this._textChanged;
+        }
+
+        //endregion
+
+        //region Properties
 
         /**
          * Gets or sets the description of label, shown below the text.
@@ -333,19 +357,36 @@ module latte{
         }
 
         /**
-         * Gets or sets the text of the label. This text may include HTML.
-         **/
+         * Property field
+         */
+        private _text: string = '';
+
+        /**
+         * Gets or sets the text of the label
+         *
+         * @returns {string}
+         */
         get text(): string{
-            return this.textElement.html();
+            return this._text;
         }
 
         /**
-         * Gets or sets the text of the label. This text may include HTML.
-         **/
+         * Gets or sets the text of the label
+         *
+         * @param {string} value
+         */
         set text(value: string){
-            this.textElement.html(value);
-            this.updateIconAndTextFlag();
-            this.onTextChanged();
+
+            // Check if value changed
+            let changed: boolean = value !== this._text;
+
+            // Set value
+            this._text = value;
+
+            // Trigger changed event
+            if(changed){
+                this.onTextChanged();
+            }
         }
 
         /**
@@ -396,5 +437,6 @@ module latte{
 
 
         }
+        //endregion
     }
 }

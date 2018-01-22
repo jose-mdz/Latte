@@ -8,12 +8,14 @@ module latte{
 
         private static initialized: boolean;
 
+
+
         /**
          * Initialize handlers at global level
          **/
         private static _initialize() {
 
-            var f = DialogView;
+            let f = DialogView;
 
             // Check if not already initialized
             if (!_undef(f.initialized) && f.initialized) return;
@@ -24,7 +26,7 @@ module latte{
             $(window)
                 .keydown(function (e) {
 
-                    var modal: DialogView = (View.modalView instanceof DialogView) ? <DialogView>View.modalView : null;
+                    let modal: DialogView = (View.modalView instanceof DialogView) ? <DialogView>View.modalView : null;
                     modal = modal instanceof DialogView ? modal : null;
 
                     if (e.keyCode == Key.ESCAPE) {
@@ -37,7 +39,11 @@ module latte{
                             && modal.defaultButton  // Has a default button
                             && modal.defaultButton.enabled // Default button is enabled
                             && document.activeElement['tagName'] != 'TEXTAREA' // And focused element is not a textarea (enter is for new lines)
+                            && !modal.defaultButtonHandled
+                            && !modal.isClosed
                         ){
+                            modal.defaultButtonHandled = true;
+                            log(`triggering click`);
                             modal.defaultButton.onClick();
                         }
                     }
@@ -54,9 +60,9 @@ module latte{
 
 
             if (!_isString(message)) throw new InvalidArgumentEx('message', message);
-            if (!_undef(description) && !_isString(description)) throw new InvalidArgumentEx('description', description);
+            description = description || '';
 
-            var m = new MessageView();
+            let m = new MessageView();
 
             // Prepare message
             m.message = message;
@@ -140,9 +146,9 @@ module latte{
 
 
             if (!_isString(message)) throw new InvalidArgumentEx('message', message);
-            if (!_undef(description) && !_isString(description)) throw new InvalidArgumentEx('description', description);
+            description = description || '';
 
-            var m = new MessageView();
+            let m = new MessageView();
 
             // Prepare message
             m.message = message;
@@ -151,6 +157,10 @@ module latte{
             if (!_undef(description)) m.description = description;
 
             m.iconInfo();
+
+            if(!items) {
+                items = [new ButtonItem(strings.ok)];
+            }
 
             return DialogView.showMessage(m, items);
 
@@ -167,10 +177,13 @@ module latte{
                     title: string,
                     inputs: IInputList,
                     validate: (values: {[index: string]: any}, items: {[index: string]: InputItem}) => any = null,
-                    save: (values: {[index: string]: any}) => any = null){
+                    save: (values: {[index: string]: any}) => any = null,
+                    cancel: () => any = null){
 
             let d = new DialogView();
             let f = new FormView();
+
+            // let cv = new ColumnView();
             let items: {[index: string]: InputItem} = {};
             let values = () => {
                 let r = {};
@@ -188,12 +201,23 @@ module latte{
                 f.inputs.add(items[i]);
             }
 
+            let type = latte['MetaFormItem'];
+            // let mf = new type(null, {
+            //     fields: inputs
+            // });
+
+            // debugger;
+            // cv.items.add(mf);
+
             d.items.addArray([
                 new ButtonItem(strings.ok),
             ]);
 
             d.addCancelButton(() => {
-                cancelled = true
+                cancelled = true;
+                if(cancel){
+                    cancel();
+                }
             });
 
             d.closing.add(() => {
@@ -239,6 +263,116 @@ module latte{
 
             d.title = title;
             d.view = f;
+            // d.view = new View();
+            // d.view.container.append(mf.raw);
+            d.show();
+
+            return d;
+        }
+        /**
+         * Presents the specified inputs and presents them
+         * @param title
+         * @param inputs
+         * @param save
+         * @param validate Return false in case validation is incorrect
+         */
+        static metaInput(
+                    title: string,
+                    inputs: IInputList,
+                    validate: (values: {[index: string]: any}, items: {[index: string]: InputItem}) => any = null,
+                    save: (values: {[index: string]: any}) => any = null,
+                    cancel: () => any = null){
+
+            let d = new DialogView();
+            let f = new FormView();
+
+            // let cv = new ColumnView();
+            let cancelled = false;
+
+            d.closeButton.visible = false;
+
+            let type = latte['MetaFormItem'];
+            let mf:any = new type({}, {
+                fields: inputs
+            });
+
+            let getValues = () => {
+                let r = {};
+                for(let name in inputs){
+                    r[name] = mf.byName(name).value;
+                }
+                return r;
+            };
+
+            let getItems = () => {
+                let r = {};
+                for(let name in inputs){
+                    r[name] = mf.byName(name);
+                }
+                return r;
+            };
+
+            // debugger;
+            // cv.items.add(mf);
+
+            d.items.addArray([
+                new ButtonItem(strings.ok),
+            ]);
+
+            d.addCancelButton(() => {
+                cancelled = true;
+                if(cancel){
+                    cancel();
+                }
+            });
+
+            d.closing.add(() => {
+                if(cancelled) {
+                    return true;
+                }
+
+                let valid = null;
+
+                if(validate) {
+                    valid = validate(getValues() as any, getItems() as any);
+                }
+
+                if(_isFunction(valid)) {
+
+                    // Execute validation
+                    d.enabled = false;
+                    valid((validationResult: boolean) => {
+                        d.enabled = true;
+
+                        if((_isBoolean(validationResult) && validationResult) || f.isValid){
+                            cancelled = true;
+                            d.close();
+                            save(getValues());
+                        }
+                    });
+                    return false;
+                }
+
+                if(!_isBoolean(valid)) {
+                    valid = f.isValid;
+                }
+
+                // Check for validation
+                if(valid) {
+                    // Save callback
+                    save(getValues());
+                }else {
+
+                    return false;
+                }
+            });
+
+            d.title = title;
+            // d.view = f;
+            let cv = new ColumnView();
+            d.view = cv;
+            cv.items.add(mf);
+            // d.view.container.append(mf.raw);
             d.show();
 
             return d;
@@ -265,6 +399,17 @@ module latte{
         //endregion
 
         //region Fields
+
+        /**
+         * Points to the layer that obscures contextual elements
+         */
+        subLayer: HTMLElement;
+
+        /**
+         * Points to the layer where the dialog view lives.
+         */
+        containmentLayer: HTMLElement;
+
         /**
          *
          **/
@@ -279,6 +424,8 @@ module latte{
          *
          **/
         private _defaultButton: ButtonItem;
+
+        private defaultButtonHandled: boolean;
 
         /**
          * Pointer to the DOM element where the title bar lives
@@ -340,7 +487,7 @@ module latte{
 
             this.closeButton = new ButtonItem();
             this.closeButton.faceVisible = false;
-            this.closeButton.icon = Glyph.dismiss;
+            this.closeButton.icon = LinearIcon.cross; //Glyph.dismiss;
             this.closeButton.appendTo(this.barElement);
             this.closeButton.click.add( () => {
                 this.close();
@@ -363,6 +510,10 @@ module latte{
 
 
         }
+
+        //region Private Methods
+
+        //endregion
 
         //region Methods
 
@@ -471,12 +622,26 @@ module latte{
          **/
         close(): boolean {
 
+            this._isClosed = true;
 
             if (this.onClosing() === false) {
                 return false;
             }
 
-            View.modalView = null;
+            // Hide sub layer modal
+            if(this.subLayer){
+                let sub = $(this.subLayer);
+                sub.fadeOut(() => sub.remove());
+                this.subLayer = null;
+            }
+
+            // Hide containment layer
+            if(this.containmentLayer){
+                let cont = $(this.containmentLayer);
+                cont.animate({
+                    top: $(window).height()
+                }, () => cont.remove());
+            }
 
             this.onClosed();
 
@@ -630,6 +795,21 @@ module latte{
         }
 
         /**
+         * Property field
+         */
+        private _isClosed: boolean;
+
+        /**
+         * Gets a value indicating if the dialog is already closed
+         *
+         * @returns {boolean}
+         */
+        get isClosed(): boolean {
+            return this._isClosed;
+        }
+
+
+        /**
          * Gets or sets the title of the dialog
          **/
         get title():string {
@@ -646,6 +826,7 @@ module latte{
 
 
         }
+
         //endregion
     }
 }

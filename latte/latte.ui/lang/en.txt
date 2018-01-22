@@ -144,3 +144,5 @@ refresh Refresh
 switchOn On
 switchOff Off
 flagsNone (None)
+nothingToShow Nothing to Show
+jumpToYear Jump to Year

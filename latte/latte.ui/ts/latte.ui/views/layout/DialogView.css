@@ -81,3 +81,11 @@
     float: right;
     margin-left: 7px;
 }
+
+.latte-view.dialog .latte-item.form.with-face{
+    margin-left: -10px;
+    margin-right: -10px;
+    border-radius: 0;
+    border-right: none;
+    border-left: none;
+}

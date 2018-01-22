@@ -29,15 +29,21 @@
     padding: 10px;
 }
 .latte-item.toolbar > .face > .holder .latte-item.button.horizontal.no-icon{
-    padding: 10px 30px;
+    padding: 9px 30px 10px 30px;
 }
 
 /**
- * Extra padding on labels
+ * Extra padding on labels & switches
  */
+
 .latte-item.toolbar.horizontal > .face > .holder > .items-container > .latte-item.label,
 .latte-item.toolbar.horizontal > .face > .holder > .side-items-container > .latte-item.label{
     padding-top: 6px;
+}
+
+.latte-item.toolbar.horizontal > .face > .holder > .items-container > .latte-item.switch,
+.latte-item.toolbar.horizontal > .face > .holder > .side-items-container > .latte-item.switch{
+    margin-top: 8px;
 }
 
 /**
@@ -75,6 +81,7 @@
 
 .latte-item.toolbar.horizontal > .face > .holder > .items-container{
     float: left;
+    /*display: flex;*/
 }
 
 .latte-item.toolbar.horizontal > .face > .holder > .items-container > .latte-item{

@@ -101,7 +101,7 @@ module latte{
             var r = new Rectangle(s, 0, Loader.maxWidth, (sampleHeight + s) * loaders.length);
 
             /// Center r on screen
-            r = r.center($(document).rectangle());
+            r = r.centerOn($(document).rectangle());
 
             if(!Loader.modalShouldBeVisible){
                 r.top = s;
@@ -308,7 +308,7 @@ module latte{
             Loader.add(this);
 
             var screen = $(document).rectangle();
-            var r = this.element.rectangle();r = r.center(screen);
+            var r = this.element.rectangle();r = r.centerOn(screen);
 
             // Position on the center
             this.element.css({

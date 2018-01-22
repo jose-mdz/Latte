@@ -8,6 +8,11 @@ module latte{
     export class IconItem extends Item{
 
         //region Static
+
+        static sidebar_left_getter: () => IconItem = () => LinearIcon.map;
+
+        static sidebar_right_getter: () => IconItem = () => LinearIcon.map;
+
         /**
          * Default URL of sprite used if coordinates are specified, and no <c>url</c> is provided.
          **/
@@ -18,7 +23,7 @@ module latte{
         /**
          * Creates an empty icon of the specified size
          **/
-        static empty(size: number): IconItem{
+        static empty(size: number = 16): IconItem{
             var icon = new IconItem();
             icon.size = size;
             icon.url = null;
@@ -43,7 +48,7 @@ module latte{
          * @returns {IconItem}
          */
         static fileIcon(): IconItem{
-            return IconItem.standard(2, 1);
+            return LinearIcon.file_empty;
         }
 
         /**
@@ -51,7 +56,7 @@ module latte{
          * @returns {IconItem}
          */
         static folderIcon(): IconItem{
-            return IconItem.standard(5, 1);
+            return LinearIcon.book;
         }
 
         /**
@@ -59,7 +64,7 @@ module latte{
          * @returns {IconItem}
          */
         static homeIcon(): IconItem{
-            return IconItem.standard(11, 1);
+            return LinearIcon.home;
         }
 
         /**
@@ -67,7 +72,7 @@ module latte{
          * @returns {IconItem}
          */
         static newIcon(): IconItem{
-            return IconItem.standard(3, 3);
+            return LinearIcon.file_add;
         }
 
         /**
@@ -75,7 +80,7 @@ module latte{
          * @returns {IconItem}
          */
         static saveIcon(): IconItem{
-            return IconItem.standard(4, 2);
+            return LinearIcon.cloud_upload;
         }
 
         /**
@@ -83,7 +88,23 @@ module latte{
          * @returns {IconItem}
          */
         static refreshIcon(): IconItem{
-            return IconItem.standard(1, 4);
+            return LinearIcon.sync;
+        }
+
+        /**
+         *
+         * @returns {IconItem}
+         */
+        static sidebarLeft(): IconItem{
+            return IconItem.sidebar_left_getter();
+        }
+
+        /**
+         *
+         * @returns {IconItem}
+         */
+        static sidebarRight(): IconItem{
+            return IconItem.sidebar_right_getter();
         }
 
         /**
@@ -91,7 +112,7 @@ module latte{
          * @returns {IconItem}
          */
         static editIcon(): IconItem{
-            return IconItem.standard(14, 8);
+            return LinearIcon.pencil
         }
 
         /**
@@ -99,13 +120,10 @@ module latte{
          * @returns {IconItem}
          */
         static deleteIcon(): IconItem{
-            return IconItem.standard(9, 1);
+            return LinearIcon.cross;
         }
 
         //endregion
-
-
-
 
         /**
          * Creates the icon

@@ -124,7 +124,19 @@ module latte{
             $('<td>').addClass('previous').appendTo(tr);
 
             // Month name space
-            $('<td>', {colspan: 5}).addClass('month-name').text(monthName).appendTo(tr);
+            let monthNameEl = $('<td>', {colspan: 5}).addClass('month-name').text(monthName).appendTo(tr);
+
+            monthNameEl.click(() => {
+                let newYear = prompt(strings.jumpToYear, String(year));
+
+                let parsedYear = parseInt(newYear, 10);
+
+                if(!isNaN(parsedYear)) {
+                    this.selectionStart = new DateTime(parsedYear, month);
+                    this.selectionEnd = this.selectionStart;
+                }
+
+            });
 
             // "Next" control space
             $('<td>').addClass('next').appendTo(tr);
@@ -331,7 +343,7 @@ module latte{
          Optionally rebuilds the calendar rows and columns.
          Optionally raises events.
          **/
-         setSelectionRange(start: DateTime, end: DateTime, rebuild: boolean = false, raiseEvents: boolean = false){
+        setSelectionRange(start: DateTime, end: DateTime, rebuild: boolean = false, raiseEvents: boolean = false){
 
 
             if(!(start instanceof DateTime)) throw new InvalidArgumentEx('start');
@@ -417,18 +429,16 @@ module latte{
          **/
         setViewStart(date: DateTime){
 
-
-//            var __this = this;
-            var i = 0, j = 0;
-            var curMonth = new DateTime(date.year, date.month, 1);
-            var start = this._selectionStart;
-            var end = this._selectionEnd;
+            let i = 0, j = 0;
+            let curMonth = new DateTime(date.year, date.month, 1);
+            let start = this._selectionStart;
+            let end = this._selectionEnd;
 
             // append month
             this.element.empty();
 
             // Create months table
-            var months = $('<table>').addClass('months').appendTo(this.element);
+            let months = $('<table>').addClass('months').appendTo(this.element);
 
             for(i = 0; i < this.rows; i++){
                 var row = $('<tr>').appendTo(months);
@@ -453,14 +463,14 @@ module latte{
             }
 
             // Create Previous & Next buttons
-            var prev = new ButtonItem();
+            let prev = new ButtonItem();
                 prev.faceVisible = false;
-                prev.icon = Glyph.left;
+                prev.icon = LinearIcon.chevron_left;
                 prev.clickPropagation = false;
 
-            var next = new ButtonItem();
+            let next = new ButtonItem();
                 next.faceVisible = false;
-                next.icon = Glyph.right;
+                next.icon = LinearIcon.chevron_right;
                 next.clickPropagation = false;
 
             // Insert on DOM
@@ -475,7 +485,7 @@ module latte{
             this.table = months;
 
             // Re-select dates in range
-            var days = start && end ? end.subtractDate(start).totalDays + 1 : 0;
+            let days = start && end ? end.subtractDate(start).totalDays + 1 : 0;
 
             // Select days
             for(i = 0; i < days; i++) this._selectDay(start.addDays(i));

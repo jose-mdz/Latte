@@ -22,7 +22,7 @@ module latte{
 
             g.size = 16;
             g.url = Glyph.defaultUrl;
-            g.u = u
+            g.u = u;
             g.v = v;
             g.name = name || '';
 

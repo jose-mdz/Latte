@@ -47,10 +47,24 @@
 }
 
 .latte-item.date .month table td.today .selectable{
-    color: #2782F3;
+    border: solid 1px orange;
 }
-.latte-item.date .month > table td.today{
-    border-color: #2782F3;
-    background-color: #EAEFF8;
-    background-color: rgba(87, 141, 217, 0.1);
+/*.latte-item.date .month > table td.today{*/
+    /*border-color: #2782F3;*/
+    /*background-color: #EAEFF8;*/
+    /*background-color: rgba(87, 141, 217, 0.1);*/
+/*}*/
+
+.latte-item.date .month table td .selectable{
+    border-radius: 15px;
+    width: 15px;
+    height: 15px;
+}
+
+.latte-item.date .month table td.today .selectable.selected{
+    /*border-radius: 10px;*/
+}
+
+.latte-item.date .month table td.today .selectable{
+    /*color: #2782F3;*/
 }

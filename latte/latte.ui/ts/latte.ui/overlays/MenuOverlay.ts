@@ -265,6 +265,9 @@ module latte{
 
         }
 
+        /**
+         * Override.
+         */
         onLayout(){
             super.onLayout();
 
@@ -301,7 +304,7 @@ module latte{
         /**
          * Shows the menu relative to the specified element
          **/
-        show(item: Item, side: Side, edge: Side): MenuOverlay{
+        showByItem(item: Item, side: Side, edge: Side): MenuOverlay{
 
 
             if(!(item instanceof Item))
@@ -342,9 +345,9 @@ module latte{
 
                 switch(side){
                     case s.TOP:     y = e.top - r.height + offset;   break;
-                    case s.BOTTOM:  y = e.bottom - offset;             break;
+                    case s.BOTTOM:  y = e.bottom - offset;           break;
                     case s.LEFT:    x = e.left - r.width + offset;   break;
-                    case s.RIGHT:   x = e.right - offset;              break;
+                    case s.RIGHT:   x = e.right - offset;            break;
                 }
 
                 if(side == s.TOP || side == s.BOTTOM){
@@ -378,6 +381,7 @@ module latte{
                         || side == s.LEFT   && rect.left   < viewport.left
                         || side == s.BOTTOM && rect.bottom > viewport.bottom
                         || side == s.TOP    && rect.top    < viewport.top){
+
                         switch(side){
                             case s.TOP:     side = s.BOTTOM; break;
                             case s.BOTTOM:  side = s.TOP;    break;
@@ -503,8 +507,7 @@ module latte{
             }else{
                 this.element
                     .show()
-                    .css(animStart)
-                    .animate(animEnd, time, 'swing', () => { this.onLayout(); });
+                    .css(animStart).animate(animEnd, time, 'swing', () => { this.onLayout(); });
             }
 
 

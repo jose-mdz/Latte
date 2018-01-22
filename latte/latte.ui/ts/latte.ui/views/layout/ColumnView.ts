@@ -96,16 +96,14 @@ module latte{
                 if(View.smallScreen){
                     this.container.children().css('width', '');
                 }else{
-                    var w = Math.floor(100 / this.columns);
+                    let w = Math.floor(100 / this.columns);
                     this.container.children().css('width', w + '%');
                 }
 
             }
 
-            // Pass event to items
-            for(var i = 0; i < this.items.count; i++){
-                this.items.item(i).onLayout();
-            }
+            // Update Items
+            this.items.each(item => item.onLayout());
 
         }
 

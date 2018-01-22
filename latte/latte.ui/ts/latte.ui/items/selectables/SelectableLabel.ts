@@ -10,19 +10,31 @@ module latte{
         label: LabelItem;
 
         /**
-         *
+         * Creates the selectable label
          **/
-        constructor(){
+        constructor(text?: string, description?: string, icon?: IconItem, title?: number){
 
             super();
             this.addClass('with-label');
 
             // Init element
-            this.label = new LabelItem();
+            this.label = new LabelItem(text, description, icon, title);
             this.label.appendTo(this);
             this.element.clear();
 
         }
+
+        //region Methods
+
+        /**
+         * Returns a string representation of the object
+         */
+        toString(): string{
+            return this.text;
+        }
+        //endregion
+
+        //region Properties
 
         /**
          * Gets or sets the description of the item's label
@@ -74,5 +86,6 @@ module latte{
 
 
         }
+        //endregion
     }
 }

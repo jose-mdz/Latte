@@ -65,16 +65,27 @@ module latte{
         selectNextItem(){
             let index = this.selectedItem ? this.items.indexOf(this.selectedItem) : -1;
 
+            if(index < 0) {
+                // log(`No selected item`);
+                return;
+            }else {
+                // log(`Selected ${this.items[index].getText(0)}`);
+            }
+
+            // log(`Pre-++ ${index}`);
             index++;
+            // log(`Post++ ${index}`);
 
             if(index >= this.items.length) {
+                // log(`Longer`);
                 return;
             }
 
             if(index >= 0) {
-                log(index)
+                // log(`Going ${this.items[index].getText(0)}`);
                 this.items[index].selected = true;
             }
+            // this.items.each((item, i)=> log(`${i} ${item.getText(0)}`));
         }
 
         selectPreviousItem(){
@@ -223,7 +234,7 @@ module latte{
 
             if(this.element.parent().length == 0) return;
 
-            var i = 0;
+            let i = 0;
 
 
             if(this.columnHeadersVisible){

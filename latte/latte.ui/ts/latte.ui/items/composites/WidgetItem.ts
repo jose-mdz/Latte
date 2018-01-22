@@ -6,55 +6,11 @@ module latte{
      **/
     export class WidgetItem extends Item{
 
-        /**
-         *
-         **/
-        private _allowClose: boolean = true;
-
-        /**
-         *
-         **/
-        private _allowMaximize: boolean = true;
-
-        /**
-         *
-         **/
-        private _allowMinimize: boolean = true;
-
-        /**
-         *
-         **/
-        private _minimized: boolean;
-
-        /**
-         * Button for closing widget
-         **/
-        closeButton: ButtonItem;
 
         /**
          * Collection of items in widget
          **/
         items: Collection<Item>;
-
-        /**
-         * Button for maximizing the widget
-         **/
-        maximizeButton: ButtonItem;
-
-        /**
-         * Button for minimizing the widget
-         **/
-        minimizeButton: ButtonItem;
-
-        /**
-         * Collection of options of widget
-         **/
-        options: Collection<Item>;
-
-        /**
-         * Button for options
-         **/
-        optionsButton: ButtonItem;
 
         /**
          * Stack of items in the widget
@@ -77,22 +33,6 @@ module latte{
         topToolbar: Toolbar;
 
         /**
-         * Raised when the widget has been closed
-         **/
-        closed: LatteEvent;
-
-        /**
-         * Raised when the widget has been maximized
-         **/
-        maximized: LatteEvent;
-
-        /**
-         * Raised when the widget has been minimized
-         **/
-        minimizedChanged: LatteEvent;
-
-
-        /**
          * Creates the widget
          **/
         constructor(){
@@ -100,19 +40,10 @@ module latte{
             // Init
             super();
 
-            var widget = this;
-
-
             this.element.addClass('widget');
-
-            // Init events
-            this.closed = new LatteEvent(this);
-            this.maximized = new LatteEvent(this);
-            this.minimizedChanged = new LatteEvent(this);
 
             // Init collections
             this.items = new Collection<Item>(this._onAddItem, this._onRemoveItem, this);
-            this.options = new Collection<Item>(this._onAddOption, this._onRemoveOption, this);
 
             // Init main elements
             this.topToolbar = new Toolbar();
@@ -127,29 +58,19 @@ module latte{
 
             // Init detailed elements
             this.titleLabel = new LabelItem();
-            this.optionsButton = new ButtonItem();
-            this.optionsButton.icon = Glyph.down;
-            this.closeButton = new ButtonItem();
-            this.closeButton.icon = Glyph.dismiss;
-            this.minimizeButton = new ButtonItem();
-            this.minimizeButton.icon = Glyph.collapseWidget;
-            this.maximizeButton = new ButtonItem();
-            this.maximizeButton.icon = Glyph.maximize;
 
             // Prepare top toolbar
-            this.topToolbar.items.add(this.optionsButton);
             this.topToolbar.items.add(this.titleLabel);
-            this.topToolbar.sideItems.addArray([this.closeButton, this.maximizeButton, this.minimizeButton]);
+            this.topToolbar.sideItems.addArray([ this.minimizeButton]);
 
             // Default reacts
-            this.closeButton.click.add(() => {this.onClosed()});
-            this.minimizeButton.click.add(() => {this.minimized = !this.minimized});
-            this.maximizeButton.click.add(() => {this.onMaximized()});
+
             this.toolbar.itemsChanged.add(() => {this.onLayout()});
             this.toolbar.sideItemsChanged.add(() => {this.onLayout()});
-            this.topToolbar.element.dblclick(() => { if(this.allowMaximize) this.onMaximized(); })
 
         }
+
+        //region Private Methods
 
         /**
          *
@@ -163,38 +84,25 @@ module latte{
         /**
          *
          **/
-        private _onAddOption(item: Item){
-
-            this.optionsButton.items.add(item);
-            this.optionsButton.glyph = null;
-
-        }
-
-        /**
-         *
-         **/
         private _onRemoveItem(item: Item){
 
             this.stack.items.remove(item);
 
         }
 
-        /**
-         *
-         **/
-        private _onRemoveOption(item: Item){
+        //endregion
 
-            this.optionsButton.items.remove(item);
-
-        }
+        //region Methods
 
         /**
-         * Raises the <c>closed</c> event
-         **/
-        onClosed(){
+         * Raises the <c>allowMinimize</c> event
+         */
+        onAllowMinimizeChanged(){
+            if(this._allowMinimizeChanged){
+                this._allowMinimizeChanged.raise();
+            }
 
-            this.closed.raise();
-
+            this.minimizeButton.visible = this.allowMinimize;
         }
 
         /**
@@ -209,123 +117,155 @@ module latte{
             // Check bottom bar visible
             this.toolbar.visible = this.toolbar.items.count > 0 || this.toolbar.sideItems.count > 0;
 
-        }
 
-        /**
-         * Raises the <c>maximized</c> event
-         **/
-        onMaximized(){
 
-            this.maximized.raise();
+            setTimeout(() => {
+                let avail = Rectangle.fromElement(this.topToolbar.raw).width;
+
+                this.topToolbar.items.each(item => {
+                    if(item.visible && item != this.titleLabel) {
+                        avail -= Rectangle.fromElement(item.raw).width;
+                    }
+                });
+
+                this.topToolbar.sideItems.each(item => {
+                    avail -= Rectangle.fromElement(item.raw).width;
+                });
+
+                // HACK: this 15 constant should be computed
+                this.titleLabel.element.css('max-width', avail - 15);
+            });
 
         }
 
         /**
          * Raises the <c>minimized</c> event
-         **/
+         */
         onMinimizedChanged(){
 
-            this.minimizedChanged.raise();
 
+            if(this.minimized){
+                this.element.addClass('minimized');
+                this.stack.visible = false;
+                this.toolbar.visible = false;
+                this.minimizeButton.icon = LinearIcon.chevron_down;
+            }else{
+                this.element.removeClass('minimized');
+                this.stack.visible = true;
+                this.toolbar.visible = this.toolbar.items.count > 0 || this.toolbar.sideItems.count > 0;
+                this.minimizeButton.icon = LinearIcon.chevron_up;
+            }
+
+            // HACK: Trigger the event after modification, because listeners should be waiting of the size of minimized widget
+            if(this._minimizedChanged){
+                this._minimizedChanged.raise();
+            }
+        }
+
+        //endregion
+
+        //region Events
+
+        /**
+         * Back field for event
+         */
+        private _allowMinimizeChanged: LatteEvent;
+
+        /**
+         * Gets an event raised when the value of the allowMinimize property changes
+         *
+         * @returns {LatteEvent}
+         */
+        get allowMinimizeChanged(): LatteEvent{
+            if(!this._allowMinimizeChanged){
+                this._allowMinimizeChanged = new LatteEvent(this);
+            }
+            return this._allowMinimizeChanged;
         }
 
         /**
-         * Gets or sets a value indicating if the item could be closed
-         **/
-        get allowClose(): boolean{
-            return this._allowClose;
-        }
+         * Back field for event
+         */
+        private _minimizedChanged: LatteEvent;
 
         /**
-         * Gets or sets a value indicating if the item could be closed
-         **/
-        set allowClose(value: boolean){
-
-
-            this._allowClose = value;
-            this.closeButton.visible = value;
-            this.onLayout();
-
-
+         * Gets an event raised when the value of the minimized property changes
+         *
+         * @returns {LatteEvent}
+         */
+        get minimizedChanged(): LatteEvent{
+            if(!this._minimizedChanged){
+                this._minimizedChanged = new LatteEvent(this);
+            }
+            return this._minimizedChanged;
         }
 
+        //endregion
+
+        //region Properties
         /**
-         * Gets or sets a value indicating if the item could be maximized
-         **/
-        get allowMaximize(): boolean{
-            return this._allowMaximize;
-        }
-
-        /**
-         * Gets or sets a value indicating if the item could be maximized
-         **/
-        set allowMaximize(value: boolean){
-
-
-            this._allowMaximize = value;
-            this.maximizeButton.visible = value;
-            this.onLayout();
-
-
-        }
+         * Property field
+         */
+        private _allowMinimize: boolean = true;
 
         /**
-         * Gets or sets a value indicating if the item could be minimized
-         **/
+         * Gets or sets a value indicating if minimization is allowed
+         *
+         * @returns {boolean}
+         */
         get allowMinimize(): boolean{
             return this._allowMinimize;
         }
 
         /**
-         * Gets or sets a value indicating if the item could be minimized
-         **/
+         * Gets or sets a value indicating if minimization is allowed
+         *
+         * @param {boolean} value
+         */
         set allowMinimize(value: boolean){
 
+            // Check if value changed
+            let changed: boolean = value !== this._allowMinimize;
 
+            // Set value
             this._allowMinimize = value;
-            this.minimizeButton.visible = value;
-            this.onLayout();
 
-
+            // Trigger changed event
+            if(changed){
+                this.onAllowMinimizeChanged();
+            }
         }
+        /**
+         * Property field
+         */
+        private _minimized: boolean = null;
 
         /**
          * Gets or sets a value indicating if the widget is currently minimized
-         **/
+         *
+         * @returns {boolean}
+         */
         get minimized(): boolean{
             return this._minimized;
         }
 
         /**
          * Gets or sets a value indicating if the widget is currently minimized
-         **/
+         *
+         * @param {boolean} value
+         */
         set minimized(value: boolean){
 
+            // Check if value changed
+            let changed: boolean = value !== this._minimized;
 
-            if(!_isBoolean(value))
-                throw new InvalidArgumentEx('value', value);
-
-            var original = this._minimized;
-
-            if(value){
-                this.element.addClass('minimized');
-                this.stack.visible = false;
-                this.toolbar.visible = false;
-                this.minimizeButton.icon = Glyph.expandWidget;
-            }else{
-                this.element.removeClass('minimized');
-                this.stack.visible = true;
-                this.toolbar.visible = this.toolbar.items.count > 0 || this.toolbar.sideItems.count > 0;
-                this.minimizeButton.icon = Glyph.collapseWidget;
-            }
-
+            // Set value
             this._minimized = value;
 
-            if(original !== this._minimized)
+            // Trigger changed event
+            if(changed){
                 this.onMinimizedChanged();
-
-
-
+            }
         }
 
         /**
@@ -347,5 +287,31 @@ module latte{
 
 
         }
+        //endregion
+
+        //region Components
+
+        /**
+         * Field for minimizeButton property
+         */
+        private _minimizeButton: ButtonItem;
+
+        /**
+         * Gets the minimize button
+         *
+         * @returns {ButtonItem}
+         */
+        get minimizeButton(): ButtonItem {
+            if (!this._minimizeButton) {
+                this._minimizeButton = new ButtonItem();
+                this._minimizeButton = new ButtonItem();
+                this._minimizeButton.icon = LinearIcon.chevron_up;
+                this._minimizeButton.click.add(() => {this.minimized = !this.minimized});
+            }
+            return this._minimizeButton;
+        }
+
+
+        //endregion
     }
 }

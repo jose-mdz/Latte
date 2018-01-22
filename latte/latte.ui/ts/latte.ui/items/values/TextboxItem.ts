@@ -22,6 +22,36 @@ module latte{
         //region Fields
 
         /**
+         *
+         **/
+        private _inputContainer: JQuery;
+
+        /**
+         *
+         **/
+        private _invisible: JQuery;
+
+        /**
+         *
+         */
+        private _minLenToSuggest: number = 4 - 1;
+
+        /**
+         * Index of Currently selected suggestion
+         */
+        private selectedIndex = -1;
+
+        /**
+         *
+         */
+        private _selectedSuggestion: Item;
+
+        /**
+         *
+         */
+        private _loadingSuggestions: boolean = false;
+
+        /**
          * Points to the element who receives input
          **/
         input: JQuery;
@@ -95,7 +125,6 @@ module latte{
 
                         // If not found, bye
                         if(!found) {
-                            log("Preventing default")
                             evt.preventDefault();
                             evt.stopImmediatePropagation();
                             return false;
@@ -129,6 +158,15 @@ module latte{
                 return this.onKeyUp(e) !== false;
             });
 
+            this.input.focus(() => {
+                if(this.minLengthToActivateSuggestions == 0) {
+                    this.onFilterSuggestions();
+                }
+            });
+
+            this.input.blur(() => {
+                this.hideSuggestions();
+            })
 
         }
 
@@ -149,8 +187,11 @@ module latte{
             this.suggestionOverlay.items.add(item);
 
             if(item instanceof ButtonItem){
-                (<ButtonItem>item).click.add(( ) => { this.hideSuggestions() });
+                (<ButtonItem>item).click.add(( ) =>  this.hideSuggestions() );
+
+                item.raw.addEventListener('mousedown', e => item.onClick());
             }
+
         }
 
         /**
@@ -189,13 +230,14 @@ module latte{
                     e.stopImmediatePropagation();
                     return false;
 
-                }else if(e.keyCode == Key.ENTER || e.keyCode == Key.TAB){
+                }else if(e.keyCode == Key.ENTER /*|| e.keyCode == Key.TAB*/){
 
                     if(this._selectedSuggestion instanceof ButtonItem){
                         (<ButtonItem>this._selectedSuggestion).onClick();
                     }
                     e.stopImmediatePropagation();
                     return false;
+
                 }else if(e.keyCode == Key.ESCAPE){
                     this.hideSuggestions();
                     e.stopImmediatePropagation();
@@ -258,6 +300,21 @@ module latte{
         }
 
         /**
+         * Raises the <c>readOnly</c> event
+         */
+        onReadOnlyChanged(){
+            if(this._readOnlyChanged){
+                this._readOnlyChanged.raise();
+            }
+
+            if(this.readOnly) {
+                this.input.attr('readonly', 'yes');
+            }else {
+                this.input.removeAttr('readonly');
+            }
+        }
+
+        /**
          * Raises the <c>removeSuggestion</c> event
          * @param item
          */
@@ -281,6 +338,8 @@ module latte{
         onValueChanged(){
 
             super.onValueChanged();
+
+            // log(`Value changed: ${this.value} Ignore:${this.ignorePassToTextbox}`);
 
             // Pass value to textbox
             if(this.ignorePassToTextbox) {
@@ -415,6 +474,23 @@ module latte{
         /**
          * Back field for event
          */
+        private _filterSuggestions: LatteEvent;
+
+        /**
+         * Gets an event raised when its time to add suggestins
+         *
+         * @returns {LatteEvent}
+         */
+        get filterSuggestions(): LatteEvent{
+            if(!this._filterSuggestions){
+                this._filterSuggestions = new LatteEvent(this);
+            }
+            return this._filterSuggestions;
+        }
+
+        /**
+         * Back field for event
+         */
         private _keyPress: LatteEvent;
 
         /**
@@ -466,18 +542,18 @@ module latte{
         /**
          * Back field for event
          */
-        private _filterSuggestions: LatteEvent;
+        private _readOnlyChanged: LatteEvent
 
         /**
-         * Gets an event raised when its time to add suggestins
+         * Gets an event raised when the value of the readOnly property changes
          *
          * @returns {LatteEvent}
          */
-        get filterSuggestions(): LatteEvent{
-            if(!this._filterSuggestions){
-                this._filterSuggestions = new LatteEvent(this);
+        get readOnlyChanged(): LatteEvent{
+            if(!this._readOnlyChanged){
+                this._readOnlyChanged = new LatteEvent(this);
             }
-            return this._filterSuggestions;
+            return this._readOnlyChanged;
         }
 
         /**
@@ -502,71 +578,6 @@ module latte{
         //region Properties
 
         /**
-         *
-         **/
-        private _autoGrow: boolean = true;
-
-        /**
-         *
-         **/
-        private _inputContainer: JQuery;
-
-        /**
-         *
-         **/
-        private _invisible: JQuery;
-
-        /**
-         *
-         **/
-        private _maxLength: number;
-
-        /**
-         *
-         **/
-        private _minHeight: number;
-
-        /**
-         *
-         **/
-        private _multiline: boolean;
-
-        /**
-         *
-         **/
-        private _password: boolean;
-
-        /**
-         *
-         */
-        private _minLenToSuggest: number = 4 - 1;
-
-        /**
-         *
-         */
-        private _suggestionOverlay: SuggestionOverlay = null;
-
-        /**
-         * Index of Currently selected suggestion
-         */
-        private selectedIndex = -1;
-
-        /**
-         *
-         */
-        private _selectedSuggestion: Item;
-
-        /**
-         *
-         */
-        private _suggestions: Collection<Item>;
-
-        /**
-         *
-         */
-        private _loadingSuggestions: boolean = false;
-
-        /**
          * Property field
          */
         private _allowedKeys: Key[] = null;
@@ -588,6 +599,11 @@ module latte{
         set allowedKeys(value: Key[]) {
             this._allowedKeys = value;
         }
+
+        /**
+         *
+         **/
+        private _autoGrow: boolean = true;
 
         /**
          * Gets or sets a value indicating if the textbox height should grow automatically
@@ -656,6 +672,11 @@ module latte{
         }
 
         /**
+         *
+         **/
+        private _maxLength: number;
+
+        /**
          * Gets or sets the maximum length for input in the textbox
          **/
         set maxLength(value: number){
@@ -696,6 +717,11 @@ module latte{
         }
 
         /**
+         *
+         **/
+        private _minHeight: number;
+
+        /**
          * Gets or sets the minimum height of the textbox, if multiline
          **/
         set minHeight(value: number){
@@ -707,6 +733,11 @@ module latte{
 
 
         }
+
+        /**
+         *
+         **/
+        private _multiline: boolean;
 
         /**
          * Gets or sets a value indicating if the textbox can be multiline
@@ -731,6 +762,11 @@ module latte{
 
 
         }
+
+        /**
+         *
+         **/
+        private _password: boolean;
 
         /**
          * Gets or sets a value indicating if the textbox accepts passwords
@@ -809,68 +845,9 @@ module latte{
         }
 
         /**
-         * Back field for event
-         */
-        private _readOnlyChanged: LatteEvent
-
-        /**
-         * Gets an event raised when the value of the readOnly property changes
          *
-         * @returns {LatteEvent}
          */
-        get readOnlyChanged(): LatteEvent{
-            if(!this._readOnlyChanged){
-                this._readOnlyChanged = new LatteEvent(this);
-            }
-            return this._readOnlyChanged;
-        }
-
-        /**
-         * Raises the <c>readOnly</c> event
-         */
-        onReadOnlyChanged(){
-            if(this._readOnlyChanged){
-                this._readOnlyChanged.raise();
-            }
-
-            if(this.readOnly) {
-                this.input.attr('readonly', 'yes');
-            }else {
-                this.input.removeAttr('readonly');
-            }
-        }
-
-        /**
-         * Gets the suggestions overlay
-         */
-        get suggestionOverlay(): SuggestionOverlay{
-            if(!this._suggestionOverlay){
-                this._suggestionOverlay = new SuggestionOverlay();
-//                this._suggestionOverlay.parent = this;
-                this._suggestionOverlay.element.appendTo('body');
-
-                /**
-                 * Show suggestions when more than one
-                 */
-                this._suggestionOverlay.stack.items.addItem.add(() => {
-                    if(this._suggestionOverlay.stack.items.length > 0){
-                        this._suggestionOverlay.showAtSide(Side.BOTTOM, this);
-                    }
-
-                    if(this._suggestionOverlay.items.length == 1){
-                        this.selectFirstSuggestion();
-                    }
-                });
-
-                this._suggestionOverlay.stack.items.removeItem.add(() => {
-                    if(this._suggestionOverlay.stack.items.length == 0){
-                        this.hideSuggestions();
-                    }
-                });
-            }
-
-            return this._suggestionOverlay;
-        }
+        private _suggestions: Collection<Item>;
 
         /**
          * Gets the collection of suggestions for autocompletion
@@ -1010,6 +987,42 @@ module latte{
             return this._sideLabel;
         }
 
+        /**
+         *
+         */
+        private _suggestionOverlay: SuggestionOverlay = null;
+
+        /**
+         * Gets the suggestions overlay
+         */
+        get suggestionOverlay(): SuggestionOverlay{
+            if(!this._suggestionOverlay){
+                this._suggestionOverlay = new SuggestionOverlay();
+//                this._suggestionOverlay.parent = this;
+                this._suggestionOverlay.element.appendTo('body');
+
+                /**
+                 * Show suggestions when more than one
+                 */
+                this._suggestionOverlay.stack.items.addItem.add(() => {
+                    if(this._suggestionOverlay.stack.items.length > 0){
+                        this._suggestionOverlay.showAtSide(Side.BOTTOM, this);
+                    }
+
+                    if(this._suggestionOverlay.items.length == 1){
+                        this.selectFirstSuggestion();
+                    }
+                });
+
+                this._suggestionOverlay.stack.items.removeItem.add(() => {
+                    if(this._suggestionOverlay.stack.items.length == 0){
+                        this.hideSuggestions();
+                    }
+                });
+            }
+
+            return this._suggestionOverlay;
+        }
 
         //endregion
 

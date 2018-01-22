@@ -138,7 +138,7 @@ module latte{
                 })
                 .click((e: JQueryEventObject) => {
                     if(this.enabled){
-                        this.onClick();
+                        this.onClick( e as any);
 
                         if(!this.clickPropagation){
                             e.stopPropagation();
@@ -198,14 +198,14 @@ module latte{
         /**
          * Raises the <c>click</c> event
          **/
-        onClick(){
+        onClick(e: MouseEvent = null){
 
 
             if(this.checkable){
                 this.checked = !this.checked;
             }
 
-            this.click.raise(this);
+            this.click.raise(e);
 
         }
 

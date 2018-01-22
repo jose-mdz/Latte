@@ -17,18 +17,28 @@
 }
 
 .latte-item.form > .container > .latte-item{
-    margin-bottom: 15px;
+    /*margin-bottom: 15px;*/
+    padding: 0.7em 0 0.8em 0;
+}
+
+.latte-item.form > .container > .latte-item.vertical{
+    padding-left: 10px;
 }
 
 .latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox{
     float: none;
 }
 
+.latte-item.form > .container > .latte-item.input > .value .value.data-record .value.textbox,
+.latte-item.form > .container > .latte-item.input > .value .value.data-record{
+    width: 100%;
+}
+
 .latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox input,
 .latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox textarea,
 .latte-item.form > .container > .latte-item.input > .value > .latte-item.textbox textarea,
-.latte-item.form > .container > .latte-item.input > .value .value.data-record,
-.latte-item.form > .container > .latte-item.input > .value .value.data-record .value.textbox,
+
+
 .latte-item.form > .container > .latte-item.input > .value .value.data-record .latte-item.textbox input{
-    width: 100%;
+    width: calc(100% - 20px);
 }
