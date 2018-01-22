@@ -1,0 +1,38 @@
+.latte-overlay.sidebar{
+    background: white;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+    transition: right ease 0.25s, bottom ease 0.25s, top ease 0.25s, left ease 0.25s;
+    display: block;
+    position: fixed;
+}
+
+.latte-overlay.sidebar > .close{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.latte-overlay.sidebar.left,
+.latte-overlay.sidebar.right{
+    top: 0;
+    bottom: 0;
+    /*width: 300px;*/
+}
+
+
+.latte-overlay.sidebar.top,
+.latte-overlay.sidebar.bottom{
+    left: 0;
+    right: 0;
+    /*height: 300px;*/
+}
+
+/*.latte-overlay.sidebar.top    { top: -300px;    bottom: auto !important; }*/
+/*.latte-overlay.sidebar.left   { left: -300px;   right: auto !important;  }*/
+/*.latte-overlay.sidebar.right  { right: -300px;  left: auto !important;   }*/
+/*.latte-overlay.sidebar.bottom { bottom: -300px; top: auto !important;    }*/
+
+.latte-overlay.sidebar.top    { bottom: auto !important; }
+.latte-overlay.sidebar.left   { right: auto !important;  }
+.latte-overlay.sidebar.right  { left: auto !important;   }
+.latte-overlay.sidebar.bottom { top: auto !important;    }
